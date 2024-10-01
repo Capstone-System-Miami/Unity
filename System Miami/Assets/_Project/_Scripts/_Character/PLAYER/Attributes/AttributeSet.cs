@@ -1,3 +1,4 @@
+// Author: Layla Hoey
 using UnityEngine;
 
 namespace SystemMiami
