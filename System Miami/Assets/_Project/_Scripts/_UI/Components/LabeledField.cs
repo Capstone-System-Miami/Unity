@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace SystemMiami.UI
 {
-    public class Transformer : MonoBehaviour
+    public class LabeledField : MonoBehaviour
     {
         // TODO
     }
