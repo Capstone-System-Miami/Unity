@@ -15,6 +15,8 @@ namespace SystemMiami
         public GameObject overlayContainer;
 
 
+        public Dictionary<Vector2Int, OverlayTile> map;
+
         private void Awake()
         {
             if(_instance != null && _instance != this)
@@ -32,7 +34,7 @@ namespace SystemMiami
         {
             
             var tileMap = gameObject.GetComponentInChildren<Tilemap>();
-
+            map = new Dictionary<Vector2Int, OverlayTile> ();
             BoundsInt bounds = tileMap.cellBounds;
 
             // looping through all of our tiles.
@@ -43,8 +45,9 @@ namespace SystemMiami
                     for (int x = bounds.min.x; x < bounds.max.x; x++)
                     {
                         var tileLocation = new Vector3Int(x, y, z);
+                        var tileKey = new Vector2Int(x, y);
 
-                        if (tileMap.HasTile(tileLocation))
+                        if (tileMap.HasTile(tileLocation) && !map.ContainsKey(tileKey))
                         {
                             
                             var overlayTile = Instantiate(overlayTilePrefab, overlayContainer.transform);
@@ -52,6 +55,8 @@ namespace SystemMiami
 
                             overlayTile.transform.position = new Vector3(cellWorldPosition.x, cellWorldPosition.y, cellWorldPosition.z+1);
                             overlayTile.GetComponent<SpriteRenderer>().sortingOrder = tileMap.GetComponent<TilemapRenderer>().sortingOrder;
+                            overlayTile.gridLocation = tileLocation;
+                            map.Add(tileKey, overlayTile);
                         }
                     }
                 }
