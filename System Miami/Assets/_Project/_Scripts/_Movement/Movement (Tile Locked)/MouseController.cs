@@ -43,14 +43,12 @@ namespace SystemMiami
                          path = pathFinder.FindPath(character.activeTile, overlayTile);
                     }
                 }
-
             }
 
             if(path.Count > 0)
             {
                 MoveAlongPath();
             }
-
         }
 
         private void MoveAlongPath()
