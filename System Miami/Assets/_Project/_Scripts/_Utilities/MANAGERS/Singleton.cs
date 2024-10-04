@@ -17,7 +17,6 @@ namespace SystemMiami.Management
             else
             {
                 _mgr = this as T;
-                DontDestroyOnLoad(gameObject);
             }
         }
     }

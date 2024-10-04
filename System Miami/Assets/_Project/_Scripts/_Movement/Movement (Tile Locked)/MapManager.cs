@@ -1,43 +1,44 @@
 // Author: Alec
 using System.Collections.Generic;
+using SystemMiami.Management;
+using SystemMiami.Utilities;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 namespace SystemMiami
 {
-    public class MapManager : MonoBehaviour
+    // (Layla) This is a singleton/manager. I wrote a base class for those,
+    // that handles the assignement of the static instance & such,
+    // so I switched it to inherit from that for consistency.
+    public class MapManager : Singleton<MapManager>
     {
-        private static MapManager _instance;
-        public static MapManager Instance { get {return _instance; } }
 
         public OverlayTile overlayTilePrefab;
         public GameObject overlayContainer;
 
-
         public Dictionary<Vector2Int, OverlayTile> map;
 
-        private void Awake()
+        protected override void Awake()
         {
-            if(_instance != null && _instance != this)
-            {
-                Destroy(this.gameObject);
-            }
-            else
-            {
-                _instance = this;
-            }
+            base.Awake(); // Handles the assignement of the static instance
         }
 
         // Start is called before the first frame update
         void Start()
         {
-            
             var tileMap = gameObject.GetComponentInChildren<Tilemap>();
             map = new Dictionary<Vector2Int, OverlayTile> ();
+
             BoundsInt bounds = tileMap.cellBounds;
 
-            // looping through all of our tiles.
-            for( int z = bounds.max.z; z >= bounds.min.z; z--)
+            print ($"Bounds xmin {bounds.min.x} | xmax {bounds.max.x}\n" +
+                $"ymin {bounds.min.y} | ymax { bounds.max.y}\n" +
+                $"zmin { bounds.min.z} | zmax {bounds.max.z}");
+
+
+            // looping through all of our tiles. --> (Layla) And doing what?
+            // It will be easier to debug if we have some notes about what this is
+            for (int z = bounds.max.z; z >= bounds.min.z; z--)
             {
                 for (int y = bounds.min.y; y < bounds.max.y; y++)
                 {
@@ -48,7 +49,6 @@ namespace SystemMiami
 
                         if (tileMap.HasTile(tileLocation) && !map.ContainsKey(tileKey))
                         {
-                            
                             var overlayTile = Instantiate(overlayTilePrefab, overlayContainer.transform);
                             var cellWorldPosition = tileMap.GetCellCenterWorld(tileLocation);
 

@@ -1467,7 +1467,7 @@ Tilemap:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Origin: {x: -6, y: -14, z: 0}
   m_Size: {x: 12, y: 22, z: 1}
-  m_TileAnchor: {x: -1, y: -1, z: 0}
+  m_TileAnchor: {x: 0.5, y: -1.5, z: 0}
   m_TileOrientation: 0
   m_TileOrientationMatrix:
     e00: 1
@@ -1786,7 +1786,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   overlayTilePrefab: {fileID: 234376238245852063, guid: e8fc57cb9f4ac2747a240ae1b3d94547, type: 3}
   overlayContainer: {fileID: 1868395076}
-  tileOffset: {x: 0, y: 0, z: 0}
 --- !u!156049354 &1880213405
 Grid:
   m_ObjectHideFlags: 0
@@ -1827,18 +1826,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb20427a53820444087b59e4e0802c21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _notes: 'Switched the tilemap to use sprites from the artists.
+  _notes: 'Switched the tilemap to use sprites from the artists, which use a pivot
+    on the bottom of the sprites.
 
-    Switched the
-    settings to the settings we will be using for the game.
+    This means we have to switch the tileAnchor
+    to (-1, -1, 0) on our tilemaps.
+
+    This broke the functionality.
 
 
-    This broke the
-    functionality.  It works properly when the tilemap is set to have a tileAnchor
-    of
-
-    (-0.5, 1.5, 0), but for the game we will be using (-1, -1, 0).  How can
-    we make this work no matter what the tile anchor is set to?'
+    Maybe
+    we can calc an offset to add to BountInt?'
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

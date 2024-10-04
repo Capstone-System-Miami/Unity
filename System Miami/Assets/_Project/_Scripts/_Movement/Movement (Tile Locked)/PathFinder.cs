@@ -78,7 +78,7 @@ namespace SystemMiami
 
         private List<OverlayTile> GetNeighbourTiles(OverlayTile currentOverlayTile)
         {
-            var map = MapManager.Instance.map;
+            var map = MapManager.MGR.map;
 
             List<OverlayTile> neighbours = new List<OverlayTile>();
 
