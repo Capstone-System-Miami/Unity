@@ -1,8 +1,7 @@
-using System.Collections;
+// Author: Alec
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using UnityEngine.UIElements;
 
 namespace SystemMiami
 {

@@ -1,9 +1,7 @@
-using System;
-using System.Collections;
+// Author: Alec
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace SystemMiami
 {

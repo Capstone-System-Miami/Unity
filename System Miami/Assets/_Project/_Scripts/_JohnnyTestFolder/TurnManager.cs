@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿//Author: Johnny
+using System.Collections;
 using System.Collections.Generic;  // Required for List<>
 using UnityEngine;
 
