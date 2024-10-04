@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2886911680002473324}
   - component: {fileID: 6512032109619817124}
   - component: {fileID: -1971288753443991781}
+  - component: {fileID: 3834768875493326230}
   m_Layer: 0
   m_Name: character
   m_TagString: Untagged
@@ -98,3 +99,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   activeTile: {fileID: 0}
+--- !u!114 &3834768875493326230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7719785247104517706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb20427a53820444087b59e4e0802c21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _notes: Can we figure out how to make an enum for setting a "preferredAxis"?  I
+    noticed this pathing prefers the X-axis
