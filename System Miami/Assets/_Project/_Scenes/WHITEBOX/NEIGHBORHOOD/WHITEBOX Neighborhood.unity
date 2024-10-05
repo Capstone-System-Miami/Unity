@@ -341,6 +341,65 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &765645565
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 765645567}
+  - component: {fileID: 765645566}
+  m_Layer: 0
+  m_Name: Intersection Generator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &765645566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 765645565}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65b0d0aec68c4244f82267ad0fd6655b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _n: {fileID: 11400000, guid: 839dfddc982c86440baa5e4e033b1121, type: 2}
+  _w: {fileID: 0}
+  _s: {fileID: 0}
+  _e: {fileID: 11400000, guid: 5724011520cd1b4418e4af725ac24108, type: 2}
+  _nw: {fileID: 0}
+  _sw: {fileID: 0}
+  _se: {fileID: 0}
+  _ns: {fileID: 0}
+  _we: {fileID: 0}
+  _nws: {fileID: 0}
+  _nes: {fileID: 0}
+  _nwe: {fileID: 0}
+  _swe: {fileID: 0}
+  _all: {fileID: 0}
+  _none: {fileID: 0}
+--- !u!4 &765645567
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 765645565}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &58683516575017669
 Transform:
   m_ObjectHideFlags: 0
@@ -23269,3 +23328,4 @@ SceneRoots:
   - {fileID: 519420032}
   - {fileID: 619394802}
   - {fileID: 8535713974348570950}
+  - {fileID: 765645567}
