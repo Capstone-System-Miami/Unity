@@ -36,8 +36,10 @@ namespace SystemMiami
                 $"zmin { bounds.min.z} | zmax {bounds.max.z}");
 
 
-            // looping through all of our tiles. --> (Layla) And doing what?
+            /* looping through all of our tiles. and for each tile in the tilemap that exists it instantiates an overlay
+             * tile at the world position. It stores the overlay tile in a dictionary letting us access each tile by its x and y--> (Layla) And doing what?
             // It will be easier to debug if we have some notes about what this is
+            */
             for (int z = bounds.max.z; z >= bounds.min.z; z--)
             {
                 for (int y = bounds.min.y; y < bounds.max.y; y++)
