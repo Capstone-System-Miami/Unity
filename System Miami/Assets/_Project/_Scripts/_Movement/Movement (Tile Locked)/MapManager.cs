@@ -19,6 +19,7 @@ namespace SystemMiami
         public OverlayTile overlayTilePrefab;
         public GameObject overlayContainer;
 
+        //dictionary containing all tiles on map by their x, y coordinates
         public Dictionary<Vector2Int, OverlayTile> map;
 
         protected override void Awake()
@@ -31,6 +32,7 @@ namespace SystemMiami
             Tilemap tileMap = gameObject.GetComponentInChildren<Tilemap>();
             map = new Dictionary<Vector2Int, OverlayTile> ();
 
+            //get the bounds of tile map in grid coordinates
             BoundsInt bounds = tileMap.cellBounds;
 
             print ($"Bounds xmin {bounds.min.x} | xmax {bounds.max.x}\n" +
@@ -38,7 +40,9 @@ namespace SystemMiami
                 $"zmin { bounds.min.z} | zmax {bounds.max.z}");
 
 
-            // looping through all of our tiles. --> (Layla) And doing what?
+            // looping through all of our tiles. for each tile that exists and hasnt been added it instantiates
+            // an overlaytile at that world position, it stores that overlaytile in a dictionary
+            // and lets us access it based on x , y coordinates.--> (Layla) And doing what?
             // It will be easier to debug if we have some notes about what this is
             for (int z = bounds.max.z; z >= bounds.min.z; z--)
             {

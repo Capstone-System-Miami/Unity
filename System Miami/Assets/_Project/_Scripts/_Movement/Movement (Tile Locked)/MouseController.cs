@@ -23,6 +23,7 @@ namespace SystemMiami
         // Update is called once per frame
         void LateUpdate()
         {
+            //what tile is mouse on
             var focusedTileHit = GetFocusedOnTile();
 
             if(focusedTileHit.HasValue )
