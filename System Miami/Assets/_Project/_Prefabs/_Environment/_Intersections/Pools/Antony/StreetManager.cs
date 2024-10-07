@@ -1,105 +1,124 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// The main class responsible for generating and managing streets in the game.
 public class StreetManager : MonoBehaviour
 {
-    // Serialized fields to set in the Unity Editor
-    [SerializeField] private StreetPool[] streetPools;
-    [SerializeField] private int maxStreets;
-    [SerializeField] private int minStreets;
-    [SerializeField] private int streetWidth;
-    [SerializeField] private int streetHeight;
-    [SerializeField] private int gridSizeX;
-    [SerializeField] private int gridSizeY;
-    [SerializeField] private int maxExits = 4; // New serialized field for maxExits
-    [SerializeField] private int maxStreetsToConnect = 4;
+    // Serialized fields allow these private variables to be set in the Unity Editor.
+    [SerializeField] private StreetPool[] streetPools; // Array of StreetPools, which contain prefabs for different street types.
+    [SerializeField] private int maxStreets; // Maximum number of streets to generate.
+    [SerializeField] private int minStreets; // Minimum number of streets to generate.
+    [SerializeField] private int streetWidth; // The width of each street in world units.
+    [SerializeField] private int streetHeight; // The height of each street in world units.
+    [SerializeField] private int gridSizeX; // The width of the street grid.
+    [SerializeField] private int gridSizeY; // The height of the street grid.
+    [SerializeField] private int maxExits = 4; // Maximum number of exits per street.
+    [SerializeField] private int maxStreetsToConnect = 4; // Maximum number of streets that can be connected from one street.
     
-    // Private fields for managing streets
+    // List to keep track of instantiated street GameObjects.
     private List<GameObject> streetObjects = new List<GameObject>();
+    // Queue used for breadth-first street generation.
     private Queue<Vector2Int> streetQueue = new Queue<Vector2Int>();
+    // Dictionary mapping StreetTypes to their corresponding StreetPools.
     private Dictionary<StreetType, StreetPool> streetPoolDictionary;
+    // 2D array representing the grid of streets.
     private StreetData[,] streetGrid;
+    // Counter for the number of streets generated.
     private int streetCount;
+    // Flag to indicate if the street generation is complete.
     private bool generationComplete = false;
 
-    // Directions for street generation
+    // Possible directions to check for neighboring streets (up, down, right, left).
     private Vector2Int[] directions = {
-        new Vector2Int(0, 1), new Vector2Int(0, -1),
-        new Vector2Int(1, 0), new Vector2Int(-1, 0)
+        new Vector2Int(0, 1),  // Up
+        new Vector2Int(0, -1), // Down
+        new Vector2Int(1, 0),  // Right
+        new Vector2Int(-1, 0)  // Left
     };
 
-    // Mappings for exit directions
+    // Mapping from direction vectors to ExitDirection enums.
     private Dictionary<Vector2Int, ExitDirection> dirToExit = new Dictionary<Vector2Int, ExitDirection> {
-        { new Vector2Int(0, 1), ExitDirection.North },
-        { new Vector2Int(0, -1), ExitDirection.South },
-        { new Vector2Int(1, 0), ExitDirection.East },
-        { new Vector2Int(-1, 0), ExitDirection.West }
+        { new Vector2Int(0, 1), ExitDirection.North }, // Up corresponds to North exit.
+        { new Vector2Int(0, -1), ExitDirection.South }, // Down corresponds to South exit.
+        { new Vector2Int(1, 0), ExitDirection.East }, // Right corresponds to East exit.
+        { new Vector2Int(-1, 0), ExitDirection.West } // Left corresponds to West exit.
     };
-
+    
+    // Mapping from direction vectors to the opposite ExitDirection enums.
     private Dictionary<Vector2Int, ExitDirection> dirToOppositeExit = new Dictionary<Vector2Int, ExitDirection> {
-        { new Vector2Int(0, 1), ExitDirection.South },
-        { new Vector2Int(0, -1), ExitDirection.North },
-        { new Vector2Int(1, 0), ExitDirection.West },
-        { new Vector2Int(-1, 0), ExitDirection.East }
+        { new Vector2Int(0, 1), ExitDirection.South }, // Up's opposite is South.
+        { new Vector2Int(0, -1), ExitDirection.North }, // Down's opposite is North.
+        { new Vector2Int(1, 0), ExitDirection.West }, // Right's opposite is West.
+        { new Vector2Int(-1, 0), ExitDirection.East } // Left's opposite is East.
     };
-
+    
+    // Mapping from ExitDirection enums to direction vectors.
     private Dictionary<ExitDirection, Vector2Int> exitToDir = new Dictionary<ExitDirection, Vector2Int> {
-        { ExitDirection.North, new Vector2Int(0, 1) },
-        { ExitDirection.South, new Vector2Int(0, -1) },
-        { ExitDirection.East, new Vector2Int(1, 0) },
-        { ExitDirection.West, new Vector2Int(-1, 0) }
+        { ExitDirection.North, new Vector2Int(0, 1) }, // North exit corresponds to Up.
+        { ExitDirection.South, new Vector2Int(0, -1) }, // South exit corresponds to Down.
+        { ExitDirection.East, new Vector2Int(1, 0) }, // East exit corresponds to Right.
+        { ExitDirection.West, new Vector2Int(-1, 0) } // West exit corresponds to Left.
     };
 
-    // Variables to track the first and last generated streets
+    // The index in the grid where the street generation starts.
     private Vector2Int startingStreetIndex;
+    // Reference to the first StreetData object generated.
     private StreetData firstStreetGenerated;
+    // Reference to the last StreetData object generated.
     private StreetData lastStreetGenerated;
 
-    // Unity's Start method, called before the first frame update
+    // Unity's Start method is called before the first frame update.
     void Start()
     {
-        InitializeStreetPoolDictionary(); // Initialize the street pool dictionary
-        InitializeStreetGrid(); // Initialize the street grid
-        StartStreetGenerationFromStreet(new Vector2Int(gridSizeX / 2, gridSizeY / 2)); // Start street generation from the center
+        InitializeStreetPoolDictionary(); // Prepare the dictionary mapping StreetTypes to StreetPools.
+        InitializeStreetGrid(); // Set up the grid data structure for street generation.
+        StartStreetGenerationFromStreet(new Vector2Int(gridSizeX / 2, gridSizeY / 2)); // Begin street generation from the center of the grid.
     }
 
-    // Unity's Update method, called once per frame
+    // Unity's Update method is called once per frame.
     void Update()
     {
+        // If there are streets in the queue and generation is not complete, continue generating streets.
         if (streetQueue.Count > 0 && !generationComplete)
         {
-            TryGenerateStreet(streetQueue.Dequeue()); // Try to generate a street from the queue
+            // Dequeue a street index from the queue and attempt to generate a street there.
+            TryGenerateStreet(streetQueue.Dequeue());
         }
+        // If the street count is below the minimum required and generation is not complete.
         else if (streetCount < minStreets && !generationComplete)
         {
-            RegenerateStreets(); // Regenerate streets if the count is below the minimum
+            // Regenerate the streets to try and meet the minimum street requirement.
+            RegenerateStreets();
         }
+        // If generation is not complete but no more streets are in the queue and the street count meets the minimum.
         else if (!generationComplete)
         {
             generationComplete = true;
-            CleanupExits(); // Cleanup exits after generation is complete
-            LogGenerationResults(); // Log the results of the generation
+            CleanupExits(); // Adjust exits to ensure consistency between connected streets.
+            LogGenerationResults(); // Output generation statistics to the console.
         }
     }
 
-    // Initialize the street pool dictionary
+    // Initialize the dictionary that maps StreetTypes to their corresponding StreetPools.
     private void InitializeStreetPoolDictionary()
     {
         streetPoolDictionary = new Dictionary<StreetType, StreetPool>();
         foreach (var pool in streetPools)
         {
+            // Check if the StreetType is already in the dictionary to avoid duplicates.
             if (!streetPoolDictionary.ContainsKey(pool.streetType))
             {
-                streetPoolDictionary.Add(pool.streetType, pool);
+                streetPoolDictionary.Add(pool.streetType, pool); // Add the StreetPool to the dictionary.
             }
             else
             {
+                // Log a warning if a duplicate StreetType is detected.
                 Debug.LogWarning("Duplicate StreetType detected in StreetPools");
             }
         }
     }
 
-    // Initialize the street grid
+    // Set up the 2D array representing the grid, and initialize each cell with a new StreetData instance.
     private void InitializeStreetGrid()
     {
         streetGrid = new StreetData[gridSizeX, gridSizeY];
@@ -107,73 +126,92 @@ public class StreetManager : MonoBehaviour
         {
             for (int y = 0; y < gridSizeY; y++)
             {
+                // Create a new StreetData object for each grid cell with its grid index.
                 streetGrid[x, y] = new StreetData { gridIndex = new Vector2Int(x, y) };
             }
         }
     }
 
-    // Start street generation from a specific street index
+    // Begin the street generation process starting from the specified grid index.
     private void StartStreetGenerationFromStreet(Vector2Int streetIndex)
     {
+        // Add the starting street index to the queue for processing.
         streetQueue.Enqueue(streetIndex);
+        // Mark the street as enqueued to prevent it from being enqueued again.
         streetGrid[streetIndex.x, streetIndex.y].enqueued = true;
     }
 
-    // Try to generate a street at a specific index
+    // Attempt to generate a street at the specified grid index.
     private void TryGenerateStreet(Vector2Int streetIndex)
     {
         int x = streetIndex.x;
         int y = streetIndex.y;
-
-        // Check if the index is out of bounds
+    
+        // Check if the grid index is within the bounds of the grid.
         if (x < 0 || x >= gridSizeX || y < 0 || y >= gridSizeY) return;
-
+    
         StreetData currentStreet = streetGrid[x, y];
-        if (currentStreet.hasStreet) return; // Return if the street already exists
-
+        if (currentStreet.hasStreet) return; // If a street already exists at this index, do nothing.
+    
+        // Mark this grid cell as having a street.
         currentStreet.hasStreet = true;
+        // List of directions where new streets can potentially be generated.
         List<Vector2Int> availableDirs = new List<Vector2Int>();
 
-        // Check available directions for street generation
+        // Check each possible direction to determine where we can generate new streets.
         foreach (var dir in directions)
         {
             int nx = x + dir.x;
             int ny = y + dir.y;
+            // Skip if neighbor index is out of bounds.
             if (nx < 0 || nx >= gridSizeX || ny < 0 || ny >= gridSizeY) continue;
-
+    
             StreetData neighborStreet = streetGrid[nx, ny];
             if (neighborStreet.hasStreet && neighborStreet.exits.Contains(dirToOppositeExit[dir]))
             {
+                // If the neighboring cell has a street and its exits include the opposite direction,
+                // then we need to add an exit in the current street in this direction to connect them.
                 currentStreet.exits.Add(dirToExit[dir]);
             }
             else if (!neighborStreet.hasStreet)
             {
+                // If the neighboring cell doesn't have a street, it's an available direction to expand into.
                 availableDirs.Add(dir);
             }
         }
 
-        // Determine the number of exits to create
-        int maxExits = Mathf.Min(maxStreets - streetCount, this.maxExits);
+        // Determine the maximum number of exits that can be created from this street.
+        int maxExits = Mathf.Min(maxStreets - streetCount, this.maxExits); // Limit exits by remaining streets to generate and the configured maxExits.
+        // Decide randomly how many exits to create, at least one, up to maxExits, but not exceeding available directions.
         int exitsToCreate = Mathf.Min(Random.Range(1, maxExits + 1), availableDirs.Count);
+        // Randomize the order of available directions to add randomness to street generation.
         ShuffleList(availableDirs);
-
+    
+        // Count how many streets are adjacent to this street already.
         int adjacentStreets = CountAdjacentStreets(streetIndex);
+        // Limit the number of streets we can connect to based on maxStreetsToConnect and existing adjacent streets.
         int maxStreetsToConnect = Mathf.Min(this.maxStreetsToConnect - adjacentStreets, exitsToCreate);
         exitsToCreate = Mathf.Min(exitsToCreate, maxStreetsToConnect);
-
+    
         int exitsCreated = 0;
+        // Loop through available directions and create exits, enqueueing new streets for generation.
         for (int i = 0; i < availableDirs.Count && exitsCreated < exitsToCreate; i++)
         {
             Vector2Int dir = availableDirs[i];
             int nx = x + dir.x;
             int ny = y + dir.y;
+            // Skip if neighbor index is out of bounds.
             if (nx < 0 || nx >= gridSizeX || ny < 0 || ny >= gridSizeY) continue;
-
+    
             StreetData neighborStreet = streetGrid[nx, ny];
+            // Check if we have not exceeded the maximum number of streets to generate.
             if (streetCount + streetQueue.Count < maxStreets)
             {
+                // Add an exit in the current street in this direction.
                 currentStreet.exits.Add(dirToExit[dir]);
+                // Add an exit in the neighboring street in the opposite direction.
                 neighborStreet.exits.Add(dirToOppositeExit[dir]);
+                // If the neighbor has not been enqueued yet, enqueue it for generation.
                 if (!neighborStreet.enqueued)
                 {
                     neighborStreet.enqueued = true;
@@ -183,110 +221,135 @@ public class StreetManager : MonoBehaviour
             }
         }
 
+        // Instantiate the street GameObject in the scene.
         InstantiateStreet(currentStreet, streetIndex); // Instantiate the street
-        streetCount++;
+        streetCount++; // Increment the total street count.
+        // If this is the first street generated, record it.
         if (firstStreetGenerated == null) firstStreetGenerated = currentStreet;
+        // Update the last street generated.
         lastStreetGenerated = currentStreet;
     }
 
-    // Shuffle a list of directions
+    // Randomly shuffle the elements in the list to randomize the order of directions.
     private void ShuffleList(List<Vector2Int> list)
     {
         for (int i = 0; i < list.Count; i++)
         {
             Vector2Int temp = list[i];
-            int randomIndex = Random.Range(i, list.Count);
+            int randomIndex = Random.Range(i, list.Count); // Pick a random index from i to the end of the list.
             list[i] = list[randomIndex];
             list[randomIndex] = temp;
         }
     }
 
-    // Instantiate a street at a specific index
+    // Instantiate a street GameObject at the specified grid index.
     private void InstantiateStreet(StreetData currentStreet, Vector2Int streetIndex)
     {
+        // Determine the StreetType based on the exits of the current street.
         StreetType streetType = GetStreetTypeFromExits(currentStreet.exits);
         if (streetPoolDictionary.TryGetValue(streetType, out StreetPool pool))
         {
+            // Randomly select a prefab from the pool of the determined StreetType.
             GameObject prefabToInstantiate = pool.streetPrefabs[Random.Range(0, pool.streetPrefabs.Length)];
+            // Calculate the world position for this grid index.
             Vector3 position = GetPositionFromGridIndex(streetIndex);
+            // Instantiate the street prefab at the calculated position with no rotation and under this manager's transform.
             GameObject streetInstance = Instantiate(prefabToInstantiate, position, Quaternion.identity, transform);
             
             
-            // Name the street instance based on its index in the grid
+            // Name the street instance based on its index in the grid for easier identification.
             streetInstance.name = $"Street [{streetIndex.x}, {streetIndex.y}]";
+            // Add the instantiated street to the list of street objects.
             streetObjects.Add(streetInstance);
+            // Keep a reference to the street instance in the StreetData.
             currentStreet.streetInstance = streetInstance;
         }
         else
         {
+            // Log a warning if no StreetPool is found for the determined StreetType.
             Debug.LogWarning($"No StreetPool found for StreetType: {streetType}");
         }
     }
 
-    // Cleanup exits after generation is complete
+    // After generation is complete, ensure that exits are consistent between connected streets.
     private void CleanupExits()
     {
         foreach (var streetData in streetGrid)
         {
             if (streetData.hasStreet)
             {
+                // Create a new set to hold exits that are valid (i.e., actually connected to neighboring streets).
                 HashSet<ExitDirection> validExits = new HashSet<ExitDirection>();
                 int x = streetData.gridIndex.x;
                 int y = streetData.gridIndex.y;
-
+    
+                // Check each exit direction to see if it connects to a valid street.
                 foreach (ExitDirection exit in streetData.exits)
                 {
                     Vector2Int dir = exitToDir[exit];
                     int nx = x + dir.x;
                     int ny = y + dir.y;
+                    // Skip if neighbor index is out of bounds.
                     if (nx < 0 || nx >= gridSizeX || ny < 0 || ny >= gridSizeY) continue;
-
+    
                     StreetData neighborStreet = streetGrid[nx, ny];
+                    // If the neighbor has a street and its exits include the opposite direction, the connection is valid.
                     if (neighborStreet.hasStreet && neighborStreet.exits.Contains(dirToOppositeExit[dir]))
                     {
                         validExits.Add(exit);
                     }
                 }
-
+    
+                // Update the exits of the street to include only valid exits.
                 streetData.exits = validExits;
                 UpdateStreetPrefab(streetData); // Update the street prefab to reflect valid exits
             }
         }
     }
 
-    // Update the street prefab based on the exits
+    // Update the street GameObject to match the updated exits after cleanup.
     private void UpdateStreetPrefab(StreetData streetData)
     {
+        // Determine the new StreetType based on the updated exits.
         StreetType streetType = GetStreetTypeFromExits(streetData.exits);
         if (streetData.streetInstance != null)
         {
+            // Destroy the old street instance.
             Destroy(streetData.streetInstance);
+            // Try to get a new prefab from the StreetPool corresponding to the new StreetType.
             if (streetPoolDictionary.TryGetValue(streetType, out StreetPool pool))
             {
+                // Randomly select a prefab from the pool.
                 GameObject prefabToInstantiate = pool.streetPrefabs[Random.Range(0, pool.streetPrefabs.Length)];
+                // Calculate the position in the world for this grid index.
                 Vector3 position = GetPositionFromGridIndex(streetData.gridIndex);
+                // Instantiate the new street prefab.
                 GameObject streetInstance = Instantiate(prefabToInstantiate, position, Quaternion.identity, transform);
                 
-                // Name the street instance based on its index in the grid
+                // Name the street instance based on its index in the grid.
                 streetInstance.name = $"Street [{streetData.gridIndex.x}, {streetData.gridIndex.y}]";
+                // Update the street instance reference in the StreetData.
                 streetData.streetInstance = streetInstance;
             }
             else
             {
+                // Log a warning if no StreetPool is found for the new StreetType.
                 Debug.LogWarning($"No StreetPool found for StreetType: {streetType}");
             }
         }
     }
 
-    // Regenerate all streets
+    // Destroy all generated streets and reset the grid to attempt generation again.
     private void RegenerateStreets()
     {
+        // Destroy all instantiated street GameObjects.
         foreach (var obj in streetObjects)
         {
             Destroy(obj);
         }
-        streetObjects.Clear();
-
+        streetObjects.Clear(); // Clear the list of street objects.
+    
+        // Reset the street grid by creating new StreetData instances.
         for (int x = 0; x < gridSizeX; x++)
         {
             for (int y = 0; y < gridSizeY; y++)
@@ -294,68 +357,76 @@ public class StreetManager : MonoBehaviour
                 streetGrid[x, y] = new StreetData { gridIndex = new Vector2Int(x, y) };
             }
         }
-
-        streetQueue.Clear();
-        streetCount = 0;
-        generationComplete = false;
-
-        StartStreetGenerationFromStreet(new Vector2Int(gridSizeX / 2, gridSizeY / 2)); // Restart generation from the center
+    
+        streetQueue.Clear(); // Clear the street generation queue.
+        streetCount = 0; // Reset the street count.
+        generationComplete = false; // Set generation as not complete.
+    
+        // Restart street generation from the center of the grid.
+        StartStreetGenerationFromStreet(new Vector2Int(gridSizeX / 2, gridSizeY / 2));
     }
 
-    // Get the position in the world from the grid index
+    // Convert a grid index to an isometric world position.
     private Vector3 GetPositionFromGridIndex(Vector2Int gridIndex)
     {
         int gridX = gridIndex.x;
         int gridY = gridIndex.y;
+        // Calculate the isometric X and Y coordinates.
         float isoX = (gridX - gridY) * (streetWidth / 2f);
         float isoY = (gridX + gridY) * (streetHeight / 4f);
         return new Vector3(isoX, isoY, 0);
     }
 
-    // Draw gizmos in the editor for visualization
+    // Draws the grid in the Unity Editor Scene view for visualization purposes.
     private void OnDrawGizmos()
     {
-        Color gizmoColor = new Color(0, 1, 1, 0.05f);
+        Color gizmoColor = new Color(0, 1, 1, 0.05f); // Cyan color with low opacity.
         for (int x = 0; x < gridSizeX; x++)
         {
             for (int y = 0; y < gridSizeY; y++)
             {
                 Gizmos.color = gizmoColor;
+                // Draw a wireframe cube at each grid cell position to represent the grid.
                 Gizmos.DrawWireCube(GetPositionFromGridIndex(new Vector2Int(x, y)), new Vector3(streetWidth, streetHeight, 0));
             }
         }
     }
 
-    // Count the number of adjacent streets
+    // Counts how many streets are adjacent (up, down, left, right) to the specified street index.
     private int CountAdjacentStreets(Vector2Int streetIndex)
     {
         int x = streetIndex.x;
         int y = streetIndex.y;
         int count = 0;
-
+    
+        // Check each direction for neighboring streets.
         foreach (Vector2Int dir in directions)
         {
             int nx = x + dir.x;
             int ny = y + dir.y;
+            // Skip if neighbor index is out of bounds.
             if (nx < 0 || nx >= gridSizeX || ny < 0 || ny >= gridSizeY) continue;
+            // If the neighbor has a street, increment the count.
             if (streetGrid[nx, ny].hasStreet) count++;
         }
-
+    
         return count;
     }
 
-    // Get the street type based on the exits
+    // Determines the StreetType based on the set of exits.
     private StreetType GetStreetTypeFromExits(HashSet<ExitDirection> exits)
     {
         ExitDirection combinedExits = ExitDirection.None;
+        // Combine all exits into a single value using bitwise OR.
         foreach (ExitDirection exit in exits)
         {
             combinedExits |= exit;
         }
+        // Cast the combined exits to a StreetType (assumes StreetType is defined to match combinations of ExitDirection).
         return (StreetType)combinedExits;
     }
 
-    // Log the results of the street generation
+    // Output statistics about the street generation process to the console.
     private void LogGenerationResults()
     {
         Debug.Log($"Generation Complete, {streetCount} streets generated");
@@ -372,10 +443,10 @@ public class StreetManager : MonoBehaviour
     // Class to hold data about each street in the grid
     private class StreetData
     {
-        public Vector2Int gridIndex;
-        public bool hasStreet = false;
-        public bool enqueued = false;
-        public HashSet<ExitDirection> exits = new HashSet<ExitDirection>();
-        public GameObject streetInstance = null;
+        public Vector2Int gridIndex; // The grid coordinates of this street.
+        public bool hasStreet = false; // Whether a street has been generated at this grid location.
+        public bool enqueued = false; // Whether this grid location has been added to the generation queue.
+        public HashSet<ExitDirection> exits = new HashSet<ExitDirection>(); // The exits (directions) this street connects to.
+        public GameObject streetInstance = null; // Reference to the instantiated street GameObject in the scene.
     }
 }
