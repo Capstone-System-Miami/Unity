@@ -12,6 +12,9 @@ namespace SystemMiami
     // so I switched it to inherit from that for consistency.
     public class MapManager : Singleton<MapManager>
     {
+        // Just an enum for the height of the block,
+        // which is distinct from the zIndex
+        public BlockHeight gridTilesHeight;
 
         public OverlayTile overlayTilePrefab;
         public GameObject overlayContainer;
@@ -23,10 +26,9 @@ namespace SystemMiami
             base.Awake(); // Handles the assignement of the static instance
         }
 
-        // Start is called before the first frame update
         void Start()
         {
-            var tileMap = gameObject.GetComponentInChildren<Tilemap>();
+            Tilemap tileMap = gameObject.GetComponentInChildren<Tilemap>();
             map = new Dictionary<Vector2Int, OverlayTile> ();
 
             BoundsInt bounds = tileMap.cellBounds;
@@ -44,15 +46,17 @@ namespace SystemMiami
                 {
                     for (int x = bounds.min.x; x < bounds.max.x; x++)
                     {
-                        var tileLocation = new Vector3Int(x, y, z);
-                        var tileKey = new Vector2Int(x, y);
+                        Vector3Int tileLocation = new Vector3Int(x, y, z);
+                        Vector2Int tileKey = new Vector2Int(x, y);
 
                         if (tileMap.HasTile(tileLocation) && !map.ContainsKey(tileKey))
                         {
-                            var overlayTile = Instantiate(overlayTilePrefab, overlayContainer.transform);
-                            var cellWorldPosition = tileMap.GetCellCenterWorld(tileLocation);
+                            OverlayTile overlayTile = Instantiate(overlayTilePrefab, overlayContainer.transform);
 
-                            overlayTile.transform.position = new Vector3(cellWorldPosition.x, cellWorldPosition.y, cellWorldPosition.z+1);
+                            // Using the function from SystemMiami.Coordinates rather than the built in worldpos tilemap fn
+                            Vector3 cellWorldPosition = Coordinates.IsoToScreen(tileLocation, gridTilesHeight);
+
+                            overlayTile.transform.position = new Vector3(cellWorldPosition.x, cellWorldPosition.y, cellWorldPosition.z);
                             overlayTile.GetComponent<SpriteRenderer>().sortingOrder = tileMap.GetComponent<TilemapRenderer>().sortingOrder;
                             overlayTile.gridLocation = tileLocation;
                             map.Add(tileKey, overlayTile);
@@ -61,7 +65,5 @@ namespace SystemMiami
                 }
             }
         }
-
-
     }
 }
