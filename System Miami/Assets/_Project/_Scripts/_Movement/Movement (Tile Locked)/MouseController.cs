@@ -1,6 +1,7 @@
 // Author: Alec
 using System.Collections.Generic;
 using System.Linq;
+using SystemMiami.Utilities;
 using UnityEngine;
 
 namespace SystemMiami
@@ -13,6 +14,7 @@ namespace SystemMiami
 
         private PathFinder pathFinder;
         private List<OverlayTile> path = new List<OverlayTile>();
+
         private void Start()
         {
             pathFinder = new PathFinder();
@@ -21,6 +23,7 @@ namespace SystemMiami
         // Update is called once per frame
         void LateUpdate()
         {
+            //what tile is mouse on
             var focusedTileHit = GetFocusedOnTile();
 
             if(focusedTileHit.HasValue )
@@ -53,9 +56,9 @@ namespace SystemMiami
 
         private void MoveAlongPath()
         {
-            var step = speed * Time.deltaTime;
+            float step = speed * Time.deltaTime;
 
-            var zIndex = path[0].transform.position.z;
+            float zIndex = path[0].transform.position.z;
             character.transform.position = Vector2.MoveTowards(character.transform.position, path[0].transform.position, step);
             character.transform.position = new Vector3(character.transform.position.x, character.transform.position.y,zIndex);
 
@@ -73,7 +76,6 @@ namespace SystemMiami
 
             RaycastHit2D[] hits = Physics2D.RaycastAll(mousePos2d, Vector2.zero);
 
-
             if(hits.Length > 0)
             {
                 return hits.OrderByDescending(i => i.collider.transform.position.z).First();
@@ -81,7 +83,6 @@ namespace SystemMiami
 
             return null;
         }
-
 
         private void PositionCharacterOnTile(OverlayTile tile)
         {
