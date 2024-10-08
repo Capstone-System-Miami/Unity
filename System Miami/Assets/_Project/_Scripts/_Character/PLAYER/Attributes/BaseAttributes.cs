@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace SystemMiami
 {
-    [CreateAssetMenu(fileName = "Base Attributes", menuName = "Base Attribute Set")]
+    [CreateAssetMenu(fileName = "Base Attributes", menuName = "CharacterInfo/Base Attribute Set")]
     public class BaseAttributes : ScriptableObject
     {
         public int _strength;

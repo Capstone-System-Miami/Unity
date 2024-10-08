@@ -6,7 +6,8 @@ using UnityEngine;
 namespace SystemMiami
 {
     [System.Serializable]
-    public class StatData
+    [CreateAssetMenu(fileName = "StatData", menuName = "CharacterInfo/StatData")]
+    public class StatData : ScriptableObject
     {
         #region VARS
         //===============================
@@ -15,13 +16,13 @@ namespace SystemMiami
         [SerializeField] private float _baseEffect = 2.5f;
         [SerializeField] private float _effectMultiplier = 1.5f;
 
-        [Header("Ability Slots")]
+        [Header("Ability Slots (Physical & Magical)")]
         [SerializeField] private int _minSlots = 1;
         [SerializeField] private int _maxSlots = 6;
         [SerializeField] private int _slotAttributeThreshold = 5;
         [SerializeField] private float _slotMultiplier = 0.25f;
 
-        [Header("Resources")]
+        [Header("Resources (Stamina & Mana)")]
         [SerializeField] private float _resourceMultiplier = 2f;
 
         [Header("Health")]

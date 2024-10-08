@@ -576,7 +576,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -3182858151486929060, guid: ebe556f43bbd2264f81fa3cbe985f2ec, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 1071437797679699061, guid: ebe556f43bbd2264f81fa3cbe985f2ec, type: 3}
@@ -800,17 +801,7 @@ MonoBehaviour:
     _constitution: 0
     _wisdom: 0
     _intelligence: 0
-  _statData:
-    _baseEffect: 2.5
-    _effectMultiplier: 1.5
-    _minSlots: 1
-    _maxSlots: 6
-    _slotAttributeThreshold: 5
-    _slotMultiplier: 0.25
-    _resourceMultiplier: 2
-    _healthMultiplier: 5
-    _healthAttributeThreshold: 10
-    _damageReductionMultiplier: 1
+  _statData: {fileID: 11400000, guid: bba75fed3304a4d408c878a265698e2d, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
