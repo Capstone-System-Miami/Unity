@@ -12,6 +12,9 @@ GameObject:
   - component: {fileID: 6512032109619817124}
   - component: {fileID: -1971288753443991781}
   - component: {fileID: 3834768875493326230}
+  - component: {fileID: 2478072973987692464}
+  - component: {fileID: -7247499472161921991}
+  - component: {fileID: 4210109583925660262}
   m_Layer: 0
   m_Name: character
   m_TagString: Untagged
@@ -113,3 +116,60 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _notes: Can we figure out how to make an enum for setting a "preferredAxis"?  I
     noticed this pathing prefers the X-axis
+--- !u!114 &2478072973987692464
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7719785247104517706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aba5452618b3ff5468ced462f51fc6a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentTile: {x: 0, y: 0}
+  movementRange: 3
+  health: 100
+  attackPower: 10
+--- !u!114 &-7247499472161921991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7719785247104517706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41959000c2420f342946f2c0ff7227c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allUnits:
+  - {fileID: 0}
+--- !u!50 &4210109583925660262
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7719785247104517706}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
