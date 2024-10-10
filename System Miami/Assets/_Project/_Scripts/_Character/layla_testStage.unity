@@ -699,31 +699,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 37dc3c9f202494e4bbe39300506f9300, type: 3}
---- !u!114 &1858700317
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2238967325899441424}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 60820b77439880c478bcedcae6d67758, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _characterClass: 3
-  _baseAttributes:
-  - {fileID: 11400000, guid: 8c9115a04c916e244bfdef36ea488f1f, type: 2}
-  - {fileID: 11400000, guid: d19146937a49e1742ae279b06907ce80, type: 2}
-  - {fileID: 11400000, guid: be5f1655dbf836b46aee7c38fd4ba593, type: 2}
-  - {fileID: 11400000, guid: 732c541b54c5fc2459f00a7a8e56d566, type: 2}
-  _attributes:
-    _strength: 0
-    _dexterity: 0
-    _constitution: 0
-    _wisdom: 0
-    _intelligence: 0
-  _statData: {fileID: 11400000, guid: bba75fed3304a4d408c878a265698e2d, type: 2}
 --- !u!4 &1071437798395792521
 Transform:
   m_ObjectHideFlags: 0
@@ -804,7 +779,8 @@ GameObject:
   - component: {fileID: 2123855808741357016}
   - component: {fileID: 3314423234656686293}
   - component: {fileID: 7664785225604856659}
-  - component: {fileID: 1858700317}
+  - component: {fileID: 7664785225604856661}
+  - component: {fileID: 7664785225604856660}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -860,6 +836,51 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &7664785225604856660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2238967325899441424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdb5f55f25919eb41b36cf6d52d9a859, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _statData: {fileID: 11400000, guid: bba75fed3304a4d408c878a265698e2d, type: 2}
+--- !u!114 &7664785225604856661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2238967325899441424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9966b3c751b0d484a890e49dc32341fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _characterClass: 1
+  _baseAttributes:
+  - {fileID: 11400000, guid: 8c9115a04c916e244bfdef36ea488f1f, type: 2}
+  - {fileID: 11400000, guid: d19146937a49e1742ae279b06907ce80, type: 2}
+  - {fileID: 11400000, guid: be5f1655dbf836b46aee7c38fd4ba593, type: 2}
+  - {fileID: 11400000, guid: 732c541b54c5fc2459f00a7a8e56d566, type: 2}
+  _minValue: 4
+  _maxValue: 10
+  _strength: 0
+  _dexterity: 0
+  _constitution: 0
+  _wisdom: 0
+  _intelligence: 0
+  _showUpgrades: 0
+  upgradeType: 0
+  upgradeAmt: 0
+  trigger_EnterUpgradeMode: 0
+  trigger_LeaveUpgradeMode: 0
+  trigger_AddUpgrade: 0
+  trigger_ConfirmUpgrades: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

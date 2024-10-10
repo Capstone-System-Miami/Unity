@@ -76,7 +76,7 @@ namespace SystemMiami.Utilities
             Vector3Int result;
 
             float xScreen, yScreen;
-            float xIso, yIso, zIso;
+            float xIso, yIso;
 
             xScreen = screenPos.x;
             yScreen = screenPos.y;
@@ -102,14 +102,13 @@ namespace SystemMiami.Utilities
             return zIndex * .25f;
         }
 
-        public static float GetBlockHeight(int zIndex)
-        {
-            return zIndex * .5f;
-        }
-
         public static float GetZIndexOf(float screenHeight)
         {
             return screenHeight * 4;
+        }
+        public static float GetHeightInTiles(int zIndex)
+        {
+            return zIndex * .5f;
         }
     }
 }

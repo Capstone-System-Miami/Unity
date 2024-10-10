@@ -3,38 +3,24 @@ using UnityEngine;
 
 namespace SystemMiami
 {
-    public enum CharacterClassType { FIGHTER, MAGE, ROGUE, TANK };
-
     public class CharacterSheet : MonoBehaviour
     {
         #region VARS
         //===============================
 
         [SerializeField] private CharacterClassType _characterClass;
-        [SerializeField] private BaseAttributes[] _baseAttributes;
+        [SerializeField] private AttributeSet[] _baseAttributes;
 
-        [SerializeField] private AttributeSet _attributes;
+        [SerializeField] private Attributes _attributes;
         [SerializeField] private StatData _statData;
 
-        public AttributeSet Attributes { get { return _attributes; } }
+        public Attributes Attributes { get { return _attributes; } }
 
         //===============================
         #endregion
 
         #region PRIVATE METHODS
         //===============================
-
-        void Awake()
-        {
-            assignAttributes();
-        }
-
-        private void assignAttributes()
-        {
-            BaseAttributes classBaseAttributes = _baseAttributes[(int)_characterClass];
-
-            _attributes = new AttributeSet(classBaseAttributes);
-        }
 
         private void Update()
         {
