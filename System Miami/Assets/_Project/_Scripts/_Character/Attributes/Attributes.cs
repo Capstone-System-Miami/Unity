@@ -1,11 +1,10 @@
 // Author: Layla Hoey
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace SystemMiami
 {
-
-
     public class Attributes : MonoBehaviour
     {
     #region VARS
@@ -13,8 +12,11 @@ namespace SystemMiami
 
         [SerializeField] private CharacterClassType _characterClass;
         [SerializeField] private AttributeSet[] _baseAttributes;
+        [SerializeField] private int _minValue;
+        [SerializeField] private int _maxValue;
 
         // These vars are here mostly to identify values in the inspector
+        [Header("Current (just for visualizing; don't change)")]
         [SerializeField] private int _strength;
         [SerializeField] private int _dexterity;
         [SerializeField] private int _constitution;
@@ -22,31 +24,33 @@ namespace SystemMiami
         [SerializeField] private int _intelligence;
 
 
-        // The array of values used for the actual writing & reading of the attributes.
-        private int[] _current = new int[CharacterEnums.ATTRIBUTE_COUNT];
-        private int[] _preview = new int[CharacterEnums.ATTRIBUTE_COUNT];
-        private int[] _buffer = new int[CharacterEnums.ATTRIBUTE_COUNT];
+        // Our current & confirmed attributes.
+        private Dictionary<AttributeType, int> _current = new Dictionary<AttributeType, int>();
 
-        // A dictionary of upgrades.
-        // This can be manipulated while the player
-        // Decides what to upgrade, then fed into AddToUpgrades()
-        // to confirm their choices.
+        // The upgrades being decided on.
         private Dictionary<AttributeType, int> _upgrades = new Dictionary<AttributeType, int>();
 
+        // A preview of what our new attributes would be if we confirmed the upgrades.
+        private Dictionary<AttributeType, int> _preview = new Dictionary<AttributeType, int>();
+
+        // Buffer for storing the attributes prior to a confirmed upgrade
+        private Dictionary<AttributeType, int> _buffer = new Dictionary<AttributeType, int>();
+
         // TODO: deserialize after testing
-        [SerializeField] private bool _isShowingUpgrades;
+        [SerializeField, Space(10)] private bool _upgradeMode;
 
         [Header("Testing/Driver")]
-        public AttributeType upgradeType;
-        public int upgradeValue;
-        public bool showUpgrades;
         [Space(5)]
+        public AttributeType upgradeType;
+        public int upgradeAmt;
+        [Space(5)]
+        public bool trigger_EnterUpgradeMode;
+        public bool trigger_LeaveUpgradeMode;
         public bool trigger_AddUpgrade;
         public bool trigger_ConfirmUpgrades;
-        public bool trigger_CancelUpgrades;
 
     //===============================
-    #endregion
+    #endregion // ^vars^
 
     #region PRIVATE METHODS
     //===============================
@@ -57,28 +61,13 @@ namespace SystemMiami
             initializeWith(classBaseAttributes);
         }
 
-        private void Update()
-        {
-            if (trigger_ConfirmUpgrades)
-            {
-                trigger_AddUpgrade = false;
-                trigger_ConfirmUpgrades = false;
-                ConfirmUpgrades();
-            }
-            
-            if (trigger_AddUpgrade)
-            {
-                trigger_AddUpgrade = false;
-                trigger_ConfirmUpgrades = false;
-                AddToUpgrades(upgradeType, upgradeValue);
-            }
-
-            trigger_AddUpgrade = false;
-            trigger_ConfirmUpgrades = false;
-        }
-
         private void initializeWith(AttributeSet baseAttributes)
         {
+            _current = getNewDict();
+            _upgrades = getNewDict();
+            _preview = getNewDict();
+            _buffer = getNewDict();
+
             _strength = baseAttributes._strength;
             _dexterity = baseAttributes._dexterity;
             _constitution = baseAttributes._constitution;
@@ -89,52 +78,104 @@ namespace SystemMiami
         }
 
         /// <summary>
-        /// Updates the vals array to reflect the values of each attribute var. "reverse" updates the vars to reflect the array.
+        /// Returns a dictionary with all attributes initialized to zero
         /// </summary>
-        private void updateVals(bool reverse)
+        private Dictionary<AttributeType, int> getNewDict()
         {
-            if (!reverse)
-            {
-                _current[(int)AttributeType.STRENGTH] = _strength;
-                _current[(int)AttributeType.DEXTERITY] = _dexterity;
-                _current[(int)AttributeType.CONSTITUTION] = _constitution;
-                _current[(int)AttributeType.WISDOM] = _wisdom;
-                _current[(int)AttributeType.INTELLIGENCE] = _intelligence;
-            }
-            else
-            {
-                _strength = _current[(int)AttributeType.STRENGTH] ;
-                _dexterity = _current[(int)AttributeType.DEXTERITY];
-                _constitution = _current[(int)AttributeType.CONSTITUTION];
-                _wisdom = _current[(int)AttributeType.WISDOM];
-                _intelligence = _current[(int)AttributeType.INTELLIGENCE];
-            }
-        }
+            Dictionary<AttributeType, int> result = new Dictionary<AttributeType, int>();
 
-        /// <summary>
-        /// Returns a modified verision of out current attributes,
-        /// with the stored upgrades added.
-        /// </summary>
-        private int[] getUpgradesPreview()
-        {
-            int[] result = new int[CharacterEnums.ATTRIBUTE_COUNT];
-
-            for (int i = 0; i < result.Length; i++)
+            foreach (int enumVal in Enum.GetValues(typeof(StatType)))
             {
-                result[i] = _current[i];
-            }
-
-            // Add the stored upgrates to the appropriate attributes
-            foreach (AttributeType attr in _upgrades.Keys)
-            {
-                result[(int)attr] += _upgrades[attr];
+                result[(AttributeType)enumVal] = 0;
             }
 
             return result;
         }
 
+        private void Update()
+        {
+            updatePreview();
+
+            if (trigger_EnterUpgradeMode)
+            {
+                _upgradeMode = true;    
+            }
+
+            if (trigger_LeaveUpgradeMode)
+            {
+                _upgradeMode = false;
+                CancelUpgrades();
+            }
+
+            if (_upgradeMode)
+            {
+                if (trigger_ConfirmUpgrades)
+                {
+                    ConfirmUpgrades();
+                }
+                
+                if (trigger_AddUpgrade)
+                {
+                    AddToUpgrades(upgradeType, upgradeAmt);
+                }
+            }
+
+            resetTriggers();
+        }
+
+        /// <summary>
+        /// Resets the testing triggers
+        /// </summary>
+        private void resetTriggers()
+        {
+            trigger_EnterUpgradeMode = false;
+            trigger_LeaveUpgradeMode = false;
+            trigger_AddUpgrade = false;
+            trigger_ConfirmUpgrades = false;
+        }
+
+
+        /// <summary>
+        /// THIS SHOULD BE CHANGED AFTER WE HAVE A FUNCTIONAL UI PANEL
+        /// Updates current attributes to reflect the values of
+        /// each attribute var in the inspector.
+        /// "reverse" updates the vars to reflect the array.
+        /// </summary>
+        private void updateVals(bool reverse)
+        {
+            if (!reverse)
+            {
+                _current[AttributeType.STRENGTH]        = _strength;
+                _current[AttributeType.DEXTERITY]       = _dexterity;
+                _current[AttributeType.CONSTITUTION]    = _constitution;
+                _current[AttributeType.WISDOM]          = _wisdom;
+                _current[AttributeType.INTELLIGENCE]    = _intelligence;
+            }
+            else
+            {
+                _strength       = _current[AttributeType.STRENGTH] ;
+                _dexterity      = _current[AttributeType.DEXTERITY];
+                _constitution   = _current[AttributeType.CONSTITUTION];
+                _wisdom         = _current[AttributeType.WISDOM];
+                _intelligence   = _current[AttributeType.INTELLIGENCE];
+            }
+        }
+
+        /// <summary>
+        /// Updates _preview to the current attributes + the stored upgrades.
+        /// Should be called in Update()
+        /// </summary>
+        private void updatePreview()
+        {
+            // Preview should be our current stored attributes plus stored upgrades
+            foreach (AttributeType attr in _current.Keys)
+            {
+                _preview[attr] = _current[attr] + _upgrades[attr];
+            }
+        }
+
     //===============================
-    #endregion
+    #endregion // ^private^
 
     #region PUBLIC METHODS
     //===============================
@@ -144,34 +185,29 @@ namespace SystemMiami
         /// </summary>
         public int GetAttribute(AttributeType type)
         {
-            if (!_isShowingUpgrades)
-            {
-                //print ($"no show{type}  {_current[(int)type]}");
-                return _current[(int)type];
-            }
-            else
-            {
-                return getUpgradesPreview()[(int)type];
-            }
+            // In case something asks for this while it's still being initialized
+            if (_current.Keys.Count == 0) { return 0; }
+
+            return _upgradeMode ? _preview[type] : _current[type];
         }
 
         /// <summary>
-        /// Adds a number of upgrades to an attribute in the
+        /// Adds an amount of points to an attribute in the
         /// stored _upgrades dict
         /// </summary>
         public void AddToUpgrades(AttributeType type, int amount)
         {
-            print ($"add to upgr being called");
-            if (!_upgrades.ContainsKey(type))
+            // If the upgrade we're trying to add would bring us
+            // under the min or over the max
+            if (_preview[type] + amount < _minValue || _preview[type] > _maxValue)
             {
-                print ("no key");
-                _upgrades.Add(type, amount);
+                // TODO: send this to UI.
+                // Could also refactor to be bool TryAddToUpgrades(...)
+                // and handle the validation from whatever calls this fn.
+                print ($"Invalid Selection");
             }
-            else
-            {
-                print ("key");
-                _upgrades[type] += amount;
-            }
+
+            _upgrades[type] += amount;            
         }
 
 
@@ -184,13 +220,10 @@ namespace SystemMiami
             // in a buffer before we change them.
             _buffer = _current;
 
-            foreach (AttributeType attribute in _upgrades.Keys)
-            {
-                _current[(int)attribute] += _upgrades[attribute];
-            }
+            _current = _preview;
 
-            // Clear the upgrades dict
-            _upgrades.Clear();
+            // Clear the upgrades
+            _upgrades = getNewDict();
 
             // Update the inspector vals
             updateVals(true);
@@ -198,11 +231,10 @@ namespace SystemMiami
 
         public void CancelUpgrades()
         {
-            _isShowingUpgrades = false;
-            _upgrades.Clear();
+            _upgrades = getNewDict();
         }
 
-        //===============================
-        #endregion
+    //===============================
+    #endregion // ^public^
     }
 }

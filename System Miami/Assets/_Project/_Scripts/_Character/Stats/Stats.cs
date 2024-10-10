@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SystemMiami
@@ -10,42 +11,31 @@ namespace SystemMiami
 
         [SerializeField] private StatData _statData;
 
-        // Mostly here to identify values in the inspector
-        [Header("Physical")]
-        [SerializeField] private float _physicalPower;
-        [SerializeField] private float _physicalSlots;
-        [SerializeField] private float _stamina;
-
-        [Header("Magical")]
-        [SerializeField] private float _magicalPower;
-        [SerializeField] private float _magicalSlots;
-        [SerializeField] private float _mana;
-
-        [Header("Other")]
-        [SerializeField] private float _health;
-        [SerializeField] private float _damageReduction;
-
         private Attributes _attributes;
 
-        // The array of values used for the actual writing & reading of the stats.
-        private float[] _current = new float[CharacterEnums.STATS_COUNT];
+        // The Dictionary of values used for the actual writing & reading of the stats.
+        private Dictionary<StatType, float> _currentStats = new Dictionary<StatType, float>();
 
-        //===============================
-        #endregion
+    //===============================
+    #endregion // ^vars^
 
-        #region PRIVATE METHODS
-        //===============================
+    #region PRIVATE METHODS
+    //===============================
 
         private void Awake()
         {
             _attributes = GetComponent<Attributes>();
+        }
+
+        private void Start()
+        {
             setAll();
         }
 
         private void Update()
         {
             setAll();
-            //print(getStatsReport());
+            print(getStatsReport());
         }
 
         private void setAll()
@@ -60,33 +50,17 @@ namespace SystemMiami
             
             setMaxHealth(_attributes.GetAttribute(AttributeType.CONSTITUTION));
             setDamageReduction(_attributes.GetAttribute(AttributeType.CONSTITUTION));
-
-            updateVals();
         }
 
-        private void updateVals()
-        {
-            _current[(int)StatType.PHYSICAL_PWR]        = _physicalPower;
-            _current[(int)StatType.PHYSICAL_SLOTS]      = _physicalSlots;
-            _current[(int)StatType.STAMINA]             = _stamina;
-
-            _current[(int)StatType.MAGICAL_PWR]         = _magicalPower;
-            _current[(int)StatType.MAGICAL_SLOTS]       = _magicalSlots;
-            _current[(int)StatType.MANA]                = _mana;
-
-            _current[(int)StatType.MAX_HEALTH]          = _health; 
-            _current[(int)StatType.DMG_RDX]             = _damageReduction;
-        }
-
-        #region SETTERS/FORMULAS
+    #region SETTERS/FORMULAS
         private void setPhysicalPower(int strength)
         {
-            _physicalPower = strength * _statData.EffectMultiplier;
+            _currentStats[StatType.PHYSICAL_PWR] = strength * _statData.EffectMultiplier;
         }
 
         private void setMagicalPower(int wisdom)
         {
-            _magicalPower = wisdom * _statData.EffectMultiplier;
+            _currentStats[StatType.MAGICAL_PWR] = wisdom * _statData.EffectMultiplier;
         }
 
         private void setPhysicalSlots(int strength)
@@ -106,7 +80,7 @@ namespace SystemMiami
                 result = minSlots;
             }
 
-            _physicalSlots = result;
+            _currentStats[StatType.PHYSICAL_SLOTS] = result;
         }
 
         private void setMagicalSlots(int wisdom)
@@ -126,54 +100,54 @@ namespace SystemMiami
                 result = minSlots;
             }
 
-            _magicalSlots = result;
+            _currentStats[StatType.MAGICAL_SLOTS] = result;
         }
 
         private void setStamina(int dexterity)
         {
-            _stamina = dexterity * _statData.ResourceMultiplier;
+            _currentStats[StatType.STAMINA] = dexterity * _statData.ResourceMultiplier;
         }
 
         private void setMana(int intelligence)
         {
-            _mana = intelligence * _statData.ResourceMultiplier;
+            _currentStats[StatType.MANA] = intelligence * _statData.ResourceMultiplier;
         }
 
         private void setMaxHealth(int constitution)
         {
-            _health = constitution * _statData.HealthMultiplier;
+            _currentStats[StatType.MAX_HEALTH] = constitution * _statData.HealthMultiplier;
         }
 
         private void setDamageReduction(int constitution)
         {
-            _damageReduction = constitution * _statData.DamageRdxMultiplier;
+            _currentStats[StatType.DMG_RDX] = constitution * _statData.DamageRdxMultiplier;
         }
-        #endregion
+    #endregion // ^setters^
 
         private string getStatsReport()
         {
             string result = "";
 
-            for (int i = 0; i < CharacterEnums.STATS_COUNT; i++)
+            foreach(StatType stat in _currentStats.Keys)
             {
-                result += $"{CharacterEnums.STATS_NAMES[i]}:  {_current[i]}\n";
+                result += $"{stat}: {_currentStats[stat]}\n";
             }
 
             return result;
         }
 
     //===============================
-    #endregion
+    #endregion // ^private^
 
     #region PUBLIC METHODS
     //===============================
 
         public float GetStat(StatType type)
         {
-            return _current[(int)type];
+            return _currentStats[type];
         }
 
     //===============================
-    #endregion
+    #endregion // ^public^
     }
 }
