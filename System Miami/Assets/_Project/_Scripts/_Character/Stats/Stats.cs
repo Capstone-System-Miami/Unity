@@ -1,3 +1,4 @@
+// Authors: Layla Hoey
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -121,6 +122,11 @@ namespace SystemMiami
         private void setDamageReduction(int constitution)
         {
             _currentStats[StatType.DMG_RDX] = constitution * _statData.DamageRdxMultiplier;
+        }
+
+        private void setSpeed(int dexterity)
+        {
+            _currentStats[StatType.SPEED] = dexterity;
         }
     #endregion // ^setters^
 

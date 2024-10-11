@@ -84,14 +84,14 @@ namespace CombatSystem
         // Expanded Player Turn Logic
         private void PlayerTurn(Hero hero)
         {
-            // Display UI showing available actions like Move, Attack, End Turn
+            // Display UI showing available actions like Move, Damage, End Turn
             if (hero.actionPoints > 0)
             {
                 // Movement phase
                 if (Input.GetMouseButtonDown(0)) // Assuming left-click for selecting a tile
                 {
                     Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                    Vector2 clickedTile = WorldToGrid(mousePosition); // Convert mouse click to grid position
+                    Vector2 clickedTile = WorldToGrid(mousePosition); // Convert mouse click to grid _gridPosition
 
                     if (IsTileValidForMovement(clickedTile, hero))  // Check if tile is within movement range
                     {
@@ -101,7 +101,7 @@ namespace CombatSystem
                     }
                 }
 
-                // Attack phase
+                // Damage phase
                 if (Input.GetMouseButtonDown(1)) // Assuming right-click for attack
                 {
                     Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -132,7 +132,7 @@ namespace CombatSystem
         {
             Vector3 worldPosition = GridToWorld((int)targetTile.x, (int)targetTile.y);  // Cast to int
             StartCoroutine(MoveOverTime(hero, worldPosition)); // Coroutine for smooth movement
-            hero.currentTile = targetTile;  // Update the hero's grid position
+            hero.currentTile = targetTile;  // Update the hero's grid _gridPosition
         }
 
         private IEnumerator MoveOverTime(Hero hero, Vector3 targetPosition)
@@ -145,7 +145,7 @@ namespace CombatSystem
             }
         }
 
-        // Attack Logic
+        // Damage Logic
         private bool IsWithinAttackRange(Hero attacker, Hero target)
         {
             int distance = CalculateDistance(attacker.currentTile, target.currentTile);
@@ -224,7 +224,7 @@ namespace CombatSystem
             return true; // For now, assume all tiles are walkable
         }
 
-        // Trigger Attack Animation (Placeholder)
+        // Trigger Damage Animation (Placeholder)
         private void TriggerAttackAnimation(Hero attacker, Hero target)
         {
             // Play attack animation here

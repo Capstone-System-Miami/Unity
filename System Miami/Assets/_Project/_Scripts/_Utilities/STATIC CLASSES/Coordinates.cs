@@ -26,8 +26,8 @@ namespace SystemMiami.Utilities
         }
 
         /// <summary>
-        /// Takes an isometric tile position,
-        /// and returns the position of the
+        /// Takes an isometric tile _gridPosition,
+        /// and returns the _gridPosition of the
         /// tile origin in screen space.
         /// </summary>
         public static Vector3 IsoToScreen(Vector3Int cellPosition)
@@ -51,11 +51,11 @@ namespace SystemMiami.Utilities
         }
 
         /// <summary>
-        /// Takes an isometric tile position,
-        /// and returns the position of the
+        /// Takes an isometric tile _gridPosition,
+        /// and returns the _gridPosition of the
         /// tile origin in screen space.
         /// This variant takes block height into account,
-        /// returning the position of the frontmost corner of the block.
+        /// returning the _gridPosition of the frontmost corner of the block.
         /// </summary>
         public static Vector3 IsoToScreen(Vector3Int cellPosition, BlockHeight height)
         {
@@ -68,8 +68,8 @@ namespace SystemMiami.Utilities
         }
 
         /// <summary>
-        /// Takes a Vector3 screen position (which should have a z of zero),
-        /// and the zIndex of the tile and returns the isometric tile position.
+        /// Takes a Vector3 screen _gridPosition (which should have a z of zero),
+        /// and the zIndex of the tile and returns the isometric tile _gridPosition.
         /// zIndex must be known for this to function as expected.
         public static Vector3Int ScreenToIso(Vector3 screenPos, int zIndex)
         {
@@ -83,8 +83,8 @@ namespace SystemMiami.Utilities
             
             xIso = xScreen + (yScreen * 2);
 
-            // In order to find the correct y position in isometric space,
-            // we need to remove however much of the screen y position is the
+            // In order to find the correct y _gridPosition in isometric space,
+            // we need to remove however much of the screen y _gridPosition is the
             // result of simulated height
             yIso = ((yScreen * 2) - xScreen) - GetScreenHeightOf(zIndex);
 

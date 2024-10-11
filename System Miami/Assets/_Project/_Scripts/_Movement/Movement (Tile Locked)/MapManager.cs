@@ -42,7 +42,7 @@ namespace SystemMiami
 
             // Looping through all of our tiles.
             // For each tile found in the tilemap, it instantiates an overlay tile
-            // at the world position (Calculated by static class Coordinates).
+            // at the world _gridPosition (Calculated by static class Coordinates).
             // Stores the overlay tile in a dictionary letting us access each tile by its x and y.
             for (int z = bounds.max.z; z >= bounds.min.z; z--)
             {

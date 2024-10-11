@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Hero : MonoBehaviour
 {
-    [SerializeField] private Vector2 currentTile; // The unit's current tile position on the grid
+    [SerializeField] private Vector2 currentTile; // The unit's current tile _gridPosition on the grid
     [SerializeField] private int movementRange = 3; // The maximum distance the unit can move
     [SerializeField] private int health = 100; // Hero's health
     [SerializeField] private int attackPower = 10; // Hero's attack power (now used)
