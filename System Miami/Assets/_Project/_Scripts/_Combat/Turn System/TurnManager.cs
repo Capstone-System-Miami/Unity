@@ -1,4 +1,5 @@
 ﻿//Author: Johnny
+// Old script do not use, keeping it in the studio just in case we use it in the future
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,11 +11,13 @@ namespace CombatSystem
         public List<Hero> allHeros;  // All player and enemy Heros
         private int currentHeroIndex = 0;
         private Hero playerHero;  // Reference to the player Hero with Rigidbody2D
-
         private void Start()
         {
-            FindPlayerWithRigidbody(); // Find the player with Rigidbody2D at the start
+            allHeros = new List<Hero>(FindObjectsOfType<Hero>()); // Automatically finds all Hero objects in the scene
+            FindPlayerWithRigidbody();    // Find the player with Rigidbody2D at the start
         }
+
+
 
         private void Update()
         {

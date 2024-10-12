@@ -1,4 +1,5 @@
 //Author: Johnny
+// Old script do not use, keeping it in the studio just in case we use it in the future
 using UnityEngine;
 
 public class Hero : MonoBehaviour
