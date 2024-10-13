@@ -7,8 +7,8 @@ namespace SystemMiami
     [RequireComponent(typeof(Attributes))]
     public class Stats : MonoBehaviour
     {
-    #region VARS
-    //===============================
+        #region VARS
+        //===============================
 
         [SerializeField] private StatData _statData;
 
@@ -17,11 +17,11 @@ namespace SystemMiami
         // The Dictionary of values used for the actual writing & reading of the stats.
         private Dictionary<StatType, float> _currentStats = new Dictionary<StatType, float>();
 
-    //===============================
-    #endregion // ^vars^
+        //===============================
+        #endregion // ^vars^
 
-    #region PRIVATE METHODS
-    //===============================
+        #region PRIVATE METHODS
+        //===============================
 
         private void Awake()
         {
@@ -30,7 +30,6 @@ namespace SystemMiami
 
         private void Start()
         {
-            setAll();
         }
 
         private void Update()
@@ -128,7 +127,7 @@ namespace SystemMiami
         {
             _currentStats[StatType.SPEED] = dexterity;
         }
-    #endregion // ^setters^
+        #endregion // ^setters^
 
         private string getStatsReport()
         {
@@ -142,18 +141,18 @@ namespace SystemMiami
             return result;
         }
 
-    //===============================
-    #endregion // ^private^
+        //===============================
+        #endregion // ^private^
 
-    #region PUBLIC METHODS
-    //===============================
+        #region PUBLIC METHODS
+        //===============================
 
         public float GetStat(StatType type)
         {
             return _currentStats[type];
         }
 
-    //===============================
-    #endregion // ^public^
+        //===============================
+        #endregion // ^public^
     }
 }

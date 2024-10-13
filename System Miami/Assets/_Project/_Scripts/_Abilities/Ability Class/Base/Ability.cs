@@ -1,15 +1,13 @@
 // Authors: Layla Hoey
-using UnityEngine;
 using SystemMiami.CombatSystem;
+using UnityEngine;
 
 namespace SystemMiami.AbilitySystem
 {
     // TODO
-    // Mostly incomplete and chaotic, and
-    // definitely not functional.
+    // Incomplete, chaotic, and partially tested
     // Depends on the creation & refactoring of other scripts.
     // Somehow need to implement a melee vs projectile system?
-    [CreateAssetMenu(fileName = "New Ability", menuName = "Ability")]
     public abstract class Ability : ScriptableObject
     {
         [Header("Basic Info")]
@@ -23,24 +21,19 @@ namespace SystemMiami.AbilitySystem
         [SerializeField] private TargetType _targetType;
         [SerializeField] private TargetingPattern _targetingPattern;
 
+        public TargetingPattern Pattern { get { return _targetingPattern; } }
+
         protected AbilityType _type;
         protected ResourceType _requiredResource;
 
-        public void AquireTargets()
+        public void UseOn(GameObject[] targets)
         {
-            // TODO
-        }
-
-        public void Preview()
-        {
-            // TODO
-        }
-
-        public void UseOn(Combatant[] targets)
-        {
-            foreach (CombatAction action in _actions)
+            foreach (GameObject target in targets)
             {
-                action.PerformOn(targets);
+                foreach (CombatAction action in _actions)
+                {
+                    action.PerformOn(target);
+                }
             }
         }
     }

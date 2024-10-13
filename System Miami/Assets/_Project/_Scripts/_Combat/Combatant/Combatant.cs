@@ -5,8 +5,11 @@ using UnityEngine;
 namespace SystemMiami.CombatSystem
 {
     [RequireComponent(typeof(Stats))]
-    public class Combatant : MonoBehaviour, IHealth
+    public class Combatant : MonoBehaviour, ITargetable, IDamageable, IHealable
     {
+        public Vector2Int fakePlayerPos;
+        public Vector2Int fakePlayerForward;
+
         private Stats _stats;
 
         private Resource _health;
@@ -56,8 +59,8 @@ namespace SystemMiami.CombatSystem
             {
                 print($"{name} got pushed {distance} tiles.\n");
 
-                // TODO: Attach & implement IMoveable to the character's tile movement controller.
-                IMoveable controller = GetComponent<IMoveable>();
+                // TODO: Attach & implement IMovable to the character's tile movement controller.
+                IMovable controller = GetComponent<IMovable>();
 
                 Vector2Int checkPos = (distance * directionVector) + controller.GetTilePos2D();
 
@@ -73,5 +76,25 @@ namespace SystemMiami.CombatSystem
                 print($"{name} is sturdy");
             }
         }
+
+        public void Target()
+        {
+            print($"{name} is being targeted");
+        }
+
+        public void UnTarget()
+        {
+            print($"{name} is not longer targeted");
+        }
+        public GameObject GameObject()
+        {
+            return gameObject;
+        }
+
+        public void Damage(float amount)
+        {
+            print($"{name} took {amount} damage");
+        }
+
     }
 }

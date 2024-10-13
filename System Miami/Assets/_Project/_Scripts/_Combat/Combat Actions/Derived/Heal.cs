@@ -1,4 +1,5 @@
 // Authors: Layla Hoey
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem
@@ -9,11 +10,11 @@ namespace SystemMiami.CombatSystem
     {
         [SerializeField] private float _amount;
 
-        public override void PerformOn(Combatant[] targets)
+        public override void PerformOn(GameObject target)
         {
-            foreach (Combatant target in targets)
+            if (target.TryGetComponent(out IHealable healable))
             {
-                target?.Heal(_amount);
+                healable.Heal(_amount);
             }
         }
     }
