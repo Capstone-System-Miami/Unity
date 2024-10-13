@@ -23,22 +23,30 @@ namespace SystemMiami.CombatSystem
             // if the player is facing the same way as the board.
             Adjacent = DirectionHelper.BoardDirections;
 
+            // TODO
+            // Right now, this doesn't work for diagonal directions.           
             if (info.Direction == DirectionHelper.BoardDirections[TileDir.MIDDLE_L])
             {
-                rotateLeft();
+                // If player's Direction is BoardDirections' Left,
+                // Rotate each position to the left
+                rotate90Left();
             }
             else if (info.Direction == DirectionHelper.BoardDirections[TileDir.MIDDLE_R])
             {
-                rotateRight();
+                // If player's Direction is BoardDirections' Right,
+                // Rotate each position to the right
+                rotate90Right();
             }
             else if (info.Direction == DirectionHelper.BoardDirections[TileDir.BACKWARD_C])
             {
+                // If player's Direction is BoardDirections' Backwards,
+                // Rotate each position by 180
                 rotate180();
             }
         }
 
         // Private
-        private void rotateRight()
+        private void rotate90Right()
         {
             foreach (TileDir direction in Adjacent.Keys)
             {
@@ -47,7 +55,7 @@ namespace SystemMiami.CombatSystem
             }
         }
 
-        private void rotateLeft()
+        private void rotate90Left()
         {
             foreach (TileDir direction in Adjacent.Keys)
             {

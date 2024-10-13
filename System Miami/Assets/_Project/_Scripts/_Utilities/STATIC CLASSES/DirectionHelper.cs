@@ -7,7 +7,7 @@ namespace SystemMiami.Utilities
 {
     public static class DirectionHelper
     {
-        // An unchanging dict of direction vectors for world space
+        // An unchanging dict of difference vectors for world space
         public static readonly Dictionary<TileDir, Vector2Int> BoardDirections =
             new Dictionary<TileDir, Vector2Int>()
             {
@@ -24,22 +24,39 @@ namespace SystemMiami.Utilities
 
         /// <summary>
         /// Takes two positions, origin and forward, 
-        /// and returns a direction vector (only 0s or signed 1s).
+        /// and returns a difference vector (only 0s or signed 1s).
         /// </summary>
         public static Vector2Int GetDirection(Vector2Int origin, Vector2Int forward)
         {
             int x = 0;
             int y = 0;
 
-            Vector2Int direction = forward - origin;
+            // In these examples, the origin object is
+            // "Looking at" the same position at (-8, 2)
+            // ex1. origin = (0, 0), forward = (-8, 2)
+            // ex2. origin = (-4, 5), forward = (-8, 2)
 
-            // If either value in direction is not zero, divide it by
-            // the absolute value of itself to make it 1 or -1.
-            // i.e. Say direction.x is -8.
-            // Set x to (-8 / 8). So (x = -1)
-            x = direction.x == 0 ? 0 : (direction.x / Mathf.Abs(direction.x));
-            y = direction.y == 0 ? 0 : (direction.y / Mathf.Abs(direction.y));
+            // Convert ints to floats and get the difference.
+                // ex1. difference = (-8.0, 2.0)
+                // ex2. difference = (-4.0, -3.0)
+            Vector2 difference = forward - origin;
 
+            // Force a magnitude of 1.
+                // ex1. difference = (-1.0, 0.25)
+                // ex2. difference = (-1.0, -0.75)
+            difference.Normalize();
+
+            // Round both values to int
+                // ex1. x = -1, y = 0
+                // ex2. x = -1, y = -1
+            x = Mathf.RoundToInt(difference.x);
+            y = Mathf.RoundToInt(difference.y);
+
+            // Return the direction vector.
+                // ex1. Returns (-1, 0), a vector
+                // equivalent to BoardDirections[MIDDLE_L]
+                // ex2. Returns (-1, -1), a vector
+                // euqivalent to BoardDirections[BACKWARD_L]
             return new Vector2Int(x, y);
         }
     }
@@ -47,7 +64,7 @@ namespace SystemMiami.Utilities
     #region STRUCTS
     /// <summary>
     /// A struct containing 3 Vector2Ints.
-    /// On construction, it stores a direction Vector based
+    /// On construction, it stores a difference Vector based
     /// on the position and forward given.
     /// </summary>
     public struct DirectionalInfo
@@ -59,7 +76,7 @@ namespace SystemMiami.Utilities
         // we consider to be "forward" from myPos.
         public Vector2Int Forward { get; private set; }
 
-        // The direction the object is facing
+        // The difference the object is facing
         public Vector2Int Direction { get; private set; }
 
         public DirectionalInfo(Vector2Int position, Vector2Int forward)
