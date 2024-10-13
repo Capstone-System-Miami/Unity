@@ -69,5 +69,9 @@ namespace SystemMiami
                 }
             }
         }
+
+        public Vector3 IsoToScreen(Vector3Int tileLocation){
+            return Coordinates.IsoToScreen(tileLocation, gridTilesHeight);
+        }
     }
 }

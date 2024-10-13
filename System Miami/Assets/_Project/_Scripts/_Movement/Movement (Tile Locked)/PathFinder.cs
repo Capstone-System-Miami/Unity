@@ -39,7 +39,7 @@ namespace SystemMiami
                 var neighbourTiles = GetNeighbourTiles(currentOverlayTile);
 
                 //loop through eac
-                foreach (var neighbour in neighbourTiles) 
+                foreach (var neighbour in neighbourTiles)
                 {
                     //skip any tiles already explored or tiles that have different z-axis, (can be edited to include tiles with blocked tag)
                     if(neighbour.isBlocked || closedList.Contains(neighbour)|| Mathf.Abs(currentOverlayTile.gridLocation.z - neighbour.gridLocation.z) > 1)
@@ -65,7 +65,7 @@ namespace SystemMiami
             //if there is no path return empty list
             return new List<OverlayTile>();
 
-            
+
         }
 
         //reconstructs path by backtracking from end to start
@@ -82,10 +82,10 @@ namespace SystemMiami
             }
             finishedList.Reverse();
 
+            DrawArrows.Instance.DrawPath(finishedList);
+
             return finishedList;
-
-
-        }
+         }
 
         private int GetManhattenDistance(OverlayTile start, OverlayTile neighbour)
         {
