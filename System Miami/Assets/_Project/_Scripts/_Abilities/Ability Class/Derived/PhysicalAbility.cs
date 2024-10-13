@@ -1,8 +1,9 @@
+// Authors: Layla Hoey
 using UnityEngine;
 
 namespace SystemMiami.AbilitySystem
 {
-    [CreateAssetMenu(fileName = "New Physical Ability", menuName = "Ability/Physical")]
+    [CreateAssetMenu(fileName = "New Physical Ability", menuName = "Abilities/Ability/Physical")]
     public class PhysicalAbility : Ability
     {
         private void Awake()

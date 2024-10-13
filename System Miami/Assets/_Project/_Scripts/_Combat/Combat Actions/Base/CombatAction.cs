@@ -1,6 +1,7 @@
 // Authors: Layla Hoey
 using SystemMiami.AbilitySystem;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace SystemMiami.CombatSystem
 {
@@ -10,6 +11,6 @@ namespace SystemMiami.CombatSystem
         [SerializeField] private bool _affectsSelf;
         [SerializeField] private bool _affectsOpponents;
 
-        public abstract void PerformOn(Combatant[] targets);
+        public abstract void PerformOn(GameObject target);
     }
 }

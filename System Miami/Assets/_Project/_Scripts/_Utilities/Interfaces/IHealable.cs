@@ -2,10 +2,9 @@ using UnityEngine;
 
 namespace SystemMiami
 {
-    public interface IHealth
+    public interface IHealable
     {
         void Heal();
         void Heal(float amount);
-        void TakeDamage(float amount);
     }
 }

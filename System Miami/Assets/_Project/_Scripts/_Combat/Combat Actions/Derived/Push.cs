@@ -1,4 +1,5 @@
 // Authors: Layla Hoey
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem
@@ -13,15 +14,15 @@ namespace SystemMiami.CombatSystem
         // In reference to attacker or reciever though, idk.
         [SerializeField] private Vector2Int _direction;
 
-        public override void PerformOn(Combatant[] targets)
+        public override void PerformOn(GameObject target)
         {
             // TODO
             // Somehow calculate this?
             Vector2Int directionVec = Vector2Int.zero;
 
-            foreach (Combatant target in targets)
+            if (target.TryGetComponent(out IMovable movable))
             {
-                target.GetPushed(_distance, directionVec);
+                movable.TryMoveTo(new Vector3(100, 100, 100));
             }
         }
     }

@@ -1,5 +1,8 @@
 // Authors: Layla Hoey
+using System.Collections.Generic;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 namespace SystemMiami.CombatSystem
 {
@@ -9,11 +12,11 @@ namespace SystemMiami.CombatSystem
     {
         [SerializeField] private float _damage;
 
-        public override void PerformOn(Combatant[] targets)
+        public override void PerformOn(GameObject target)
         {
-            foreach (Combatant target in targets)
+            if (target.TryGetComponent(out IDamageable damageable))
             {
-                target?.TakeDamage(_damage);
+                damageable.Damage(_damage);
             }
         }
     }

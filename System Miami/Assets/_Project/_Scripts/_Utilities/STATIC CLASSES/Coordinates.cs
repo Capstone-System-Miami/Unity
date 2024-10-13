@@ -1,10 +1,12 @@
-using Unity.VisualScripting.FullSerializer;
+// Authors: Layla Hoey
 using UnityEngine;
 
 namespace SystemMiami.Utilities
 {
     public enum BlockHeight { NONE, HALF, FULL };
 
+    // A helper class for transitions between
+    // Screen and World/Tile spaces
     public static class Coordinates
     {
         /// <summary>
