@@ -124,12 +124,14 @@ namespace SystemMiami
                 yield return StartCoroutine(EnemyMove(enemy));
 
                 // Enemy action phase
+                    // (layla note) This will happen as soon as the movement coroutine is called
                 currentPhase = Phase.ActionPhase;
 
                 Debug.Log("Enemy " + currentEnemyIndex + " Action Phase.");
 
                 // Enemy AI for action
                 // Placeholder: Do nothing for now
+                    // (layla note) This will happen the same frame as movement is called
                 yield return StartCoroutine(EnemyAction(enemy));
 
                 currentEnemyIndex++;
