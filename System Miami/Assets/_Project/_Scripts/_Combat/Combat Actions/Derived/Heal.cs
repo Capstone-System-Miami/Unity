@@ -17,5 +17,10 @@ namespace SystemMiami.CombatSystem
                 healable.Heal(_amount);
             }
         }
+
+        public override void PerformOn(GameObject me, GameObject target)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

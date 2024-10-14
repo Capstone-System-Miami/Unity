@@ -7,6 +7,9 @@ namespace SystemMiami.CombatSystem
     [RequireComponent(typeof(Stats))]
     public class Combatant : MonoBehaviour, ITargetable, IDamageable, IHealable
     {
+        public OverlayTile CurrentTile;
+        public bool HasActed {  get; private set; }
+
         public Vector2Int fakePlayerPos;
         public Vector2Int fakePlayerForward;
 
@@ -20,9 +23,15 @@ namespace SystemMiami.CombatSystem
         private bool _isDamageable;
         private bool _isMoveable;
 
+
         private void Start()
         {
             _stats = GetComponent<Stats>();
+
+            _health = new Resource(_stats.GetStat(StatType.MAX_HEALTH));
+            _stamina = new Resource(_stats.GetStat(StatType.STAMINA));
+            _mana = new Resource(_stats.GetStat(StatType.MANA));
+            _speed = new Resource(_stats.GetStat(StatType.SPEED));
         }
 
         public void Heal()
@@ -96,5 +105,10 @@ namespace SystemMiami.CombatSystem
             print($"{name} took {amount} damage");
         }
 
+        public void ResetTurn()
+        {
+            _speed = new Resource(_stats.GetStat(StatType.SPEED));
+            HasActed = false;
+        }
     }
 }

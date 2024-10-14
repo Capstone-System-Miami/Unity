@@ -25,16 +25,18 @@ namespace SystemMiami
 
 
         // Our current & confirmed attributes.
-        private Dictionary<AttributeType, int> _current = new Dictionary<AttributeType, int>();
+        private AttributeSet _current;
 
         // The upgrades being decided on.
-        private Dictionary<AttributeType, int> _upgrades = new Dictionary<AttributeType, int>();
+        private AttributeSet _upgrades;
 
         // A preview of what our new attributes would be if we confirmed the upgrades.
-        private Dictionary<AttributeType, int> _preview = new Dictionary<AttributeType, int>();
+        private AttributeSet _preview;
 
         // Buffer for storing the attributes prior to a confirmed upgrade
-        private Dictionary<AttributeType, int> _buffer = new Dictionary<AttributeType, int>();
+        private AttributeSet _buffer;
+
+        private List<AttributeSet> _statusEffects = new List<AttributeSet>();
 
         // TODO: deserialize after testing
         [SerializeField, Space(10)] private bool _upgradeMode;
@@ -63,16 +65,11 @@ namespace SystemMiami
 
         private void initializeWith(AttributeSet baseAttributes)
         {
-            _current = getNewDict();
-            _upgrades = getNewDict();
-            _preview = getNewDict();
-            _buffer = getNewDict();
-
-            _strength = baseAttributes._strength;
-            _dexterity = baseAttributes._dexterity;
-            _constitution = baseAttributes._constitution;
-            _wisdom = baseAttributes._wisdom;
-            _intelligence = baseAttributes._intelligence;
+            _strength = baseAttributes.Dict[AttributeType.STRENGTH];
+            _dexterity = baseAttributes.Dict[AttributeType.DEXTERITY];
+            _constitution = baseAttributes.Dict[AttributeType.CONSTITUTION];
+            _wisdom = baseAttributes.Dict[AttributeType.WISDOM];
+            _intelligence = baseAttributes.Dict[AttributeType.INTELLIGENCE];
 
             updateVals(false);
         }
@@ -145,19 +142,19 @@ namespace SystemMiami
         {
             if (!reverse)
             {
-                _current[AttributeType.STRENGTH]        = _strength;
-                _current[AttributeType.DEXTERITY]       = _dexterity;
-                _current[AttributeType.CONSTITUTION]    = _constitution;
-                _current[AttributeType.WISDOM]          = _wisdom;
-                _current[AttributeType.INTELLIGENCE]    = _intelligence;
+                _current.Dict[AttributeType.STRENGTH]        = _strength;
+                _current.Dict[AttributeType.DEXTERITY]       = _dexterity;
+                _current.Dict[AttributeType.CONSTITUTION]    = _constitution;
+                _current.Dict[AttributeType.WISDOM]          = _wisdom;
+                _current.Dict[AttributeType.INTELLIGENCE]    = _intelligence;
             }
             else
             {
-                _strength       = _current[AttributeType.STRENGTH] ;
-                _dexterity      = _current[AttributeType.DEXTERITY];
-                _constitution   = _current[AttributeType.CONSTITUTION];
-                _wisdom         = _current[AttributeType.WISDOM];
-                _intelligence   = _current[AttributeType.INTELLIGENCE];
+                _strength       = _current.Dict[AttributeType.STRENGTH] ;
+                _dexterity      = _current.Dict[AttributeType.DEXTERITY];
+                _constitution   = _current.Dict[AttributeType.CONSTITUTION];
+                _wisdom         = _current.Dict[AttributeType.WISDOM];
+                _intelligence   = _current.Dict[AttributeType.INTELLIGENCE];
             }
         }
 
@@ -168,9 +165,9 @@ namespace SystemMiami
         private void updatePreview()
         {
             // Preview should be our current stored attributes plus stored upgrades
-            foreach (AttributeType attr in _current.Keys)
+            foreach (AttributeType attr in _current.Dict.Keys)
             {
-                _preview[attr] = _current[attr] + _upgrades[attr];
+                _preview.Dict[attr] = _current.Dict[attr] + _upgrades.Dict[attr];
             }
         }
 
@@ -186,9 +183,11 @@ namespace SystemMiami
         public int GetAttribute(AttributeType type)
         {
             // In case something asks for this while it's still being initialized
-            if (_current.Keys.Count == 0) { return 0; }
+            if (_current.Dict.Count == 0) { return 0; }
 
-            return _upgradeMode ? _preview[type] : _current[type];
+            AttributeSet allEffects = GetStatusEffects();
+
+            return _upgradeMode ? _preview.Dict[type] : _current.Dict[type] + allEffects.Dict[type];
         }
 
         /// <summary>
@@ -199,7 +198,7 @@ namespace SystemMiami
         {
             // If the upgrade we're trying to add would bring us
             // under the min or over the max
-            if (_preview[type] + amount < _minValue || _preview[type] > _maxValue)
+            if (_preview.Dict[type] + amount < _minValue || _preview.Dict[type] > _maxValue)
             {
                 // TODO: send this to UI.
                 // Could also refactor to be bool TryAddToUpgrades(...)
@@ -207,7 +206,7 @@ namespace SystemMiami
                 print ($"Invalid Selection");
             }
 
-            _upgrades[type] += amount;            
+            _upgrades.Dict[type] += amount;            
         }
 
 
@@ -223,7 +222,7 @@ namespace SystemMiami
             _current = _preview;
 
             // Clear the upgrades
-            _upgrades = getNewDict();
+            _upgrades = new AttributeSet();
 
             // Update the inspector vals
             updateVals(true);
@@ -231,7 +230,39 @@ namespace SystemMiami
 
         public void CancelUpgrades()
         {
-            _upgrades = getNewDict();
+            _upgrades = new AttributeSet();
+        }
+
+        public void AddStatusEffect(AttributeSet effect)
+        {
+            _statusEffects.Add(effect);
+        }
+
+        public int GetStatusEffect(AttributeType type)
+        {
+            int result = 0;
+
+            foreach (AttributeSet effect in _statusEffects)
+            {
+                result += effect.Dict[type];
+            }
+
+            return result;
+        }
+
+        public AttributeSet GetStatusEffects()
+        {
+            AttributeSet result = new AttributeSet();
+
+            foreach (AttributeSet effect in _statusEffects)
+            {
+                foreach(AttributeType type in result.Dict.Keys)
+                {
+                    result.Dict[type] += effect.Dict[type];
+                }
+            }
+
+            return result;
         }
 
     //===============================
