@@ -4,7 +4,7 @@ using UnityEngine;
 namespace SystemMiami
 {
     [System.Serializable]
-    [CreateAssetMenu(fileName = "StatData", menuName = "CharacterInfo/StatData")]
+    [CreateAssetMenu(fileName = "StatData", menuName = "Combatant/StatData")]
     public class StatData : ScriptableObject
     {
         #region VARS

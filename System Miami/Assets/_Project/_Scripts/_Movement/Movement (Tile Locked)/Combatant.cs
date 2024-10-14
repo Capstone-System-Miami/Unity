@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace SystemMiami
 {
-    public class CharacterInfo : MonoBehaviour
+    public class Combatant : MonoBehaviour
     {
         // Tile that the character is occupying
         public OverlayTile activeTile;

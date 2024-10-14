@@ -9,7 +9,7 @@ namespace SystemMiami
     {
         public float speed;
         public GameObject characterPrefab;
-        private CharacterInfo character;
+        private Combatant character;
 
         private PathFinder pathFinder;
         private List<OverlayTile> path = new List<OverlayTile>();
@@ -58,7 +58,7 @@ namespace SystemMiami
                             // If character hasn't been instantiated yet, instantiate and place on the clicked tile
                             if (character == null)
                             {
-                                character = Instantiate(characterPrefab).GetComponent<CharacterInfo>();
+                                character = Instantiate(characterPrefab).GetComponent<Combatant>();
                                 PositionCharacterOnTile(overlayTile);
 
                                 // Add character to TurnManager
@@ -176,9 +176,20 @@ namespace SystemMiami
         /// </summary>
         private void PositionCharacterOnTile(OverlayTile tile)
         {
+            // Clear previous tile's currentCharacter
+            if (character.activeTile != null)
+            {
+                character.activeTile.currentCharacter = null;
+            }
+
             character.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y + 0.0001f, tile.transform.position.z);
             character.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
+
+            // Update activeTile
             character.activeTile = tile;
+
+            // Set tile's currentCharacter
+            tile.currentCharacter = character;
         }
     }
 }

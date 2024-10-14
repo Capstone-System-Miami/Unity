@@ -15,6 +15,9 @@ namespace SystemMiami
         public int G;
         public int H;
 
+        // Reference to the character currently on this tile
+        public Combatant currentCharacter;
+
         // ??
         public int F { get { return G + H; } }
 

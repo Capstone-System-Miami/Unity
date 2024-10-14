@@ -92,7 +92,7 @@ namespace SystemMiami
             return Mathf.Abs(start.gridLocation.x - neighbour.gridLocation.x) + Mathf.Abs(start.gridLocation.y - neighbour.gridLocation.y);
         }
 
-        private List<OverlayTile> GetNeighbourTiles(OverlayTile currentOverlayTile)
+        public List<OverlayTile> GetNeighbourTiles(OverlayTile currentOverlayTile)
         {
             var map = MapManager.MGR.map;
 

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace SystemMiami
 {
-    [CreateAssetMenu(fileName = "New Attribute Set", menuName = "CharacterInfo/Base Attribute Set")]
+    [CreateAssetMenu(fileName = "New Attribute Set", menuName = "Combatant/Base Attribute Set")]
     public class AttributeSet : ScriptableObject
     {
         public int _strength;

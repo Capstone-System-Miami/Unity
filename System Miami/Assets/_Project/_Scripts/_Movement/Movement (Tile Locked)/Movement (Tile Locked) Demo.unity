@@ -140,7 +140,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!50 &10327425
 Rigidbody2D:
   serializedVersion: 4
@@ -242,7 +242,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 10327424}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 245ed7e6fbedb9641a909247f861dc8b, type: 3}
   m_Name: 
@@ -2060,7 +2060,10 @@ MonoBehaviour:
   playerCharacters: []
   enemyCharacters: []
   currentPhase: 0
+  enemyPrefab: {fileID: 7719785247104517706, guid: b8b0f82d5c6569e48bd39dfc9ebc2f05, type: 3}
+  numberOfEnemies: 3
   isPlayerTurn: 1
+  enemyDetectionRadius: 2
 --- !u!1 &1940009733
 GameObject:
   m_ObjectHideFlags: 0
