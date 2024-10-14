@@ -11,6 +11,9 @@ namespace SystemMiami.CombatSystem
         [SerializeField] private bool _affectsSelf;
         [SerializeField] private bool _affectsOpponents;
 
+        protected AbilityType _type;
+
         public abstract void PerformOn(GameObject target);
+        public abstract void PerformOn(GameObject me, GameObject target);
     }
 }

@@ -25,5 +25,9 @@ namespace SystemMiami.CombatSystem
                 movable.TryMoveTo(new Vector3(100, 100, 100));
             }
         }
+
+        public override void PerformOn(GameObject me, GameObject target)
+        {
+        }
     }
 }
