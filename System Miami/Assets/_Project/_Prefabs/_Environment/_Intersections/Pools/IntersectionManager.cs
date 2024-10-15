@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Made By Antony
+
 // The main class responsible for generating and managing streets in the game.
-public class StreetManager : MonoBehaviour
+public class IntersectionManager : MonoBehaviour
 {
     // Serialized fields allow these private variables to be set in the Unity Editor.
-    [SerializeField] private StreetPool[] streetPools; // Array of StreetPools, which contain prefabs for different street types.
+    [SerializeField] private IntersectionPool[] streetPools; // Array of StreetPools, which contain prefabs for different street types.
     [SerializeField] private int maxStreets; // Maximum number of streets to generate.
     [SerializeField] private int minStreets; // Minimum number of streets to generate.
     [SerializeField] private int streetWidth; // The width of each street in world units.
@@ -20,7 +22,7 @@ public class StreetManager : MonoBehaviour
     // Queue used for breadth-first street generation.
     private Queue<Vector2Int> streetQueue = new Queue<Vector2Int>();
     // Dictionary mapping StreetTypes to their corresponding StreetPools.
-    private Dictionary<StreetType, StreetPool> streetPoolDictionary;
+    private Dictionary<IntersectionType, IntersectionPool> streetPoolDictionary;
     // 2D array representing the grid of streets.
     private StreetData[,] streetGrid;
     // Counter for the number of streets generated.
@@ -102,18 +104,18 @@ public class StreetManager : MonoBehaviour
     // Initialize the dictionary that maps StreetTypes to their corresponding StreetPools.
     private void InitializeStreetPoolDictionary()
     {
-        streetPoolDictionary = new Dictionary<StreetType, StreetPool>();
+        streetPoolDictionary = new Dictionary<IntersectionType, IntersectionPool>();
         foreach (var pool in streetPools)
         {
-            // Check if the StreetType is already in the dictionary to avoid duplicates.
+            // Check if the IntersectionType is already in the dictionary to avoid duplicates.
             if (!streetPoolDictionary.ContainsKey(pool.streetType))
             {
-                streetPoolDictionary.Add(pool.streetType, pool); // Add the StreetPool to the dictionary.
+                streetPoolDictionary.Add(pool.streetType, pool); // Add the IntersectionPool to the dictionary.
             }
             else
             {
-                // Log a warning if a duplicate StreetType is detected.
-                Debug.LogWarning("Duplicate StreetType detected in StreetPools");
+                // Log a warning if a duplicate IntersectionType is detected.
+                Debug.LogWarning("Duplicate IntersectionType detected in StreetPools");
             }
         }
     }
@@ -245,11 +247,11 @@ public class StreetManager : MonoBehaviour
     // Instantiate a street GameObject at the specified grid index.
     private void InstantiateStreet(StreetData currentStreet, Vector2Int streetIndex)
     {
-        // Determine the StreetType based on the exits of the current street.
-        StreetType streetType = GetStreetTypeFromExits(currentStreet.exits);
-        if (streetPoolDictionary.TryGetValue(streetType, out StreetPool pool))
+        // Determine the IntersectionType based on the exits of the current street.
+        IntersectionType streetType = GetStreetTypeFromExits(currentStreet.exits);
+        if (streetPoolDictionary.TryGetValue(streetType, out IntersectionPool pool))
         {
-            // Randomly select a prefab from the pool of the determined StreetType.
+            // Randomly select a prefab from the pool of the determined IntersectionType.
             GameObject prefabToInstantiate = pool.streetPrefabs[Random.Range(0, pool.streetPrefabs.Length)];
             // Calculate the world position for this grid index.
             Vector3 position = GetPositionFromGridIndex(streetIndex);
@@ -266,8 +268,8 @@ public class StreetManager : MonoBehaviour
         }
         else
         {
-            // Log a warning if no StreetPool is found for the determined StreetType.
-            Debug.LogWarning($"No StreetPool found for StreetType: {streetType}");
+            // Log a warning if no IntersectionPool is found for the determined IntersectionType.
+            Debug.LogWarning($"No IntersectionPool found for IntersectionType: {streetType}");
         }
     }
 
@@ -310,14 +312,14 @@ public class StreetManager : MonoBehaviour
     // Update the street GameObject to match the updated exits after cleanup.
     private void UpdateStreetPrefab(StreetData streetData)
     {
-        // Determine the new StreetType based on the updated exits.
-        StreetType streetType = GetStreetTypeFromExits(streetData.exits);
+        // Determine the new IntersectionType based on the updated exits.
+        IntersectionType streetType = GetStreetTypeFromExits(streetData.exits);
         if (streetData.streetInstance != null)
         {
             // Destroy the old street instance.
             Destroy(streetData.streetInstance);
-            // Try to get a new prefab from the StreetPool corresponding to the new StreetType.
-            if (streetPoolDictionary.TryGetValue(streetType, out StreetPool pool))
+            // Try to get a new prefab from the IntersectionPool corresponding to the new IntersectionType.
+            if (streetPoolDictionary.TryGetValue(streetType, out IntersectionPool pool))
             {
                 // Randomly select a prefab from the pool.
                 GameObject prefabToInstantiate = pool.streetPrefabs[Random.Range(0, pool.streetPrefabs.Length)];
@@ -333,8 +335,8 @@ public class StreetManager : MonoBehaviour
             }
             else
             {
-                // Log a warning if no StreetPool is found for the new StreetType.
-                Debug.LogWarning($"No StreetPool found for StreetType: {streetType}");
+                // Log a warning if no IntersectionPool is found for the new IntersectionType.
+                Debug.LogWarning($"No IntersectionPool found for IntersectionType: {streetType}");
             }
         }
     }
@@ -413,8 +415,8 @@ public class StreetManager : MonoBehaviour
         return count;
     }
 
-    // Determines the StreetType based on the set of exits.
-    private StreetType GetStreetTypeFromExits(HashSet<ExitDirection> exits)
+    // Determines the IntersectionType based on the set of exits.
+    private IntersectionType GetStreetTypeFromExits(HashSet<ExitDirection> exits)
     {
         ExitDirection combinedExits = ExitDirection.None;
         // Combine all exits into a single value using bitwise OR.
@@ -422,8 +424,8 @@ public class StreetManager : MonoBehaviour
         {
             combinedExits |= exit;
         }
-        // Cast the combined exits to a StreetType (assumes StreetType is defined to match combinations of ExitDirection).
-        return (StreetType)combinedExits;
+        // Cast the combined exits to a IntersectionType (assumes IntersectionType is defined to match combinations of ExitDirection).
+        return (IntersectionType)combinedExits;
     }
 
     // Output statistics about the street generation process to the console.

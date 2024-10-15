@@ -1,5 +1,7 @@
 using System;
 
+//Made By Antony
+
 [Flags]
 public enum ExitDirection
 {
@@ -11,7 +13,7 @@ public enum ExitDirection
 }
 
 
-public enum StreetType
+public enum IntersectionType
 {
     None = 0,
     N = ExitDirection.North,                                                                    // 1
