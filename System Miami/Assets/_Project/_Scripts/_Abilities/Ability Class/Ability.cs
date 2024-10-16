@@ -1,6 +1,5 @@
 // Authors: Layla Hoey
 using SystemMiami.CombatSystem;
-using SystemMiami.Utilities;
 using UnityEngine;
 
 namespace SystemMiami.AbilitySystem
@@ -8,7 +7,7 @@ namespace SystemMiami.AbilitySystem
     // TODO
     // Incomplete, chaotic, and partially tested
     // Depends on the creation & refactoring of other scripts.
-    [CreateAssetMenu(fileName = "New Ability", menuName = "Abilities/Ability")]
+    [CreateAssetMenu(fileName = "New Ability", menuName = "Ability")]
     public class Ability : ScriptableObject
     {
         [Header("Basic Info")]
