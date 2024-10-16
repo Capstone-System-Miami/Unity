@@ -28,6 +28,10 @@ namespace SystemMiami.AbilitySystem
         [SerializeField, Tooltip("An array of combat actions. The order of the array determines the execution order, as well as the order that the actions find and gather targets.")]
         private CombatAction[] _actions;
 
+        [Header("Animation")]
+        [SerializeField, Tooltip("The animation controller to override the combatants when they perform this ability.")]
+        private AnimatorOverrideController _overrideController;
+
         private Combatant _user;
 
         private void Awake()
@@ -44,6 +48,10 @@ namespace SystemMiami.AbilitySystem
         public void Init(Combatant user)
         {
             _user = user;
+
+            // I don't know how the animator override controller works
+            // but that stuff would (or could?) go here.
+
             foreach(CombatAction action in _actions)
             {
                 action.Init(user);

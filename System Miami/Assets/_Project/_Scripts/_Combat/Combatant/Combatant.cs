@@ -12,11 +12,13 @@ namespace SystemMiami.CombatSystem
         public OverlayTile CurrentTile;
 
         public DirectionalInfo DirectionInfo;
+        public Animator Animator;
 
         private MouseController _controller;
         private Stats _stats;
         private SpriteRenderer _renderer;
         private Color _defaultColor;
+
 
         private Resource _health;
         private Resource _stamina;
@@ -36,6 +38,7 @@ namespace SystemMiami.CombatSystem
             _controller = GetComponent<MouseController>();
             _renderer = GetComponent<SpriteRenderer>();
             _defaultColor = _renderer.color;
+            Animator = GetComponent<Animator>();
 
             _health = new Resource(_stats.GetStat(StatType.MAX_HEALTH));
             _stamina = new Resource(_stats.GetStat(StatType.STAMINA));
