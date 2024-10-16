@@ -28,6 +28,8 @@ namespace SystemMiami.CombatSystem
         private bool _isDamageable;
         private bool _isMoveable;
 
+        System.Action Pause;
+
         public bool HasActed { get; set; }
         public Resource Speed { get { return _speed; } }
 

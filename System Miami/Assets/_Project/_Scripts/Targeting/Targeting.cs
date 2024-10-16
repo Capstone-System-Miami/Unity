@@ -20,15 +20,8 @@ namespace SystemMiami.CombatSystem
             _action = action;
         }
 
-        private void setTargetPositions()
+        private void tryGetTile(Vector2Int position, out OverlayTile tile, out Combatant character)
         {
-
-        }
-
-        private OverlayTile tryGetTile(out Combatant character, Vector2Int position)
-        {
-            OverlayTile tile = null;
-
             if (MapManager.MGR.map.ContainsKey(position))
             {
                 tile = MapManager.MGR.map[position];
@@ -39,8 +32,6 @@ namespace SystemMiami.CombatSystem
                 tile = null;
                 character = null;
             }
-
-            return tile;
         }
 
         public void GetUpdatedTargets(out OverlayTile[] tiles, out Combatant[] combatants)
@@ -93,9 +84,10 @@ namespace SystemMiami.CombatSystem
                     // corrected for the direction the character is facing.
                     targetPositions.Add(boardPosition);
 
-                    OverlayTile tile = tryGetTile(out Combatant enemy, boardPosition);
+                    tryGetTile(boardPosition, out OverlayTile tile, out Combatant enemy);
 
                     if (tile != null) { targetTiles.Add(tile); }
+
                     if (enemy != null) { targetCombatants.Add(enemy); }
                 }
             }

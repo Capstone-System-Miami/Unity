@@ -8,7 +8,7 @@ namespace SystemMiami.AbilitySystem
     // TODO
     // Incomplete, chaotic, and partially tested
     // Depends on the creation & refactoring of other scripts.
-    [CreateAssetMenu(fileName = "New Ability", menuName = "Abilities/Just Ability")]
+    [CreateAssetMenu(fileName = "New Ability", menuName = "Abilities/Ability")]
     public class Ability : ScriptableObject
     {
         [Header("Basic Info")]

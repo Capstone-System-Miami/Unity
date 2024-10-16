@@ -289,6 +289,12 @@ namespace SystemMiami
             yield return new WaitForSeconds(0.5f); // Wait for action simulation
         }
 
+        // layla note
+        //public void EnemyAction(Combatant enemy)
+        //{
+        //    StartCoroutine(enemyAction(enemy));
+        //}
+
         /// <summary>
         /// Finds the nearest player character to the enemy.
         /// </summary>

@@ -68,12 +68,15 @@ namespace SystemMiami.AbilitySystem
 
             if(_isTargeting)
             {
-                _selectedAbility?.UpdateTargets();
+                if(Input.GetMouseButtonDown(0))
+                {
+                    _selectedAbility?.UpdateTargets();
+                }
+
                 _selectedAbility?.ShowTargets();
             }
             else
             {
-                _selectedAbility?.UpdateTargets();
                 _selectedAbility?.HideTargets();
             }
         }
