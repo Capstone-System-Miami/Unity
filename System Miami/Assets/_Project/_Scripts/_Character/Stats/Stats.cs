@@ -30,6 +30,7 @@ namespace SystemMiami
 
         private void Start()
         {
+            setAll();
         }
 
         private void Update()
@@ -50,6 +51,7 @@ namespace SystemMiami
             
             setMaxHealth(_attributes.GetAttribute(AttributeType.CONSTITUTION));
             setDamageReduction(_attributes.GetAttribute(AttributeType.CONSTITUTION));
+            setSpeed(_attributes.GetAttribute(AttributeType.DEXTERITY));
         }
 
     #region SETTERS/FORMULAS

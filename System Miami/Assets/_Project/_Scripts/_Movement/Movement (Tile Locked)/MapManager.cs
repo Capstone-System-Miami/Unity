@@ -22,6 +22,9 @@ namespace SystemMiami
         //dictionary containing all tiles on map by their x, y coordinates
         public Dictionary<Vector2Int, OverlayTile> map;
 
+        private Tilemap tileMap;
+        private BoundsInt bounds;
+
         protected override void Awake()
         {
             base.Awake(); // Handles the assignement of the static instance
@@ -29,11 +32,11 @@ namespace SystemMiami
 
         void Start()
         {
-            Tilemap tileMap = gameObject.GetComponentInChildren<Tilemap>();
+            tileMap = gameObject.GetComponentInChildren<Tilemap>();
             map = new Dictionary<Vector2Int, OverlayTile> ();
 
             //get the bounds of tile map in grid coordinates
-            BoundsInt bounds = tileMap.cellBounds;
+            bounds = tileMap.cellBounds;
 
             print ($"Bounds xmin {bounds.min.x} | xmax {bounds.max.x}\n" +
                 $"ymin {bounds.min.y} | ymax { bounds.max.y}\n" +
@@ -69,6 +72,39 @@ namespace SystemMiami
                 }
             }
         }
+
+        # region layla addition
+        // the following is a reworked copy of
+        // GetRandomUnblockedTile in TurnManager.
+        // That function is still there, but other scripts
+        // need this in Start,
+        // before the TurnManager has time
+        // to create a new list of unblocked tiles
+        public OverlayTile GetRandomUnblockedTile()
+        {
+            int x, y;
+            Vector2Int randomPos;
+
+            int iterationCount = 0;
+            int maxIterations = 1000;
+            do
+            {
+                x = Random.Range(bounds.min.x, bounds.max.x);
+                y = Random.Range(bounds.min.y, bounds.max.y);
+                randomPos = new Vector2Int(x, y);
+
+                if(++iterationCount >= maxIterations)
+                {
+                    Debug.LogWarning("Every tile is blocked," +
+                        "or we are very very unlucky");
+                    break;
+                }
+
+            } while (map[randomPos].isBlocked);
+
+            return map[randomPos];
+        }
+        #endregion
 
         public Vector3 IsoToScreen(Vector3Int tileLocation){
             return Coordinates.IsoToScreen(tileLocation, gridTilesHeight);

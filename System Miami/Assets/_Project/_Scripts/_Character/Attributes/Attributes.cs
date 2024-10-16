@@ -11,7 +11,7 @@ namespace SystemMiami
     //===============================
 
         [SerializeField] private CharacterClassType _characterClass;
-        [SerializeField] private AttributeSet[] _baseAttributes;
+        [SerializeField] private AttributeSetSO[] _baseAttributes;
         [SerializeField] private int _minValue;
         [SerializeField] private int _maxValue;
 
@@ -25,16 +25,16 @@ namespace SystemMiami
 
 
         // Our current & confirmed attributes.
-        private AttributeSet _current;
+        private AttributeSet _current = new AttributeSet();
 
         // The upgrades being decided on.
-        private AttributeSet _upgrades;
+        private AttributeSet _upgrades = new AttributeSet();
 
         // A preview of what our new attributes would be if we confirmed the upgrades.
-        private AttributeSet _preview;
+        private AttributeSet _preview = new AttributeSet();
 
         // Buffer for storing the attributes prior to a confirmed upgrade
-        private AttributeSet _buffer;
+        private AttributeSet _buffer = new AttributeSet();
 
         private List<AttributeSet> _statusEffects = new List<AttributeSet>();
 
@@ -59,7 +59,7 @@ namespace SystemMiami
 
         private void Awake()
         {
-            AttributeSet classBaseAttributes = _baseAttributes[(int)_characterClass];
+            AttributeSet classBaseAttributes = new AttributeSet(_baseAttributes[(int)_characterClass]);
             initializeWith(classBaseAttributes);
         }
 
@@ -72,21 +72,6 @@ namespace SystemMiami
             _intelligence = baseAttributes.Dict[AttributeType.INTELLIGENCE];
 
             updateVals(false);
-        }
-
-        /// <summary>
-        /// Returns a dictionary with all attributes initialized to zero
-        /// </summary>
-        private Dictionary<AttributeType, int> getNewDict()
-        {
-            Dictionary<AttributeType, int> result = new Dictionary<AttributeType, int>();
-
-            foreach (int enumVal in Enum.GetValues(typeof(StatType)))
-            {
-                result[(AttributeType)enumVal] = 0;
-            }
-
-            return result;
         }
 
         private void Update()
@@ -140,6 +125,9 @@ namespace SystemMiami
         /// </summary>
         private void updateVals(bool reverse)
         {
+            if (_current.Dict == null) { return; }
+            if (_current.Dict.Count == 0) { return; }
+
             if (!reverse)
             {
                 _current.Dict[AttributeType.STRENGTH]        = _strength;
@@ -183,7 +171,7 @@ namespace SystemMiami
         public int GetAttribute(AttributeType type)
         {
             // In case something asks for this while it's still being initialized
-            if (_current.Dict.Count == 0) { return 0; }
+            if (_current.Dict == null) { return 0; }
 
             AttributeSet allEffects = GetStatusEffects();
 

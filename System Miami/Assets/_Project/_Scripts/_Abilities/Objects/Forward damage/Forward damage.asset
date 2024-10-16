@@ -9,17 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18aaf81e9d3abe44383bfb6bcd92651d, type: 3}
-  m_Name: ExplosionPattern
+  m_Script: {fileID: 11500000, guid: f8064743d8edd3d4c84a95f86cfc3885, type: 3}
+  m_Name: Forward damage
   m_EditorClassIdentifier: 
-  _origin: 0
-  _radius: 5
-  _frontLeft: 1
-  _front: 1
-  _frontRight: 1
-  _left: 1
-  _center: 1
-  _right: 1
-  _backLeft: 1
-  _back: 1
-  _backRight: 1
+  _type: 0
+  _resourceCost: 0
+  _actions:
+  - {fileID: 11400000, guid: f0e70d078828f18439ce5ce3fde88b81, type: 2}

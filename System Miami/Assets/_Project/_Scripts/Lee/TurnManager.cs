@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using SystemMiami.CombatSystem;
 using SystemMiami.AbilitySystem;
 
 namespace SystemMiami
@@ -55,8 +56,14 @@ namespace SystemMiami
                 Destroy(gameObject);
 
             // Initialize lists
-            playerCharacters = new List<Combatant>();
-            enemyCharacters = new List<Combatant>();
+            if (playerCharacters == null)
+            {
+                playerCharacters = new List<Combatant>();
+            }
+            if (enemyCharacters == null)
+            {
+                enemyCharacters = new List<Combatant>();
+            }           
 
             // Set starting phase
             currentPhase = Phase.MovementPhase;
@@ -164,7 +171,6 @@ namespace SystemMiami
                     // Instantiate enemy
                     GameObject enemyGO = Instantiate(enemyPrefab);
                     Combatant enemy = enemyGO.GetComponent<Combatant>();
-                    enemy.InitializeCharacter();
 
                     // Position enemy on the tile
                     PositionCharacterOnTile(enemy, spawnTile);
@@ -222,10 +228,10 @@ namespace SystemMiami
 
                 // Calculate path to the player
                 PathFinder pathFinder = new PathFinder();
-                List<OverlayTile> path = pathFinder.FindPath(enemy.activeTile, targetPlayer.activeTile);
+                List<OverlayTile> path = pathFinder.FindPath(enemy.CurrentTile, targetPlayer.CurrentTile);
 
                 // Limit movement to enemy's movement points
-                int movementPoints = enemy.movementPoints;
+                int movementPoints = (int)enemy.Speed.Get();
                 if (path.Count > movementPoints)
                 {
                     path = path.GetRange(0, movementPoints);
@@ -240,9 +246,12 @@ namespace SystemMiami
                         break;
                     }
 
+                    // Decrement speed
+                    enemy.Speed.Lose(1);
+
                     // Update tiles' currentCharacter
-                    enemy.activeTile.currentCharacter = null;
-                    enemy.activeTile = tile;
+                    enemy.CurrentTile.currentCharacter = null;
+                    enemy.CurrentTile = tile;
                     tile.currentCharacter = enemy;
 
                     // Move enemy's position
@@ -251,8 +260,6 @@ namespace SystemMiami
 
                     yield return new WaitForSeconds(0.2f); // Wait for movement simulation
                 }
-
-                enemy.movementPoints = 0;
             }
             else
             {
@@ -275,7 +282,7 @@ namespace SystemMiami
             {
                 // Use basic attack
                 print($"{name} has attacked!");
-                    enemy.hasActed = true;
+                    enemy.HasActed = true;
                 
             }
 
@@ -292,8 +299,8 @@ namespace SystemMiami
 
             foreach (Combatant player in playerCharacters)
             {
-                int distance = Mathf.Abs(enemy.activeTile.gridLocation.x - player.activeTile.gridLocation.x) +
-                               Mathf.Abs(enemy.activeTile.gridLocation.y - player.activeTile.gridLocation.y);
+                int distance = Mathf.Abs(enemy.CurrentTile.gridLocation.x - player.CurrentTile.gridLocation.x) +
+                               Mathf.Abs(enemy.CurrentTile.gridLocation.y - player.CurrentTile.gridLocation.y);
 
                 if (distance < shortestDistance)
                 {
@@ -315,8 +322,8 @@ namespace SystemMiami
 
             foreach (Combatant player in playerCharacters)
             {
-                int distance = Mathf.Abs(enemy.activeTile.gridLocation.x - player.activeTile.gridLocation.x) +
-                               Mathf.Abs(enemy.activeTile.gridLocation.y - player.activeTile.gridLocation.y);
+                int distance = Mathf.Abs(enemy.CurrentTile.gridLocation.x - player.CurrentTile.gridLocation.x) +
+                               Mathf.Abs(enemy.CurrentTile.gridLocation.y - player.CurrentTile.gridLocation.y);
 
                 if (distance <= radius && distance < shortestDistance)
                 {
@@ -333,12 +340,10 @@ namespace SystemMiami
         /// </summary>
         private IEnumerator EnemyRandomMove(Combatant enemy)
         {
-            int movementPoints = enemy.movementPoints;
-
-            while (movementPoints > 0)
+            while ((int)enemy.Speed.Get() > 0)
             {
                 // Get walkable neighbor tiles
-                List<OverlayTile> walkableTiles = GetWalkableNeighbourTiles(enemy.activeTile);
+                List<OverlayTile> walkableTiles = GetWalkableNeighbourTiles(enemy.CurrentTile);
 
                 if (walkableTiles.Count == 0)
                 {
@@ -346,13 +351,16 @@ namespace SystemMiami
                     break;
                 }
 
+                // Decrement speed
+                enemy.Speed.Lose(1);
+
                 // Choose a random tile
                 int index = Random.Range(0, walkableTiles.Count);
                 OverlayTile tile = walkableTiles[index];
 
                 // Update tiles' currentCharacter
-                enemy.activeTile.currentCharacter = null;
-                enemy.activeTile = tile;
+                enemy.CurrentTile.currentCharacter = null;
+                enemy.CurrentTile = tile;
                 tile.currentCharacter = enemy;
 
                 // Move enemy's position
@@ -360,11 +368,7 @@ namespace SystemMiami
                 enemy.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
 
                 yield return new WaitForSeconds(0.2f); // Wait for movement simulation
-
-                movementPoints--;
             }
-
-            enemy.movementPoints = 0;
 
             yield return null;
         }
@@ -425,7 +429,7 @@ namespace SystemMiami
         {
             character.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y + 0.0001f, tile.transform.position.z);
             character.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
-            character.activeTile = tile;
+            character.CurrentTile = tile;
 
             // Update tile's current character
             tile.currentCharacter = character;
@@ -434,7 +438,7 @@ namespace SystemMiami
         private Combatant FindAdjacentPlayer(Combatant enemy)
         {
             PathFinder pathFinder = new PathFinder();
-            List<OverlayTile> neighbours = pathFinder.GetNeighbourTiles(enemy.activeTile);
+            List<OverlayTile> neighbours = pathFinder.GetNeighbourTiles(enemy.CurrentTile);
 
             foreach (OverlayTile tile in neighbours)
             {

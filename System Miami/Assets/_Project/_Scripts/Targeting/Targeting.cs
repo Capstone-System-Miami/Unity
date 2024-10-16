@@ -3,112 +3,105 @@ using System.Collections.Generic;
 using SystemMiami.Enums;
 using SystemMiami.Utilities;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 namespace SystemMiami.CombatSystem
 {
-    // TODO
-    // A component for determining which combatants will be
-    // affected by the currently selected ability
-    [RequireComponent(typeof(Combatant))]
-    public class Targeting : MonoBehaviour
+    public class Targeting
     {
-        [SerializeField] Tilemap fakeGameBoard;
-        [SerializeField] GameObject[] fakePlayers;
+        private Combatant _combatant;
+        private CombatAction _action;
 
-        private List<ITargetable> _targets = new List<ITargetable>();
+        private DirectionalInfo _directionalInfo;
+        private AdjacentPositionSet _adjacentPositions;
 
-        private Vector2Int getPlayerTilePos()
+        public Targeting(Combatant user, CombatAction action)
         {
-            // TODO
-            // get the tile position of the player on the game board
-            return GetComponent<Combatant>().fakePlayerPos;
+            _combatant = user;
+            _action = action;
         }
 
-        private Vector2Int getTileUnderMouse()
+        private void setTargetPositions()
         {
-            // TODO
-            // return the game board position of the
-            // tile under the mouse
-            Vector3Int tilePos = Coordinates.ScreenToIso(Camera.main.ScreenToWorldPoint(Input.mousePosition), 0);
-            return new Vector2Int(tilePos.x, tilePos.y);
+
         }
 
-        private List<Vector2Int> getTilesToCheck(TargetingPattern pattern)
+        private OverlayTile tryGetTile(out Combatant character, Vector2Int position)
         {
-            List<Vector2Int> tilesToCheck = new List<Vector2Int>();
+            OverlayTile tile = null;
+
+            if (MapManager.MGR.map.ContainsKey(position))
+            {
+                tile = MapManager.MGR.map[position];
+                character = tile.currentCharacter;
+            }
+            else
+            {
+                tile = null;
+                character = null;
+            }
+
+            return tile;
+        }
+
+        public void GetUpdatedTargets(out OverlayTile[] tiles, out Combatant[] combatants)
+        {
+            List<Vector2Int> targetPositions = new List<Vector2Int>();
+            List<OverlayTile> targetTiles = new List<OverlayTile>();
+            List<Combatant> targetCombatants = new List<Combatant>();
 
             Vector2Int patternOrigin;
             Vector2Int patternForward;
 
-            switch (pattern.Origin)
+            // If action is a projectile
+            if (_action is Projectile projectile)
             {
-                default:
-                case TargetOrigin.SELF:
-                    patternOrigin = getPlayerTilePos();
-                    patternForward = getTileUnderMouse();
-                    break;
-                case TargetOrigin.MOUSE:
-                    patternOrigin = getTileUnderMouse();
-                    patternForward = DirectionHelper.BoardDirections[TileDir.FORWARD_C];
-                    break;
+                // If this is player
+                // If the mouse boardPosition is less than the range (how will we do this?)
+                // Pattern origin = mouse boardPosition
+                // If this is the enemy
+                // If the player boardPosition is less than the range (how?)
+                // Pattern origin = player boardPosition
+
+                // Return a zero'd direction info
+                // if projectile targeting failed?
+                patternOrigin = _combatant.DirectionInfo.Forward;
+                patternForward = patternOrigin + _combatant.DirectionInfo.Direction;
+            }
+            else
+            {
+                patternOrigin = _combatant.DirectionInfo.Position;
+                patternForward = _combatant.DirectionInfo.Forward;
             }
 
-            DirectionalInfo patternDirInfo = new DirectionalInfo(patternOrigin, patternForward);
+            _directionalInfo = new DirectionalInfo(patternOrigin, patternForward);
+            _adjacentPositions = new AdjacentPositionSet(_directionalInfo);
 
-            AdjacentPositionSet adjacent = new AdjacentPositionSet(patternDirInfo);
-
-            for(int i = 0; i < pattern.Radius; i++)
+            for (int i = 0; i <= _action.TargetingPattern.Radius; i++)
             {
-                print($"{name} radius is {pattern.Radius} so checking rad at {i}");
+                Debug.Log($"{_action} radius is {_action.TargetingPattern.Radius},\n" +
+                    $"so {_combatant.name} is adding tiles at {i}");
 
-                foreach (TileDir dir in pattern.Directions.Keys)
+                List<TileDir> targetDirections = _action.TargetingPattern.GetDirections();
+                foreach (TileDir dir in targetDirections)
                 {
-                    print($"{name} checking {dir} at {i}");
+                    Vector2Int boardPosition = _adjacentPositions.Adjacent[dir] * i;
 
-                    if (pattern.Directions[dir])
-                    {
-                        print($"Adding an adjacent tile.\n" +
-                            $"Direction {dir}, BoardPosition {adjacent.Adjacent[dir] * i}");
-                        tilesToCheck.Add(adjacent.Adjacent[dir] * i);
-                    }
+                    Debug.Log($"Adding an adjacent tile.\n" +
+                        $"Direction {dir}, BoardPosition {boardPosition}");
+
+                    // Add the tile at the action origin's adjacent tiles,
+                    // corrected for the direction the character is facing.
+                    targetPositions.Add(boardPosition);
+
+                    OverlayTile tile = tryGetTile(out Combatant enemy, boardPosition);
+
+                    if (tile != null) { targetTiles.Add(tile); }
+                    if (enemy != null) { targetCombatants.Add(enemy); }
                 }
             }
 
-            return tilesToCheck;
-        }
-
-        /// <summary>
-        /// TODO:
-        /// Checks the specified tiles, and returns a list
-        /// of ITargetable objects.
-        /// </summary>
-        /// <param name="pattern">
-        /// Specifies the pattern to use when checking the tiles.
-        /// </param>
-        public List<ITargetable> GetTargets(TargetingPattern pattern)
-        {
-            print($"{name} getting pos");
-            List<ITargetable> targets = new List<ITargetable>();
-
-            foreach(Vector2Int pos in getTilesToCheck(pattern))
-            {
-                foreach(GameObject fakePlayer in fakePlayers)
-                {
-                    if (fakePlayer.TryGetComponent(out ITargetable target))
-                    {
-                        if (target.GameObject().GetComponent<Combatant>().fakePlayerPos == pos)
-                        {
-                            targets.Add(target);
-                        }
-                    }
-                    else
-                    {
-                        print($"No player found at {pos}");
-                    }
-                }
-            }
-            return targets;
+            tiles = targetTiles.ToArray();
+            combatants = targetCombatants.ToArray();
         }
     }
 }

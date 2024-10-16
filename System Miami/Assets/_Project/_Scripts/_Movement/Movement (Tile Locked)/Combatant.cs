@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SystemMiami
+namespace SystemMiami.Outdated
 {
     public class Combatant : MonoBehaviour
     {
@@ -36,7 +36,7 @@ namespace SystemMiami
             {
                 // If Attributes component is missing, set a default value
                 maxMovementPoints = 5; // Default movement points
-                Debug.LogWarning("Attributes component missing on character. Using default movement points.");
+                Debug.LogWarning($"Attributes component missing on {name}. Using default movement points.");
             }
             movementPoints = maxMovementPoints;
         }

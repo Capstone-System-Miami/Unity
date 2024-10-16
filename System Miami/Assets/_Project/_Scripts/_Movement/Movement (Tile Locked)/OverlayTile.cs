@@ -1,10 +1,11 @@
 // Author: Alec
+using SystemMiami.CombatSystem;
 using SystemMiami.Utilities;
 using UnityEngine;
 
 namespace SystemMiami
 {
-    public class OverlayTile : MonoBehaviour
+    public class OverlayTile : MonoBehaviour, ITargetable
     {
         // The height of the overlay tile.
         // Presumably NONE, since it's flat.
@@ -26,7 +27,16 @@ namespace SystemMiami
         public OverlayTile previous;
 
         public Vector3Int gridLocation;
-  
+
+        private SpriteRenderer _renderer;
+        private Color _defaultColor;
+
+        private void Awake()
+        {
+            _renderer = GetComponent<SpriteRenderer>();
+            _defaultColor = _renderer.color;
+        }
+
         void Update()
         {
             if (Input.GetMouseButton(0))
@@ -37,6 +47,7 @@ namespace SystemMiami
 
         public void ShowTile()
         {
+            //Debug.Log($"{name} at {gridLocation} is trying to show self");
             // Max vals means white.
             gameObject.GetComponent<SpriteRenderer>().color = new Color (1, 1, 1, 1);
         }
@@ -45,6 +56,29 @@ namespace SystemMiami
         {
             // Alpha = 0 means transparent.
             gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0);
+        }
+
+        public void Target()
+        {
+            ShowTile();
+        }
+
+        public void Target(Color color)
+        {
+            ShowTile();
+
+            _renderer.color = color;
+        }
+
+        public void UnTarget()
+        {
+            HideTile();
+            _renderer.color = _defaultColor;
+        }
+
+        public GameObject GameObject()
+        {
+            return gameObject;
         }
     }
 }

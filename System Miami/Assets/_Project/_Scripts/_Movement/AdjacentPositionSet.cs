@@ -19,6 +19,7 @@ namespace SystemMiami.CombatSystem
         // Constructors
         public AdjacentPositionSet(DirectionalInfo info)
         {
+            Debug.Log($"HI, trying to create myself to {DirectionHelper.BoardDirections[TileDir.FORWARD_C]}");
             // Initialize to right size and values
             // if the player is facing the same way as the board.
             Adjacent = DirectionHelper.BoardDirections;
@@ -29,6 +30,7 @@ namespace SystemMiami.CombatSystem
             {
                 // If player's Direction is BoardDirections' Left,
                 // Rotate each position to the left
+                //rotate90Left();
                 rotate90Left();
             }
             else if (info.Direction == DirectionHelper.BoardDirections[TileDir.MIDDLE_R])
@@ -48,28 +50,36 @@ namespace SystemMiami.CombatSystem
         // Private
         private void rotate90Right()
         {
-            foreach (TileDir direction in Adjacent.Keys)
+            Dictionary<TileDir, Vector2Int> hi = DirectionHelper.BoardDirections;
+
+            foreach (TileDir direction in hi.Keys)
             {
                 // Swap x and y, multiply new y by -1
-                Adjacent[direction] = new Vector2Int(Adjacent[direction].y, -Adjacent[direction].x);
+                hi[direction] = new Vector2Int(hi[direction].y, -hi[direction].x);
             }
+            Adjacent = hi;
         }
 
         private void rotate90Left()
         {
-            foreach (TileDir direction in Adjacent.Keys)
+            Dictionary<TileDir, Vector2Int> hi = DirectionHelper.BoardDirections;
+
+            foreach (TileDir direction in hi.Keys)
             {
                 // Swap x and y, multiply new x by -1
-                Adjacent[direction] = new Vector2Int(-Adjacent[direction].y, Adjacent[direction].x);
+                hi[direction] = new Vector2Int(-hi[direction].y, hi[direction].x);
             }
+            Adjacent = hi;
         }
 
         private void rotate180()
         {
-            foreach (TileDir direction in Adjacent.Keys)
+            Dictionary<TileDir, Vector2Int> hi = DirectionHelper.BoardDirections;
+
+            foreach (TileDir direction in hi.Keys)
             {
                 // Multiply x and y by -1
-                Adjacent[direction] *= -1;
+                hi[direction] *= -1;
             }
         }
     }

@@ -9,9 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cacf5194a710a29478559fb9ce9dfa24, type: 3}
-  m_Name: Heal
+  m_Script: {fileID: 11500000, guid: f8064743d8edd3d4c84a95f86cfc3885, type: 3}
+  m_Name: Slice plus
   m_EditorClassIdentifier: 
-  _affectsSelf: 1
-  _affectsOpponents: 0
-  _amount: 0
+  _type: 0
+  _resourceCost: 2
+  _actions:
+  - {fileID: 11400000, guid: 5d66b04abd5558f4f9fc93d9c15b6ed8, type: 2}

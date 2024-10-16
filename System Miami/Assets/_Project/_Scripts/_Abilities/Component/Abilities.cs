@@ -1,84 +1,90 @@
 // Authors: Layla Hoey
 using System.Collections.Generic;
 using SystemMiami.CombatSystem;
+using SystemMiami.Utilities;
 using UnityEngine;
 
 namespace SystemMiami.AbilitySystem
 {
     // TODO
-    // Incomplete, partially tested, realll dirty
+    // Incomplete, partially tested
 
     // The actual component used for
     // storing / acessing / triggering abilities
-    [RequireComponent(typeof(Targeting))]
     public class Abilities : MonoBehaviour
     {
-        [SerializeField] private KeyCode[] _keys;
+        [SerializeField] private KeyCode[] _keys =
+        {
+            KeyCode.Alpha1,
+            KeyCode.Alpha2,
+            KeyCode.Alpha3,
+            KeyCode.Alpha4,
+            KeyCode.Alpha5,
+        };
+
         [SerializeField] private Ability[] _abilities;
+        [SerializeField] private Ability _selectedAbility;
         [SerializeField] private bool isenabled;
+        [SerializeField] private bool _isTargeting = false;
         
         [SerializeField] private GameObject[] targs;
 
-        private Targeting _targeting;
+        private Combatant _combatant;
+
+        private Vector2Int startFrameDirection;
+        private Vector2Int endFrameDirection;
 
 
         void Awake()
         {
-            _targeting = GetComponent<Targeting>();
+            _combatant = GetComponent<Combatant>();
+        }
+
+        private void OnEnable()
+        {
+            //foreach(Ability ability in _abilities)
+            //{
+            //    ability.Init(_combatant);
+            //}
         }
 
         private void Update()
         {
-            if (isenabled)
+            startFrameDirection = _combatant.DirectionInfo.Direction;
+
+            // Just for testing.
+            // Checks inputs and sets the selected ability
+            // index to the key pressed
+            for (int i = 0; i < _abilities.Length; i++)
             {
-                // Targeting
-                if (targs.Length == 0)
+                if (_keys.Length <= i) { continue; }
+
+                if (Input.GetKeyDown(_keys[i]))
                 {
-                    if (Input.GetKeyDown(_keys[0]))
-                    {
-                        print($"{name} hi {_keys[0]}");
-                        List<ITargetable> targets = _targeting.GetTargets(_abilities[0].Pattern);
-                        GameObject[] targetObjects = new GameObject[targets.Count];
-
-                        for (int i = 0; i < targets.Count; i++)
-                        {
-                            targetObjects[i] = targets[i].GameObject();
-                        }
-
-                        targs = targetObjects;
-                    }
-
-                    if (Input.GetKeyDown(_keys[1]))
-                    {
-                        print($"{name} hi {_keys[1]}");
-
-                        List<ITargetable> targets = _targeting.GetTargets(_abilities[1].Pattern);
-                        GameObject[] targetObjects = new GameObject[targets.Count];
-
-                        for (int i = 0; i < targets.Count; i++)
-                        {
-                            targetObjects[i] = targets[i].GameObject();
-                        }
-
-                        targs = targetObjects;
-                    }
+                    _selectedAbility = _abilities[i];
+                    _selectedAbility?.Init(_combatant);
                 }
+            }
 
-                // Executing
-                else
-                {
-                    if (Input.GetKeyDown(_keys[0]))
-                    {
-                        print($"{name} hi {_keys[0]}");
-                        _abilities[0].UseOn(targs);
-                    }
+            if(_isTargeting)
+            {
+                _selectedAbility?.UpdateTargets();
+                _selectedAbility?.ShowTargets();
+            }
+            else
+            {
+                _selectedAbility?.UpdateTargets();
+                _selectedAbility?.HideTargets();
+            }
+        }
 
-                    if (Input.GetKeyDown(_keys[1]))
-                    {
-                        print($"{name} hi {_keys[1]}");
-                        _abilities[1].UseOn(targs);
-                    }
-                }
+        private void LateUpdate()
+        {
+            endFrameDirection = _combatant.DirectionInfo.Direction;
+
+            if (startFrameDirection != endFrameDirection)
+            {
+                _selectedAbility?.UpdateTargets();
             }
         }
     }

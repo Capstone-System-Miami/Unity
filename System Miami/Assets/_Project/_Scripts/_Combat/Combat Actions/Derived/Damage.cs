@@ -1,6 +1,8 @@
 // Authors: Layla Hoey
 using UnityEngine;
 using SystemMiami.AbilitySystem;
+using Unity.VisualScripting.FullSerializer;
+using UnityEditor.PackageManager;
 
 namespace SystemMiami.CombatSystem
 {
@@ -9,25 +11,25 @@ namespace SystemMiami.CombatSystem
     public class Damage : CombatAction
     {
         [SerializeField] private float _abilityDamage;
-        public override void PerformOn(GameObject target)
+        public override void SetTargeting()
         {
+            Debug.Log($"{name} trying to set targets");
+
+            _targeting = new Targeting(_user, this);
         }
 
-        public override void PerformOn(GameObject me, GameObject target)
+        public override void Perform()
         {
-            if (target.TryGetComponent(out IDamageable damageable))
+            for(int i = 0; i < _targetCombatants.Length; i++)
             {
-                Stats stats = me.GetComponent<Stats>();
-
-                float addToDamage = _type switch
+                if (!_targetCombatants[i].TryGetComponent(out IDamageable target))
                 {
-                    AbilityType.PHYSICAL => stats.GetStat(StatType.PHYSICAL_PWR),
-                    AbilityType.MAGICAL => stats.GetStat(StatType.MAGICAL_PWR),
-                    _                   => stats.GetStat(StatType.PHYSICAL_PWR)
-                };
-
-                float damageToDeal = _abilityDamage + addToDamage;
-                damageable.Damage(_abilityDamage);
+                    Debug.Log("Invalid damage target");
+                }
+                else
+                {
+                    target.Damage(_abilityDamage);
+                }
             }
         }
     }

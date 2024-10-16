@@ -1,5 +1,6 @@
 // Authors: Layla Hoey
 using SystemMiami.CombatSystem;
+using SystemMiami.Utilities;
 using UnityEngine;
 
 namespace SystemMiami.AbilitySystem
@@ -7,33 +8,79 @@ namespace SystemMiami.AbilitySystem
     // TODO
     // Incomplete, chaotic, and partially tested
     // Depends on the creation & refactoring of other scripts.
-    // Somehow need to implement a melee vs projectile system?
-    public abstract class Ability : ScriptableObject
+    [CreateAssetMenu(fileName = "New Ability", menuName = "Abilities/Just Ability")]
+    public class Ability : ScriptableObject
     {
         [Header("Basic Info")]
-        [SerializeField] private string _name;
-        [SerializeField] private float _resourceCost;
+        [SerializeField, Tooltip("Determines which type of slot this ability will occupy. Also determines the resource that will be used when the ability is executed.")]
+        private AbilityType _type;
 
-        [Header("Actions"), Space(10)]
-        [SerializeField] private CombatAction[] _actions;
+        /// <summary>
+        /// Determines which Resource to consume when the ability is executed. Determined by the AbilityType.
+        /// </summary>
+        private ResourceType _requiredResource;
+        
+        [SerializeField, Tooltip("The amount of the required resource that will be consumed upon the ability being used once.")]
+        private float _resourceCost;
 
-        [Header("Targeting"), Space(10)]
-        [SerializeField] private TargetType _targetType;
-        [SerializeField] private TargetingPattern _targetingPattern;
 
-        public TargetingPattern Pattern { get { return _targetingPattern; } }
+        [Header("Actions"), Space(5)]
+        [SerializeField, Tooltip("An array of combat actions. The order of the array determines the execution order, as well as the order that the actions find and gather targets.")]
+        private CombatAction[] _actions;
 
-        protected AbilityType _type;
-        protected ResourceType _requiredResource;
+        private Combatant _user;
 
-        public void UseOn(GameObject[] targets)
+        private void Awake()
         {
-            foreach (GameObject target in targets)
+            // Assigns the _requiredResource based on _type
+            _requiredResource = _type switch
             {
-                foreach (CombatAction action in _actions)
-                {
-                    action.PerformOn(target);
-                }
+                AbilityType.PHYSICAL    => ResourceType.STAMINA,
+                AbilityType.MAGICAL     => ResourceType.MANA,
+                _                       => ResourceType.STAMINA,
+            };  
+        }
+
+        public void Init(Combatant user)
+        {
+            _user = user;
+            foreach(CombatAction action in _actions)
+            {
+                action.Init(user);
+            }
+        }
+
+        public void UpdateTargets()
+        {
+            Debug.Log($"{name} trying to update targets");
+            foreach (CombatAction action in _actions)
+            {
+                action.UpdateTargets();
+            }
+        }
+
+        public void ShowTargets()
+        {
+            foreach(CombatAction action in _actions)
+            {
+                action.ShowTargets();
+            }
+        }
+
+        public void HideTargets()
+        {
+            foreach (CombatAction action in _actions)
+            {
+                action.HideTargets();
+            }
+        }
+
+        public void Use()
+        {
+            foreach(CombatAction action in _actions)
+            {
+                action.Perform();
+                action.HideTargets();
             }
         }
     }

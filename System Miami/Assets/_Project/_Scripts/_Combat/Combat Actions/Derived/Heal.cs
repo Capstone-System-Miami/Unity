@@ -10,17 +10,24 @@ namespace SystemMiami.CombatSystem
     {
         [SerializeField] private float _amount;
 
-        public override void PerformOn(GameObject target)
+        public override void SetTargeting()
         {
-            if (target.TryGetComponent(out IHealable healable))
-            {
-                healable.Heal(_amount);
-            }
+            _targeting = new Targeting(_user, this);
         }
 
-        public override void PerformOn(GameObject me, GameObject target)
+        public override void Perform()
         {
-            throw new System.NotImplementedException();
+            for (int i = 0; i < _targetCombatants.Length; i++)
+            {
+                if(!_targetCombatants[i].TryGetComponent(out IHealable target))
+                {
+                    Debug.Log($"Invalid heal target.");
+                }
+                else
+                {
+                    target.Heal(_amount);
+                }
+            }
         }
     }
 }
