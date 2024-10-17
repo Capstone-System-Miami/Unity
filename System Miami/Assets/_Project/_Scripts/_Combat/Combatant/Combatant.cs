@@ -87,7 +87,7 @@ namespace SystemMiami.CombatSystem
                 // Right now, I guess this would happen in TurnManager?
                 // That's were enemy movement is currently being handled.
                 // Movement component should have a currentTile and a previous tile.
-                // Enemies Direction would be either
+                // Enemies DirectionVec would be either
                     // [wherever they moved to] - [where they moved from] or
                     // [player position] - [wherever they are right now]
 
@@ -98,7 +98,7 @@ namespace SystemMiami.CombatSystem
             DirectionInfo = new DirectionalInfo(playerPos, playerFwd);
             if(tag == "Player")
             {
-                Debug.LogWarning($"origin {DirectionInfo.Position}, NormalDir{DirectionInfo.Direction}");
+                Debug.LogWarning($"origin {DirectionInfo.MapPosition}, NormalDir{DirectionInfo.DirectionVec}");
             }
         }
 

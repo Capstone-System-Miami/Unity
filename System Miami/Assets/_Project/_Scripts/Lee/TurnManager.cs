@@ -172,7 +172,7 @@ namespace SystemMiami
                     GameObject enemyGO = Instantiate(enemyPrefab);
                     Combatant enemy = enemyGO.GetComponent<Combatant>();
 
-                    // Position enemy on the tile
+                    // MapPosition enemy on the tile
                     PositionCharacterOnTile(enemy, spawnTile);
 
                     // Add to enemy list

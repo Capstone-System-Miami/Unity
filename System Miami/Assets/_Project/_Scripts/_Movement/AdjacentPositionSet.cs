@@ -1,4 +1,5 @@
 // Authors: Layla Hoey
+using System;
 using System.Collections.Generic;
 using SystemMiami.Enums;
 using SystemMiami.Utilities;
@@ -6,81 +7,95 @@ using UnityEngine;
 
 namespace SystemMiami.CombatSystem
 {
-    // TODO
-    // Not fully tested.
-    // Should take the direction the player is facing,
-    // gather the actual world tile positions of the
-    // 8 surrounding directions, then adjust each one for
-    // whatever direction the object is facing.
+    // TODO: this doesn't work for quarter turns yet.
+    // Take the direction that something is facing,
+    // and translate their local adjacent positions
+    // into the static/unchanging positions on the Board/Map
     public class AdjacentPositionSet
     {
+        private Dictionary<TileDir, Vector2Int> _directionsRelativeToMap;
+        private Dictionary<TileDir, Vector2Int> _positionsRelativeToMap;
+        private Dictionary<TileDir, Vector2Int> _directionsRelativeToSelf;
+
         public Dictionary<TileDir, Vector2Int> Adjacent { get; private set; }
+        public bool IsReady { get; private set; }
 
         // Constructors
         public AdjacentPositionSet(DirectionalInfo info)
         {
-            Debug.Log($"HI, trying to create myself to {DirectionHelper.BoardDirections[TileDir.FORWARD_C]}");
-            // Initialize to right size and values
-            // if the player is facing the same way as the board.
-            Adjacent = DirectionHelper.BoardDirections;
+            // Initialize local directions to default set of directions.
+            _directionsRelativeToSelf = DirectionHelper.MapDirectionsByEnum;
 
-            // TODO
-            // Right now, this doesn't work for diagonal directions.           
-            if (info.Direction == DirectionHelper.BoardDirections[TileDir.MIDDLE_L])
+            // Find the map directions by rotating an amount of
+            // ticks equivalent to the enumerated direction
+            // of the incoming object.
+            _directionsRelativeToMap = getRotatedVectors(_directionsRelativeToSelf, (int)info.DirectionName);
+            
+            // Get adjacent map positions by adding the map position of the
+            // incoming object to the directions
+            _positionsRelativeToMap = new Dictionary<TileDir, Vector2Int>();
+            foreach(TileDir direction in _directionsRelativeToMap.Keys)
             {
-                // If player's Direction is BoardDirections' Left,
-                // Rotate each position to the left
-                //rotate90Left();
-                rotate90Left();
+                _positionsRelativeToMap[direction] = _directionsRelativeToMap[direction] + info.MapPosition;
             }
-            else if (info.Direction == DirectionHelper.BoardDirections[TileDir.MIDDLE_R])
-            {
-                // If player's Direction is BoardDirections' Right,
-                // Rotate each position to the right
-                rotate90Right();
-            }
-            else if (info.Direction == DirectionHelper.BoardDirections[TileDir.BACKWARD_C])
-            {
-                // If player's Direction is BoardDirections' Backwards,
-                // Rotate each position by 180
-                rotate180();
-            }
+
+            Adjacent = _positionsRelativeToMap;
+            IsReady = true;
         }
 
-        // Private
-        private void rotate90Right()
+        /// <summary>
+        /// Rotates a set of local positions by a
+        /// number of quarter turns.
+        /// (One clockwise quarter turn from forward
+        /// means your new forward is topRight)
+        /// </summary>
+        /// <param name="originalVectors">
+        /// The set of 8 positions to be shitfed
+        /// </param>
+        /// <param name="quarterTurns">
+        /// The amount of times to shift by 45 degrees
+        /// <returns></returns>
+        private Dictionary<TileDir, Vector2Int> getRotatedVectors(Dictionary<TileDir, Vector2Int> originalVectors, int quarterTurns)
         {
-            Dictionary<TileDir, Vector2Int> hi = DirectionHelper.BoardDirections;
+            Dictionary<TileDir, Vector2Int> result = new Dictionary<TileDir, Vector2Int>();
 
-            foreach (TileDir direction in hi.Keys)
+            // Should always be 8
+            int directionCount = Enum.GetValues(typeof(TileDir)).Length;
+
+            int leftIndex = 0;
+            int rightIndex = quarterTurns;
+            int catchBeginning = 0;
+
+            int total = 0;
+            const int LIMIT = 10; // ( while loops are scary ¯\_( )_/¯ )
+            while (leftIndex < directionCount && total++ <= LIMIT)
             {
-                // Swap x and y, multiply new y by -1
-                hi[direction] = new Vector2Int(hi[direction].y, -hi[direction].x);
+                // At leftIndex == 0, centered is forward center.
+                // Increment the indexer after we read it.
+                TileDir centered = (TileDir)leftIndex++;
+                TileDir shifted;
+
+                // If right is less than the number of
+                // directions in the TileDir enum,
+                if (rightIndex < directionCount)
+                {
+                    // then the shifted index is that.
+                    // Increment the indexer after we read it.
+                    shifted = (TileDir)rightIndex++;
+                }
+                // If right is >= number of directions,
+                else
+                {
+                    // start using this as the shifted index.
+                    // Increment it after we read it.
+                    shifted = (TileDir)catchBeginning++;
+                }
+
+                Debug.Log($"local pos {centered} is now original pos {shifted}");
+                // Result set to the shifted position.
+                result[centered] = originalVectors[shifted];
             }
-            Adjacent = hi;
-        }
-
-        private void rotate90Left()
-        {
-            Dictionary<TileDir, Vector2Int> hi = DirectionHelper.BoardDirections;
-
-            foreach (TileDir direction in hi.Keys)
-            {
-                // Swap x and y, multiply new x by -1
-                hi[direction] = new Vector2Int(-hi[direction].y, hi[direction].x);
-            }
-            Adjacent = hi;
-        }
-
-        private void rotate180()
-        {
-            Dictionary<TileDir, Vector2Int> hi = DirectionHelper.BoardDirections;
-
-            foreach (TileDir direction in hi.Keys)
-            {
-                // Multiply x and y by -1
-                hi[direction] *= -1;
-            }
+            return result;
         }
     }
 }

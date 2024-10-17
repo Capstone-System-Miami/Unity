@@ -7,15 +7,15 @@ namespace SystemMiami
     // Oh man... it's a doozy
     public enum ExitDirections
     {
-        // 1 Direction
+        // 1 DirectionVec
         NorthOnly, WestOnly, SouthOnly, EastOnly,
 
-        // 2 Direction
+        // 2 DirectionVec
         NorthWest, NorthEast,
         SouthWest, SouthEast,
         NorthSouth, WestEast,
 
-        // 3 Direction
+        // 3 DirectionVec
         NorthWestSouth, NorthEastSouth,
         NorthWestEast, SouthWestEast,
 

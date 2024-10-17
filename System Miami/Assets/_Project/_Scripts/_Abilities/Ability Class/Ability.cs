@@ -1,4 +1,5 @@
 // Authors: Layla Hoey
+using System.Collections;
 using SystemMiami.CombatSystem;
 using UnityEngine;
 
@@ -26,12 +27,17 @@ namespace SystemMiami.AbilitySystem
         [Header("Actions"), Space(5)]
         [SerializeField, Tooltip("An array of combat actions. The order of the array determines the execution order, as well as the order that the actions find and gather targets.")]
         private CombatAction[] _actions;
+        private Targets[] _targets;
 
         [Header("Animation")]
-        [SerializeField, Tooltip("The animation controller to override the combatants when they perform this ability.")]
+        [SerializeField, Tooltip("The animation controller to override the combatant's when they perform this ability.")]
         private AnimatorOverrideController _overrideController;
 
         private Combatant _user;
+
+        public CombatAction[] Actions { get { return _actions; } }
+        public bool IsBusy { get; private set; }
+        public bool IsPreviewing { get; private set; }
 
         private void Awake()
         {
@@ -47,48 +53,117 @@ namespace SystemMiami.AbilitySystem
         public void Init(Combatant user)
         {
             _user = user;
-
             // I don't know how the animator override controller works
             // but that stuff would (or could?) go here.
-
-            foreach(CombatAction action in _actions)
-            {
-                action.Init(user);
-            }
         }
 
-        public void UpdateTargets()
+        private bool showTilesOf(CombatAction action)
         {
-            Debug.Log($"{name} trying to update targets");
-            foreach (CombatAction action in _actions)
+            Targets targets = action.GetUpdatedTargets(_user.DirectionInfo);
+
+            foreach (OverlayTile tile in targets.Tiles)
             {
-                action.UpdateTargets();
+                tile.Target(action.TargetedTileColor);
             }
+
+            return true;
         }
 
-        public void ShowTargets()
+        private bool showCombatantsOf(CombatAction action)
         {
-            foreach(CombatAction action in _actions)
+            Targets targets = action.GetUpdatedTargets(_user.DirectionInfo);
+
+            foreach (Combatant combatant in targets.Combatants)
             {
-                action.ShowTargets();
+                combatant.Target(action.TargetedCombatantColor);
             }
+
+            return true;
         }
 
-        public void HideTargets()
+        private bool hideTilesOf(CombatAction action)
         {
-            foreach (CombatAction action in _actions)
+            Targets targets = action.StoredTargets;
+            if(targets.Tiles == null) return true;
+
+            foreach (OverlayTile tile in targets.Tiles)
             {
-                action.HideTargets();
+                tile.UnTarget();
             }
+
+            return true;
         }
 
-        public void Use()
+        private bool hideCombatantsOf(CombatAction action)
         {
-            foreach(CombatAction action in _actions)
+            Targets targets = action.StoredTargets;
+            if (targets.Combatants == null) return true;
+
+            foreach (Combatant combatant in targets.Combatants)
             {
-                action.Perform();
-                action.HideTargets();
+                combatant.UnTarget();
             }
+
+            return true;
+        }
+
+        public IEnumerator ShowAllTargets()
+        {
+            IsPreviewing = true;
+            if (IsBusy) { yield break; }
+
+            IsBusy = true;
+            yield return null;
+
+            for (int i = 0; i < _actions.Length; i++)
+            {
+                yield return new WaitUntil(() => hideTilesOf(_actions[i]));
+                yield return new WaitUntil(() => hideCombatantsOf(_actions[i]));
+                yield return new WaitUntil(() => showTilesOf(_actions[i]));
+                yield return new WaitUntil(() => showCombatantsOf(_actions[i]));
+            }
+
+            yield return new WaitForEndOfFrame();
+            IsBusy = false;
+        }
+
+        public IEnumerator HideAllTargets()
+        {
+            if (IsBusy) { yield break; }
+
+            IsBusy = true;
+            yield return null;
+
+            for (int i = 0; i < _actions.Length; i++)
+            {
+                yield return new WaitUntil(() => hideTilesOf(_actions[i]));
+                yield return new WaitUntil(() => hideCombatantsOf(_actions[i]));
+            }
+
+            yield return new WaitForEndOfFrame();
+            IsBusy = false;
+            IsPreviewing = false;
+        }
+
+        public IEnumerator Use()
+        {
+            if (!IsBusy) { yield break; }
+
+            IsBusy = true;
+            yield return null;
+
+            for (int i = 0; i < _actions.Length; i++)
+            {
+                Targets targets = _actions[i].GetUpdatedTargets(_user.DirectionInfo);
+
+                _actions[i].Perform(targets);
+
+                yield return new WaitUntil(() => hideTilesOf(_actions[i]));
+                yield return new WaitUntil(() => hideCombatantsOf(_actions[i]));
+            }
+
+            yield return new WaitForEndOfFrame();
+            IsBusy = false;
         }
     }
 }

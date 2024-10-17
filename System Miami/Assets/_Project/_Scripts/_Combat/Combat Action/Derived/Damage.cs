@@ -11,18 +11,12 @@ namespace SystemMiami.CombatSystem
     public class Damage : CombatAction
     {
         [SerializeField] private float _abilityDamage;
-        public override void SetTargeting()
-        {
-            Debug.Log($"{name} trying to set targets");
 
-            _targeting = new Targeting(_user, this);
-        }
-
-        public override void Perform()
+        public override void Perform(Targets targets)
         {
-            for(int i = 0; i < _targetCombatants.Length; i++)
+            for(int i = 0; i < targets.Combatants.Length; i++)
             {
-                if (!_targetCombatants[i].TryGetComponent(out IDamageable target))
+                if (!targets.Combatants[i].TryGetComponent(out IDamageable target))
                 {
                     Debug.Log("Invalid damage target");
                 }

@@ -7,34 +7,47 @@ namespace SystemMiami.Utilities
 {
     public static class DirectionHelper
     {
-        // An unchanging dict of difference vectors for world space
-        public static readonly Dictionary<TileDir, Vector2Int> BoardDirections =
+        // An unchanging dict of direction vectors, accessable by TileDir
+        public static readonly Dictionary<TileDir, Vector2Int> MapDirectionsByEnum =
             new Dictionary<TileDir, Vector2Int>()
             {
-                { TileDir.FORWARD_L,   new Vector2Int(-1,  1)  },
                 { TileDir.FORWARD_C,   new Vector2Int( 0,  1)  },
                 { TileDir.FORWARD_R,   new Vector2Int( 1,  1)  },
-                { TileDir.MIDDLE_L,    new Vector2Int(-1,  0)  },
-                { TileDir.MIDDLE_C,    new Vector2Int( 0,  0)  },
                 { TileDir.MIDDLE_R,    new Vector2Int( 1,  0)  },
-                { TileDir.BACKWARD_L,  new Vector2Int(-1,  -1) },
+                { TileDir.BACKWARD_R,  new Vector2Int( 1,  -1) },
                 { TileDir.BACKWARD_C,  new Vector2Int( 0,  -1) },
-                { TileDir.BACKWARD_R,  new Vector2Int( 1,  -1) }
+                { TileDir.BACKWARD_L,  new Vector2Int(-1,  -1) },
+                { TileDir.MIDDLE_L,    new Vector2Int(-1,  0)  },
+                { TileDir.FORWARD_L,   new Vector2Int(-1,  1)  }
+            };
+
+        // An unchanging dict of TileDirs, accessable by direction vector
+        public static readonly Dictionary<Vector2Int, TileDir> DirectionEnumsByVector = 
+            new Dictionary<Vector2Int, TileDir>()
+            {
+                { new Vector2Int( 0,  1),   TileDir.FORWARD_C   },
+                { new Vector2Int( 1,  1),   TileDir.FORWARD_R   },
+                { new Vector2Int( 1,  0),   TileDir.MIDDLE_R    },
+                { new Vector2Int( 1,  -1),  TileDir.BACKWARD_R  },
+                { new Vector2Int( 0,  -1),  TileDir.BACKWARD_C  },
+                { new Vector2Int(-1,  -1),  TileDir.BACKWARD_L  },
+                { new Vector2Int(-1,  0),   TileDir.MIDDLE_L    },
+                { new Vector2Int(-1,  1),   TileDir.FORWARD_L   }
             };
 
         /// <summary>
-        /// Takes two positions, origin and forward, 
+        /// Takes two positions, origin and mapPositionB, 
         /// and returns a difference vector (only 0s or signed 1s).
         /// </summary>
-        public static Vector2Int GetDirection(Vector2Int origin, Vector2Int forward)
+        public static Vector2Int GetDirectionVec(Vector2Int origin, Vector2Int forward)
         {
             int x = 0;
             int y = 0;
 
             // In these examples, the origin object is
-            // "Looking at" the same position at (-8, 2)
-            // ex1. origin = (0, 0), forward = (-8, 2)
-            // ex2. origin = (-4, 5), forward = (-8, 2)
+            // "Looking at" the same mapPositionA at (-8, 2)
+            // ex1. origin = (0, 0), mapPositionB = (-8, 2)
+            // ex2. origin = (-4, 5), mapPositionB = (-8, 2)
 
             // Convert ints to floats and get the difference.
                 // ex1. difference = (-8.0, 2.0)
@@ -54,9 +67,9 @@ namespace SystemMiami.Utilities
 
             // Return the direction vector.
                 // ex1. Returns (-1, 0), a vector
-                // equivalent to BoardDirections[MIDDLE_L]
+                // equivalent to MapDirectionsByEnum[MIDDLE_L]
                 // ex2. Returns (-1, -1), a vector
-                // euqivalent to BoardDirections[BACKWARD_L]
+                // euqivalent to MapDirectionsByEnum[BACKWARD_L]
             return new Vector2Int(x, y);
         }
     }
@@ -65,25 +78,38 @@ namespace SystemMiami.Utilities
     /// <summary>
     /// A struct containing 3 Vector2Ints.
     /// On construction, it stores a difference Vector based
-    /// on the position and forward given.
+    /// on the mapPositionA and mapPositionB given.
     /// </summary>
     public struct DirectionalInfo
     {
-        // Position (on the game board) of a tile
-        public Vector2Int Position { get; private set; }
+        // MapPosition (on the game board) of a tile
+        public Vector2Int MapPosition { get; private set; }
 
-        // Position (on the game board) of whatever
-        // we consider to be "forward" from myPos.
-        public Vector2Int Forward { get; private set; }
+        // MapPosition (on the game board) of whatever
+        // we consider to be "mapPositionB" from myPos.
+        public Vector2Int MapForward { get; private set; }
 
-        // The difference the object is facing
-        public Vector2Int Direction { get; private set; }
+        // The direction the object is mapPositionB
+        public Vector2Int DirectionVec { get; private set; }
 
-        public DirectionalInfo(Vector2Int position, Vector2Int forward)
+        public TileDir DirectionName { get; private set; }
+
+        public DirectionalInfo(Vector2Int mapPositionA, Vector2Int mapPositionB)
         {
-            Position = position;
-            Forward = forward;
-            Direction = DirectionHelper.GetDirection(position, forward);
+            MapPosition = mapPositionA;
+            DirectionVec = DirectionHelper.GetDirectionVec(mapPositionA, mapPositionB);
+
+            TileDir directionName;
+            if(DirectionHelper.DirectionEnumsByVector.TryGetValue(DirectionVec, out directionName))
+            {
+                DirectionName = directionName;
+            }
+            else
+            {
+                DirectionName = (TileDir)0;
+            }
+
+            MapForward = MapPosition + DirectionVec;
         }
     }
     #endregion

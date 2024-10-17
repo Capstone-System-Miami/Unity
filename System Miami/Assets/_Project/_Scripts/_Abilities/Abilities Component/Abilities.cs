@@ -1,8 +1,10 @@
 // Authors: Layla Hoey
-using System.Collections.Generic;
 using SystemMiami.CombatSystem;
+using System.Collections;
 using SystemMiami.Utilities;
 using UnityEngine;
+using System.Net;
+using Unity.VisualScripting;
 
 namespace SystemMiami.AbilitySystem
 {
@@ -24,7 +26,6 @@ namespace SystemMiami.AbilitySystem
 
         [SerializeField] private Ability[] _abilities;
         [SerializeField] private Ability _selectedAbility;
-        [SerializeField] private bool isenabled;
         [SerializeField] private bool _isTargeting = false;
         
         [SerializeField] private GameObject[] targs;
@@ -34,6 +35,7 @@ namespace SystemMiami.AbilitySystem
         private Vector2Int startFrameDirection;
         private Vector2Int endFrameDirection;
 
+        private bool _isUpdating;
 
         void Awake()
         {
@@ -42,15 +44,18 @@ namespace SystemMiami.AbilitySystem
 
         private void OnEnable()
         {
-            //foreach(Ability ability in _abilities)
-            //{
-            //    ability.Init(_combatant);
-            //}
+            foreach (Ability ability in _abilities)
+            {
+                ability.Init(_combatant);
+            }
         }
 
         private void Update()
         {
-            startFrameDirection = _combatant.DirectionInfo.Direction;
+            startFrameDirection = _combatant.DirectionInfo.DirectionVec;
+
+            if(_isUpdating) { return; }
+
 
             // Just for testing.
             // Checks inputs and sets the selected ability
@@ -66,29 +71,69 @@ namespace SystemMiami.AbilitySystem
                 }
             }
 
-            if(_isTargeting)
+            if(_selectedAbility != null)
             {
-                if(Input.GetMouseButtonDown(0))
+                if (!_isTargeting)
                 {
-                    _selectedAbility?.UpdateTargets();
-                }
+                    if (_selectedAbility.IsPreviewing)
+                    {
+                        StartCoroutine(_selectedAbility.HideAllTargets());
+                    }
 
-                _selectedAbility?.ShowTargets();
+                    if (Input.GetMouseButtonDown(0))
+                    {
+                        _isTargeting = true;
+                    }
+                }
+                else
+                {
+                    if (!_selectedAbility.IsPreviewing)
+                    {
+                        StartCoroutine(_selectedAbility.ShowAllTargets());
+                    }
+
+
+                    if (Input.GetMouseButtonDown(1))
+                    {
+                        _isTargeting = false;
+                    }
+
+                    if (Input.GetKeyDown(KeyCode.Return))
+                    {
+                        StartCoroutine(_selectedAbility.Use());
+                        _isTargeting = false;
+                    }
+                }
             }
-            else
-            {
-                _selectedAbility?.HideTargets();
-            }
+
         }
 
         private void LateUpdate()
         {
-            endFrameDirection = _combatant.DirectionInfo.Direction;
-
-            if (startFrameDirection != endFrameDirection)
+            endFrameDirection = _combatant.DirectionInfo.DirectionVec;
+            if(endFrameDirection != startFrameDirection)
             {
-                _selectedAbility?.UpdateTargets();
+                if (_selectedAbility != null)
+                {
+                    StartCoroutine(onDirectionChange());
+                }
             }
+        }
+
+        private IEnumerator onDirectionChange()
+        {
+            _isUpdating = true;
+            yield return null;
+
+            //StartCoroutine(_selectedAbility.HideAllTargets());
+            //yield return new WaitUntil(() => !_selectedAbility.IsPreviewing);
+            //yield return null;
+
+            StartCoroutine(_selectedAbility.ShowAllTargets());
+            yield return new WaitUntil(() => _selectedAbility.IsPreviewing);
+            yield return null;
+            
+            _isUpdating = false;
         }
     }
 }

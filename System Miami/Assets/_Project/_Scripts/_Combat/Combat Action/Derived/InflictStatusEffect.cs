@@ -9,19 +9,14 @@ namespace SystemMiami.CombatSystem
     {
         [SerializeField] AttributeSetSO _effect;
         [SerializeField] int _turns;
-        public override void SetTargeting()
-        {
-            _targeting = new Targeting(_user, this);
-        }
 
-        public override void Perform()
+        public override void Perform(Targets targets)
         {
-            Combatant[] validTargets = _targetCombatants;
             AttributeSet effect = new AttributeSet(_effect);
 
-            foreach (Combatant target in validTargets)
+            for(int i = 0; i < targets.Combatants.Length; i++)
             {
-                if (!target.TryGetComponent(out Attributes attr))
+                if (!targets.Combatants[i].TryGetComponent(out Attributes attr))
                 {
                     Debug.Log($"Couldn't find attributes on the target");
                 }

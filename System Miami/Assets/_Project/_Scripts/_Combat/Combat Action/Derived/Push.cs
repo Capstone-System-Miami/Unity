@@ -11,22 +11,15 @@ namespace SystemMiami.CombatSystem
     {
         [SerializeField] private int _distance;
         
-        // TODO Forward, backward, etc.
+        // TODO MapForward, backward, etc.
         // In reference to attacker or reciever though, idk.
         [SerializeField] private Vector2Int _direction;
 
-        public override void SetTargeting()
+        public override void Perform(Targets targets)
         {
-            _targeting = new Targeting(_user, this);
-        }
-
-        public override void Perform()
-        {
-            Combatant[] validEnemies = _targetCombatants;
-
-            for (int i = 0; i < validEnemies.Length; i++)
+            for (int i = 0; i < targets.Combatants.Length; i++)
             {
-                if (validEnemies[i].TryGetComponent(out IMovable target))
+                if (targets.Combatants[i].TryGetComponent(out IMovable target))
                 {
                     if (!target.TryMoveInDirection(_direction, _distance))
                     {

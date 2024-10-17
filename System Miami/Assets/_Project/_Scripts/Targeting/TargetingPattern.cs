@@ -17,7 +17,6 @@ namespace SystemMiami.CombatSystem
         [SerializeField] private bool _front;
         [SerializeField] private bool _frontRight;
         [SerializeField] private bool _left;
-        [SerializeField] private bool _center;
         [SerializeField] private bool _right;
         [SerializeField] private bool _backLeft;
         [SerializeField] private bool _back;
@@ -33,15 +32,14 @@ namespace SystemMiami.CombatSystem
             // An array of the bools set in the inspector
             bool[] checkDirections =
             {
-                _frontLeft,
                 _front,
                 _frontRight,
-                _left,
-                _center,
                 _right,
-                _backLeft,
-                _back,
                 _backRight,
+                _back,
+                _backLeft,
+                _left,
+                _frontLeft,
             };
 
             // Add the direction of every `true` to the result List

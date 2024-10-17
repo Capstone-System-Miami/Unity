@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using SystemMiami.Enums;
 using SystemMiami.Utilities;
 using UnityEditor.PackageManager;
+using SystemMiami.Outdated;
 
 namespace SystemMiami.CombatSystem
 {
@@ -23,90 +24,107 @@ namespace SystemMiami.CombatSystem
         [Tooltip("Directions and distance this action will check for targets")]
         [SerializeField] private TargetingPattern _targetingPattern;
 
-        [SerializeField] protected Color _targetedTileColor;
-        [SerializeField] protected Color _targetedCombatantColor;
-
-        protected Combatant _user;
-
-        /// <summary>
-        /// Object that checks for targets given a specific pattern,
-        /// adjusting for the direction the user is facing.
-        /// </summary>
-        protected Targeting _targeting;
-
-        protected OverlayTile[] _targetTiles;
-        protected Combatant[] _targetCombatants;
+        public Color TargetedTileColor;
+        public Color TargetedCombatantColor;
 
         public bool AffectsSelf { get { return _affectsSelf; } }
         public TargetingPattern TargetingPattern { get { return _targetingPattern; } }
 
-        public abstract void SetTargeting();
-        public abstract void Perform();
+        public Targets StoredTargets;
 
-        public void Init(Combatant user)
+
+        /// <summary>
+        /// Takes directional info about the user,
+        /// and uses it as the basis for creating
+        /// a new set of DirectionalInfo about
+        /// the targetting pattern specific to
+        /// this CombatAction.
+        /// </summary>
+        /// <param name="userInfo"></param>
+        /// <returns></returns>
+        private DirectionalInfo getPatternDirection(DirectionalInfo userInfo)
         {
-            _user = user;
-            SetTargeting();
-        }
+            // The coordinates (on the Board) to start checking tiles from
+            Vector2Int patternOrigin;
 
-        public void ShowTargets()
-        {
-            TargetTiles();
-            TargetCombatants();
-        }
+            // The coordinates (on the board) that
+            // the Pattern considers to be
+            // its own local "forward".
+            // The Pattern's definition of "forward" might be
+            // the Board's definition of "right"
+            Vector2Int patternForward;
 
-        public void UpdateTargets()
-        {
-            Debug.Log($"{name} trying to update with {_user.DirectionInfo}");
-            _targeting.GetUpdatedTargets(out _targetTiles, out _targetCombatants);
-        }
-
-        public void HideTargets()
-        {
-            UntargetTiles();
-            UntargetCombatants();
-        }
-
-        public void TargetTiles()
-        {
-            OverlayTile[] targetTiles = _targetTiles;
-
-            Debug.Log($"{name} Trying to target tiles");
-            for (int i = 0; i < targetTiles.Length; i++)
+            // If action is a projectile
+            if (this is Projectile projectile)
             {
-                targetTiles[i].Target(_targetedTileColor);
+                // If this is player
+                // If the mouse boardPosition is less than the range (how will we do this?)
+                // Pattern origin = mouse boardPosition
+                // If this is the enemy
+                // If the player boardPosition is less than the range (how?)
+                // Pattern origin = player boardPosition
+
+                // Return a zero'd direction info
+                // if projectile targeting failed?
+                patternOrigin = userInfo.MapForward;
+                patternForward = userInfo.MapForward + userInfo.DirectionVec;
+            }
+            else
+            {
+                patternOrigin = userInfo.MapPosition;
+                patternForward = userInfo.DirectionVec;
+            }
+
+            return new DirectionalInfo(patternOrigin, patternForward);
+        }
+
+        private void tryGetTile(Vector2Int position, out OverlayTile tile, out Combatant character)
+        {
+            if (MapManager.MGR.map.ContainsKey(position))
+            {
+                tile = MapManager.MGR.map[position];
+                character = tile.currentCharacter;
+            }
+            else
+            {
+                tile = null;
+                character = null;
             }
         }
 
-        public void TargetCombatants()
+        public Targets GetUpdatedTargets(DirectionalInfo userInfo)
         {
-            Combatant[] targetCombatants = _targetCombatants;
+            List<Vector2Int> boardPositions = new List<Vector2Int>();
+            List<OverlayTile> validTilesList = new List<OverlayTile>();
+            List<Combatant> targetCombatantsList = new List<Combatant>();
 
-            for (int i = 0; i < _targetCombatants.Length; i++)
+            AdjacentPositionSet patternAdjacentPositions = new AdjacentPositionSet(getPatternDirection(userInfo));
+
+            for (int i = 0; i <= _targetingPattern.Radius; i++)
             {
-                _targetCombatants[i].Target(_targetedCombatantColor);
+                List<TileDir> patternDirections = _targetingPattern.GetDirections();
+
+                foreach (TileDir direction in patternDirections)
+                {
+                    Vector2Int boardPosition = patternAdjacentPositions.Adjacent[direction] * i;
+
+                    // Add the tile at the action origin's adjacent tiles,
+                    // corrected for the direction the character is facing.
+                    boardPositions.Add(boardPosition);
+
+                    tryGetTile(boardPosition, out OverlayTile tile, out Combatant enemy);
+
+                    if (tile != null) { validTilesList.Add(tile); }
+
+                    if (enemy != null) { targetCombatantsList.Add(enemy); }
+                }
             }
+
+            Targets updated = new Targets(boardPositions.ToArray(), validTilesList.ToArray(), targetCombatantsList.ToArray());
+            StoredTargets = updated;
+            return updated;
         }
 
-        public void UntargetTiles()
-        {
-            OverlayTile[] targetTiles = _targetTiles;
-
-            for (int i = 0; i < targetTiles.Length; i++)
-            {
-                targetTiles[i].UnTarget();
-            }
-        }
-
-        public void UntargetCombatants()
-        {
-            Combatant[] targetCombatants = _targetCombatants;
-
-            for (int i = 0; i < _targetCombatants.Length; i++)
-            {
-                _targetCombatants[i].UnTarget();
-            }
-        }
-
+        public abstract void Perform(Targets targets);
     }
 }
