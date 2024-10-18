@@ -6,9 +6,13 @@ using UnityEngine;
 
 namespace SystemMiami.CombatSystem
 {
+    public enum PatternType { SELF, AREA, MOUSE };
+
     [System.Serializable]
     public class TargetingPattern
     {
+        public PatternType Type;
+
         [Tooltip("Radius of the pattern, in Tiles.")]
         [SerializeField] private int _radius;
 

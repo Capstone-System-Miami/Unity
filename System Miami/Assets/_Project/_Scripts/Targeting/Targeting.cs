@@ -44,7 +44,7 @@ namespace SystemMiami.Outdated
     //        Vector2Int patternForward;
 
     //        // If action is a projectile
-    //        if (_action is Projectile projectile)
+    //        if (_action is AreaOfEffect projectile)
     //        {
     //            // If this is player
     //            // If the mouse boardPosition is less than the range (how will we do this?)

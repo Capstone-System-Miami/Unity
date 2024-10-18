@@ -4,7 +4,7 @@ using UnityEngine;
 namespace SystemMiami.CombatSystem
 {
     [CreateAssetMenu(fileName = "New Projectile Action", menuName = "CombatAction/Projectile")]
-    public class Projectile : CombatAction
+    public class AreaOfEffect : CombatAction
     {
         [SerializeField] int _range;
 

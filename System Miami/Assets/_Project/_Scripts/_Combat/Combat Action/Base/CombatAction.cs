@@ -25,8 +25,8 @@ namespace SystemMiami.CombatSystem
         [Tooltip("Directions and distance this action will check for targets")]
         [SerializeField] private TargetingPattern _targetingPattern;
 
-        public Color TargetedTileColor;
-        public Color TargetedCombatantColor;
+        public Color TargetedTileColor = Color.white;
+        public Color TargetedCombatantColor = Color.white;
 
         public bool AffectsSelf { get { return _affectsSelf; } }
         public TargetingPattern TargetingPattern { get { return _targetingPattern; } }
@@ -55,8 +55,13 @@ namespace SystemMiami.CombatSystem
             // the Board's definition of "right"
             Vector2Int patternForward;
 
-            // If action is a projectile
-            if (this is Projectile projectile)
+            // If action is a AOE
+            if (_targetingPattern.Type == PatternType.SELF)
+            {
+                patternOrigin = userInfo.MapPosition;
+                patternForward = userInfo.MapForward;
+            }
+            else
             {
                 // If this is player
                 // If the mouse boardPosition is less than the range (how will we do this?)
@@ -66,14 +71,9 @@ namespace SystemMiami.CombatSystem
                 // Pattern origin = player boardPosition
 
                 // Return a zero'd direction info
-                // if projectile targeting failed?
-                patternOrigin = userInfo.MapForward;
-                patternForward = userInfo.MapForward + userInfo.DirectionVec;
-            }
-            else
-            {
-                patternOrigin = userInfo.MapPosition;
-                patternForward = userInfo.MapForward;
+                // if AOE targeting failed?
+                patternOrigin = userInfo.B;
+                patternForward = userInfo.B + userInfo.DirectionVec;
             }
 
             DirectionalInfo patternInfo = new DirectionalInfo(patternOrigin, patternForward);
@@ -106,26 +106,77 @@ namespace SystemMiami.CombatSystem
 
             AdjacentPositionSet patternAdjacentPositions = new AdjacentPositionSet(getPatternDirection(userInfo));
 
-            for (int i = 0; i <= _targetingPattern.Radius; i++)
+            OverlayTile tile;
+            Combatant enemy;
+
+            switch (_targetingPattern.Type)
             {
-                List<TileDir> patternDirections = _targetingPattern.GetDirections();
+                default:
+                case PatternType.SELF:
+                    // check adjacent tiles
+                    for (int i = 0; i <= _targetingPattern.Radius; i++)
+                    {
+                        List<TileDir> patternDirections = _targetingPattern.GetDirections();
 
-                foreach (TileDir direction in patternDirections)
-                {
-                    Vector2Int boardPosition = patternAdjacentPositions.AdjacentPositions[direction] +
-                        patternAdjacentPositions.AdjacentDirections[direction] * i;
+                        foreach (TileDir direction in patternDirections)
+                        {
+                            Vector2Int boardPosition = patternAdjacentPositions.AdjacentPositions[direction] +
+                                patternAdjacentPositions.AdjacentDirections[direction] * i;
 
-                    // Add the tile at the action origin's adjacent tiles,
-                    // corrected for the direction the character is facing.
-                    boardPositions.Add(boardPosition);
+                            // Add the tile at the action origin's adjacent tiles,
+                            // corrected for the direction the character is facing.
+                            boardPositions.Add(boardPosition);
 
-                    tryGetTile(boardPosition, out OverlayTile tile, out Combatant enemy);
+                            tryGetTile(boardPosition, out tile, out enemy);
+
+                            if (tile != null) { validTilesList.Add(tile); }
+
+                            if (enemy != null) { targetCombatantsList.Add(enemy); }
+                        }
+                    }
+
+                    break;
+
+                case PatternType.AREA:
+                    // check own tile
+                    tryGetTile(userInfo.B, out tile, out enemy);
 
                     if (tile != null) { validTilesList.Add(tile); }
-
                     if (enemy != null) { targetCombatantsList.Add(enemy); }
-                }
+
+                    // check adjacent tiles
+                    for (int i = 0; i <= _targetingPattern.Radius; i++)
+                    {
+                        List<TileDir> patternDirections = _targetingPattern.GetDirections();
+
+                        foreach (TileDir direction in patternDirections)
+                        {
+                            Vector2Int boardPosition = patternAdjacentPositions.AdjacentPositions[direction] +
+                                patternAdjacentPositions.AdjacentDirections[direction] * i;
+
+                            // Add the tile at the action origin's adjacent tiles,
+                            // corrected for the direction the character is facing.
+                            boardPositions.Add(boardPosition);
+
+                            tryGetTile(boardPosition, out tile, out enemy);
+
+                            if (tile != null) { validTilesList.Add(tile); }
+
+                            if (enemy != null) { targetCombatantsList.Add(enemy); }
+                        }
+                    }
+                    break;
+
+                case PatternType.MOUSE:
+                    // check own tile
+                    tryGetTile(userInfo.B, out tile, out enemy);
+
+                    if (tile != null) { validTilesList.Add(tile); }
+                    if (enemy != null) { targetCombatantsList.Add(enemy); }
+                    break;
             }
+
+
 
             Targets updated = new Targets(boardPositions.ToArray(), validTilesList.ToArray(), targetCombatantsList.ToArray());
             StoredTargets = updated;

@@ -115,6 +115,9 @@ namespace SystemMiami.Utilities
     /// </summary>
     public struct DirectionalInfo
     {
+        public Vector2Int A { get; private set; }
+        public Vector2Int B { get; private set; }
+
         // MapPosition (on the game board) of a tile
         public Vector2Int MapPosition { get; private set; }
 
@@ -129,6 +132,9 @@ namespace SystemMiami.Utilities
 
         public DirectionalInfo(Vector2Int mapPositionA, Vector2Int mapPositionB)
         {
+            A = mapPositionA;
+            B = mapPositionB;
+
             MapPosition = mapPositionA;
             DirectionVec = DirectionHelper.GetDirectionVec(mapPositionA, mapPositionB);
 
