@@ -72,19 +72,39 @@ namespace SystemMiami.Utilities
             // euqivalent to MapDirectionsByEnum[BACKWARD_L]
             return new Vector2Int(x, y);
         }
+
+        public static TileDir GetTileDir(Vector2Int directionVec)
+        {
+            if (DirectionHelper.DirectionEnumsByVector.TryGetValue(directionVec, out TileDir dirEnum))
+            {
+                return dirEnum;
+            }
+            else
+            {
+                return TileDir.FORWARD_C;
+            }
+        }
+
+        public static void Print(DirectionalInfo dirInfo, string objectName)
+        {
+            Debug.LogWarning($"{objectName}|  MapOrigin {dirInfo.MapPosition}, MapFWD {dirInfo.MapForward}, " +
+                $"MapDir{dirInfo.DirectionVec}, DirName {dirInfo.DirectionName}");
+        }
+
+        public static void Print(Dictionary<TileDir, Vector2Int> dirDict, string objectName)
+        {
+            string report = $"{objectName}\n";
+
+            foreach(TileDir dir in dirDict.Keys)
+            {
+                report += $"{dir}: {dirDict[dir]}\n";
+            }
+
+            Debug.LogWarning(report);
+        }
     }
 
-    public static TileDir GetTileDir(Vector2Int directionVec)
-    {
-        if (DirectionHelper.DirectionEnumsByVector.TryGetValue(directionVec, out TileDir dirEnum))
-        {
-            return dirEnum;
-        }
-        else
-        {
-            return TileDir.FORWARD_C;
-        }
-    }
+
 
 
     #region STRUCTS

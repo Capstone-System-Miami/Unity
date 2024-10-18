@@ -6,6 +6,7 @@ using SystemMiami.Enums;
 using SystemMiami.Utilities;
 using UnityEditor.PackageManager;
 using SystemMiami.Outdated;
+using Unity.VisualScripting.FullSerializer;
 
 namespace SystemMiami.CombatSystem
 {
@@ -72,10 +73,15 @@ namespace SystemMiami.CombatSystem
             else
             {
                 patternOrigin = userInfo.MapPosition;
-                patternForward = userInfo.DirectionVec;
+                patternForward = userInfo.MapForward;
             }
 
-            return new DirectionalInfo(patternOrigin, patternForward);
+            DirectionalInfo patternInfo = new DirectionalInfo(patternOrigin, patternForward);
+
+            DirectionHelper.Print(userInfo, "user");
+            DirectionHelper.Print(patternInfo, "pattern");
+
+            return patternInfo;
         }
 
         private void tryGetTile(Vector2Int position, out OverlayTile tile, out Combatant character)

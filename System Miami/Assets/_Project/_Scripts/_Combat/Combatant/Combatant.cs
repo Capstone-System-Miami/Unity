@@ -103,9 +103,10 @@ namespace SystemMiami.CombatSystem
             }
 
             DirectionInfo = new DirectionalInfo(playerPos, playerFwd);
+
             if(tag == "Player")
             {
-                Debug.LogWarning($"origin {DirectionInfo.MapPosition}, NormalDir{DirectionInfo.DirectionVec}");
+                //DirectionHelper.Print(DirectionInfo);
             }
         }
 
