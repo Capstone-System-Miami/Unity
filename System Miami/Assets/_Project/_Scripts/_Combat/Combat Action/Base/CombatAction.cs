@@ -78,8 +78,8 @@ namespace SystemMiami.CombatSystem
 
             DirectionalInfo patternInfo = new DirectionalInfo(patternOrigin, patternForward);
 
-            DirectionHelper.Print(userInfo, "user");
-            DirectionHelper.Print(patternInfo, "pattern");
+          //  DirectionHelper.Print(userInfo, "user");
+           // DirectionHelper.Print(patternInfo, "pattern");
 
             return patternInfo;
         }
@@ -173,6 +173,8 @@ namespace SystemMiami.CombatSystem
 
                     if (tile != null) { validTilesList.Add(tile); }
                     if (enemy != null) { targetCombatantsList.Add(enemy); }
+                   
+
                     break;
             }
 

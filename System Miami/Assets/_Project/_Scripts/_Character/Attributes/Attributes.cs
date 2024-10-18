@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using SystemMiami.CombatSystem;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 namespace SystemMiami
 {
@@ -225,9 +226,11 @@ namespace SystemMiami
             _upgrades = new AttributeSet();
         }
 
-        public void AddStatusEffect(AttributeSet effect, int duration)
+        public void AddStatusEffect(StatusEffect effect)
         {
-            _statusEffects.Add(new StatusEffect(effect, duration));
+            _statusEffects.Add(effect);
+            Debug.Log($"{name} received a status effect for {effect.Duration} turns.");
+            updateVals(false);
         }
 
         public int GetStatusEffectValue(AttributeType type)

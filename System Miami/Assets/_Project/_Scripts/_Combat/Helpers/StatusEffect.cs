@@ -9,13 +9,18 @@ namespace SystemMiami
     {
         public AttributeSet Effect { get; private set; }
         public int Duration { get; private set; }
-        
-        // Start is called before the first frame update
-        public StatusEffect(AttributeSet effect, int duration)
+
+        public StatusEffect(AttributeSetSO effect, int duration)
         {
-            Effect = effect;
+            Effect = new AttributeSet(effect);
             Duration = duration;
         }
+
+        //public StatusEffect(AttributeSet effect, int duration)
+        //{
+        //    Effect = effect;
+        //    Duration = duration;
+        //}
 
         /// <summary>
         /// Decreases the duration of the status effect by one turn.

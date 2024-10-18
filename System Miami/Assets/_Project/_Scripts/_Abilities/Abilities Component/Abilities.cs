@@ -37,6 +37,8 @@ namespace SystemMiami.AbilitySystem
 
         private bool _isUpdating;
 
+        TargetingPattern _targetingPattern;
+
         void Awake()
         {
             _combatant = GetComponent<Combatant>();
@@ -74,7 +76,7 @@ namespace SystemMiami.AbilitySystem
             // Unsubscribe from MouseController event
             if (_mouseController != null)
             {
-                _mouseController.OnMouseTileChanged -= UpdateTargetPreview;
+                _mouseController.OnMouseTileChanged -= HandleMouseTile;
             }
         }
 
@@ -133,7 +135,7 @@ namespace SystemMiami.AbilitySystem
                     _isTargeting = true;
 
                     //subscribe to MouseController's tile change event
-                    _mouseController.OnMouseTileChanged += UpdateTargetPreview;
+                    _mouseController.OnMouseTileChanged += HandleMouseTile;
                 }
             }
         }
@@ -151,7 +153,7 @@ namespace SystemMiami.AbilitySystem
                     StartCoroutine(_selectedAbility.HideAllTargets());
 
                     //unsubscribe
-                    _mouseController.OnMouseTileChanged -= UpdateTargetPreview;
+                    _mouseController.OnMouseTileChanged -= HandleMouseTile;
                 }
             }
         }
@@ -166,7 +168,7 @@ namespace SystemMiami.AbilitySystem
                 Debug.Log("Press enter");
                 StartCoroutine(_selectedAbility.Use());
                 _isTargeting = false;
-                _mouseController.OnMouseTileChanged -= UpdateTargetPreview;
+                _mouseController.OnMouseTileChanged -= HandleMouseTile;
             }
         }
 
@@ -174,7 +176,7 @@ namespace SystemMiami.AbilitySystem
         /// Updates target preview when the mouse moves over a new tile.
         /// </summary>
         /// <param name="tile">The new tile under the mouse cursor.</param>
-        private void UpdateTargetPreview(OverlayTile tile)
+        private void HandleMouseTile(OverlayTile tile)
         {
             //update target preview based on new tile
             if (_selectedAbility != null)
@@ -200,6 +202,7 @@ namespace SystemMiami.AbilitySystem
 
         private void LateUpdate()
         {
+            
             endFrameDirection = _combatant.DirectionInfo.DirectionVec;
             if (endFrameDirection != startFrameDirection)
             {
@@ -215,15 +218,14 @@ namespace SystemMiami.AbilitySystem
             _isUpdating = true;
             yield return null;
 
-            //StartCoroutine(_selectedAbility.HideAllTargets());
-            //yield return new WaitUntil(() => !_selectedAbility.IsPreviewing);
+            //StartCoroutine(_selectedAbility.HideAllTargets());//yield return new WaitUntil(() => !_selectedAbility.IsPreviewing);
             //yield return null;
 
             StartCoroutine(_selectedAbility.ShowAllTargets());
             yield return new WaitUntil(() => _selectedAbility.IsPreviewing);
             yield return null;
 
-            _isUpdating = false;
+          _isUpdating = false;
         }
         #endregion
     }

@@ -117,7 +117,7 @@ namespace SystemMiami.CombatSystem
                     shifted = (TileDir)catchBeginning++;
                 }
 
-                Debug.Log($"local pos {centered} is now original pos {shifted}");
+                //Debug.Log($"local pos {centered} is now original pos {shifted}");
                 // Result set to the shifted position.
                 result[centered] = originalVectors[shifted];
             }
