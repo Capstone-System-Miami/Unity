@@ -204,55 +204,55 @@ namespace SystemMiami.AbilitySystem
         /// Updates the target preview based on the tile under the mouse cursor.
         /// </summary>
         /// <param name="targetTile">The tile under the mouse cursor.</param>
-        public IEnumerator UpdateTargetPreview(OverlayTile targetTile)
-        {
-            if (IsBusy)
-            {
-                yield break;
-            }
+        //public IEnumerator UpdateTargetPreview(OverlayTile targetTile)
+        //{
+        //    if (IsBusy)
+        //    {
+        //        yield break;
+        //    }
 
-            IsBusy = true;
-            yield return null;
+        //    IsBusy = true;
+        //    yield return null;
 
-            //hide previous targets
-            for (int i = 0; i < _actions.Length; i++)
-            {
-                yield return new WaitUntil(() => hideTilesOf(_actions[i]));
-                yield return new WaitUntil(() => hideCombatantsOf(_actions[i]));
-            }
+        //    //hide previous targets
+        //    for (int i = 0; i < _actions.Length; i++)
+        //    {
+        //        yield return new WaitUntil(() => hideTilesOf(_actions[i]));
+        //        yield return new WaitUntil(() => hideCombatantsOf(_actions[i]));
+        //    }
 
-            //create a new DirectionalInfo based on user pos and target tile
-            Vector2Int userPosition = (Vector2Int)_user.CurrentTile.gridLocation;
-            Vector2Int targetPosition = (Vector2Int)targetTile.gridLocation;
+        //    //create a new DirectionalInfo based on user pos and target tile
+        //    Vector2Int userPosition = (Vector2Int)_user.CurrentTile.gridLocation;
+        //    Vector2Int targetPosition = (Vector2Int)targetTile.gridLocation;
 
-            DirectionalInfo newDirectionInfo = new DirectionalInfo(userPosition, targetPosition);
+        //    DirectionalInfo newDirectionInfo = new DirectionalInfo(userPosition, targetPosition);
 
-            // If the direction vector is zero, do not update targets
-            if (newDirectionInfo.DirectionVec == Vector2Int.zero)
-            {
-                IsBusy = false;
-                IsPreviewing = false;
-                yield break;
-            }
+        //    // If the direction vector is zero, do not update targets
+        //    if (newDirectionInfo.DirectionVec == Vector2Int.zero)
+        //    {
+        //        IsBusy = false;
+        //        IsPreviewing = false;
+        //        yield break;
+        //    }
 
-            //update stored targets for each action
-            for (int i = 0; i < _actions.Length; i++)
-            {
-                _actions[i].GetUpdatedTargets(newDirectionInfo);
-            }
+        //    //update stored targets for each action
+        //    for (int i = 0; i < _actions.Length; i++)
+        //    {
+        //        _actions[i].GetUpdatedTargets(newDirectionInfo);
+        //    }
 
-            // Show new targets
-            for (int i = 0; i < _actions.Length; i++)
-            {
-                yield return new WaitUntil(() => showTilesOf(_actions[i]));
-                yield return new WaitUntil(() => showCombatantsOf(_actions[i]));
-            }
+        //    // Show new targets
+        //    for (int i = 0; i < _actions.Length; i++)
+        //    {
+        //        yield return new WaitUntil(() => showTilesOf(_actions[i]));
+        //        yield return new WaitUntil(() => showCombatantsOf(_actions[i]));
+        //    }
 
-            yield return new WaitForEndOfFrame();
-            IsBusy = false;
-            IsPreviewing = true;
+        //    yield return new WaitForEndOfFrame();
+        //    IsBusy = false;
+        //    IsPreviewing = true;
 
-        }
+        //}
 
         #endregion
 
@@ -269,4 +269,5 @@ namespace SystemMiami.AbilitySystem
 
         #endregion
     }
+    
 }

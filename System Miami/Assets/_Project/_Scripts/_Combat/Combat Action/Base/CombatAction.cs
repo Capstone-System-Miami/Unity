@@ -123,6 +123,7 @@ namespace SystemMiami.CombatSystem
             Targets updated = new Targets(boardPositions.ToArray(), validTilesList.ToArray(), targetCombatantsList.ToArray());
             StoredTargets = updated;
             return updated;
+            
         }
 
         public abstract void Perform(Targets targets);

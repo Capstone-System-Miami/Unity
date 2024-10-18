@@ -3,11 +3,12 @@ using System;
 using System.Collections.Generic;
 using SystemMiami.Enums;
 using SystemMiami.Utilities;
+using UnityEditor;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem
 {
-    // TODO: this doesn't work for quarter turns yet.
+    
     // Take the direction that something is facing,
     // and translate their local adjacent positions
     // into the static/unchanging positions on the Board/Map
@@ -16,7 +17,8 @@ namespace SystemMiami.CombatSystem
         private Dictionary<TileDir, Vector2Int> _directionsRelativeToMap;
         private Dictionary<TileDir, Vector2Int> _positionsRelativeToMap;
         private Dictionary<TileDir, Vector2Int> _directionsRelativeToSelf;
-
+        private List<TileDir> rotatedDirs;
+        private TargetingPattern targetingPattern;
         public Dictionary<TileDir, Vector2Int> Adjacent { get; private set; }
         public bool IsReady { get; private set; }
 
@@ -41,6 +43,25 @@ namespace SystemMiami.CombatSystem
 
             Adjacent = _positionsRelativeToMap;
             IsReady = true;
+        }
+
+        public void SetRotatedDirections(List<TileDir> rotatedDirections)
+        {
+            rotatedDirs.Clear();
+            if (rotatedDirections != null && rotatedDirections.Count > 0)
+            {
+                rotatedDirs.AddRange(rotatedDirections);
+            }
+            else
+            {
+                Debug.Log("rotated list is empty");
+            }
+
+        }
+
+        public List<TileDir> GetRotatedDirs()
+        {
+            return rotatedDirs ?? targetingPattern.GetDirections();
         }
 
         /// <summary>

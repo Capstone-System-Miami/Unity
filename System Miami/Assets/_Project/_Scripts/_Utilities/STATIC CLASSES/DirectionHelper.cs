@@ -74,6 +74,19 @@ namespace SystemMiami.Utilities
         }
     }
 
+    public static TileDir GetTileDir(Vector2Int directionVec)
+    {
+        if (DirectionHelper.DirectionEnumsByVector.TryGetValue(directionVec, out TileDir dirEnum))
+        {
+            return dirEnum;
+        }
+        else
+        {
+            return TileDir.FORWARD_C;
+        }
+    }
+
+
     #region STRUCTS
     /// <summary>
     /// A struct containing 3 Vector2Ints.
