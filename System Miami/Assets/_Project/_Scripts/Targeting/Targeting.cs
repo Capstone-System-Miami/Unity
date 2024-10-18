@@ -75,7 +75,7 @@ namespace SystemMiami.Outdated
     //            List<TileDir> targetDirections = _action.TargetingPattern.GetDirections();
     //            foreach (TileDir dir in targetDirections)
     //            {
-    //                Vector2Int boardPosition = _adjacentPositions.Adjacent[dir] * i;
+    //                Vector2Int boardPosition = _adjacentPositions.AdjacentPositions[dir] * i;
 
     //                Debug.Log($"Adding an adjacent tile.\n" +
     //                    $"Direction {dir}, BoardPosition {boardPosition}");

@@ -19,7 +19,8 @@ namespace SystemMiami.CombatSystem
         private Dictionary<TileDir, Vector2Int> _directionsRelativeToSelf;
         private List<TileDir> rotatedDirs;
         private TargetingPattern targetingPattern;
-        public Dictionary<TileDir, Vector2Int> Adjacent { get; private set; }
+        public Dictionary<TileDir, Vector2Int> AdjacentPositions { get; private set; }
+        public Dictionary<TileDir, Vector2Int> AdjacentDirections { get; private set; }
         public bool IsReady { get; private set; }
 
         // Constructors
@@ -42,7 +43,10 @@ namespace SystemMiami.CombatSystem
                 _positionsRelativeToMap[direction] = _directionsRelativeToMap[direction] + info.MapPosition;
             }
 
-            Adjacent = _positionsRelativeToMap;
+            AdjacentPositions = _positionsRelativeToMap;
+            AdjacentDirections = _directionsRelativeToMap;
+
+            DirectionHelper.Print(AdjacentPositions, "Adjacent");
             IsReady = true;
         }
 

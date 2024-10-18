@@ -112,7 +112,8 @@ namespace SystemMiami.CombatSystem
 
                 foreach (TileDir direction in patternDirections)
                 {
-                    Vector2Int boardPosition = patternAdjacentPositions.Adjacent[direction] * i;
+                    Vector2Int boardPosition = patternAdjacentPositions.AdjacentPositions[direction] +
+                        patternAdjacentPositions.AdjacentDirections[direction] * i;
 
                     // Add the tile at the action origin's adjacent tiles,
                     // corrected for the direction the character is facing.
