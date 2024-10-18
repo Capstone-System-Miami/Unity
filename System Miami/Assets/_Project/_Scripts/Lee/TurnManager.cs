@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using SystemMiami.CombatSystem;
 using SystemMiami.AbilitySystem;
+using SystemMiami.Utilities;
 
 namespace SystemMiami
 {
@@ -28,17 +29,18 @@ namespace SystemMiami
         // List of all player characters
         public List<Combatant> playerCharacters;
         // List of all enemy characters
-        public List<Combatant> enemyCharacters;
+        public List<Enemy> enemyCharacters;
 
         // The current phase (Movement or Action)
         public Phase currentPhase;
 
         // Index of the current player character taking their turn
-        private int currentPlayerIndex = 0;
+       // private int currentPlayerIndex = 0;
         // Index of the current enemy character taking their turn
         private int currentEnemyIndex = 0;
 
         public GameObject enemyPrefab;
+        public GameObject bossPrefab; // TODO: Assign boss prefab
 
         public int numberOfEnemies = 3;
 
@@ -46,6 +48,9 @@ namespace SystemMiami
         public bool isPlayerTurn = true;
 
         public int enemyDetectionRadius = 2;
+
+        #region Unity  Methods
+        //===============================
 
         private void Awake()
         {
@@ -62,8 +67,8 @@ namespace SystemMiami
             }
             if (enemyCharacters == null)
             {
-                enemyCharacters = new List<Combatant>();
-            }           
+                enemyCharacters = new List<Enemy>();
+            }
 
             // Set starting phase
             currentPhase = Phase.MovementPhase;
@@ -71,11 +76,16 @@ namespace SystemMiami
 
         private void Start()
         {
-
             SpawnEnemies();
             // Initialize turns, start with first player
             StartPlayerTurn();
         }
+
+        //===============================
+        #endregion // ^Unity  Methods^
+
+        #region Turn Management
+        //===============================
 
         /// <summary>
         /// Starts the player's turn.
@@ -92,7 +102,7 @@ namespace SystemMiami
                 character.ResetTurn();
             }
 
-            currentPlayerIndex = 0;
+           // currentPlayerIndex = 0;
 
             Debug.Log("Player's turn started. Movement Phase.");
         }
@@ -121,6 +131,48 @@ namespace SystemMiami
         }
 
         /// <summary>
+        /// Called when the player has finished their turn.
+        /// Starts the enemy turn.
+        /// </summary>
+        public void EndPlayerTurn()
+        {
+            Debug.Log("Player's turn ended.");
+
+            // Reduce cooldowns and update status effects for player 
+            foreach (Combatant player in playerCharacters)
+            {
+                player.GetComponent<Abilities>().ReduceCooldowns();
+                player._attributes.UpdateStatusEffects();
+            }
+            // After player turn ends, start enemy turn
+            StartEnemyTurn();
+        }
+
+        /// <summary>
+        /// Called when the player wants to end the movement phase.
+        /// Switches to action phase.
+        /// </summary>
+        public void EndMovementPhase()
+        {
+            if (isPlayerTurn)
+            {
+                currentPhase = Phase.ActionPhase;
+                Debug.Log("Player's Action Phase started.");
+                // Update UI or allow player to perform actions TODO
+            }
+            else
+            {
+                // For enemies, this is called in the EnemyTurn coroutine
+            }
+        }
+
+        //===============================
+        #endregion // ^Turn Management^
+
+        #region Enemy Turn and AI
+        //===============================
+
+        /// <summary>
         /// Coroutine for handling enemy turns.
         /// Each enemy takes their movement and action phases in sequence.
         /// </summary>
@@ -128,7 +180,7 @@ namespace SystemMiami
         {
             while (currentEnemyIndex < enemyCharacters.Count)
             {
-                Combatant enemy = enemyCharacters[currentEnemyIndex];
+                Enemy enemy = enemyCharacters[currentEnemyIndex];
 
                 // Enemy movement phase
                 currentPhase = Phase.MovementPhase;
@@ -136,7 +188,6 @@ namespace SystemMiami
                 Debug.Log("Enemy " + currentEnemyIndex + " Movement Phase.");
 
                 // Enemy AI for movement
-                // Placeholder: Move randomly for now
                 yield return StartCoroutine(EnemyMove(enemy));
 
                 // Enemy action phase
@@ -145,84 +196,38 @@ namespace SystemMiami
                 Debug.Log("Enemy " + currentEnemyIndex + " Action Phase.");
 
                 // Enemy AI for action
-                // Placeholder: Do nothing for now
-                    // (layla note) This will happen the same frame as movement is called
                 yield return StartCoroutine(EnemyAction(enemy));
 
                 currentEnemyIndex++;
             }
+            // Reduce cooldowns and update status effects for enemies
+            //foreach (Combatant enemy in enemyCharacters)
+            //{
+            //   // enemy.GetComponent<Abilities>().ReduceCooldowns();
+            //    enemy._attributes.UpdateStatusEffects();
+            //}
 
             // After enemies have taken their turns, start player turn
             StartPlayerTurn();
         }
 
         /// <summary>
-        /// Spawns enemies on the map.
-        /// </summary>
-        private void SpawnEnemies()
-        {
-            for (int i = 0; i < numberOfEnemies; i++)
-            {
-                // Find a random unblocked tile to place the enemy
-                OverlayTile spawnTile = GetRandomUnblockedTile();
-
-                if (spawnTile != null)
-                {
-                    // Instantiate enemy
-                    GameObject enemyGO = Instantiate(enemyPrefab);
-                    Combatant enemy = enemyGO.GetComponent<Combatant>();
-
-                    // MapPosition enemy on the tile
-                    PositionCharacterOnTile(enemy, spawnTile);
-
-                    // Add to enemy list
-                    enemyCharacters.Add(enemy);
-                }
-                else
-                {
-                    Debug.LogWarning("No unblocked tiles available for spawning enemies.");
-                }
-            }
-        }
-
-        /// <summary>
-        /// Finds a random unblocked tile on the map.
-        /// </summary>
-        /// <returns>An unblocked OverlayTile or null if none are available.</returns>
-        private OverlayTile GetRandomUnblockedTile()
-        {
-            // Get all unblocked tiles
-            List<OverlayTile> unblockedTiles = new List<OverlayTile>();
-
-            foreach (var tile in MapManager.MGR.map.Values)
-            {
-                if (!tile.isBlocked && tile.currentCharacter == null)
-                {
-                    unblockedTiles.Add(tile);
-                }
-            }
-
-            if (unblockedTiles.Count > 0)
-            {
-                // Select a random tile
-                int index = Random.Range(0, unblockedTiles.Count);
-                return unblockedTiles[index];
-            }
-
-            return null;
-        }
-
-        /// <summary>
         /// Coroutine for enemy movement phase.
-        /// Placeholder 
         /// </summary>
-
-        private IEnumerator EnemyMove(Combatant enemy)
+        private IEnumerator EnemyMove(Enemy enemy)
         {
             // Check if any player is within the detection radius
             Combatant targetPlayer = FindNearestPlayerWithinRadius(enemy, enemyDetectionRadius);
 
-            if (targetPlayer != null)
+            // Check if any player is within ability range
+            Ability selectedAbility = SelectAbility(enemy);
+
+            if (selectedAbility != null)
+            {
+                // Player is within ability range; no need to move
+                yield return null;
+            }
+            else if (targetPlayer != null)
             {
                 // Player is within detection radius, chase the player
 
@@ -273,27 +278,111 @@ namespace SystemMiami
         /// <summary>
         /// Coroutine for enemy action phase.
         /// </summary>
-        private IEnumerator EnemyAction(Combatant enemy)
+        private IEnumerator EnemyAction(Enemy enemy)
         {
-            // attack player if adjacent
-            Combatant adjacentPlayer = FindAdjacentPlayer(enemy);
-
-            if (adjacentPlayer != null)
+            if (enemy.HasActed)
             {
-                // Use basic attack
-                print($"{name} has attacked!");
-                    enemy.HasActed = true;
-                
+                yield break; // Enemy has already acted
+            }
+
+            // Select an ability
+            Ability selectedAbility = SelectAbility(enemy);
+
+            if (selectedAbility != null)
+            {
+                // Use the selected ability
+                yield return StartCoroutine(UseEnemyAbility(enemy, selectedAbility));
+                enemy.HasActed = true;
+            }
+            else
+            {
+                // No ability can be used, so end action phase
+                enemy.HasActed = true;
             }
 
             yield return new WaitForSeconds(0.5f); // Wait for action simulation
         }
 
-        // layla note
-        //public void EnemyAction(Combatant enemy)
-        //{
-        //    StartCoroutine(enemyAction(enemy));
-        //}
+        /// <summary>
+        /// Executes the enemy's ability.
+        /// </summary>
+        private IEnumerator UseEnemyAbility(Enemy enemy, Ability ability)
+        {
+            // For simplicity, we'll target the nearest player
+            Combatant targetPlayer = FindNearestPlayer(enemy);
+
+            if (targetPlayer != null)
+            {
+                // Set enemy's facing direction towards the player
+                enemy.DirectionInfo = new DirectionalInfo(
+                    (Vector2Int)enemy.CurrentTile.gridLocation,
+                    (Vector2Int)targetPlayer.CurrentTile.gridLocation
+                );
+
+                // Use the ability
+                yield return StartCoroutine(ability.Use());
+            }
+            else
+            {
+                Debug.Log($"{enemy.name} could not find a target to use {ability.name}.");
+            }
+
+            yield return null;
+        }
+
+        //===============================
+        #endregion // ^Enemy Turn and AI^
+
+        #region Enemy Abilities and Selection
+        //===============================
+
+        /// <summary>
+        /// Selects an ability for the enemy.
+        /// </summary>
+        private Ability SelectAbility(Enemy enemy)
+        {
+            // Select the first ability that can be used
+            foreach (Ability ability in enemy.abilities)
+            {
+                if (!ability.isOnCooldown)
+                {
+                    // Check if any target is in range
+                    if (IsPlayerInAbilityRange(enemy, ability))
+                    {
+                        return ability;
+                    }
+                }
+            }
+
+            return null; // No ability can be used
+        }
+
+        /// <summary>
+        /// Checks if any player is within the ability's range.
+        /// </summary>
+        private bool IsPlayerInAbilityRange(Enemy enemy, Ability ability)
+        {
+            int maxRange = 2; // Example range
+
+            foreach (Combatant player in playerCharacters)
+            {
+                int distance = Mathf.Abs(enemy.CurrentTile.gridLocation.x - player.CurrentTile.gridLocation.x) +
+                               Mathf.Abs(enemy.CurrentTile.gridLocation.y - player.CurrentTile.gridLocation.y);
+
+                if (distance <= maxRange)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        //===============================
+        #endregion // ^Enemy Abilities and Selection^
+
+        #region Player and Enemy Interaction
+        //===============================
 
         /// <summary>
         /// Finds the nearest player character to the enemy.
@@ -340,6 +429,28 @@ namespace SystemMiami
 
             return nearestPlayer;
         }
+
+        private Combatant FindAdjacentPlayer(Combatant enemy)
+        {
+            PathFinder pathFinder = new PathFinder();
+            List<OverlayTile> neighbours = pathFinder.GetNeighbourTiles(enemy.CurrentTile);
+
+            foreach (OverlayTile tile in neighbours)
+            {
+                if (tile.currentCharacter != null && playerCharacters.Contains(tile.currentCharacter))
+                {
+                    return tile.currentCharacter;
+                }
+            }
+
+            return null;
+        }
+
+        //===============================
+        #endregion // ^Player and Enemy Interaction^
+
+        #region Enemy Movement Helpers
+        //===============================
 
         /// <summary>
         /// Coroutine for enemy random movement when not chasing the player.
@@ -399,33 +510,66 @@ namespace SystemMiami
             return walkableTiles;
         }
 
+        //===============================
+        #endregion // ^Enemy Movement Helpers^
+
+        #region Character Positioning and Spawning
+        //===============================
+
         /// <summary>
-        /// Called when the player has finished their turn.
-        /// Starts the enemy turn.
+        /// Spawns enemies on the map.
         /// </summary>
-        public void EndPlayerTurn()
+        private void SpawnEnemies()
         {
-            Debug.Log("Player's turn ended.");
-            // After player turn ends, start enemy turn
-            StartEnemyTurn();
+            for (int i = 0; i < numberOfEnemies; i++)
+            {
+                // Find a random unblocked tile to place the enemy
+                OverlayTile spawnTile = GetRandomUnblockedTile();
+
+                if (spawnTile != null)
+                {
+                    // Instantiate enemy
+                    GameObject enemyGO = Instantiate(enemyPrefab);
+                    Enemy enemy = enemyGO.GetComponent<Enemy>();
+
+                    // Position enemy on the tile
+                    PositionCharacterOnTile(enemy, spawnTile);
+
+                    // Add to enemy list
+                    enemyCharacters.Add(enemy);
+                }
+                else
+                {
+                    Debug.LogWarning("No unblocked tiles available for spawning enemies.");
+                }
+            }
         }
 
         /// <summary>
-        /// Called when the player wants to end the movement phase.
-        /// Switches to action phase.
+        /// Finds a random unblocked tile on the map.
         /// </summary>
-        public void EndMovementPhase()
+        /// <returns>An unblocked OverlayTile or null if none are available.</returns>
+        private OverlayTile GetRandomUnblockedTile()
         {
-            if (isPlayerTurn)
+            // Get all unblocked tiles
+            List<OverlayTile> unblockedTiles = new List<OverlayTile>();
+
+            foreach (var tile in MapManager.MGR.map.Values)
             {
-                currentPhase = Phase.ActionPhase;
-                Debug.Log("Player's Action Phase started.");
-                // Update UI or allow player to perform actions TODO
+                if (!tile.isBlocked && tile.currentCharacter == null)
+                {
+                    unblockedTiles.Add(tile);
+                }
             }
-            else
+
+            if (unblockedTiles.Count > 0)
             {
-                // For enemies, this is called in the EnemyTurn coroutine
+                // Select a random tile
+                int index = Random.Range(0, unblockedTiles.Count);
+                return unblockedTiles[index];
             }
+
+            return null;
         }
 
         /// <summary>
@@ -441,22 +585,7 @@ namespace SystemMiami
             tile.currentCharacter = character;
         }
 
-        private Combatant FindAdjacentPlayer(Combatant enemy)
-        {
-            PathFinder pathFinder = new PathFinder();
-            List<OverlayTile> neighbours = pathFinder.GetNeighbourTiles(enemy.CurrentTile);
-
-            foreach (OverlayTile tile in neighbours)
-            {
-                if (tile.currentCharacter != null && playerCharacters.Contains(tile.currentCharacter))
-                {
-                    return tile.currentCharacter;
-                }
-            }
-
-            return null;
-        }
-
-
+        //===============================
+        #endregion // ^Character Positioning and Spawning^
     }
 }

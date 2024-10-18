@@ -4,25 +4,22 @@ using UnityEngine;
 namespace SystemMiami.CombatSystem
 {
     [System.Serializable]
-    [CreateAssetMenu(fileName = "New Status Effect", menuName = "CombatAction/Inflict Status Effect")]
+    [CreateAssetMenu(fileName = "New Status Effect", menuName = "CombatAction/Status Effects")]
     public class InflictStatusEffect : CombatAction
     {
-        [SerializeField] AttributeSetSO _effect;
-        [SerializeField] int _turns;
+        [SerializeField] AttributeSetSO statusEffectAttributesSO;
+        [SerializeField] int durationTurns;
 
         public override void Perform(Targets targets)
         {
-            AttributeSet effect = new AttributeSet(_effect);
+            AttributeSet statusEffectAttributes = new AttributeSet(statusEffectAttributesSO);
 
-            for(int i = 0; i < targets.Combatants.Length; i++)
+            foreach (Combatant target in targets.Combatants)
             {
-                if (!targets.Combatants[i].TryGetComponent(out Attributes attr))
+                if (target != null)
                 {
-                    Debug.Log($"Couldn't find attributes on the target");
-                }
-                else
-                {
-                    attr.AddStatusEffect(effect);
+                    target._attributes.AddStatusEffect(statusEffectAttributes, durationTurns);
+                    Debug.Log($"{target.name} received a status effect for {durationTurns} turns.");
                 }
             }
         }

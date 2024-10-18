@@ -14,15 +14,12 @@ namespace SystemMiami.CombatSystem
 
         public override void Perform(Targets targets)
         {
-            for(int i = 0; i < targets.Combatants.Length; i++)
+            // Loop through each combatant in the targets and apply damage.
+            foreach (Combatant targetCombatant in targets.Combatants)
             {
-                if (!targets.Combatants[i].TryGetComponent(out IDamageable target))
+                if (targetCombatant != null)
                 {
-                    Debug.Log("Invalid damage target");
-                }
-                else
-                {
-                    target.Damage(_abilityDamage);
+                    targetCombatant.Damage(_abilityDamage);
                 }
             }
         }

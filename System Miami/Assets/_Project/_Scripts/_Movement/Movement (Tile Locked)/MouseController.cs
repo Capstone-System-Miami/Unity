@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using SystemMiami.CombatSystem;
@@ -13,6 +14,8 @@ namespace SystemMiami
 
         private PathFinder pathFinder;
         private List<OverlayTile> path = new List<OverlayTile>();
+
+        public event Action<OverlayTile> OnMouseTileChanged; // event for tile change
 
         #region Layla Added Vars
         private OverlayTile _mostRecentMouseTile;
@@ -58,9 +61,11 @@ namespace SystemMiami
             RaycastHit2D? mouseHit = GetFocusedOnTile();
             OverlayTile mouseTile = mouseHit?.collider.gameObject.GetComponent<OverlayTile>();
 
-            if (mouseTile != null)
+            if (mouseTile != null && mouseTile != _mostRecentMouseTile)
             {
                 _mostRecentMouseTile = mouseTile;
+                //raise event when mouse tile  changes //Lee change
+                OnMouseTileChanged?.Invoke(mouseTile);
             }
         }
 

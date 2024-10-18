@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using SystemMiami.Enums;
 using UnityEngine;
+using UnityEngine.TextCore;
 
 namespace SystemMiami.Utilities
 {
@@ -37,42 +38,74 @@ namespace SystemMiami.Utilities
 
         /// <summary>
         /// Takes two positions, origin and mapPositionB, 
-        /// and returns a difference vector (only 0s or signed 1s).
+        /// and returns a normalized direction vector //changed
         /// </summary>
-        public static Vector2Int GetDirectionVec(Vector2Int origin, Vector2Int forward)
+        public static Vector2Int GetDirectionVec(Vector2Int origin, Vector2Int target)
         {
-            int x = 0;
-            int y = 0;
+            int x = target.x - origin.x;
+            int y = target.y - origin.y;
 
-            // In these examples, the origin object is
-            // "Looking at" the same mapPositionA at (-8, 2)
-            // ex1. origin = (0, 0), mapPositionB = (-8, 2)
-            // ex2. origin = (-4, 5), mapPositionB = (-8, 2)
+            //get greatest common divisor to normalize the direction vector
+            int gcd = Mathf.Abs(GCD(x, y));
 
-            // Convert ints to floats and get the difference.
-                // ex1. difference = (-8.0, 2.0)
-                // ex2. difference = (-4.0, -3.0)
-            Vector2 difference = forward - origin;
+            //// In these examples, the origin object is
+            //// "Looking at" the same mapPositionA at (-8, 2)
+            //// ex1. origin = (0, 0), mapPositionB = (-8, 2)
+            //// ex2. origin = (-4, 5), mapPositionB = (-8, 2)
 
-            // Force a magnitude of 1.
-                // ex1. difference = (-1.0, 0.25)
-                // ex2. difference = (-1.0, -0.75)
-            difference.Normalize();
+            //// Convert ints to floats and get the difference.
+            //    // ex1. difference = (-8.0, 2.0)
+            //    // ex2. difference = (-4.0, -3.0)
+            //Vector2 difference = forward - origin;
 
-            // Round both values to int
-                // ex1. x = -1, y = 0
-                // ex2. x = -1, y = -1
-            x = Mathf.RoundToInt(difference.x);
-            y = Mathf.RoundToInt(difference.y);
+            //// Force a magnitude of 1.
+            //    // ex1. difference = (-1.0, 0.25)
+            //    // ex2. difference = (-1.0, -0.75)
+            //difference.Normalize();
 
-            // Return the direction vector.
-                // ex1. Returns (-1, 0), a vector
-                // equivalent to MapDirectionsByEnum[MIDDLE_L]
-                // ex2. Returns (-1, -1), a vector
-                // euqivalent to MapDirectionsByEnum[BACKWARD_L]
-            return new Vector2Int(x, y);
+            //// Round both values to int
+            //    // ex1. x = -1, y = 0
+            //    // ex2. x = -1, y = -1
+            //x = Mathf.RoundToInt(difference.x);
+            //y = Mathf.RoundToInt(difference.y);
+
+            //// Return the direction vector.
+            //    // ex1. Returns (-1, 0), a vector
+            //    // equivalent to MapDirectionsByEnum[MIDDLE_L]
+            //    // ex2. Returns (-1, -1), a vector
+            //    // euqivalent to MapDirectionsByEnum[BACKWARD_L]
+            return new Vector2Int(Mathf.Clamp(x, -1, 1), Mathf.Clamp(y, -1, 1));
+        }
+
+        /// <summary>
+        /// Calculates the Greatest Common Divisor of two integers.
+        /// </summary>
+        private static int GCD(int a, int b)
+        {
+            if (b == 0)
+                return a;
+            return GCD(b, a % b);
+        }
+
+        /// <summary>
+        /// Maps a direction vector to the corresponding TileDir enum.
+        /// </summary>
+        public static TileDir GetTileDirFromVector(Vector2Int directionVec)
+        {
+            if (DirectionEnumsByVector.TryGetValue(directionVec, out TileDir dirEnum))
+            {
+                return dirEnum;
+            }
+            else
+            {
+                // Handle invalid direction vector
+                Debug.LogWarning($"Invalid direction vector: {directionVec}");
+                return TileDir.FORWARD_C; // Default to forward
+            }
         }
     }
+
+    
 
     #region STRUCTS
     /// <summary>

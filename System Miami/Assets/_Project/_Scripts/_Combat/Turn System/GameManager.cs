@@ -1,46 +1,51 @@
 //Johnny
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+namespace CombatSystem.outdated
 {
-    public bool playerTurn = true;   // Indicates whose turn it is
-    public GameObject enemy;         // Reference to the enemy GameObject
-    public GameObject player;        // Reference to the player GameObject
 
-    void Update()
+
+    public class GameManager : MonoBehaviour
     {
-        // Player turn logic
-        if (playerTurn && Input.GetMouseButtonDown(0))
+        public bool playerTurn = true; // Indicates whose turn it is
+        public GameObject enemy; // Reference to the enemy GameObject
+        public GameObject player; // Reference to the player GameObject
+
+        void Update()
         {
-            // Handle player actions (e.g., attacking the enemy)
-            HandlePlayerActions();
+            // Player turn logic
+            if (playerTurn && Input.GetMouseButtonDown(0))
+            {
+                // Handle player actions (e.g., attacking the enemy)
+                HandlePlayerActions();
+            }
+
+            // Check if it's time for the enemy's turn
+            if (!playerTurn)
+            {
+                HandleEnemyTurn();
+            }
         }
 
-        // Check if it's time for the enemy's turn
-        if (!playerTurn)
+        void HandlePlayerActions()
         {
-            HandleEnemyTurn();
-        }
-    }
+            // Implement player actions (e.g., attacking, movement)
 
-    void HandlePlayerActions()
-    {
-        // Implement player actions (e.g., attacking, movement)
-        
-        // After player actions, switch to enemy turn
-        playerTurn = false;
-    }
-
-    void HandleEnemyTurn()
-    {
-        // Call the enemy's attack method
-        Enemy enemyScript = enemy.GetComponent<Enemy>();
-        if (enemyScript != null)
-        {
-            enemyScript.AttackPlayer(player);  // Pass the player object to the enemy attack method
+            // After player actions, switch to enemy turn
+            playerTurn = false;
         }
 
-        // After the enemy's attack, switch back to player turn
-        playerTurn = true;
+        void HandleEnemyTurn()
+        {
+            // Call the enemy's attack method
+            Enemy enemyScript = enemy.GetComponent<Enemy>();
+            if (enemyScript != null)
+            {
+               
+            }
+
+            // After the enemy's attack, switch back to player turn
+            playerTurn = true;
+        }
     }
 }

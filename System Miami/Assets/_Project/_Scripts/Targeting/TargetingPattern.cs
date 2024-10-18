@@ -9,8 +9,11 @@ namespace SystemMiami.CombatSystem
     [System.Serializable]
     public class TargetingPattern
     {
+        private List<TileDir> _rotatedDirections;
+       
         [Tooltip("Radius of the pattern, in Tiles.")]
         [SerializeField] private int _radius;
+
 
         [Header("Directions")]
         [SerializeField] private bool _frontLeft;
@@ -42,6 +45,8 @@ namespace SystemMiami.CombatSystem
                 _frontLeft,
             };
 
+
+
             // Add the direction of every `true` to the result List
             for (int i = 0; i < checkDirections.Length; i++)
             {
@@ -59,6 +64,30 @@ namespace SystemMiami.CombatSystem
             Debug.Log(report);
 
             return result;
+        }
+
+        /// <summary>
+        /// Sets the rotated directions after applying rotation.
+        /// </summary>
+        public void SetRotatedDirections(List<TileDir> rotatedDirections)
+        {
+            _rotatedDirections.Clear();
+            if (rotatedDirections != null && rotatedDirections.Count > 0)
+            {
+                _rotatedDirections.AddRange(rotatedDirections);
+            }
+            else
+            {
+                Debug.LogWarning("Attempted to set rotatedDirections with a null or empty list.");
+            }
+        }
+
+        /// <summary>
+        /// Gets the rotated directions for targeting.
+        /// </summary>
+        public List<TileDir> GetRotatedDirections()
+        {
+            return _rotatedDirections ?? GetDirections(); // Return original if not rotated
         }
     }
 }

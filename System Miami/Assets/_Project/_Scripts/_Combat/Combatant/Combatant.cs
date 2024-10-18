@@ -33,8 +33,14 @@ namespace SystemMiami.CombatSystem
         public bool HasActed { get; set; }
         public Resource Speed { get { return _speed; } }
 
+        public Attributes _attributes;
 
-        private void Start()
+        public void Awake()
+        {
+            
+
+        }
+        public void Start()
         {
             _stats = GetComponent<Stats>();
             _controller = GetComponent<MouseController>();
@@ -42,6 +48,7 @@ namespace SystemMiami.CombatSystem
             _defaultColor = _renderer.color;
             Animator = GetComponent<Animator>();
 
+            _attributes = GetComponent<Attributes>();
             _health = new Resource(_stats.GetStat(StatType.MAX_HEALTH));
             _stamina = new Resource(_stats.GetStat(StatType.STAMINA));
             _mana = new Resource(_stats.GetStat(StatType.MANA));

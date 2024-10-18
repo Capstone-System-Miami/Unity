@@ -1,6 +1,7 @@
 // Authors: Layla Hoey
 using System;
 using System.Collections.Generic;
+using SystemMiami.CombatSystem;
 using UnityEngine;
 
 namespace SystemMiami
@@ -36,7 +37,7 @@ namespace SystemMiami
         // Buffer for storing the attributes prior to a confirmed upgrade
         private AttributeSet _buffer = new AttributeSet();
 
-        private List<AttributeSet> _statusEffects = new List<AttributeSet>();
+        private List<StatusEffect> _statusEffects = new List<StatusEffect>();
 
         // TODO: deserialize after testing
         [SerializeField, Space(10)] private bool _upgradeMode;
@@ -166,16 +167,19 @@ namespace SystemMiami
     //===============================
 
         /// <summary>
-        /// Returns the value of the specified attribute.
+        /// Returns the value of the specified attribute, including status effects
         /// </summary>
         public int GetAttribute(AttributeType type)
         {
             // In case something asks for this while it's still being initialized
             if (_current.Dict == null) { return 0; }
 
-            AttributeSet allEffects = GetStatusEffects();
+            int baseValue = _upgradeMode ? _preview.Get(type) : _current.Get(type);
+            int statusEffectValue = GetStatusEffectValue(type);
 
-            return _upgradeMode ? _preview.Dict[type] : _current.Dict[type] + allEffects.Dict[type];
+            return baseValue + statusEffectValue;
+
+            
         }
 
         /// <summary>
@@ -221,36 +225,34 @@ namespace SystemMiami
             _upgrades = new AttributeSet();
         }
 
-        public void AddStatusEffect(AttributeSet effect)
+        public void AddStatusEffect(AttributeSet effect, int duration)
         {
-            _statusEffects.Add(effect);
+            _statusEffects.Add(new StatusEffect(effect, duration));
         }
 
-        public int GetStatusEffect(AttributeType type)
+        public int GetStatusEffectValue(AttributeType type)
         {
             int result = 0;
 
-            foreach (AttributeSet effect in _statusEffects)
+            foreach (StatusEffect statusEffect in _statusEffects)
             {
-                result += effect.Dict[type];
+                result += statusEffect.Effect.Get(type);
             }
 
             return result;
         }
 
-        public AttributeSet GetStatusEffects()
+        public void UpdateStatusEffects()
         {
-            AttributeSet result = new AttributeSet();
-
-            foreach (AttributeSet effect in _statusEffects)
+            for (int i = _statusEffects.Count - 1; i >= 0; i--)
             {
-                foreach(AttributeType type in result.Dict.Keys)
+                _statusEffects[i].DecrementDuration();
+
+                if (_statusEffects[i].IsExpired())
                 {
-                    result.Dict[type] += effect.Dict[type];
+                    _statusEffects.RemoveAt(i);
                 }
             }
-
-            return result;
         }
 
     //===============================
