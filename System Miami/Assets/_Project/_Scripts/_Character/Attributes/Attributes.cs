@@ -175,12 +175,11 @@ namespace SystemMiami
             // In case something asks for this while it's still being initialized
             if (_current.Dict == null) { return 0; }
 
+            // If upgrade mode show preview
             int baseValue = _upgradeMode ? _preview.Get(type) : _current.Get(type);
             int statusEffectValue = GetStatusEffectValue(type);
 
-            return baseValue + statusEffectValue;
-
-            
+            return baseValue + statusEffectValue;            
         }
 
         /// <summary>

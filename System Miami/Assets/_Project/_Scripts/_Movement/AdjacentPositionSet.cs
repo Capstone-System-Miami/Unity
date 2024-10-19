@@ -33,7 +33,7 @@ namespace SystemMiami.CombatSystem
             // ticks equivalent to the enumerated direction
             // of the incoming object.
             _directionsRelativeToMap = getRotatedVectors(_directionsRelativeToSelf, (int)info.DirectionName);
-            DirectionHelper.Print(_directionsRelativeToMap, "Map directions");
+            //DirectionHelper.Print(_directionsRelativeToMap, "Map directions");
             
             // Get adjacent map positions by adding the map position of the
             // incoming object to the directions
@@ -46,7 +46,7 @@ namespace SystemMiami.CombatSystem
             AdjacentPositions = _positionsRelativeToMap;
             AdjacentDirections = _directionsRelativeToMap;
 
-            DirectionHelper.Print(AdjacentPositions, "Adjacent");
+            //DirectionHelper.Print(AdjacentPositions, "Adjacent");
             IsReady = true;
         }
 

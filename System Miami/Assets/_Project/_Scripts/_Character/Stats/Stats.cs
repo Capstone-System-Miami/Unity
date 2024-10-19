@@ -151,6 +151,8 @@ namespace SystemMiami
 
         public float GetStat(StatType type)
         {
+            if (_currentStats == null || _currentStats.Count == 0) { return 0f; }
+
             return _currentStats[type];
         }
 
