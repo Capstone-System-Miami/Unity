@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 6512032109619817124}
   - component: {fileID: -1971288753443991781}
   - component: {fileID: 3834768875493326230}
+  - component: {fileID: 4210109583925660262}
+  - component: {fileID: 93970076044477454}
   m_Layer: 0
   m_Name: character
   m_TagString: Untagged
@@ -99,6 +101,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   activeTile: {fileID: 0}
+  movementPoints: 0
+  maxMovementPoints: 30
+  hasActed: 0
 --- !u!114 &3834768875493326230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -113,3 +118,44 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _notes: Can we figure out how to make an enum for setting a "preferredAxis"?  I
     noticed this pathing prefers the X-axis
+--- !u!50 &4210109583925660262
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7719785247104517706}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!114 &93970076044477454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7719785247104517706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9332f85a560239b4faed768cd551d940, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  currentHealth: 80
