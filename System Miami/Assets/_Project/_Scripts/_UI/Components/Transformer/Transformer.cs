@@ -30,7 +30,7 @@ namespace SystemMiami.UI
         }
 
         /// <summary>
-        /// Sets the transform to the given position (relative to parent & anchors), optionally storing the current one in a buffer
+        /// Sets the transform to the given _gridPosition (relative to parent & anchors), optionally storing the current one in a buffer
         /// </summary>
         private void reposition(Vector2 newPos, bool store)
         {
@@ -42,7 +42,7 @@ namespace SystemMiami.UI
         }
 
         /// <summary>
-        /// Swaps the current position with the buffer
+        /// Swaps the current _gridPosition with the buffer
         /// </summary>
         private void reposition()
         {
@@ -80,7 +80,7 @@ namespace SystemMiami.UI
         }
 
         /// <summary>
-        /// Coroutine. Applies the change from the current position to the [target pos vector] over the [duration].
+        /// Coroutine. Applies the change from the current _gridPosition to the [target pos vector] over the [duration].
         /// </summary>
         private IEnumerator changePosOverTime(Vector2 target, float duration)
         {
@@ -151,7 +151,7 @@ namespace SystemMiami.UI
         }
 
         /// <summary>
-        /// Immediately revert the object to the last stored position.
+        /// Immediately revert the object to the last stored _gridPosition.
         /// </summary>
         public void RevertPosition()
         {
@@ -159,7 +159,7 @@ namespace SystemMiami.UI
         }
 
         /// <summary>
-        /// Revert the object to the last stored position over the span of a given duration.
+        /// Revert the object to the last stored _gridPosition over the span of a given duration.
         /// </summary>
         public void RevertPosition(float duration)
         {
@@ -191,7 +191,7 @@ namespace SystemMiami.UI
         }
 
         /// <summary>
-        /// Revert the object to the last stored position over the span of a given duration.
+        /// Revert the object to the last stored _gridPosition over the span of a given duration.
         /// </summary>
         public void RevertSize(float duration)
         {

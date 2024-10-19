@@ -29,7 +29,7 @@ public class TopDownMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        direction = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")).normalized; // Handles input
+        direction = new Vector2( Input.GetAxis("Horizontal"), Input.GetAxis("Vertical") * .5f).normalized; // Handles input
         body.velocity = direction * walkSpeed; // Apply velocity to Rigidbody
 
         HandleSpriteFlip(); // Flips sprite based on movement direction

@@ -22,7 +22,7 @@ namespace SystemMiami
         {
             _tilemap = GetComponent<Tilemap>();
 
-            // Set the non interactable color to whatever
+            // SetWith the non interactable color to whatever
             // the tilemap color was set to when we pressed play.
             _nonInteractableColor = _tilemap.color;
         }
