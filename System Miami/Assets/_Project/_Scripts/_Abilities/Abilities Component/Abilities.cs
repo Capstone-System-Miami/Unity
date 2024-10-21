@@ -23,9 +23,7 @@ namespace SystemMiami.AbilitySystem
 
         [SerializeField] private List<Ability> _abilities = new List<Ability>();
         [SerializeField] private Ability _selectedAbility;
-        [SerializeField] private bool _isTargeting = false;
-        
-        [SerializeField] private GameObject[] targs;
+        [SerializeField] private bool _isTargeting = false;       
 
         private Combatant _combatant;
         private MouseController _mouseController;
@@ -177,40 +175,6 @@ namespace SystemMiami.AbilitySystem
             //}
             
         }
-        #endregion
-        #region LaylaStuff
-
-
-
-
-
-        //private void LateUpdate()
-        //{
-            
-        //    endFrameDirection = _combatant.DirectionInfo.DirectionVec;
-        //    if (endFrameDirection != startFrameDirection)
-        //    {
-        //        if (_selectedAbility != null)
-        //        {
-        //            StartCoroutine(onDirectionChange());
-        //        }
-        //    }
-        //}
-
-        //private IEnumerator onDirectionChange()
-        //{
-        //    _isUpdating = true;
-        //    yield return null;
-
-        //    //StartCoroutine(_selectedAbility.HideAllTargets());//yield return new WaitUntil(() => !_selectedAbility.IsTargeting);
-        //    //yield return null;
-
-        //    StartCoroutine(_selectedAbility.ShowAllTargets());
-        //    yield return new WaitUntil(() => _selectedAbility.IsTargeting);
-        //    yield return null;
-
-        //  _isUpdating = false;
-        //}
         #endregion
     }
 }

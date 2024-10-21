@@ -93,19 +93,9 @@ namespace SystemMiami.AbilitySystem
 
         public IEnumerator Use()
         {
-            //if (IsBusy)
-            //{
-            //    Debug.Log("I'm Busy");
-            //    yield break;
-            //}
+            // TODO: Decrement resource
 
-            //if (isOnCooldown)
-            //{
-            //    Debug.Log($"{name} is on Cooldown for {currentCooldown} more turns");
-            //    yield break;
-            //}
-         
-            //IsBusy = true;
+
             yield return null;
 
             for (int i = 0; i < _actions.Length; i++)
@@ -117,7 +107,6 @@ namespace SystemMiami.AbilitySystem
             currentCooldown = coolDownTurns;
 
             yield return new WaitForEndOfFrame();
-            //  IsBusy = false;
         }
 
         /// <summary>
