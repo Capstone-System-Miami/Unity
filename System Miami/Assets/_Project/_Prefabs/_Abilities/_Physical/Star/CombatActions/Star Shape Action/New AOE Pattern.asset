@@ -9,21 +9,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f09d9016dd9642c49ba6586e769b5961, type: 3}
-  m_Name: square
+  m_Script: {fileID: 11500000, guid: 4c0882405a2f2a94b90ce0cda5f3c03e, type: 3}
+  m_Name: New AOE Pattern
   m_EditorClassIdentifier: 
-  _affectsSelf: 0
-  _targetingPattern:
-    Type: 2
-    _radius: 1
-    _frontLeft: 1
-    _front: 1
-    _frontRight: 1
-    _left: 1
-    _right: 1
-    _backLeft: 1
-    _back: 1
-    _backRight: 1
+  _patternOrigin: 0
   TargetedTileColor: {r: 1, g: 0, b: 0, a: 1}
   TargetedCombatantColor: {r: 1, g: 0, b: 0, a: 1}
-  _range: 2
+  _tileRadius: 3
+  _afftectsCenter: 0
+  _front: 1
+  _frontRight: 1
+  _right: 1
+  _backRight: 1
+  _back: 1
+  _backLeft: 1
+  _left: 1
+  _frontLeft: 1

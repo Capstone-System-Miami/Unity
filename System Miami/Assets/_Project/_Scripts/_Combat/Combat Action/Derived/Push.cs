@@ -6,30 +6,22 @@ using UnityEngine;
 namespace SystemMiami.CombatSystem
 {
     [System.Serializable]
-    [CreateAssetMenu(fileName = "New Push Action", menuName = "CombatAction/Push")]
+    [CreateAssetMenu(fileName = "New Push Action", menuName = "Abilities/CombatActions/Push")]
     public class Push : CombatAction
     {
         [SerializeField] private int _distance;
         
-        // TODO MapForward, backward, etc.
+        // TODO MapForwardA, backward, etc.
         // In reference to attacker or reciever though, idk.
         [SerializeField] private Vector2Int _direction;
 
-        public override void Perform(Targets targets)
+        public override void Perform()
         {
-            for (int i = 0; i < targets.Combatants.Length; i++)
+            foreach (Combatant target in TargetingPattern.StoredTargets.Combatants)
             {
-                if (targets.Combatants[i].TryGetComponent(out IMovable target))
-                {
-                    if (!target.TryMoveInDirection(_direction, _distance))
-                    {
-                        Debug.Log($"Target can't be pushed");
-                    }
-                    else
-                    {
-                        target.TryMoveInDirection(_direction, _distance);
-                    }
-                }
+                if (target == null) { continue; }
+
+                target.GetPushed(_distance, _direction);
             }
         }
 

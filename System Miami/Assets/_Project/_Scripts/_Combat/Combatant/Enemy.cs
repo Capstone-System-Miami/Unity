@@ -16,7 +16,7 @@ using UnityEngine;
         public EnemyType enemyType;
         public List<Ability> abilities = new List<Ability>();
 
-        private void Awake()
+        protected override void Start()
         {
             base.Start();
             // Initialize abilities

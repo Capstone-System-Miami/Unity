@@ -1,11 +1,9 @@
-// Authors: Layla Hoey
-using SystemMiami.CombatSystem;
+// Authors: Layla Hoey, Lee St. Louis
 using System.Collections;
 using System.Collections.Generic;
+using SystemMiami.CombatSystem;
 using SystemMiami.Utilities;
 using UnityEngine;
-using System.Net;
-using Unity.VisualScripting;
 
 namespace SystemMiami.AbilitySystem
 {
@@ -44,8 +42,6 @@ namespace SystemMiami.AbilitySystem
             _combatant = GetComponent<Combatant>();
             _mouseController = _combatant.GetComponent<MouseController>();
         }
-
-        
 
         private void OnEnable()
         {
@@ -127,11 +123,7 @@ namespace SystemMiami.AbilitySystem
             {
                 if (!_isTargeting)
                 {
-                    if (_selectedAbility.IsPreviewing)
-                    {
-                        StartCoroutine(_selectedAbility.HideAllTargets());
-
-                    }
+                    _selectedAbility.BeginTargeting();
                     _isTargeting = true;
 
                     //subscribe to MouseController's tile change event
@@ -149,8 +141,8 @@ namespace SystemMiami.AbilitySystem
             {
                 if (_isTargeting)
                 {
+                    _selectedAbility.CancelTargeting();
                     _isTargeting = false;
-                    StartCoroutine(_selectedAbility.HideAllTargets());
 
                     //unsubscribe
                     _mouseController.OnMouseTileChanged -= HandleMouseTile;
@@ -178,11 +170,11 @@ namespace SystemMiami.AbilitySystem
         /// <param name="tile">The new tile under the mouse cursor.</param>
         private void HandleMouseTile(OverlayTile tile)
         {
-            //update target preview based on new tile
-            if (_selectedAbility != null)
-            {
-                StartCoroutine(_selectedAbility.ShowAllTargets());
-            }
+            ////update target preview based on new tile
+            //if (_selectedAbility != null)
+            //{
+            //    StartCoroutine(_selectedAbility.ShowAllTargets());
+            //}
             
         }
         #endregion
@@ -191,42 +183,34 @@ namespace SystemMiami.AbilitySystem
 
 
 
-        private void Update()
-        {
-            startFrameDirection = _combatant.DirectionInfo.DirectionVec;
 
-            if (_isUpdating) { return; }
-
-
-        }
-
-        private void LateUpdate()
-        {
+        //private void LateUpdate()
+        //{
             
-            endFrameDirection = _combatant.DirectionInfo.DirectionVec;
-            if (endFrameDirection != startFrameDirection)
-            {
-                if (_selectedAbility != null)
-                {
-                    StartCoroutine(onDirectionChange());
-                }
-            }
-        }
+        //    endFrameDirection = _combatant.DirectionInfo.DirectionVec;
+        //    if (endFrameDirection != startFrameDirection)
+        //    {
+        //        if (_selectedAbility != null)
+        //        {
+        //            StartCoroutine(onDirectionChange());
+        //        }
+        //    }
+        //}
 
-        private IEnumerator onDirectionChange()
-        {
-            _isUpdating = true;
-            yield return null;
+        //private IEnumerator onDirectionChange()
+        //{
+        //    _isUpdating = true;
+        //    yield return null;
 
-            //StartCoroutine(_selectedAbility.HideAllTargets());//yield return new WaitUntil(() => !_selectedAbility.IsPreviewing);
-            //yield return null;
+        //    //StartCoroutine(_selectedAbility.HideAllTargets());//yield return new WaitUntil(() => !_selectedAbility.IsTargeting);
+        //    //yield return null;
 
-            StartCoroutine(_selectedAbility.ShowAllTargets());
-            yield return new WaitUntil(() => _selectedAbility.IsPreviewing);
-            yield return null;
+        //    StartCoroutine(_selectedAbility.ShowAllTargets());
+        //    yield return new WaitUntil(() => _selectedAbility.IsTargeting);
+        //    yield return null;
 
-          _isUpdating = false;
-        }
+        //  _isUpdating = false;
+        //}
         #endregion
     }
 }

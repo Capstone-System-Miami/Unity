@@ -8,15 +8,15 @@ namespace SystemMiami.Outdated
 {
     //public class Targeting
     //{
-    //    private Combatant _user;
+    //    private Combatant User;
     //    private CombatAction _action;
 
     //    private DirectionalInfo _directionalInfo;
-    //    private AdjacentPositionSet _adjacentPositions;
+    //    private AdjacentPositionSet _adjacent;
 
     //    public Targeting(Combatant user, CombatAction action)
     //    {
-    //        _user = user;
+    //        User = user;
     //        _action = action;
     //    }
 
@@ -44,7 +44,7 @@ namespace SystemMiami.Outdated
     //        Vector2Int patternForward;
 
     //        // If action is a projectile
-    //        if (_action is AreaOfEffect projectile)
+    //        if (_action is SomethingElse projectile)
     //        {
     //            // If this is player
     //            // If the mouse boardPosition is less than the range (how will we do this?)
@@ -55,27 +55,27 @@ namespace SystemMiami.Outdated
 
     //            // Return a zero'd direction info
     //            // if projectile targeting failed?
-    //            patternOrigin = _user.DirectionInfo.MapForward;
-    //            patternForward = patternOrigin + _user.DirectionInfo.DirectionVec;
+    //            patternOrigin = User.DirectionInfo.MapForwardA;
+    //            patternForward = patternOrigin + User.DirectionInfo.DirectionVec;
     //        }
     //        else
     //        {
-    //            patternOrigin = _user.DirectionInfo.MapPosition;
-    //            patternForward = _user.DirectionInfo.MapForward;
+    //            patternOrigin = User.DirectionInfo.MapPositionA;
+    //            patternForward = User.DirectionInfo.MapForwardA;
     //        }
 
     //        _directionalInfo = new DirectionalInfo(patternOrigin, patternForward);
-    //        _adjacentPositions = new AdjacentPositionSet(_directionalInfo);
+    //        _adjacent = new AdjacentPositionSet(_directionalInfo);
 
     //        for (int i = 0; i <= _action.TargetingPattern.Radius; i++)
     //        {
     //            Debug.Log($"{_action} radius is {_action.TargetingPattern.Radius},\n" +
-    //                $"so {_user.name} is adding tiles at {i}");
+    //                $"so {User.name} is adding tiles at {i}");
 
-    //            List<TileDir> targetDirections = _action.TargetingPattern.GetDirections();
+    //            List<TileDir> targetDirections = _action.TargetingPattern.getDirectionsToCheck();
     //            foreach (TileDir dir in targetDirections)
     //            {
-    //                Vector2Int boardPosition = _adjacentPositions.AdjacentPositions[dir] * i;
+    //                Vector2Int boardPosition = _adjacent.AdjacentPositions[dir] * i;
 
     //                Debug.Log($"Adding an adjacent tile.\n" +
     //                    $"Direction {dir}, BoardPosition {boardPosition}");
