@@ -153,7 +153,11 @@ namespace SystemMiami.AbilitySystem
 
             // Wait for the animation to finish TODO
             // For now, just wait 5 secs
-            yield return new WaitForSeconds(5f);
+            for (int i = 5; i >= 0; i--)
+            {
+                Debug.Log($"Placeholder for animation time. Activates in {i} seconds.");
+                yield return new WaitForSeconds(1f);
+            }
 
             // Perform the ability actions
             yield return StartCoroutine(_selectedAbility.Use());

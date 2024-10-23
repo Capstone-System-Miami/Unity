@@ -34,7 +34,7 @@ namespace SystemMiami.CombatSystem
                 user.OnSubjectChanged += onTargetChanged;
             }
             _targetsLocked = false;
-            showTargets();
+            ShowTargets();
         }
 
         public void UnsubscribeToDirectionUpdates(Combatant user)
@@ -50,18 +50,46 @@ namespace SystemMiami.CombatSystem
             }
             if (!_targetsLocked)
             {
-                hideTargets();
+                HideTargets();
             }
         }
 
         /// <summary>
-        /// Locks the targets by unsubscribing from direction updates without hiding the targets.
+        /// Locks the targets by allowing unsubscribing from direction updates without hiding the targets.
         /// </summary>
         public void LockTargets()
-        {
-            
+        {            
             _targetsLocked = true;
-            Debug.Log("Targets locked in TargetingPattern.");
+            Debug.Log($"Targets locked in {name}'s TargetingPattern.");
+        }
+
+        public void UnlockTargets()
+        {
+            _targetsLocked = false;
+            Debug.Log($"Targets unlocked in {name}'s TargetingPattern");
+        }
+
+        public bool ShowTargets()
+        {            
+            showTiles();
+            showCombatants();
+            return true;
+        }
+
+        public bool HideTargets()
+        {
+            if (_targetsLocked)
+            {
+                // Shouldn't this condition check be somewhere else?
+                // This function is supposed to hide the targets no matter what.
+                Debug.Log("hideTargets called but targets are locked. Skipping hiding.");
+                return true;
+            }
+
+            Debug.Log("HideTargets called. Hiding targets.");
+            hideTiles();
+            hideCombatants();
+            return true;
         }
         #endregion Public
 
@@ -71,37 +99,16 @@ namespace SystemMiami.CombatSystem
         {
             Debug.Log($"OnTargetChanged called. Targets locked: {_targetsLocked}");
             if (_targetsLocked)
-            {
-               
-                showTargets();
+            {          
+                ShowTargets();
                 return;
             }
-            hideTargets();
+
+            HideTargets();
             SetTargets(dir);
-            showTargets();
+            ShowTargets();
         }
 
-        protected bool showTargets()
-        {
-            
-            showTiles();
-            showCombatants();
-            return true;
-        }
-
-        protected bool hideTargets()
-        {
-            if (_targetsLocked)
-            {
-                Debug.Log("hideTargets called but targets are locked. Skipping hiding.");
-                return false;
-            }
-
-            Debug.Log("HideTargets called. Hiding targets.");
-            hideTiles();
-            hideCombatants();
-            return true;
-        }
 
         /// <summary>
         /// Takes directional info about the user,
@@ -191,8 +198,7 @@ namespace SystemMiami.CombatSystem
             if (StoredTargets.Combatants.Count == 0) { return; }
 
             foreach (Combatant combatant in StoredTargets.Combatants)
-            {
-                
+            {                
                 combatant.UnTarget();
             }
         }

@@ -64,13 +64,18 @@ namespace SystemMiami.CombatSystem
             _speed = new Resource(_stats.GetStat(StatType.SPEED));
 
 
-
-            _controller.OnMouseTileChanged += setDirectionalInfo;
+            if (_controller != null)
+            {
+                _controller.OnMouseTileChanged += setDirectionalInfo;
+            }
         }
 
         private void OnDisable()
         {
-            _controller.OnMouseTileChanged -= setDirectionalInfo;
+            if (_controller != null)
+            {
+                _controller.OnMouseTileChanged -= setDirectionalInfo;
+            }
         }
 
         protected virtual void Start()

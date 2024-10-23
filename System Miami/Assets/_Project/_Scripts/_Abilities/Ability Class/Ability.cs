@@ -76,6 +76,7 @@ namespace SystemMiami.AbilitySystem
         {
             foreach (CombatAction action in _actions)
             {
+                action.TargetingPattern.UnlockTargets();
                 action.TargetingPattern.UnsubscribeToDirectionUpdates(User);
             }
         }
@@ -87,8 +88,8 @@ namespace SystemMiami.AbilitySystem
         {
             foreach (CombatAction action in _actions)
             {
-                //action.TargetingPattern.UnsubscribeToDirectionUpdates(User);
                 action.TargetingPattern.LockTargets();
+                action.TargetingPattern.UnsubscribeToDirectionUpdates(User);
             }
 
             //do other stuff
@@ -105,6 +106,9 @@ namespace SystemMiami.AbilitySystem
             for (int i = 0; i < _actions.Length; i++)
             {
                 _actions[i].Perform();
+
+                _actions[i].TargetingPattern.UnlockTargets();
+                _actions[i].TargetingPattern.HideTargets();
                 Debug.Log("Doing My actions");             
             }
 
