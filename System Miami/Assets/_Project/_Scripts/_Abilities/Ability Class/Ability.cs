@@ -39,7 +39,7 @@ namespace SystemMiami.AbilitySystem
         [Header("Animation"), Space(5)]
 
         [SerializeField, Tooltip("The animation controller to override the combatant's when they perform this ability.")]
-        private AnimatorOverrideController _overrideController;
+        public AnimatorOverrideController _overrideController;
 
         [Header("Cooldown")]
 
@@ -80,11 +80,15 @@ namespace SystemMiami.AbilitySystem
             }
         }
 
+        /// <summary>
+        /// Locks the targets by unsubscribing from direction updates without hiding the targets.
+        /// </summary>
         public void ConfirmTargets()
         {
             foreach (CombatAction action in _actions)
             {
-                action.TargetingPattern.UnsubscribeToDirectionUpdates(User);
+                //action.TargetingPattern.UnsubscribeToDirectionUpdates(User);
+                action.TargetingPattern.LockTargets();
             }
 
             //do other stuff
