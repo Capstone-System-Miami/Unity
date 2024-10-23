@@ -1,4 +1,4 @@
-// Authors: Layla Hoey
+// Authors: Layla Hoey, Lee St. Louis
 using SystemMiami.Utilities;
 using UnityEngine;
 
@@ -17,7 +17,7 @@ namespace SystemMiami.CombatSystem
         public PatternOriginType PatternOrigin { get { return _patternOrigin; } }
 
         public Targets StoredTargets;
-        public bool _targetsLocked;
+        [HideInInspector] public bool _targetsLocked;
        
         #region Public
         public abstract void SetTargets(DirectionalInfo userInfo);

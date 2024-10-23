@@ -1,8 +1,6 @@
-// Authors: Layla Hoey
-using SystemMiami.Utilities;
+// Authors: Layla Hoey, Lee St Louis
 using System;
-using Unity.VisualScripting;
-using UnityEditor.UIElements;
+using SystemMiami.Utilities;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem
@@ -30,8 +28,11 @@ namespace SystemMiami.CombatSystem
         private Resource _mana;
         private Resource _speed;
 
-        private bool _isDamageable;
-        private bool _isMoveable;
+        public bool IsDamageable = true;
+        public bool IsHealable = true;
+        public bool IsMovable = true;
+        public bool IsStunned = false;
+        public bool IsInvisible = false;
 
         Action Pause; //??
 
@@ -89,8 +90,6 @@ namespace SystemMiami.CombatSystem
                     CurrentTile = MapManager.MGR.map[gridPos];
                 }
             }
-
-
         }
 
         /// <summary>
@@ -140,59 +139,7 @@ namespace SystemMiami.CombatSystem
             DirectionInfo = newDirection;
         }
 
-        public void Heal()
-        {
-            print($"{name} gained full health.\n");
-
-            _health.Reset();
-        }
-
-        public void Heal(float amount)
-        {
-            print($"{name} gained {amount} health.\n");
-
-            _health.Gain(amount);
-        }
-
-        public void TakeDamage(float amount)
-        {
-            if (_isDamageable)
-            {
-                print($"{name} lost {amount} health.\n");
-
-                _health.Lose(amount);
-            }
-            else
-            {
-                print($"{name} took no damage");
-            }
-        }
-
-        public void GetPushed(int distance, Vector2Int directionVector)
-        {
-            if (_isMoveable)
-            {
-                print($"{name} got pushed {distance} tiles.\n");
-
-                // TODO: Attach & implement IMovable to the character's tile movement controller.
-                // This will be null right now
-                IMovable controller = GetComponent<IMovable>();
-
-                Vector2Int checkPos = (distance * directionVector) + controller.GetTilePos();
-
-                controller?.TryMoveTo(new Vector2Int(checkPos.x, checkPos.y));
-
-                // TODO:
-                // Try to move to tile at checkPos
-                // if there are obstacles / edge of board in the way, move as far as possible before hitting them.
-                // Take damage if they hit an obstacle?
-            }
-            else
-            {
-                print($"{name} is sturdy");
-            }
-        }
-
+        #region ITargetable
         public void Target()
         {
             print($"{name} is being targeted");
@@ -209,22 +156,81 @@ namespace SystemMiami.CombatSystem
             print($"{name} is not longer targeted");
             _renderer.color = _defaultColor;
         }
+
         public GameObject GameObject()
         {
             return gameObject;
         }
+        #endregion
 
+        #region IDamageable
         public void Damage(float amount)
         {
-            print($"{name} took {amount} damage");
-        }
+            if (IsDamageable)
+            {
+                print($"{name} lost {amount} health.\n");
 
-        public void ResetTurn()
+                _health.Lose(amount);
+            }
+            else
+            {
+                print($"{name} took no damage");
+            }
+        }
+        #endregion
+
+        #region IHealable
+        public void Heal()
         {
-            _speed = new Resource(_stats.GetStat(StatType.SPEED));
-            HasActed = false;
+            if (IsHealable)
+            {
+                print($"{name} gained full health.\n");
+
+                _health.Reset();
+            }
+            else
+            {
+                print($"{name} is not healable");
+            }
         }
 
+        public void Heal(float amount)
+        {
+            if (IsHealable)
+            {
+                print($"{name} gained {amount} health.\n");
+
+                _health.Gain(amount);
+            }
+            else
+            {
+                print($"{name} is not healable");
+            }
+        }
+        #endregion
+
+        #region IMovable
+        public void GetPushed(int distance, Vector2Int directionVector)
+        {
+            if (IsMovable)
+            {
+                print($"{name} got pushed {distance} tiles.\n");
+
+                // TODO: Attach & implement IMovable to the character's tile movement controller.
+                // This will be null right now
+                IMovable controller = GetComponent<IMovable>();
+
+                Vector2Int checkPos = (distance * directionVector) + controller.GetTilePos();
+
+                controller?.TryMoveTo(new Vector2Int(checkPos.x, checkPos.y));
+
+
+            }
+            else
+            {
+                print($"{name} is sturdy");
+            }
+        }
         public Vector2Int GetTilePos()
         {
             return (Vector2Int)CurrentTile.gridLocation;
@@ -233,20 +239,47 @@ namespace SystemMiami.CombatSystem
         public bool TryMoveTo(Vector2Int tilePos)
         {
             // TODO: Move the character to a certain position
-
-            print($"{name} is being moved to {tilePos}");
-            return true;
+            if (IsMovable)
+            {
+                print($"{name} would be moved to {tilePos}, but this mechanic has not been implemented");
+                return true;
+            }
+            else
+            {
+                print ($"{name} is sturdy");
+                return false;
+            }
         }
 
         public bool TryMoveInDirection(Vector2Int boardDirection, int distance)
         {
-            Vector2Int newPos = (Vector2Int)CurrentTile.gridLocation + boardDirection * distance;
+            // TODO: Move the character to a certain position
+            if (IsMovable)
+            {
+                // TODO: Move the character a certain amount of tiles
+                // in a certain boardDirection
+                // if there are obstacles / edge of board in the way,
+                // move as far as possible before hitting them.
+                // Take damage if they hit an obstacle?
 
-            // TODO: Move the character a certain amount of tiles
-            // in a certain boardDirection
+                Vector2Int newPos = (Vector2Int)CurrentTile.gridLocation + boardDirection * distance;
 
-            print($"{name} is being moved to {newPos}");
-            return true;
+                print($"{name} would be moved to {newPos}, but this mechanic has not been implemented");
+                return true;
+            }
+            else
+            {
+                print($"{name} is sturdy");
+                return false;
+            }
         }
+        #endregion
+
+        public void ResetTurn()
+        {
+            _speed = new Resource(_stats.GetStat(StatType.SPEED));
+            HasActed = false;
+        }
+
     }
 }

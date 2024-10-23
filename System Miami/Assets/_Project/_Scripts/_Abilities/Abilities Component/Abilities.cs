@@ -1,3 +1,4 @@
+// Authors: Layla Hoey, Lee St Louis
 using System.Collections.Generic;
 using SystemMiami.CombatSystem;
 using Unity.VisualScripting;

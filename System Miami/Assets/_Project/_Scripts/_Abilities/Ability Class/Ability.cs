@@ -1,8 +1,6 @@
 // Authors: Layla Hoey, Lee St. Louis
 using System.Collections;
 using SystemMiami.CombatSystem;
-using SystemMiami.Utilities;
-using UnityEditor;
 using UnityEngine;
 
 namespace SystemMiami.AbilitySystem

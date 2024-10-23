@@ -1,8 +1,5 @@
 // Authors: Layla Hoey
 using UnityEngine;
-using SystemMiami.AbilitySystem;
-using Unity.VisualScripting.FullSerializer;
-using UnityEditor.PackageManager;
 
 namespace SystemMiami.CombatSystem
 {

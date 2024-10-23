@@ -2190,6 +2190,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CurrentTile: {fileID: 0}
   Animator: {fileID: 7803342958832123495}
+  IsDamageable: 1
+  IsHealable: 1
+  IsMovable: 1
+  IsStunned: 0
+  IsInvisible: 0
   Attributes: {fileID: 0}
 --- !u!114 &7803342958832123492
 MonoBehaviour:
@@ -2250,9 +2255,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _abilities:
   - {fileID: 11400000, guid: 45c6ec0b6d7a9e5478d997ae438398ef, type: 2}
-  - {fileID: 11400000, guid: 4b92fe34711d58e49a0072edbf9bed45, type: 2}
   - {fileID: 11400000, guid: 643bdca0740b1444a99f9510e235f561, type: 2}
   - {fileID: 11400000, guid: c4d4b4a8e8b13cf41903d724b6524a65, type: 2}
+  - {fileID: 11400000, guid: 146ee7a517906464cb6712562b49fe47, type: 2}
+  - {fileID: 11400000, guid: a26cec8b8d0669847858387b5aa71c83, type: 2}
   _selectedAbility: {fileID: 0}
   _isTargeting: 0
   _isAbilityConfirmed: 0
