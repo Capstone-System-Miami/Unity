@@ -1,4 +1,4 @@
-// Authors: Layla Hoey
+// Authors: Layla Hoey, Lee St. Louis
 using SystemMiami.Utilities;
 using UnityEngine;
 
@@ -17,9 +17,11 @@ namespace SystemMiami.CombatSystem
         public PatternOriginType PatternOrigin { get { return _patternOrigin; } }
 
         public Targets StoredTargets;
-
+        [HideInInspector] public bool _targetsLocked;
+       
         #region Public
         public abstract void SetTargets(DirectionalInfo userInfo);
+
 
         public void SubscribeToDirectionUpdates(Combatant user)
         {
@@ -31,14 +33,13 @@ namespace SystemMiami.CombatSystem
             {
                 user.OnSubjectChanged += onTargetChanged;
             }
-
-            showTargets();
+            _targetsLocked = false;
+            ShowTargets();
         }
 
         public void UnsubscribeToDirectionUpdates(Combatant user)
         {
-            hideTargets();
-
+            
             if (_patternOrigin == PatternOriginType.USER)
             {
                 user.OnDirectionChanged -= onTargetChanged;
@@ -47,6 +48,48 @@ namespace SystemMiami.CombatSystem
             {
                 user.OnSubjectChanged -= onTargetChanged;
             }
+            if (!_targetsLocked)
+            {
+                HideTargets();
+            }
+        }
+
+        /// <summary>
+        /// Locks the targets by allowing unsubscribing from direction updates without hiding the targets.
+        /// </summary>
+        public void LockTargets()
+        {            
+            _targetsLocked = true;
+            Debug.Log($"Targets locked in {name}'s TargetingPattern.");
+        }
+
+        public void UnlockTargets()
+        {
+            _targetsLocked = false;
+            Debug.Log($"Targets unlocked in {name}'s TargetingPattern");
+        }
+
+        public bool ShowTargets()
+        {            
+            showTiles();
+            showCombatants();
+            return true;
+        }
+
+        public bool HideTargets()
+        {
+            if (_targetsLocked)
+            {
+                // Shouldn't this condition check be somewhere else?
+                // This function is supposed to hide the targets no matter what.
+                Debug.Log("hideTargets called but targets are locked. Skipping hiding.");
+                return true;
+            }
+
+            Debug.Log("HideTargets called. Hiding targets.");
+            hideTiles();
+            hideCombatants();
+            return true;
         }
         #endregion Public
 
@@ -54,24 +97,18 @@ namespace SystemMiami.CombatSystem
         #region Protected
         protected void onTargetChanged(DirectionalInfo dir)
         {
-            hideTargets();
+            Debug.Log($"OnTargetChanged called. Targets locked: {_targetsLocked}");
+            if (_targetsLocked)
+            {          
+                ShowTargets();
+                return;
+            }
+
+            HideTargets();
             SetTargets(dir);
-            showTargets();
+            ShowTargets();
         }
 
-        protected bool showTargets()
-        {
-            showTiles();
-            showCombatants();
-            return true;
-        }
-
-        protected bool hideTargets()
-        {
-            hideTiles();
-            hideCombatants();
-            return true;
-        }
 
         /// <summary>
         /// Takes directional info about the user,
@@ -120,9 +157,10 @@ namespace SystemMiami.CombatSystem
         #region Private
         private void showTiles()
         {
+           
             if (StoredTargets.Tiles == null) return;
             if (StoredTargets.Tiles.Count == 0) { return; }
-
+            
             foreach (OverlayTile tile in StoredTargets.Tiles)
             {
                 tile.Target(TargetedTileColor);
@@ -131,6 +169,7 @@ namespace SystemMiami.CombatSystem
 
         private void showCombatants()
         {
+          
             if (StoredTargets.Combatants == null) return;
             if (StoredTargets.Combatants.Count == 0) { return; }
 
@@ -142,22 +181,24 @@ namespace SystemMiami.CombatSystem
 
         private void hideTiles()
         {
+            
             if (StoredTargets.Tiles == null) return;
             if (StoredTargets.Tiles.Count == 0) { return; }
 
             foreach (OverlayTile tile in StoredTargets.Tiles)
             {
-                tile.UnTarget();
+               tile.UnTarget();
             }
         }
 
         private void hideCombatants()
         {
+            if (_targetsLocked) { Debug.Log("Not Calling Hide Combatants"); return; }
             if (StoredTargets.Combatants == null) return;
             if (StoredTargets.Combatants.Count == 0) { return; }
 
             foreach (Combatant combatant in StoredTargets.Combatants)
-            {
+            {                
                 combatant.UnTarget();
             }
         }

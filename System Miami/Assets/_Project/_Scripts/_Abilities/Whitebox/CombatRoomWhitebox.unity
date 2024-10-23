@@ -1978,8 +1978,8 @@ MonoBehaviour:
   enemyCharacters: []
   currentPhase: 0
   enemyPrefab: {fileID: 5985083666047915755, guid: 0992dae8a10eab24da3ffdab83f92baf, type: 3}
-  bossPrefab: {fileID: 5985083666047915755, guid: 0992dae8a10eab24da3ffdab83f92baf, type: 3}
-  numberOfEnemies: 0
+  bossPrefab: {fileID: 0}
+  numberOfEnemies: 3
   isPlayerTurn: 1
   enemyDetectionRadius: 2
 --- !u!1 &1940009733
@@ -2189,7 +2189,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CurrentTile: {fileID: 0}
-  Animator: {fileID: 0}
+  Animator: {fileID: 7803342958832123495}
+  IsDamageable: 1
+  IsHealable: 1
+  IsMovable: 1
+  IsStunned: 0
+  IsInvisible: 0
   Attributes: {fileID: 0}
 --- !u!114 &7803342958832123492
 MonoBehaviour:
@@ -2248,15 +2253,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0954a2eec1a6ef4eacf7b922aa8acda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _keys: 3100000032000000330000003400000035000000
   _abilities:
-  - {fileID: 11400000, guid: 4b92fe34711d58e49a0072edbf9bed45, type: 2}
-  - {fileID: 11400000, guid: c581097b9ccb2fc4997a4c29aa9e9804, type: 2}
-  - {fileID: 11400000, guid: c4d4b4a8e8b13cf41903d724b6524a65, type: 2}
+  - {fileID: 11400000, guid: 45c6ec0b6d7a9e5478d997ae438398ef, type: 2}
   - {fileID: 11400000, guid: 643bdca0740b1444a99f9510e235f561, type: 2}
+  - {fileID: 11400000, guid: c4d4b4a8e8b13cf41903d724b6524a65, type: 2}
+  - {fileID: 11400000, guid: 146ee7a517906464cb6712562b49fe47, type: 2}
+  - {fileID: 11400000, guid: a26cec8b8d0669847858387b5aa71c83, type: 2}
   _selectedAbility: {fileID: 0}
   _isTargeting: 0
-  targs: []
+  _isAbilityConfirmed: 0
+  _areTargetsLocked: 0
 --- !u!95 &7803342958832123495
 Animator:
   serializedVersion: 5

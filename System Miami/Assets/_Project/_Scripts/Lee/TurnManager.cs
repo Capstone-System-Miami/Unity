@@ -1,3 +1,4 @@
+// Authors: Lee St. Louis
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -69,7 +70,7 @@ namespace SystemMiami
             {
                 enemyCharacters = new List<Enemy>();
             }
-
+            
             // Set starting phase
             currentPhase = Phase.MovementPhase;
         }
@@ -537,6 +538,7 @@ namespace SystemMiami
 
                     // Add to enemy list
                     enemyCharacters.Add(enemy);
+                    Debug.Log("Spawning Enemies");
                 }
                 else
                 {

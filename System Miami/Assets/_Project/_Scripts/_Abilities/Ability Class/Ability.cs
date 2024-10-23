@@ -1,8 +1,6 @@
 // Authors: Layla Hoey, Lee St. Louis
 using System.Collections;
 using SystemMiami.CombatSystem;
-using SystemMiami.Utilities;
-using UnityEditor;
 using UnityEngine;
 
 namespace SystemMiami.AbilitySystem
@@ -39,7 +37,7 @@ namespace SystemMiami.AbilitySystem
         [Header("Animation"), Space(5)]
 
         [SerializeField, Tooltip("The animation controller to override the combatant's when they perform this ability.")]
-        private AnimatorOverrideController _overrideController;
+        public AnimatorOverrideController _overrideController;
 
         [Header("Cooldown")]
 
@@ -76,14 +74,19 @@ namespace SystemMiami.AbilitySystem
         {
             foreach (CombatAction action in _actions)
             {
+                action.TargetingPattern.UnlockTargets();
                 action.TargetingPattern.UnsubscribeToDirectionUpdates(User);
             }
         }
 
+        /// <summary>
+        /// Locks the targets by unsubscribing from direction updates without hiding the targets.
+        /// </summary>
         public void ConfirmTargets()
         {
             foreach (CombatAction action in _actions)
             {
+                action.TargetingPattern.LockTargets();
                 action.TargetingPattern.UnsubscribeToDirectionUpdates(User);
             }
 
@@ -93,31 +96,23 @@ namespace SystemMiami.AbilitySystem
 
         public IEnumerator Use()
         {
-            //if (IsBusy)
-            //{
-            //    Debug.Log("I'm Busy");
-            //    yield break;
-            //}
+            // TODO: Decrement resource
 
-            //if (isOnCooldown)
-            //{
-            //    Debug.Log($"{name} is on Cooldown for {currentCooldown} more turns");
-            //    yield break;
-            //}
-         
-            //IsBusy = true;
+
             yield return null;
 
             for (int i = 0; i < _actions.Length; i++)
             {
                 _actions[i].Perform();
+
+                _actions[i].TargetingPattern.UnlockTargets();
+                _actions[i].TargetingPattern.HideTargets();
                 Debug.Log("Doing My actions");             
             }
 
             currentCooldown = coolDownTurns;
 
             yield return new WaitForEndOfFrame();
-            //  IsBusy = false;
         }
 
         /// <summary>
