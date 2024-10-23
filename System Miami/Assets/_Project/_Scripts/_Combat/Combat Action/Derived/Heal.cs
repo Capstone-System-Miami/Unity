@@ -5,23 +5,18 @@ using UnityEngine;
 namespace SystemMiami.CombatSystem
 {
     [System.Serializable]
-    [CreateAssetMenu(fileName = "New Heal Action", menuName = "CombatAction/Heal")]
+    [CreateAssetMenu(fileName = "New Heal Action", menuName = "Abilities/CombatActions/Heal")]
     public class Heal : CombatAction
     {
         [SerializeField] private float _amount;
 
-        public override void Perform(Targets targets)
+        public override void Perform()
         {
-            for (int i = 0; i < targets.Combatants.Length; i++)
+            foreach (Combatant target in TargetingPattern.StoredTargets.Combatants)
             {
-                if(!targets.Combatants[i].TryGetComponent(out IHealable target))
-                {
-                    Debug.Log($"Invalid heal target.");
-                }
-                else
-                {
-                    target.Heal(_amount);
-                }
+                if (target == null) { continue; }
+
+                target.Heal(_amount);
             }
         }
     }

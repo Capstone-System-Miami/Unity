@@ -1,5 +1,6 @@
 // Authors: Layla Hoey
 using SystemMiami.Utilities;
+using System;
 using Unity.VisualScripting;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -11,8 +12,12 @@ namespace SystemMiami.CombatSystem
     {
         public OverlayTile CurrentTile;
 
-        public DirectionalInfo DirectionInfo;
         public Animator Animator;
+
+        public DirectionalInfo DirectionInfo;
+
+        private Vector2Int _startFrameDirection;
+        private Vector2Int _endFrameDirection;
 
         private MouseController _controller;
         private Stats _stats;
@@ -28,19 +33,23 @@ namespace SystemMiami.CombatSystem
         private bool _isDamageable;
         private bool _isMoveable;
 
-        System.Action Pause;
+        Action Pause; //??
+
+        // These Actions will be subscribed to by each ability's
+        // CombatActions when they are equppped and targeting.
+        // Which one they subscribe to will depend on the origin
+        // of the pattern.
+        public Action<DirectionalInfo> OnSubjectChanged;
+        public Action<DirectionalInfo> OnDirectionChanged;
 
         public bool HasActed { get; set; }
         public Resource Speed { get { return _speed; } }
+        public MouseController Controller { get { return _controller; } }
 
-        public Attributes _attributes;
 
-        public void Awake()
-        {
-            
+        public Attributes Attributes;
 
-        }
-        public void Start()
+        private void OnEnable()
         {
             _stats = GetComponent<Stats>();
             _controller = GetComponent<MouseController>();
@@ -48,44 +57,56 @@ namespace SystemMiami.CombatSystem
             _defaultColor = _renderer.color;
             Animator = GetComponent<Animator>();
 
-            _attributes = GetComponent<Attributes>();
+            Attributes = GetComponent<Attributes>();
             _health = new Resource(_stats.GetStat(StatType.MAX_HEALTH));
             _stamina = new Resource(_stats.GetStat(StatType.STAMINA));
             _mana = new Resource(_stats.GetStat(StatType.MANA));
             _speed = new Resource(_stats.GetStat(StatType.SPEED));
 
+
+
+            _controller.OnMouseTileChanged += setDirectionalInfo;
+        }
+
+        private void OnDisable()
+        {
+            _controller.OnMouseTileChanged -= setDirectionalInfo;
+        }
+
+        protected virtual void Start()
+        {
             if (CurrentTile == null)
             {
                 Vector2Int gridPos = (Vector2Int)Coordinates.ScreenToIso(transform.position, 0);
 
-                if(MapManager.MGR.map.ContainsKey(gridPos))
+                if (MapManager.MGR.map.ContainsKey(gridPos))
                 {
                     CurrentTile = MapManager.MGR.map[gridPos];
                 }
             }
-        }
 
-        private void Update()
-        {
-            setDirectionalInfo();
+
         }
 
         /// <summary>
         /// TODO:
+        /// Because this is now tied into a MouseController event,
+        /// it will do nothing for enemies, who don't have mouse controllers.
         /// This should be refactored once a
         /// movement system is finalized in a
         /// structured way.
         /// Sets the player's directional info
         /// </summary>
-        private void setDirectionalInfo()
+        private void setDirectionalInfo(OverlayTile mouseTile)
         {
+            Debug.LogWarning("Dir info changing");
             Vector2Int playerPos = (Vector2Int)CurrentTile.gridLocation;
             Vector2Int playerFwd;
 
             // If the player has a Mouse Controller (is the user)
             if (TryGetComponent(out _controller))
             {
-                playerFwd = (Vector2Int)_controller.MostRecentMouseTile.gridLocation;
+                playerFwd = (Vector2Int)mouseTile.gridLocation;
             }
             // If the player doesn't have a mouse controller (is an enemy)
             else
@@ -102,12 +123,16 @@ namespace SystemMiami.CombatSystem
                 playerFwd = (Vector2Int)TurnManager.Instance.playerCharacters[0].CurrentTile.gridLocation;
             }
 
-            DirectionInfo = new DirectionalInfo(playerPos, playerFwd);
+            DirectionalInfo newDirection = new DirectionalInfo(playerPos, playerFwd);
 
-            if(tag == "Player")
+            OnSubjectChanged?.Invoke(newDirection);
+
+            if (newDirection.DirectionVec != DirectionInfo.DirectionVec)
             {
-                //DirectionHelper.Print(DirectionInfo);
+                OnDirectionChanged?.Invoke(newDirection);
             }
+
+            DirectionInfo = newDirection;
         }
 
         public void Heal()

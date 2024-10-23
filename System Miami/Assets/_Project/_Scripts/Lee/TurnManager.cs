@@ -142,7 +142,7 @@ namespace SystemMiami
             foreach (Combatant player in playerCharacters)
             {
                 player.GetComponent<Abilities>().ReduceCooldowns();
-                player._attributes.UpdateStatusEffects();
+                player.Attributes.UpdateStatusEffects();
             }
             // After player turn ends, start enemy turn
             StartEnemyTurn();
@@ -204,7 +204,7 @@ namespace SystemMiami
             //foreach (Combatant enemy in enemyCharacters)
             //{
             //   // enemy.GetComponent<Abilities>().ReduceCooldowns();
-            //    enemy._attributes.UpdateStatusEffects();
+            //    enemy.Attributes.UpdateStatusEffects();
             //}
 
             // After enemies have taken their turns, start player turn

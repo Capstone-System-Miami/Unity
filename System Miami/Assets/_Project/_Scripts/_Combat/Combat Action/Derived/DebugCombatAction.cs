@@ -7,13 +7,12 @@ using UnityEngine;
 namespace SystemMiami.CombatSystem
 {
     [System.Serializable]
-    [CreateAssetMenu(fileName = "Debug Action", menuName = "CombatAction/Debug")]
+    [CreateAssetMenu(fileName = "Debug Action", menuName = "Abilities/CombatActions/Debug")]
     public class DebugCombatAction : CombatAction
     {
         
-        public override void Perform(Targets target)
-        {
-           
+        public override void Perform()
+        {           
             Debug.Log("Ability has been used!");
         }
     }

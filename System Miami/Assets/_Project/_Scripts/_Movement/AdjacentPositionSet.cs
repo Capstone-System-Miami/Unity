@@ -40,7 +40,7 @@ namespace SystemMiami.CombatSystem
             _positionsRelativeToMap = new Dictionary<TileDir, Vector2Int>();
             foreach(TileDir direction in _directionsRelativeToMap.Keys)
             {
-                _positionsRelativeToMap[direction] = _directionsRelativeToMap[direction] + info.MapPosition;
+                _positionsRelativeToMap[direction] = _directionsRelativeToMap[direction] + info.MapPositionA;
             }
 
             AdjacentPositions = _positionsRelativeToMap;
@@ -48,25 +48,6 @@ namespace SystemMiami.CombatSystem
 
             //DirectionHelper.Print(AdjacentPositions, "Adjacent");
             IsReady = true;
-        }
-
-        public void SetRotatedDirections(List<TileDir> rotatedDirections)
-        {
-            rotatedDirs.Clear();
-            if (rotatedDirections != null && rotatedDirections.Count > 0)
-            {
-                rotatedDirs.AddRange(rotatedDirections);
-            }
-            else
-            {
-                Debug.Log("rotated list is empty");
-            }
-
-        }
-
-        public List<TileDir> GetRotatedDirs()
-        {
-            return rotatedDirs ?? targetingPattern.GetDirections();
         }
 
         /// <summary>

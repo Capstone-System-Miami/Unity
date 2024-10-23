@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using SystemMiami.CombatSystem;
+using SystemMiami.Utilities;
 using UnityEngine;
 
 namespace SystemMiami
@@ -84,6 +85,8 @@ namespace SystemMiami
             {
                 _mostRecentMouseTile = MapManager.MGR.GetRandomUnblockedTile();
             }
+
+            OnMouseTileChanged?.Invoke(_mostRecentMouseTile);
         }
         #endregion
 

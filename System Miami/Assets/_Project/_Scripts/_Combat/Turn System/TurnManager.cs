@@ -192,7 +192,7 @@ namespace CombatSystem
 
         // Helper Functions
 
-        // Convert World MapPosition to Grid Coordinates
+        // Convert World MapPositionA to Grid Coordinates
         private Vector2 WorldToGrid(Vector3 worldPosition)
         {
             int x = Mathf.FloorToInt(worldPosition.x); // Example of conversion
@@ -200,7 +200,7 @@ namespace CombatSystem
             return new Vector2(x, y);
         }
 
-        // Convert Grid Coordinates to World MapPosition
+        // Convert Grid Coordinates to World MapPositionA
         private Vector3 GridToWorld(int x, int y)
         {
             float worldX = (x - y) * 0.5f;  // Cast to float
