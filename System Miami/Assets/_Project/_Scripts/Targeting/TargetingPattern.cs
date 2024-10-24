@@ -163,7 +163,7 @@ namespace SystemMiami.CombatSystem
             
             foreach (OverlayTile tile in StoredTargets.Tiles)
             {
-                tile.Target(TargetedTileColor);
+                tile.Highlight(TargetedTileColor);
             }
         }
 
@@ -175,7 +175,7 @@ namespace SystemMiami.CombatSystem
 
             foreach (Combatant combatant in StoredTargets.Combatants)
             {
-                combatant.Target(TargetedCombatantColor);
+                combatant.Highlight(TargetedCombatantColor);
             }
         }
 
@@ -187,7 +187,7 @@ namespace SystemMiami.CombatSystem
 
             foreach (OverlayTile tile in StoredTargets.Tiles)
             {
-               tile.UnTarget();
+               tile.UnHighlight();
             }
         }
 
@@ -199,7 +199,7 @@ namespace SystemMiami.CombatSystem
 
             foreach (Combatant combatant in StoredTargets.Combatants)
             {                
-                combatant.UnTarget();
+                combatant.UnHighlight();
             }
         }
         #endregion Private

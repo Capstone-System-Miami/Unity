@@ -145,15 +145,22 @@ namespace SystemMiami.CombatSystem
             print($"{name} is being targeted");
         }
 
-        public void Target(Color color)
+        public void Highlight(Color color)
         {
-            print($"{name} is being targeted");
-            _renderer.color = color;
+            if (!IsInvisible)
+            {
+                print($"{name} is being highlighted");
+                _renderer.color = color;
+            }
+            else
+            {
+                print($"{name} is not being highlighted, because it's invisible");
+            }
         }
 
-        public void UnTarget()
+        public void UnHighlight()
         {
-            print($"{name} is not longer targeted");
+            print($"{name} is not longer highlighted");
             _renderer.color = _defaultColor;
         }
 
@@ -210,27 +217,6 @@ namespace SystemMiami.CombatSystem
         #endregion
 
         #region IMovable
-        public void GetPushed(int distance, Vector2Int directionVector)
-        {
-            if (IsMovable)
-            {
-                print($"{name} got pushed {distance} tiles.\n");
-
-                // TODO: Attach & implement IMovable to the character's tile movement controller.
-                // This will be null right now
-                IMovable controller = GetComponent<IMovable>();
-
-                Vector2Int checkPos = (distance * directionVector) + controller.GetTilePos();
-
-                controller?.TryMoveTo(new Vector2Int(checkPos.x, checkPos.y));
-
-
-            }
-            else
-            {
-                print($"{name} is sturdy");
-            }
-        }
         public Vector2Int GetTilePos()
         {
             return (Vector2Int)CurrentTile.gridLocation;
@@ -238,9 +224,9 @@ namespace SystemMiami.CombatSystem
 
         public bool TryMoveTo(Vector2Int tilePos)
         {
-            // TODO: Move the character to a certain position
             if (IsMovable)
             {
+                // TODO: Move the character to a certain position
                 print($"{name} would be moved to {tilePos}, but this mechanic has not been implemented");
                 return true;
             }
@@ -253,7 +239,6 @@ namespace SystemMiami.CombatSystem
 
         public bool TryMoveInDirection(Vector2Int boardDirection, int distance)
         {
-            // TODO: Move the character to a certain position
             if (IsMovable)
             {
                 // TODO: Move the character a certain amount of tiles

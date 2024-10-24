@@ -7,7 +7,7 @@ namespace SystemMiami.CombatSystem
 {
     [System.Serializable]
     [CreateAssetMenu(fileName = "New Push Action", menuName = "Abilities/CombatActions/Push")]
-    public class Push : CombatAction
+    public class ForceMovement : CombatAction
     {
         [SerializeField] private int _distance;
         
@@ -21,7 +21,7 @@ namespace SystemMiami.CombatSystem
             {
                 if (target == null) { continue; }
 
-                target.GetPushed(_distance, _direction);
+                target.TryMoveInDirection(_direction, _distance);
             }
         }
 

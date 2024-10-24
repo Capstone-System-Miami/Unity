@@ -104,11 +104,7 @@ namespace SystemMiami
                         // End movement phase
                         TurnManager.Instance.EndMovementPhase();
                     }
-                    else if (TurnManager.Instance.currentPhase == Phase.ActionPhase)
-                    {
-                        // End player turn
-                        TurnManager.Instance.EndPlayerTurn();
-                    }
+                    // button for end phase
                 }
 
                 // Handle movement phase
@@ -182,12 +178,12 @@ namespace SystemMiami
                     if (!character.HasActed)
                     {
                         // Placeholder for action selection
-                        if (Input.GetKeyDown(KeyCode.Space))
-                        {
-                            // Perform basic attack
-                            character.HasActed = true;
-                            Debug.Log("Player performed basic attack.");
-                        }
+                        //if (Input.GetKeyDown(KeyCode.Space))
+                        //{
+                        //    // Perform basic attack
+                        //    character.HasActed = true;
+                        //    Debug.Log("Player performed basic attack.");
+                        //}
                     }
                     else
                     {

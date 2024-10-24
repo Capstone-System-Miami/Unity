@@ -90,11 +90,12 @@ namespace SystemMiami.AbilitySystem
             }
         }
 
+        // CALL THIS FROM ABILITY BUTTON
         /// <summary>
         /// Called when an ability is equipped (selected) by pressing the corresponding key.
         /// </summary>
         /// <param name="index">Index of the ability in the abilities list.</param>
-        private void OnEquip(int index)
+        public void OnEquip(int index)
         {
             if (index >= 0 && index < _abilities.Count)
             {

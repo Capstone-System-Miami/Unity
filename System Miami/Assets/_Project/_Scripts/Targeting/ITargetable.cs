@@ -5,8 +5,8 @@ namespace SystemMiami.CombatSystem
     public interface ITargetable
     {
         void Target();
-        void Target(Color color);
-        void UnTarget();
+        void Highlight(Color color);
+        void UnHighlight();
         GameObject GameObject();
     }
 }
