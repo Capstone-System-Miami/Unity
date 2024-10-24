@@ -19,7 +19,7 @@ namespace SystemMiami.CombatSystem
             List<OverlayTile> foundTiles = new List<OverlayTile>();
             List<Combatant> foundCombatants = new List<Combatant>();
 
-            // The map origin & direction of
+            // The map origin & moveDirection of
             // THIS PATTERN
             DirectionalInfo patternDirectionInfo = getPatternDirection(userInfo);
 

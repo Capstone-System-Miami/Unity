@@ -9,7 +9,7 @@ using UnityEngine;
 namespace SystemMiami.CombatSystem
 {
     
-    // Take the direction that something is facing,
+    // Take the moveDirection that something is facing,
     // and translate their local adjacent positions
     // into the static/unchanging positions on the Board/Map
     public class AdjacentPositionSet
@@ -30,7 +30,7 @@ namespace SystemMiami.CombatSystem
             _directionsRelativeToSelf = DirectionHelper.MapDirectionsByEnum;
 
             // Find the map directions by rotating an amount of
-            // ticks equivalent to the enumerated direction
+            // ticks equivalent to the enumerated moveDirection
             // of the incoming object.
             _directionsRelativeToMap = getRotatedVectors(_directionsRelativeToSelf, (int)info.DirectionName);
             //DirectionHelper.Print(_directionsRelativeToMap, "Map directions");

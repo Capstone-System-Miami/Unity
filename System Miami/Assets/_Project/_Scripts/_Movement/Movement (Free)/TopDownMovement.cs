@@ -1,24 +1,24 @@
-//Author: Johnny
+//Author: Johnny, Layla Hoey
 using System.Collections;
 using System.Collections.Generic;
+using SystemMiami.Enums;
+using SystemMiami.Utilities;
 using UnityEngine;
 
 public class TopDownMovement : MonoBehaviour
 {
     public Rigidbody2D body; // Fixed the case of Rigidbody2D
     public SpriteRenderer spriteRenderer;
-
-    public List<Sprite> nSprite;
-    public List<Sprite> neSprite;
-    public List<Sprite> eSprite;
-    public List<Sprite> seSprite;
-    public List<Sprite> sSprite;
+    [SerializeField] private Animator animator;
 
     public float walkSpeed;
     public float frameRate;
 
     float idleTime;
-    Vector2 direction;
+
+    Vector2 rawInput;
+    Vector2 moveDirection;
+    Vector2Int roundedDirection;
 
     // Start is called before the first frame update
     void Start()
@@ -29,74 +29,105 @@ public class TopDownMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        direction = new Vector2( Input.GetAxis("Horizontal"), Input.GetAxis("Vertical") * .5f).normalized; // Handles input
-        body.velocity = direction * walkSpeed; // Apply velocity to Rigidbody
+        updateDirections();
+        movePlayer();
 
-        HandleSpriteFlip(); // Flips sprite based on movement direction
-        SetSprite(); // Sets the current sprite
-    }
-
-    void SetSprite()
-    {
-        List<Sprite> directionSprites = GetSpriteDirection(); // Get the sprite list for the current direction
-
-        if (directionSprites != null && directionSprites.Count > 0)
+        if (roundedDirection == Vector2.zero)
         {
-            float playTime = Time.time - idleTime;
-            int totalFrames = (int)(playTime * frameRate);
-            int frame = totalFrames % directionSprites.Count; // Fixed indexing to the number of available sprites
-
-            spriteRenderer.sprite = directionSprites[frame];
+            animator.enabled = false;
         }
         else
         {
-            idleTime = Time.time; // Reset idle time if no direction is pressed
+            animator.enabled = true;
+            setAnim();
         }
+
+        //HandleSpriteFlip(); // Flips sprite based on movement moveDirection
+        //SetSprite(); // Sets the current sprite
     }
 
-    void HandleSpriteFlip()
+    private void updateDirections()
     {
-        if (!spriteRenderer.flipX && direction.x < 0)
-        {
-            spriteRenderer.flipX = true; // Flip the sprite when moving left
-        }
-        else if (spriteRenderer.flipX && direction.x > 0)
-        {
-            spriteRenderer.flipX = false; // Flip back when moving right
-        }
+        rawInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        roundedDirection = new Vector2Int(Mathf.RoundToInt(rawInput.x), Mathf.RoundToInt(rawInput.y));
+
+        moveDirection = new Vector2(rawInput.x, rawInput.y * .5f).normalized; // Handles input
     }
 
-    List<Sprite> GetSpriteDirection() // Changed void to List<Sprite> to return the sprite list
+    private void movePlayer()
     {
-        List<Sprite> selectedSprites = null;
-
-        if (direction.y > 0) // North
-        {
-            if (Mathf.Abs(direction.x) > 0) // Northeast or Northwest
-            {
-                selectedSprites = neSprite;
-            }
-            else // Straight North
-            {
-                selectedSprites = nSprite;
-            }
-        }
-        else if (direction.y < 0) // South
-        {
-            if (Mathf.Abs(direction.x) > 0) // Southeast or Southwest
-            {
-                selectedSprites = seSprite;
-            }
-            else // Straight South
-            {
-                selectedSprites = sSprite;
-            }
-        }
-        else if (Mathf.Abs(direction.x) > 0) // East or West
-        {
-            selectedSprites = eSprite;
-        }
-
-        return selectedSprites; // Return the selected sprite list
+        body.velocity = moveDirection * walkSpeed; // Apply velocity to Rigidbody
     }
+
+    private void setAnim()
+    {
+        TileDir dir = DirectionHelper.GetTileDir(roundedDirection);
+        animator.SetInteger("TileDir", (int)dir);
+    }
+
+    #region old (sprite-flipper)
+    //void SetSprite()
+    //{
+    //    List<Sprite> directionSprites = GetSpriteDirection(); // Get the sprite list for the current moveDirection
+
+    //    if (directionSprites != null && directionSprites.Count > 0)
+    //    {
+    //        float playTime = Time.time - idleTime;
+    //        int totalFrames = (int)(playTime * frameRate);
+    //        int frame = totalFrames % directionSprites.Count; // Fixed indexing to the number of available sprites
+
+    //        spriteRenderer.sprite = directionSprites[frame];
+    //    }
+    //    else
+    //    {
+    //        idleTime = Time.time; // Reset idle time if no moveDirection is pressed
+    //    }
+    //}
+
+    //void HandleSpriteFlip()
+    //{
+    //    if (!spriteRenderer.flipX && moveDirection.x < 0)
+    //    {
+    //        spriteRenderer.flipX = true; // Flip the sprite when moving left
+    //    }
+    //    else if (spriteRenderer.flipX && moveDirection.x > 0)
+    //    {
+    //        spriteRenderer.flipX = false; // Flip back when moving right
+    //    }
+    //}
+
+    //List<Sprite> GetSpriteDirection() // Changed void to List<Sprite> to return the sprite list
+    //{
+    //    List<Sprite> selectedSprites = null;
+
+    //    if (moveDirection.y > 0) // North
+    //    {
+    //        if (Mathf.Abs(moveDirection.x) > 0) // Northeast or Northwest
+    //        {
+    //            selectedSprites = neSprite;
+    //        }
+    //        else // Straight North
+    //        {
+    //            selectedSprites = nSprite;
+    //        }
+    //    }
+    //    else if (moveDirection.y < 0) // South
+    //    {
+    //        if (Mathf.Abs(moveDirection.x) > 0) // Southeast or Southwest
+    //        {
+    //            selectedSprites = seSprite;
+    //        }
+    //        else // Straight South
+    //        {
+    //            selectedSprites = sSprite;
+    //        }
+    //    }
+    //    else if (Mathf.Abs(moveDirection.x) > 0) // East or West
+    //    {
+    //        selectedSprites = eSprite;
+    //    }
+
+    //    return selectedSprites; // Return the selected sprite list
+    //}
+    #endregion
 }

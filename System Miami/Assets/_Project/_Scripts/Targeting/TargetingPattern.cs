@@ -55,7 +55,7 @@ namespace SystemMiami.CombatSystem
         }
 
         /// <summary>
-        /// Locks the targets by allowing unsubscribing from direction updates without hiding the targets.
+        /// Locks the targets by allowing unsubscribing from moveDirection updates without hiding the targets.
         /// </summary>
         public void LockTargets()
         {            
@@ -131,7 +131,7 @@ namespace SystemMiami.CombatSystem
             {
                 // If the pattern originates from a non-user target,
                 // We should use whatever the user is looking at
-                // as the 'A' point for the direction of the pattern.
+                // as the 'A' point for the moveDirection of the pattern.
                 // If the user is the player, userDirectionInfo.MapPositionB will be the
                 // mouse position.
                 return new DirectionalInfo(userInfo.MapPositionB, userInfo.MapForwardB);
