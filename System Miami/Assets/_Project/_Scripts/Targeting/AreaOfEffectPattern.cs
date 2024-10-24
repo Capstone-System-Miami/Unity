@@ -45,7 +45,7 @@ namespace SystemMiami.CombatSystem
             List<OverlayTile> foundTiles = new List<OverlayTile>();
             List<Combatant> foundCombatants = new List<Combatant>();
 
-            // The map origin & direction of
+            // The map origin & moveDirection of
             // THIS PATTERN
             DirectionalInfo patternDirectionInfo = getPatternDirection(userInfo);
 
@@ -72,7 +72,7 @@ namespace SystemMiami.CombatSystem
                     if (checkedEnemy != null) { foundCombatants.Add(checkedEnemy); }
                 }
 
-                // Check the position at each direction in the pattern.
+                // Check the position at each moveDirection in the pattern.
                 foreach (TileDir direction in _directionsToCheck)
                 {
                     if (radial == 1) Debug.Log($"{direction}");
@@ -118,7 +118,7 @@ namespace SystemMiami.CombatSystem
                 _frontLeft,
             };
 
-            // Add the direction of every `true` to the result List
+            // Add the moveDirection of every `true` to the result List
             for (int i = 0; i < checkDirections.Length; i++)
             {
                 if (checkDirections[i])

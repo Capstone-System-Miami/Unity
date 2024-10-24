@@ -7,7 +7,7 @@ namespace SystemMiami.Utilities
 {
     public static class DirectionHelper
     {
-        // An unchanging dict of direction vectors, accessable by TileDir
+        // An unchanging dict of moveDirection vectors, accessable by TileDir
         public static readonly Dictionary<TileDir, Vector2Int> MapDirectionsByEnum =
             new Dictionary<TileDir, Vector2Int>()
             {
@@ -21,7 +21,7 @@ namespace SystemMiami.Utilities
                 { TileDir.FORWARD_L,   new Vector2Int(-1,  1)  }
             };
 
-        // An unchanging dict of TileDirs, accessable by direction vector
+        // An unchanging dict of TileDirs, accessable by moveDirection vector
         public static readonly Dictionary<Vector2Int, TileDir> DirectionEnumsByVector =
             new Dictionary<Vector2Int, TileDir>()
             {
@@ -65,7 +65,7 @@ namespace SystemMiami.Utilities
             x = Mathf.RoundToInt(difference.x);
             y = Mathf.RoundToInt(difference.y);
 
-            // Return the direction vector.
+            // Return the moveDirection vector.
             // ex1. Returns (-1, 0), a vector
             // equivalent to MapDirectionsByEnum[MIDDLE_L]
             // ex2. Returns (-1, -1), a vector
@@ -121,20 +121,20 @@ namespace SystemMiami.Utilities
         // The unchanged mapPositionB coordinate
         public Vector2Int MapPositionB { get; private set; }
 
-        // The direction the object is facing
+        // The moveDirection the object is facing
         public Vector2Int DirectionVec { get; private set; }
         public TileDir DirectionName { get; private set; }
 
         /// <summary>
         /// Map (game board) coordinates one tile in
-        /// whatever direction we've determined to be "forward"
+        /// whatever moveDirection we've determined to be "forward"
         /// from MapPositionA
         /// </summary>
         public Vector2Int MapForwardA { get; private set; }
 
         /// <summary>
         /// Map (game board) coordinates one tile in
-        /// whatever direction we've determined to be "forward"
+        /// whatever moveDirection we've determined to be "forward"
         /// from MapPositionB
         /// </summary>
         public Vector2Int MapForwardB { get; private set; }

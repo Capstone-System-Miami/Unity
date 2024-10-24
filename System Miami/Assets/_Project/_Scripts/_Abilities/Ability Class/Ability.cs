@@ -80,7 +80,7 @@ namespace SystemMiami.AbilitySystem
         }
 
         /// <summary>
-        /// Locks the targets by unsubscribing from direction updates without hiding the targets.
+        /// Locks the targets by unsubscribing from moveDirection updates without hiding the targets.
         /// </summary>
         public void ConfirmTargets()
         {
@@ -158,7 +158,7 @@ namespace SystemMiami.AbilitySystem
 
         //    DirectionalInfo newDirectionInfo = new DirectionalInfo(userPosition, targetPosition);
 
-        //    // If the direction vector is zero, do not update targets
+        //    // If the moveDirection vector is zero, do not update targets
         //    if (newDirectionInfo.DirectionVec == Vector2Int.zero)
         //    {
         //        IsBusy = false;

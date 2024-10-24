@@ -53,7 +53,7 @@ namespace SystemMiami.Outdated
     //            // If the player boardPosition is less than the range (how?)
     //            // Pattern origin = player boardPosition
 
-    //            // Return a zero'd direction info
+    //            // Return a zero'd moveDirection info
     //            // if projectile targeting failed?
     //            patternOrigin = User.DirectionInfo.MapForwardA;
     //            patternForward = patternOrigin + User.DirectionInfo.DirectionVec;
@@ -81,7 +81,7 @@ namespace SystemMiami.Outdated
     //                    $"Direction {dir}, BoardPosition {boardPosition}");
 
     //                // Add the tile at the action origin's adjacent tiles,
-    //                // corrected for the direction the character is facing.
+    //                // corrected for the moveDirection the character is facing.
     //                boardPositions.Add(boardPosition);
 
     //                tryGetTile(boardPosition, out OverlayTile tile, out Combatant enemy);
