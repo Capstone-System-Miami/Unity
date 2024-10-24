@@ -133,6 +133,8 @@ namespace SystemMiami.CombatSystem
 
             if (newDirection.DirectionVec != DirectionInfo.DirectionVec)
             {
+                //TODO: Swap character sprite
+
                 OnDirectionChanged?.Invoke(newDirection);
             }
 
