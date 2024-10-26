@@ -25,7 +25,8 @@ namespace SystemMiami.AbilitySystem
         private float _resourceCost;
 
         [SerializeField, Tooltip("The icon that will appear in the ui for this ability")]
-        private Sprite Icon;
+        private Sprite _icon;
+        public Sprite Icon { get { return _icon; } }
 
 
         [Header("Actions"), Space(5)]

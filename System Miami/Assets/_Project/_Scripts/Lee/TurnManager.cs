@@ -97,7 +97,7 @@ namespace SystemMiami
             isPlayerTurn = true;
             currentPhase = Phase.MovementPhase;
 
-            // Reset player actions and movement points
+            // SetDefault player actions and movement points
             foreach (Combatant character in playerCharacters)
             {
                 character.ResetTurn();
@@ -117,7 +117,7 @@ namespace SystemMiami
             isPlayerTurn = false;
             currentPhase = Phase.MovementPhase;
 
-            // Reset enemy actions and movement points
+            // SetDefault enemy actions and movement points
             foreach (Combatant enemy in enemyCharacters)
             {
                 enemy.ResetTurn();

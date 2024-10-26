@@ -351,7 +351,7 @@ public class IntersectionManager : MonoBehaviour
         }
         streetObjects.Clear(); // Clear the list of street objects.
     
-        // Reset the street grid by creating new StreetData instances.
+        // SetDefault the street grid by creating new StreetData instances.
         for (int x = 0; x < gridSizeX; x++)
         {
             for (int y = 0; y < gridSizeY; y++)
@@ -361,7 +361,7 @@ public class IntersectionManager : MonoBehaviour
         }
     
         streetQueue.Clear(); // Clear the street generation queue.
-        streetCount = 0; // Reset the street count.
+        streetCount = 0; // SetDefault the street count.
         generationComplete = false; // Set generation as not complete.
     
         // Restart street generation from the center of the grid.

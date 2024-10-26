@@ -175,7 +175,7 @@ namespace CombatSystem
         // End Player Turn
         private void EndPlayerTurn(Hero hero)
         {
-            // Reset hero's action points for the next turn
+            // SetDefault hero's action points for the next turn
             hero.actionPoints = hero.maxActionPoints;
             Debug.Log("Player turn ended for: " + hero.heroName);
             NextTurn(); // Switch to the next hero in the turn order

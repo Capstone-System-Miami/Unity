@@ -43,7 +43,7 @@ public class TopDownMovement : MonoBehaviour
         }
 
         //HandleSpriteFlip(); // Flips sprite based on movement moveDirection
-        //SetSprite(); // Sets the current sprite
+        //Set(); // Sets the current sprite
     }
 
     private void updateDirections()
@@ -66,7 +66,7 @@ public class TopDownMovement : MonoBehaviour
     }
 
     #region old (sprite-flipper)
-    //void SetSprite()
+    //void Set()
     //{
     //    List<Sprite> directionSprites = GetSpriteDirection(); // Get the sprite list for the current moveDirection
 
@@ -80,7 +80,7 @@ public class TopDownMovement : MonoBehaviour
     //    }
     //    else
     //    {
-    //        idleTime = Time.time; // Reset idle time if no moveDirection is pressed
+    //        idleTime = Time.time; // SetDefault idle time if no moveDirection is pressed
     //    }
     //}
 
