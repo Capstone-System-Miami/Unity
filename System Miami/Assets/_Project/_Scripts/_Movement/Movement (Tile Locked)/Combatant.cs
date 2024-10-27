@@ -26,7 +26,7 @@ namespace SystemMiami.Outdated
         /// </summary>
         public void InitializeCharacter()
         {
-            // Set maxMovementPoints to Dexterity attribute
+            // SetAll maxMovementPoints to Dexterity attribute
             Attributes attributes = GetComponent<Attributes>();
             if (attributes != null)
             {

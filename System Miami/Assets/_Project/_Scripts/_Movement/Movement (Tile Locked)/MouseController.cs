@@ -256,7 +256,7 @@ namespace SystemMiami
             // Update CurrentTile
             character.CurrentTile = tile;
 
-            // Set tile's currentCharacter
+            // SetAll tile's currentCharacter
             tile.currentCharacter = character;
         }
     }

@@ -22,6 +22,13 @@ namespace SystemMiami
             _buffer = _default;
         }
 
+        public ClassSwitcher(T defaultSetting)
+        {
+            _default = defaultSetting;
+            _current = _default;
+            _buffer = _default;
+        }
+
         public T Get()
         {
             return _current;

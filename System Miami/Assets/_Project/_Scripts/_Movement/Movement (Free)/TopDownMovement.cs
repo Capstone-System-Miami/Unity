@@ -43,7 +43,7 @@ public class TopDownMovement : MonoBehaviour
         }
 
         //HandleSpriteFlip(); // Flips sprite based on movement moveDirection
-        //Set(); // Sets the current sprite
+        //SetAll(); // Sets the current sprite
     }
 
     private void updateDirections()
@@ -66,7 +66,7 @@ public class TopDownMovement : MonoBehaviour
     }
 
     #region old (sprite-flipper)
-    //void Set()
+    //void SetAll()
     //{
     //    List<Sprite> directionSprites = GetSpriteDirection(); // Get the sprite list for the current moveDirection
 

@@ -115,7 +115,7 @@ namespace SystemMiami.CombatSystem
             // If the player doesn't have a mouse controller (is an enemy)
             else
             {
-                // TODO: Set up an equivalent for enemies.
+                // TODO: SetAll up an equivalent for enemies.
                 // Right now, I guess this would happen in TurnManager?
                 // That's were enemy movement is currently being handled.
                 // Movement component should have a currentTile and a previous tile.

@@ -73,7 +73,7 @@ public class IntersectionManager : MonoBehaviour
     void Start()
     {
         InitializeStreetPoolDictionary(); // Prepare the dictionary mapping StreetTypes to StreetPools.
-        InitializeStreetGrid(); // Set up the grid data structure for street generation.
+        InitializeStreetGrid(); // SetAll up the grid data structure for street generation.
         StartStreetGenerationFromStreet(new Vector2Int(gridSizeX / 2, gridSizeY / 2)); // Begin street generation from the center of the grid.
     }
 
@@ -120,7 +120,7 @@ public class IntersectionManager : MonoBehaviour
         }
     }
 
-    // Set up the 2D array representing the grid, and initialize each cell with a new StreetData instance.
+    // SetAll up the 2D array representing the grid, and initialize each cell with a new StreetData instance.
     private void InitializeStreetGrid()
     {
         streetGrid = new StreetData[gridSizeX, gridSizeY];
@@ -362,7 +362,7 @@ public class IntersectionManager : MonoBehaviour
     
         streetQueue.Clear(); // Clear the street generation queue.
         streetCount = 0; // SetDefault the street count.
-        generationComplete = false; // Set generation as not complete.
+        generationComplete = false; // SetAll generation as not complete.
     
         // Restart street generation from the center of the grid.
         StartStreetGenerationFromStreet(new Vector2Int(gridSizeX / 2, gridSizeY / 2));

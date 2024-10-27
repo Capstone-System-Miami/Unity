@@ -1,6 +1,7 @@
 // Authors: Layla Hoey, Lee St Louis
 using System.Collections.Generic;
 using SystemMiami.CombatSystem;
+using SystemMiami.Management;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -20,6 +21,8 @@ namespace SystemMiami.AbilitySystem
         private Combatant _combatant; // Reference to the combatant component
 
         private InputManager _inputManager; // Reference to the InputManager
+
+        public List<Ability> List { get { return _abilities; } }
 
         void Awake()
         {
@@ -172,7 +175,7 @@ namespace SystemMiami.AbilitySystem
         /// Called when the player unequips the ability (e.g., by right-clicking).
         /// Cancels the ability, removes the preview, and allows equipping a different ability.
         /// </summary>
-        private void OnUnequip()
+        public void OnUnequip()
         {
             Debug.Log("OnUnequip called.");
             if (_selectedAbility != null && _isTargeting)
@@ -194,6 +197,8 @@ namespace SystemMiami.AbilitySystem
                 // Clear the selected ability
                 _selectedAbility = null;
             }
+
+            Management.UI.MGR.UnequipAbility.Invoke();
         }
 
         /// <summary>

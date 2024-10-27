@@ -71,7 +71,7 @@ namespace SystemMiami
                 enemyCharacters = new List<Enemy>();
             }
             
-            // Set starting phase
+            // SetAll starting phase
             currentPhase = Phase.MovementPhase;
         }
 
@@ -314,7 +314,7 @@ namespace SystemMiami
 
             if (targetPlayer != null)
             {
-                // Set enemy's facing moveDirection towards the player
+                // SetAll enemy's facing moveDirection towards the player
                 enemy.DirectionInfo = new DirectionalInfo(
                     (Vector2Int)enemy.CurrentTile.gridLocation,
                     (Vector2Int)targetPlayer.CurrentTile.gridLocation
