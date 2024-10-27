@@ -21,11 +21,6 @@ namespace SystemMiami.UI
         private string _currentText;
         private Color _currentColor;
 
-        private void Start()
-        {
-            _selectionState = SelectionState.UNSELECTED;
-        }
-
         private void Update()
         {
             _currentText = getCurrentText();

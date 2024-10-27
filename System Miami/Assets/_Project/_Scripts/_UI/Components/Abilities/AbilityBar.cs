@@ -9,6 +9,8 @@ namespace SystemMiami.UI
 
         [SerializeField] private AbilitySlot[] _slots;
 
+        [SerializeField] private UnequipPrompt _unequipPrompt;
+
         private int _selectedIndex;
 
         private void Start()
@@ -38,15 +40,19 @@ namespace SystemMiami.UI
 
         public void EquipAbility(int index)
         {
+            if (_slots[index].State == SelectionState.DISABLED) { return; }
+
             _selectedIndex = index;
 
             _slots[_selectedIndex].Select();
             _playerAbilities.OnEquip(_selectedIndex);
+            _unequipPrompt.Show();
         }
 
         public void UnEquipSelected()
         {
             _slots[_selectedIndex].Deselect();
+            _unequipPrompt.Hide();
         }
     }
 }

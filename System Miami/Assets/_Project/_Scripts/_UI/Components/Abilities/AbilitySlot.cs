@@ -30,6 +30,8 @@ namespace SystemMiami.UI
 
         private SelectionState _selectionState;
 
+        public SelectionState State { get { return _selectionState; } }
+
         private void newStateAllFields(SelectionState state)
         {
             _background.NewState(state);

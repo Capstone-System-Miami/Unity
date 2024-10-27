@@ -25,7 +25,6 @@ namespace SystemMiami.UI
         private void Start()
         {
             checkSprites();
-            _selectionState = SelectionState.UNSELECTED;
         }
 
         private void checkSprites()
