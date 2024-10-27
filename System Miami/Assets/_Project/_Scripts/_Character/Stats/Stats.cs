@@ -1,4 +1,4 @@
-// Authors: Layla Hoey
+// Authors: Layla Hoey, Daylan Pain
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,6 +9,11 @@ namespace SystemMiami
     {
         #region VARS
         //===============================
+
+
+        [SerializeField] private float _additionalDamageReductionPercentage = 0.0f; // Leave at zero if no extra damage reduction is neded
+        [SerializeField] private float _additionalDamageIncreasePercentage = 0.0f;
+
 
         [SerializeField] private StatData _statData;
 
@@ -122,8 +127,38 @@ namespace SystemMiami
 
         private void setDamageReduction(int constitution)
         {
-            _currentStats[StatType.DMG_RDX] = constitution * _statData.DamageRdxMultiplier;
+            float baseReduction = constitution * _statData.DamageRdxMultiplier;
+
+            // Apply additional reduction if any *Daylan's shenanigans* lol
+            float totalReduction = baseReduction * (1 + _additionalDamageReductionPercentage);
+
+            _currentStats[StatType.DMG_RDX] = totalReduction;
         }
+
+        /*public void SetAdditionalDamageReductionPercentage(float percentage)
+        {
+            _additionalDamageReductionPercentage = percentage;
+            setDamageReduction(_attributes.GetAttribute(AttributeType.CONSTITUTION)); // Recalculate with new percentage
+        }  Old method that has been modified to allow for both increase a decrease damage. Will clean up later*/
+
+        // In your Stats class
+        public void SetDamageModificationPercentage(float percentage, bool isIncrease)
+        {
+            if (isIncrease)
+            {
+                _additionalDamageIncreasePercentage = percentage;
+                Debug.Log($"Incoming damage increased by {percentage * 100}%. DEBUFF");
+            }
+            else
+            {
+                _additionalDamageReductionPercentage = percentage;
+                Debug.Log($"Incoming damage reduced by {percentage * 100}%. BUFF");
+            }
+
+            setDamageReduction(_attributes.GetAttribute(AttributeType.CONSTITUTION)); // Recalculate with new values
+        }
+
+
 
         private void setSpeed(int dexterity)
         {

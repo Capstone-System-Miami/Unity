@@ -1,4 +1,6 @@
-// Authors: Layla Hoey
+// Authors: Layla Hoey, Daylan Pain
+using UnityEngine;
+
 namespace SystemMiami
 {
     public class Resource
@@ -19,6 +21,9 @@ namespace SystemMiami
             _current = _max;
         }
 
+        // Property to get the max value
+        public float MaxValue => _max;
+
         // Getters
         public float Get()
         {
@@ -37,9 +42,11 @@ namespace SystemMiami
         /// </summary>
         public void Gain(float amt)
         {
+
             float newVal = _current + amt;
 
             _current = newVal > _max ? _max : newVal;
+
         }
 
         /// <summary>
@@ -48,9 +55,12 @@ namespace SystemMiami
         /// </summary>
         public void Lose(float amt)
         {
+
             float newVal = _current - amt;
 
             _current = newVal < 0 ? 0 : newVal;
+
+           
         }
     }
 }

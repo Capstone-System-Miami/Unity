@@ -1,4 +1,4 @@
-// Authors: Layla Hoey, Lee St Louis
+// Authors: Layla Hoey, Lee St Louis, Daylan Pain
 using System;
 using SystemMiami.Utilities;
 using UnityEngine;
@@ -34,6 +34,7 @@ namespace SystemMiami.CombatSystem
         public bool IsStunned = false;
         public bool IsInvisible = false;
 
+       public Resource Health => _health;
         Action Pause; //??
 
         // These Actions will be subscribed to by each ability's
@@ -64,6 +65,9 @@ namespace SystemMiami.CombatSystem
             _mana = new Resource(_stats.GetStat(StatType.MANA));
             _speed = new Resource(_stats.GetStat(StatType.SPEED));
 
+            // Debugging: Print initial mana value
+            Debug.Log($"Initial Mana: {_mana.Get()}/{_mana.MaxValue}");
+
 
             if (_controller != null)
             {
@@ -91,6 +95,60 @@ namespace SystemMiami.CombatSystem
                 }
             }
         }
+
+        #region IManaModifiable
+        //Handles Mana changes using percentages-Daylan Pain
+        public void ModifyManaPercentage(float percentage, bool isIncreasing)
+        {
+            float amountToChange = _mana.MaxValue * (percentage / 100f); // Calculate amount to change
+
+            if (isIncreasing)
+            {
+                _mana.Gain(amountToChange); // Call Gain on _mana instance
+            }
+            else
+            {
+                _mana.Lose(amountToChange); // Call Lose on _mana instance
+            }
+
+            // Debugging: Log the current and max mana after modification
+            Debug.Log($"{name} Current Mana after modification: {_mana.Get()}/{_mana.MaxValue}");
+        }
+
+
+
+        #endregion
+
+        #region IHealable
+        public void HealPercentage(float percentage)
+        {
+            if (IsHealable)
+            {
+                float healAmount = _health.MaxValue * (percentage / 100f);
+                print($"{name} gained {healAmount} health (percentage-based).\n");
+                _health.Gain(healAmount);
+            }
+            else
+            {
+                print($"{name} is not healable");
+            }
+        }
+
+        public void ReducePercentage(float percentage)
+        {
+            if (IsDamageable) // Check if the character is damageable instead of healable
+            {
+                float damageAmount = _health.MaxValue * (percentage / 100f);
+                print($"{name} lost {damageAmount} health (percentage-based).\n");
+                _health.Lose(damageAmount);
+            }
+            else
+            {
+                print($"{name} is not damageable");
+            }
+        }
+        #endregion
+
 
         /// <summary>
         /// TODO:

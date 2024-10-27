@@ -3056,6 +3056,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdb5f55f25919eb41b36cf6d52d9a859, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _additionalDamageReductionPercentage: 0
+  _additionalDamageIncreasePercentage: 0
   _statData: {fileID: 11400000, guid: bba75fed3304a4d408c878a265698e2d, type: 2}
 --- !u!114 &7803342958832123493
 MonoBehaviour:
@@ -3083,10 +3085,10 @@ MonoBehaviour:
   _wisdom: 0
   _intelligence: 0
   _upgradeMode: 0
-  upgradeType: 0
+  upgradeType: 4
   upgradeAmt: 0
   trigger_EnterUpgradeMode: 0
-  trigger_LeaveUpgradeMode: 0
+  trigger_LeaveUpgradeMode: 1
   trigger_AddUpgrade: 0
   trigger_ConfirmUpgrades: 0
 --- !u!114 &7803342958832123494
@@ -3102,11 +3104,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _abilities:
-  - {fileID: 11400000, guid: 45c6ec0b6d7a9e5478d997ae438398ef, type: 2}
-  - {fileID: 11400000, guid: 643bdca0740b1444a99f9510e235f561, type: 2}
-  - {fileID: 11400000, guid: c4d4b4a8e8b13cf41903d724b6524a65, type: 2}
-  - {fileID: 11400000, guid: 146ee7a517906464cb6712562b49fe47, type: 2}
-  - {fileID: 11400000, guid: a26cec8b8d0669847858387b5aa71c83, type: 2}
+  - {fileID: 11400000, guid: 7723000a6edb00c4ebc28e6811228809, type: 2}
+  - {fileID: 11400000, guid: b8c07a4313e2353458a092c3e774e08b, type: 2}
+  - {fileID: 11400000, guid: 801734ddee2393744ae12d5959497042, type: 2}
   _selectedAbility: {fileID: 0}
   _isTargeting: 0
   _isAbilityConfirmed: 0
