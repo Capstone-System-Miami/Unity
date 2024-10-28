@@ -10,16 +10,30 @@ namespace SystemMiami
         /// This wouldn't be serialized in the final version --
         /// it would be set at runtime by the Generator script.
         /// </summary>
+        ///
+        
+        
         [SerializeField] private DifficultyLevel _difficulty;
 
-        [SerializeField] private Light2D _light;
-        private Color _lightColor = Color.white;
+        //[SerializeField] private Light2D _light;
+        //private Color _lightColor = Color.white;
+//
+        //[SerializeField] private Tilemap _signTilemap;
+        //[SerializeField] private Vector3Int _signTilePosition;
+        //private TileBase _tile;
+        //private Color _tileColor;
 
-        [SerializeField] private Tilemap _signTilemap;
-        [SerializeField] private Vector3Int _signTilePosition;
-        private TileBase _tile;
-        private Color _tileColor;
-
+        //Antony
+        [ColorUsage(true, true)]
+        [SerializeField]  Color easyColor;
+        [ColorUsage(true, true)]
+        [SerializeField] Color mediumColor;
+        [ColorUsage(true, true)]
+        [SerializeField] Color hardColor;
+        
+        
+        [SerializeField] private Material _material;
+        
         /// <summary>
         /// This would ideally be on the generator script
         /// </summary>
@@ -29,28 +43,51 @@ namespace SystemMiami
         // these fns would be called from the Generator script.
         private void Start()
         {
-            LoadPreset(_presets[(int)_difficulty]);
-            SetLight();
-            SwapTileForSign();
+            //LoadPreset(_presets[(int)_difficulty]);
+            //SetLight();
+            //SwapTileForSign();
+            _difficulty = Random.Range(0, 3) == 0 ? DifficultyLevel.EASY : Random.Range(0, 3) == 1 ? DifficultyLevel.MEDIUM : DifficultyLevel.HARD;
         }
 
-        public void LoadPreset(DungeonEntrancePreset preset)
+        //public void LoadPreset(DungeonEntrancePreset preset)
+        //{
+        //    _difficulty = preset.Difficulty;
+        //    _lightColor = preset.LightColor;
+        //    _tile = preset.Tile;
+        //    _tileColor = preset.TileColor;
+        //}
+        
+        public void setDungeonColor()
         {
-            _difficulty = preset.Difficulty;
-            _lightColor = preset.LightColor;
-            _tile = preset.Tile;
-            _tileColor = preset.TileColor;
+        
+            if (_difficulty == DifficultyLevel.EASY)
+            {
+                _material.SetColor("_Color", easyColor);
+            }
+            else if (_difficulty == DifficultyLevel.MEDIUM)
+            {
+                _material.SetColor("_Color", mediumColor);
+            }
+            else if (_difficulty == DifficultyLevel.HARD)
+            {
+                _material.SetColor("_Color", hardColor);
+            }
         }
-
-        public void SwapTileForSign()
+        
+        public void turnOffDungeonColor()
         {
-            _signTilemap.SetTile(_signTilePosition, _tile);
-            _signTilemap.color = _tileColor;
+            _material.SetColor("_Color", Color.black);
         }
-
-        public void SetLight()
-        {
-            _light.color = _lightColor;
-        }
+        
+        //public void SwapTileForSign()
+        //{
+        //    _signTilemap.SetTile(_signTilePosition, _tile);
+        //    _signTilemap.color = _tileColor;
+        //}
+//
+        //public void SetLight()
+        //{
+        //    _light.color = _lightColor;
+        //}
     }
 }
