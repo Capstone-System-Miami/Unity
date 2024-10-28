@@ -20,6 +20,8 @@ namespace SystemMiami.UI
             {
                 _text = GetComponentInChildren<Text>();
             }
+            
+            Hide();
         }
 
         public void Show()
