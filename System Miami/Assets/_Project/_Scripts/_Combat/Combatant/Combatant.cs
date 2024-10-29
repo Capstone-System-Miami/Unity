@@ -2,6 +2,7 @@
 using System;
 using SystemMiami.Enums;
 using SystemMiami.Utilities;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem
@@ -48,6 +49,7 @@ namespace SystemMiami.CombatSystem
         public Action<DirectionalInfo> OnDirectionChanged;
         private Vector2Int _direction;
         public bool HasActed { get; set; }
+        public bool IsMoving { get; set; }
 
         public MouseController Controller { get { return _controller; } }
 
@@ -68,6 +70,7 @@ namespace SystemMiami.CombatSystem
             if (_controller != null)
             {
                 _controller.OnMouseTileChanged += setDirectionalInfo;
+                _controller.OnPathTileChanged += setDirectionalInfo;
             }
         }
 
@@ -76,6 +79,7 @@ namespace SystemMiami.CombatSystem
             if (_controller != null)
             {
                 _controller.OnMouseTileChanged -= setDirectionalInfo;
+                _controller.OnPathTileChanged -= setDirectionalInfo;
             }
         }
 
@@ -108,6 +112,8 @@ namespace SystemMiami.CombatSystem
         /// </summary>
         private void setDirectionalInfo(OverlayTile mouseTile)
         {
+            if (IsMoving) { return; }
+
             Debug.LogWarning("Dir info changing");
             Vector2Int playerPos = (Vector2Int)CurrentTile.gridLocation;
             Vector2Int playerFwd;
@@ -120,7 +126,7 @@ namespace SystemMiami.CombatSystem
             // If the _player doesn't have a mouse controller (is an enemy)
             else
             {
-                // TODO: SetAll up an equivalent for enemies.
+                // TODO: Set up an equivalent for enemies.
                 // Right now, I guess this would happen in TurnManager?
                 // That's were enemy movement is currently being handled.
                 // Movement component should have a currentTile and a previous tile.
@@ -138,8 +144,7 @@ namespace SystemMiami.CombatSystem
 
             if (newDirection.DirectionVec != DirectionInfo.DirectionVec)
             {
-                //TODO: Swap character sprite
-                SwapSprite();
+                SwapSprite(newDirection.DirectionVec);
                 OnDirectionChanged?.Invoke(newDirection);
             }
 
@@ -147,47 +152,21 @@ namespace SystemMiami.CombatSystem
             _direction = newDirection.DirectionVec;
         }
 
-        public void SwapSprite()
+        // As of 10/29/24 this is only being called when
+        // OnPathTileChanged is invoked on mouse controller.
+        private void setDirectionalInfo(DirectionalInfo newDirection)
         {
-            TileDir dir = DirectionHelper.GetTileDir(_direction);
+            DirectionInfo = newDirection;
+            _direction = newDirection.DirectionVec;
+            SwapSprite(_direction);
+        }
 
-            if (dir == TileDir.FORWARD_C )
-            {
-                currentSprite = PlayerDirSprites[0];
+        public void SwapSprite(Vector2Int direction)
+        {
+            TileDir dir = DirectionHelper.GetTileDir(direction);
 
-            }
-            else if (dir == TileDir.FORWARD_R)
-            {
-                currentSprite = PlayerDirSprites[1];
-            }
-            else if (dir == TileDir.MIDDLE_R)
-            {
-                currentSprite = PlayerDirSprites[2];
-            }
-            else if (dir == TileDir.BACKWARD_R)
-            {
-                currentSprite = PlayerDirSprites[3];
-            }
-            else if (dir == TileDir.BACKWARD_C)
-            {
-                currentSprite = PlayerDirSprites[4];
-            }
-            else if (dir == TileDir.BACKWARD_L)
-            {
-                currentSprite = PlayerDirSprites[5];
-            }
-            else if (dir == TileDir.MIDDLE_L)
-            {
-                currentSprite = PlayerDirSprites[6];
-            }
-            else if (dir == TileDir.FORWARD_L)
-            {
-                currentSprite = PlayerDirSprites[7];
-            }
-            else
-            {
-                currentSprite = PlayerDirSprites[0];
-            }
+            currentSprite = PlayerDirSprites[(int)dir];
+
             GetComponent<SpriteRenderer>().sprite = currentSprite;
             Debug.Log($"player should be {DirectionInfo.DirectionVec}");
         }

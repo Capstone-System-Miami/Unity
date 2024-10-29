@@ -17,6 +17,7 @@ namespace SystemMiami
         private List<OverlayTile> path = new List<OverlayTile>();
 
         public event Action<OverlayTile> OnMouseTileChanged; // event for tile change
+        public event Action<DirectionalInfo> OnPathTileChanged;
 
         #region Layla Added Vars
         private OverlayTile _mostRecentMouseTile;
@@ -166,7 +167,12 @@ namespace SystemMiami
 
                     if (path.Count > 0)
                     {
+                        character.IsMoving = true;
                         MoveAlongPath();
+                    }
+                    else
+                    {
+                        character.IsMoving = false;
                     }
 
                     IsBusy = false; // layla added
@@ -210,6 +216,13 @@ namespace SystemMiami
 
                 if (Vector2.Distance(character.transform.position, targetTile.transform.position) < 0.0001f)
                 {
+                    // Directional info based on the current tile
+                    // and the one we're moving to.
+                    DirectionalInfo newDir = new DirectionalInfo((Vector2Int)character.CurrentTile.gridLocation, (Vector2Int)targetTile.gridLocation);
+
+                    // Let any subscribers know that we are moving along path
+                    OnPathTileChanged(newDir);
+
                     PositionCharacterOnTile(targetTile);
                     path.RemoveAt(0);
                 }
