@@ -1,5 +1,6 @@
 // Authors: Layla Hoey, Lee St Louis
 using System;
+using SystemMiami.Enums;
 using SystemMiami.Utilities;
 using UnityEngine;
 
@@ -22,6 +23,10 @@ namespace SystemMiami.CombatSystem
         private SpriteRenderer _renderer;
         private Color _defaultColor;
 
+        public Sprite[] PlayerDirSprites;
+        public Sprite currentSprite;
+
+
         [HideInInspector] public Resource Health;
         [HideInInspector] public Resource Stamina;
         [HideInInspector] public Resource Mana;
@@ -41,7 +46,7 @@ namespace SystemMiami.CombatSystem
         // of the pattern.
         public Action<DirectionalInfo> OnSubjectChanged;
         public Action<DirectionalInfo> OnDirectionChanged;
-
+        private Vector2Int _direction;
         public bool HasActed { get; set; }
 
         public MouseController Controller { get { return _controller; } }
@@ -56,6 +61,7 @@ namespace SystemMiami.CombatSystem
             _renderer = GetComponent<SpriteRenderer>();
             _defaultColor = _renderer.color;
             Animator = GetComponent<Animator>();
+            currentSprite = GetComponent<SpriteRenderer>().sprite;
 
             Attributes = GetComponent<Attributes>();
 
@@ -133,11 +139,57 @@ namespace SystemMiami.CombatSystem
             if (newDirection.DirectionVec != DirectionInfo.DirectionVec)
             {
                 //TODO: Swap character sprite
-
+                SwapSprite();
                 OnDirectionChanged?.Invoke(newDirection);
             }
 
             DirectionInfo = newDirection;
+            _direction = newDirection.DirectionVec;
+        }
+
+        public void SwapSprite()
+        {
+            TileDir dir = DirectionHelper.GetTileDir(_direction);
+
+            if (dir == TileDir.FORWARD_C )
+            {
+                currentSprite = PlayerDirSprites[0];
+
+            }
+            else if (dir == TileDir.FORWARD_R)
+            {
+                currentSprite = PlayerDirSprites[1];
+            }
+            else if (dir == TileDir.MIDDLE_R)
+            {
+                currentSprite = PlayerDirSprites[2];
+            }
+            else if (dir == TileDir.BACKWARD_R)
+            {
+                currentSprite = PlayerDirSprites[3];
+            }
+            else if (dir == TileDir.BACKWARD_C)
+            {
+                currentSprite = PlayerDirSprites[4];
+            }
+            else if (dir == TileDir.BACKWARD_L)
+            {
+                currentSprite = PlayerDirSprites[5];
+            }
+            else if (dir == TileDir.MIDDLE_L)
+            {
+                currentSprite = PlayerDirSprites[6];
+            }
+            else if (dir == TileDir.FORWARD_L)
+            {
+                currentSprite = PlayerDirSprites[7];
+            }
+            else
+            {
+                currentSprite = PlayerDirSprites[0];
+            }
+            GetComponent<SpriteRenderer>().sprite = currentSprite;
+            Debug.Log($"player should be {DirectionInfo.DirectionVec}");
         }
 
         #region ITargetable
