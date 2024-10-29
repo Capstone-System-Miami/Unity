@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.Tilemaps;
 
 namespace SystemMiami
 {
@@ -23,8 +24,14 @@ namespace SystemMiami
         
         private void Awake()
         {
+            //Setting a new instance of the glowing material so every single entrance
+            // doesn't turn on at the same time.
+            _material = new Material(_material);
+            TilemapRenderer tilemapRenderer = GetComponent<TilemapRenderer>();
+            tilemapRenderer.material = _material;
+            
             DifficultyLevel _difficulty = GetRandomDifficulty();
-
+            
             foreach (DungeonEntrancePreset preset in _presets)
             {
                 if (preset.Difficulty == _difficulty)
