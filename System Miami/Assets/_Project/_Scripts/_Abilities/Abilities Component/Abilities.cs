@@ -129,7 +129,7 @@ namespace SystemMiami.AbilitySystem
         }
 
         /// <summary>
-        /// Called when the player confirms the ability usage (e.g., by pressing Enter).
+        /// Called when the _player confirms the ability usage (e.g., by pressing Enter).
         /// Executes the ability.
         /// </summary>
         private void OnConfirm()
@@ -172,7 +172,7 @@ namespace SystemMiami.AbilitySystem
         }
 
         /// <summary>
-        /// Called when the player unequips the ability (e.g., by right-clicking).
+        /// Called when the _player unequips the ability (e.g., by right-clicking).
         /// Cancels the ability, removes the preview, and allows equipping a different ability.
         /// </summary>
         public void OnUnequip()

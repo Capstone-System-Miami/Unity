@@ -22,11 +22,10 @@ namespace SystemMiami.CombatSystem
         private SpriteRenderer _renderer;
         private Color _defaultColor;
 
-
-        private Resource _health;
-        private Resource _stamina;
-        private Resource _mana;
-        private Resource _speed;
+        [HideInInspector] public Resource Health;
+        [HideInInspector] public Resource Stamina;
+        [HideInInspector] public Resource Mana;
+        [HideInInspector] public Resource Speed;
 
         public bool IsDamageable = true;
         public bool IsHealable = true;
@@ -44,7 +43,7 @@ namespace SystemMiami.CombatSystem
         public Action<DirectionalInfo> OnDirectionChanged;
 
         public bool HasActed { get; set; }
-        public Resource Speed { get { return _speed; } }
+
         public MouseController Controller { get { return _controller; } }
 
 
@@ -59,11 +58,6 @@ namespace SystemMiami.CombatSystem
             Animator = GetComponent<Animator>();
 
             Attributes = GetComponent<Attributes>();
-            _health = new Resource(_stats.GetStat(StatType.MAX_HEALTH));
-            _stamina = new Resource(_stats.GetStat(StatType.STAMINA));
-            _mana = new Resource(_stats.GetStat(StatType.MANA));
-            _speed = new Resource(_stats.GetStat(StatType.SPEED));
-
 
             if (_controller != null)
             {
@@ -90,6 +84,11 @@ namespace SystemMiami.CombatSystem
                     CurrentTile = MapManager.MGR.map[gridPos];
                 }
             }
+
+            Health = new Resource(_stats.GetStat(StatType.MAX_HEALTH));
+            Stamina = new Resource(_stats.GetStat(StatType.STAMINA));
+            Mana = new Resource(_stats.GetStat(StatType.MANA));
+            Speed = new Resource(_stats.GetStat(StatType.SPEED));
         }
 
         /// <summary>
@@ -99,7 +98,7 @@ namespace SystemMiami.CombatSystem
         /// This should be refactored once a
         /// movement system is finalized in a
         /// structured way.
-        /// Sets the player's directional info
+        /// Sets the _player's directional info
         /// </summary>
         private void setDirectionalInfo(OverlayTile mouseTile)
         {
@@ -107,12 +106,12 @@ namespace SystemMiami.CombatSystem
             Vector2Int playerPos = (Vector2Int)CurrentTile.gridLocation;
             Vector2Int playerFwd;
 
-            // If the player has a Mouse Controller (is the user)
+            // If the _player has a Mouse Controller (is the user)
             if (TryGetComponent(out _controller))
             {
                 playerFwd = (Vector2Int)mouseTile.gridLocation;
             }
-            // If the player doesn't have a mouse controller (is an enemy)
+            // If the _player doesn't have a mouse controller (is an enemy)
             else
             {
                 // TODO: SetAll up an equivalent for enemies.
@@ -121,9 +120,9 @@ namespace SystemMiami.CombatSystem
                 // Movement component should have a currentTile and a previous tile.
                 // Enemies DirectionVec would be either
                     // [wherever they moved to] - [where they moved from] or
-                    // [player position] - [wherever they are right now]
+                    // [_player position] - [wherever they are right now]
 
-                // For now, set the enemy's forward to the player position
+                // For now, set the enemy's forward to the _player position
                 playerFwd = (Vector2Int)TurnManager.Instance.playerCharacters[0].CurrentTile.gridLocation;
             }
 
@@ -179,7 +178,7 @@ namespace SystemMiami.CombatSystem
             {
                 print($"{name} lost {amount} health.\n");
 
-                _health.Lose(amount);
+                Health.Lose(amount);
             }
             else
             {
@@ -195,7 +194,7 @@ namespace SystemMiami.CombatSystem
             {
                 print($"{name} gained full health.\n");
 
-                _health.Reset();
+                Health.Reset();
             }
             else
             {
@@ -209,7 +208,7 @@ namespace SystemMiami.CombatSystem
             {
                 print($"{name} gained {amount} health.\n");
 
-                _health.Gain(amount);
+                Health.Gain(amount);
             }
             else
             {
@@ -264,7 +263,7 @@ namespace SystemMiami.CombatSystem
 
         public void ResetTurn()
         {
-            _speed = new Resource(_stats.GetStat(StatType.SPEED));
+            Speed = new Resource(_stats.GetStat(StatType.SPEED));
             HasActed = false;
         }
 

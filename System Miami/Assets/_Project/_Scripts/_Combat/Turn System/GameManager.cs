@@ -9,14 +9,14 @@ namespace CombatSystem.outdated
     {
         public bool playerTurn = true; // Indicates whose turn it is
         public GameObject enemy; // Reference to the enemy GameObject
-        public GameObject player; // Reference to the player GameObject
+        public GameObject player; // Reference to the _player GameObject
 
         void Update()
         {
             // Player turn logic
             if (playerTurn && Input.GetMouseButtonDown(0))
             {
-                // Handle player actions (e.g., attacking the enemy)
+                // Handle _player actions (e.g., attacking the enemy)
                 HandlePlayerActions();
             }
 
@@ -29,9 +29,9 @@ namespace CombatSystem.outdated
 
         void HandlePlayerActions()
         {
-            // Implement player actions (e.g., attacking, movement)
+            // Implement _player actions (e.g., attacking, movement)
 
-            // After player actions, switch to enemy turn
+            // After _player actions, switch to enemy turn
             playerTurn = false;
         }
 
@@ -44,7 +44,7 @@ namespace CombatSystem.outdated
                
             }
 
-            // After the enemy's attack, switch back to player turn
+            // After the enemy's attack, switch back to _player turn
             playerTurn = true;
         }
     }

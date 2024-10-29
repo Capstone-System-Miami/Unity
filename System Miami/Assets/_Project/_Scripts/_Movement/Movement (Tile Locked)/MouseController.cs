@@ -35,7 +35,7 @@ namespace SystemMiami
             }
 
             // Remove character instantiation from Start()
-            // We'll instantiate the character when the player clicks on a starting tile
+            // We'll instantiate the character when the _player clicks on a starting tile
             // (layla) ^^ I'm wondering why? ^^           
         }
 
@@ -93,7 +93,7 @@ namespace SystemMiami
         // Update is called once per frame
         void LateUpdate()
         {
-            // Check if it's player's turn
+            // Check if it's _player's turn
             if (TurnManager.Instance.isPlayerTurn)
             {
                 // Handle input for ending phases
@@ -110,7 +110,7 @@ namespace SystemMiami
                 // Handle movement phase
                 if (TurnManager.Instance.currentPhase == Phase.MovementPhase)
                 {
-                    // Allow player to select a tile to move to
+                    // Allow _player to select a tile to move to
                     var focusedTileHit = GetFocusedOnTile();
 
                     if (focusedTileHit.HasValue)
@@ -174,7 +174,7 @@ namespace SystemMiami
                 // Handle action phase
                 else if (TurnManager.Instance.currentPhase == Phase.ActionPhase)
                 {
-                    // Allow player to perform an action if they haven't already
+                    // Allow _player to perform an action if they haven't already
                     if (!character.HasActed)
                     {
                         // Placeholder for action selection
@@ -217,7 +217,7 @@ namespace SystemMiami
             else
             {
                 // Movement finished
-                // You can check if player wants to end movement phase
+                // You can check if _player wants to end movement phase
             }
         }
 

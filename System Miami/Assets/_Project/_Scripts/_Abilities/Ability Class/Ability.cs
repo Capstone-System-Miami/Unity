@@ -97,7 +97,14 @@ namespace SystemMiami.AbilitySystem
 
         public IEnumerator Use()
         {
-            // TODO: Decrement resource
+            Resource resource = _requiredResource switch
+            {
+                ResourceType.STAMINA    => User.Stamina,
+                ResourceType.MANA       => User.Mana,
+                _                       => User.Stamina
+            };
+
+            resource.Lose(_resourceCost);
 
 
             yield return null;

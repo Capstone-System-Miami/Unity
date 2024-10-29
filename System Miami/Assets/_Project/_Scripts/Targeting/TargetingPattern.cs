@@ -132,7 +132,7 @@ namespace SystemMiami.CombatSystem
                 // If the pattern originates from a non-user target,
                 // We should use whatever the user is looking at
                 // as the 'A' point for the moveDirection of the pattern.
-                // If the user is the player, userDirectionInfo.MapPositionB will be the
+                // If the user is the _player, userDirectionInfo.MapPositionB will be the
                 // mouse position.
                 return new DirectionalInfo(userInfo.MapPositionB, userInfo.MapForwardB);
             }
