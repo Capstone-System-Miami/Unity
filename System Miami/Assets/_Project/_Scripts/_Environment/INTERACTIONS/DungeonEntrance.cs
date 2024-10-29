@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
-using UnityEngine.Tilemaps;
 
 namespace SystemMiami
 {
@@ -12,82 +11,70 @@ namespace SystemMiami
         /// </summary>
         ///
         
-        
-        [SerializeField] private DifficultyLevel _difficulty;
-
-        //[SerializeField] private Light2D _light;
-        //private Color _lightColor = Color.white;
-//
-        //[SerializeField] private Tilemap _signTilemap;
-        //[SerializeField] private Vector3Int _signTilePosition;
-        //private TileBase _tile;
-        //private Color _tileColor;
-
-        //Antony
-        [ColorUsage(true, true)]
-        [SerializeField]  Color easyColor;
-        [ColorUsage(true, true)]
-        [SerializeField] Color mediumColor;
-        [ColorUsage(true, true)]
-        [SerializeField] Color hardColor;
-        
-        
-        [SerializeField] private Material _material;
-        
         /// <summary>
         /// This would ideally be on the generator script
         /// </summary>
+        
+        
         [SerializeField] private DungeonEntrancePreset[] _presets;
+        [SerializeField] private Material _material;
+        
+        private DungeonEntrancePreset _currentPreset;
+        
+        private void Awake()
+        {
+            DifficultyLevel _difficulty = GetRandomDifficulty();
 
-        // This wouldn't be here in the final version --
-        // these fns would be called from the Generator script.
-        private void Start()
+            foreach (DungeonEntrancePreset preset in _presets)
+            {
+                if (preset.Difficulty == _difficulty)
+                {
+                    LoadPreset(preset);
+                    break;
+                }
+            }
+            Debug.Log("Selected Difficulty for " + gameObject.name + " is "  + _difficulty);
+        }
+        
+        private DifficultyLevel GetRandomDifficulty()
         {
-            //LoadPreset(_presets[(int)_difficulty]);
-            //SetLight();
-            //SwapTileForSign();
-            _difficulty = Random.Range(0, 3) == 0 ? DifficultyLevel.EASY : Random.Range(0, 3) == 1 ? DifficultyLevel.MEDIUM : DifficultyLevel.HARD;
+            float randomValue = Random.value; // Generates a value between 0.0 and 1.0
+
+            if (randomValue < 0.5f)
+            {
+                return DifficultyLevel.EASY; // 50% chance
+            }
+            else if (randomValue < 0.8f)
+            {
+                return DifficultyLevel.MEDIUM; // 30% chance
+            }
+            else
+            {
+                return DifficultyLevel.HARD; // 20% chance
+            }
+        }
+        
+        public void LoadPreset(DungeonEntrancePreset preset)
+        {
+            _currentPreset = preset;
+            ApplyPreset();
         }
 
-        //public void LoadPreset(DungeonEntrancePreset preset)
-        //{
-        //    _difficulty = preset.Difficulty;
-        //    _lightColor = preset.LightColor;
-        //    _tile = preset.Tile;
-        //    _tileColor = preset.TileColor;
-        //}
-        
-        public void setDungeonColor()
+        public void ApplyPreset()
         {
-        
-            if (_difficulty == DifficultyLevel.EASY)
-            {
-                _material.SetColor("_Color", easyColor);
-            }
-            else if (_difficulty == DifficultyLevel.MEDIUM)
-            {
-                _material.SetColor("_Color", mediumColor);
-            }
-            else if (_difficulty == DifficultyLevel.HARD)
-            {
-                _material.SetColor("_Color", hardColor);
-            }
+            //Set the color of the door to default
+            _material.SetColor("_Color", _currentPreset.DoorOffColor);
         }
         
-        public void turnOffDungeonColor()
+        
+        public void SetDungeonColor()
         {
-            _material.SetColor("_Color", Color.black);
+            _material.SetColor("_Color", _currentPreset.DoorOnColor);
         }
         
-        //public void SwapTileForSign()
-        //{
-        //    _signTilemap.SetTile(_signTilePosition, _tile);
-        //    _signTilemap.color = _tileColor;
-        //}
-//
-        //public void SetLight()
-        //{
-        //    _light.color = _lightColor;
-        //}
+        public void TurnOffDungeonColor()
+        {
+            _material.SetColor("_Color", _currentPreset.DoorOffColor);
+        }
     }
 }

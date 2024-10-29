@@ -320,11 +320,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4306299752331093467, guid: ddc7b66291f6f704aa65f8b212e979e3, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.0189087
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4306299752331093467, guid: ddc7b66291f6f704aa65f8b212e979e3, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.6400583
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4306299752331093467, guid: ddc7b66291f6f704aa65f8b212e979e3, type: 3}
       propertyPath: m_LocalPosition.x
@@ -368,7 +368,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4306299752331093467, guid: ddc7b66291f6f704aa65f8b212e979e3, type: 3}
       propertyPath: m_ConstrainProportionsScale
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4476760992286927676, guid: ddc7b66291f6f704aa65f8b212e979e3, type: 3}
       propertyPath: m_SortingLayer
@@ -678,7 +678,7 @@ GameObject:
   - component: {fileID: 1005621089}
   - component: {fileID: 1005621091}
   m_Layer: 0
-  m_Name: Glow
+  m_Name: DoorEntrance1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -887,12 +887,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c94ab060c368be4b80a7d4a7e2771d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _difficulty: 0
-  easyColor: {r: 0.072443604, g: 1.8317873, b: 0.32170326, a: 0}
-  mediumColor: {r: 1.8082932, g: 1.7992717, b: 0, a: 0}
-  hardColor: {r: 2.79544, g: 0.3512595, b: 0, a: 0}
+  _presets:
+  - {fileID: 11400000, guid: b62ecf78532493d40aaa289fa59c2577, type: 2}
+  - {fileID: 11400000, guid: ad458d592988c3749b0b654a882b084d, type: 2}
+  - {fileID: 11400000, guid: 3ac68e114586ecf429cfaf34d8ff63f7, type: 2}
   _material: {fileID: 2100000, guid: b673bd577411dc242a027f4797dcd53c, type: 2}
-  _presets: []
 --- !u!1 &1382123850
 GameObject:
   m_ObjectHideFlags: 0
@@ -1123,7 +1122,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1005621091}
         m_TargetAssemblyTypeName: SystemMiami.DungeonEntrance, Assembly-CSharp
-        m_MethodName: setDungeonColor
+        m_MethodName: SetDungeonColor
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1141,7 +1140,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1005621091}
         m_TargetAssemblyTypeName: SystemMiami.DungeonEntrance, Assembly-CSharp
-        m_MethodName: turnOffDungeonColor
+        m_MethodName: TurnOffDungeonColor
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
