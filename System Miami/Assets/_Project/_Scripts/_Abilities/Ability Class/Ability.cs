@@ -48,7 +48,7 @@ namespace SystemMiami.AbilitySystem
         public bool isOnCooldown => currentCooldown > 0;
 
         [HideInInspector] public Combatant User;
-
+        public AbilityType Type { get { return _type; } }
         public CombatAction[] Actions { get { return _actions; } }
         public bool IsBusy { get; private set; }
 

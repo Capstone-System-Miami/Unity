@@ -1,9 +1,11 @@
 // Authors: Layla Hoey, Lee St Louis
+using System;
 using System.Collections.Generic;
 using SystemMiami.CombatSystem;
 using SystemMiami.Management;
-using Unity.VisualScripting;
+using SystemMiami.UI;
 using UnityEngine;
+using UnityEngine.XR;
 
 namespace SystemMiami.AbilitySystem
 {
@@ -12,45 +14,67 @@ namespace SystemMiami.AbilitySystem
     /// </summary>
     public class Abilities : MonoBehaviour
     {
-        [SerializeField] private List<Ability> _abilities = new List<Ability>(); // List of abilities 
+        [SerializeField] private List<Ability> _physical = new List<Ability>(); // List of phys abilities
+        [SerializeField] private List<Ability> _magical = new List<Ability>(); // List of magic abilities
         [SerializeField] Ability _selectedAbility; // Currently selected ability
         [SerializeField] private bool _isTargeting = false; // check if in targeting mode
-        [SerializeField] private bool _isAbilityConfirmed = false; // check if the ability has been confirmed
-        [SerializeField] private bool _areTargetsLocked = false; // heck if targets are locked
+        [SerializeField] private bool _isUsing = false; // check if the ability has been confirmed
+        [SerializeField] private bool _isConfirming = false; // heck if targets are locked
 
         private Combatant _combatant; // Reference to the combatant component
 
         private InputManager _inputManager; // Reference to the InputManager
 
-        public List<Ability> List { get { return _abilities; } }
+        public List<Ability> Physical { get { return _physical; } }
+        public List<Ability> Magical { get { return _magical; } }
+
+        public Action<AbilityType, int> EquipAbility;
+        public Action UnequipAbility;
 
         void Awake()
         {
             _combatant = GetComponent<Combatant>();
             _inputManager = InputManager.Instance;
-           
-            if (_inputManager != null)
-            {
-                // Always listen for ability key presses
-                _inputManager.OnAbilityKeyPressed += OnAbilityKeyPressed;
-            }
         }
 
-        void OnDestroy()
+        private void OnEnable()
         {
-            if (_inputManager != null)
-            {
-                _inputManager.OnAbilityKeyPressed -= OnAbilityKeyPressed;
-            }
+            EquipAbility += OnEquip;
+            UnequipAbility += OnUnequip;
+            Management.UI.MGR.SlotClicked += onSlotClicked;
         }
 
-       
-        /// <summary>
-        /// Called when an ability key is pressed.
-        /// </summary>
-        private void OnAbilityKeyPressed(int index)
+        private void OnDisable()
         {
-            OnEquip(index);
+            EquipAbility -= OnEquip;
+            UnequipAbility -= OnUnequip;
+            Management.UI.MGR.SlotClicked -= onSlotClicked;
+        }
+
+        private Ability getAbility(AbilityType type, int index)
+        {
+            List<Ability> typePool = type switch
+            {
+                AbilityType.PHYSICAL => _physical,
+                AbilityType.MAGICAL => _magical,
+                _ => _physical
+            };
+
+            if (index >= typePool.Count) { return null; }
+
+            return typePool[index];
+        }
+
+        private void onSlotClicked(AbilitySlot slot)
+        {
+            if (getAbility(slot.Type, slot.Index) == _selectedAbility)
+            {
+                UnequipAbility.Invoke();
+            }
+            else
+            {
+                EquipAbility.Invoke(slot.Type, slot.Index);
+            }
         }
 
         /// <summary>
@@ -59,11 +83,11 @@ namespace SystemMiami.AbilitySystem
         private void OnLeftMouseDown()
         {
             Debug.Log("OnLeftMouseDown called.");
-            if (_isTargeting && !_areTargetsLocked)
+            if (_isTargeting && !_isConfirming)
             {
                 Debug.Log("Locking targets.");
                 _selectedAbility.ConfirmTargets();
-                _areTargetsLocked = true;
+                _isConfirming = true;
             }
             else
             {
@@ -78,7 +102,7 @@ namespace SystemMiami.AbilitySystem
         {
             if (_isTargeting)
             {
-                OnUnequip();
+                UnequipAbility.Invoke();
             }
         }
 
@@ -87,7 +111,7 @@ namespace SystemMiami.AbilitySystem
         /// </summary>
         private void OnEnterPressed()
         {
-            if (_isTargeting && _areTargetsLocked && !_isAbilityConfirmed)
+            if (_isTargeting && _isConfirming && !_isUsing)
             {
                 OnConfirm();
             }
@@ -98,35 +122,36 @@ namespace SystemMiami.AbilitySystem
         /// Called when an ability is equipped (selected) by pressing the corresponding key.
         /// </summary>
         /// <param name="index">Index of the ability in the abilities list.</param>
-        public void OnEquip(int index)
+        private void OnEquip(AbilityType type, int index)
         {
             if (!TurnManager.Instance.isPlayerTurn) { return; }
+            if (index < 0) { return; }
 
-            if (index >= 0 && index < _abilities.Count)
+            
+            // If already targeting an ability, unequip it
+            if (_isTargeting)
             {
-                // If already targeting an ability, unequip it
-                if (_isTargeting)
-                {
-                    OnUnequip();
-                }
+                UnequipAbility.Invoke();
+            }
 
-                // Select the new ability
-                _selectedAbility = _abilities[index];
-                _selectedAbility?.Init(_combatant);
+            // Select the new ability
+            _selectedAbility = getAbility(type, index);
+            if (_selectedAbility == null) { return; }
 
-                // Begin targeting mode
-                _selectedAbility.BeginTargeting();
-                _isTargeting = true;
-                _isAbilityConfirmed = false;
-                _areTargetsLocked = false;
+            _selectedAbility.Init(_combatant);
 
-                // Subscribe to input events
-                if (_inputManager != null)
-                {
-                    _inputManager.OnEnterPressed += OnEnterPressed;
-                    _inputManager.OnLeftMouseDown += OnLeftMouseDown;
-                    _inputManager.OnRightMouseDown += OnRightMouseDown;
-                }
+            // Begin targeting mode
+            _selectedAbility.BeginTargeting();
+            _isTargeting = true;
+            _isUsing = false;
+            _isConfirming = false;
+
+            // Subscribe to input events
+            if (_inputManager != null)
+            {
+                _inputManager.OnEnterPressed += OnEnterPressed;
+                _inputManager.OnLeftMouseDown += OnLeftMouseDown;
+                _inputManager.OnRightMouseDown += OnRightMouseDown;
             }
         }
 
@@ -136,14 +161,17 @@ namespace SystemMiami.AbilitySystem
         /// </summary>
         private void OnConfirm()
         {
-            if (_selectedAbility != null && _isTargeting && _areTargetsLocked)
-            {
-                // Ability is confirmed
-                _isAbilityConfirmed = true;
+            if (_selectedAbility == null) { return; }
+            if (!_isTargeting) { return; }
+            if (!_isConfirming) { return; }
 
-                // Execute the ability
-                StartCoroutine(OnUse());
-            }
+            // Ability is confirmed
+            _isUsing = true;
+
+            TurnManager.Instance.EndMovementPhase();
+
+            // Execute the ability
+            StartCoroutine(OnUse());
         }
 
         /// <summary>
@@ -151,16 +179,15 @@ namespace SystemMiami.AbilitySystem
         /// </summary>
         private System.Collections.IEnumerator OnUse()
         {
-            
-            if (_selectedAbility._overrideController != null && _combatant.Animator != null)
-            {
-                _combatant.Animator.runtimeAnimatorController = _selectedAbility._overrideController;
-                _combatant.Animator.SetTrigger("UseAbility");
-            }
+            if (_selectedAbility._overrideController == null) { yield break; }
+            if (_combatant.Animator == null) { yield break; }
 
-            // Wait for the animation to finish TODO
-            // For now, just wait 5 secs
-            for (int i = 5; i >= 0; i--)
+            _combatant.Animator.runtimeAnimatorController = _selectedAbility._overrideController;
+            _combatant.Animator.SetTrigger("UseAbility");
+
+            // TODO: Wait for the animation to finish
+            // For now, just wait 3 secs
+            for (int i = 3; i >= 0; i--)
             {
                 Debug.Log($"Placeholder for animation time. Activates in {i} seconds.");
                 yield return new WaitForSeconds(1f);
@@ -169,37 +196,36 @@ namespace SystemMiami.AbilitySystem
             // Perform the ability actions
             yield return StartCoroutine(_selectedAbility.Use());
 
-            OnUnequip();
+            // Unequip when the Ability's Use() coroutine is over.
+            UnequipAbility.Invoke();
         }
 
         /// <summary>
         /// Called when the _player unequips the ability (e.g., by right-clicking).
         /// Cancels the ability, removes the preview, and allows equipping a different ability.
         /// </summary>
-        public void OnUnequip()
+        private void OnUnequip()
         {
             Debug.Log("OnUnequip called.");
-            if (_selectedAbility != null && _isTargeting)
+            if (_selectedAbility == null) { return; }
+            if (!_isTargeting) { return; }
+
+            // Cancel the ability, which hides the targets
+            _selectedAbility.CancelTargeting();
+            _isTargeting = false;
+            _isUsing = false;
+            _isConfirming = false;
+
+            // Unsubscribe from input events
+            if (_inputManager != null)
             {
-                // Cancel the ability, which hides the targets
-                _selectedAbility.CancelTargeting();
-                _isTargeting = false;
-                _isAbilityConfirmed = false;
-                _areTargetsLocked = false;
-
-                // Unsubscribe from input events
-                if (_inputManager != null)
-                {
-                    _inputManager.OnEnterPressed -= OnEnterPressed;
-                    _inputManager.OnLeftMouseDown -= OnLeftMouseDown;
-                    _inputManager.OnRightMouseDown -= OnRightMouseDown;
-                }
-
-                // Clear the selected ability
-                _selectedAbility = null;
+                _inputManager.OnEnterPressed -= OnEnterPressed;
+                _inputManager.OnLeftMouseDown -= OnLeftMouseDown;
+                _inputManager.OnRightMouseDown -= OnRightMouseDown;
             }
 
-            Management.UI.MGR.UnequipAbility.Invoke();
+            // Clear the selected ability
+            _selectedAbility = null;            
         }
 
         /// <summary>
@@ -207,9 +233,16 @@ namespace SystemMiami.AbilitySystem
         /// </summary>
         public void AddAbility(Ability newAbility)
         {
-            if (!_abilities.Contains(newAbility))
+            List<Ability> pool = newAbility.Type switch
             {
-                _abilities.Add(newAbility);
+                AbilityType.PHYSICAL    => _physical,
+                AbilityType.MAGICAL     => _magical,
+                _                       => _physical
+            };
+
+            if (!pool.Contains(newAbility))
+            {
+                pool.Add(newAbility);
                 newAbility.Init(_combatant);
             }
         }
@@ -219,7 +252,7 @@ namespace SystemMiami.AbilitySystem
         /// </summary>
         public void ReduceCooldowns()
         {
-            foreach (Ability ability in _abilities)
+            foreach (Ability ability in _physical)
             {
                 ability.ReduceCooldown();
             }

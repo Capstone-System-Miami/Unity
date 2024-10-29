@@ -1,17 +1,56 @@
+using System.Collections.Generic;
 using SystemMiami.AbilitySystem;
+using SystemMiami.Management;
 using UnityEngine;
 
 namespace SystemMiami.UI
 {
     public class AbilityBar : MonoBehaviour
     {
+        [SerializeField] private AbilityType _barType;
+
         [SerializeField] private Abilities _playerAbilities;
+        [SerializeField] private Stats _playerStats;
 
         [SerializeField] private AbilitySlot[] _slots;
 
-        [SerializeField] private UnequipPrompt _unequipPrompt;
+        [SerializeField] private UnequipPrompt _unequipPrompt; 
 
-        private int _selectedIndex;
+        public AbilityType BarType { get { return _barType; } }
+
+        private void OnEnable()
+        {
+            _playerAbilities.EquipAbility += onEquipAbility;
+            _playerAbilities.UnequipAbility += onUnequipAbility;
+        }
+
+        private void OnDisable()
+        {
+            _playerAbilities.EquipAbility -= onEquipAbility;
+            _playerAbilities.UnequipAbility -= onUnequipAbility;
+        }
+
+        private void onEquipAbility(AbilityType type, int index)
+        {
+            if (type != _barType) { return; }
+
+            _slots[index].Select();
+            _unequipPrompt.Show();
+        }
+
+        private void onUnequipAbility()
+        {
+            unequipAll();
+            _unequipPrompt.Hide();
+        }
+
+        private void unequipAll()
+        {
+            for (int i = 0; i < _slots.Length; i++)
+            {
+                _slots[i].Deselect();
+            }
+        }
 
         private void Start()
         {
@@ -23,36 +62,39 @@ namespace SystemMiami.UI
         {
             for (int i = 0; i < _slots.Length; i++)
             {
-                _slots[i].Initialize(i);
+                _slots[i].Initialize(_barType, i);
             }
         }
 
         private void fillSlots()
         {
-            int toFill = Mathf.Min(_slots.Length, _playerAbilities.List.Count);
+            int toFill = Mathf.Min(new int[] { _slots.Length, getSlotStat(), getAbilities().Count});
 
             for (int i = 0 ; i < toFill; i++)
             {
-                _slots[i].Fill(_playerAbilities.List[i]);
+                _slots[i].Fill(getAbilities()[i]);
                 _slots[i].EnableSelection();
             }
         }
 
-        public void EquipAbility(int index)
+        private List<Ability> getAbilities()
         {
-            if (_slots[index].State == SelectionState.DISABLED) { return; }
-
-            _selectedIndex = index;
-
-            _slots[_selectedIndex].Select();
-            _playerAbilities.OnEquip(_selectedIndex);
-            _unequipPrompt.Show();
+            return _barType switch
+            {
+                AbilityType.PHYSICAL    => _playerAbilities.Physical,
+                AbilityType.MAGICAL     => _playerAbilities.Magical,
+                _                       => _playerAbilities.Physical
+            };
         }
 
-        public void UnEquipSelected()
+        private int getSlotStat()
         {
-            _slots[_selectedIndex].Deselect();
-            _unequipPrompt.Hide();
+            return _barType switch
+            {
+                AbilityType.PHYSICAL    => (int)_playerStats.GetStat(StatType.PHYSICAL_SLOTS),
+                AbilityType.MAGICAL     => (int)_playerStats.GetStat(StatType.MAGICAL_SLOTS),
+                _                       => (int)_playerStats.GetStat(StatType.PHYSICAL_SLOTS)
+            };
         }
     }
 }

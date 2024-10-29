@@ -8,11 +8,6 @@ namespace SystemMiami.UI
 {
     public class AbilitySlot : MonoBehaviour
     {
-        private int _index;
-
-        [Header("Colors")]
-        [SerializeField] private Color _typeColor;
-
         [Header("Background Panel")]
         [SerializeField] private SelectableSprite _background;
 
@@ -28,7 +23,12 @@ namespace SystemMiami.UI
         [SerializeField] private SelectableText _name;
         [SerializeField] private SelectableSprite _nameBKG;
 
+        private int _index;
+        private AbilityType _type;
         private SelectionState _selectionState;
+
+        public AbilityType Type { get { return _type; } }
+        public int Index { get { return _index; } }
 
         public SelectionState State { get { return _selectionState; } }
 
@@ -46,9 +46,10 @@ namespace SystemMiami.UI
             _nameBKG.NewState(state);
         }
 
-        public void Initialize(int index)
+        public void Initialize(AbilityType type, int index)
         {
             _index = index;
+            _type = type;
             
             // Set every string in the selectable text
             // so it won't change depending on
@@ -66,11 +67,13 @@ namespace SystemMiami.UI
             _icon.SetAllSprites(ability.Icon);
 
             _name.SetAllMessages(ability.name);
+
+            _type = ability.Type;
         }
 
         public void OnClick()
         {
-            Management.UI.MGR.EquipAbility.Invoke(_index);
+            Management.UI.MGR.SlotClicked.Invoke(this);
         }
 
         public void Select()
