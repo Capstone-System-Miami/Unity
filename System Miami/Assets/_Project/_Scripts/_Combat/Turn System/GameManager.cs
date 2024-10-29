@@ -1,5 +1,6 @@
 //Johnny
 using UnityEngine;
+using SystemMiami.CombatSystem;
 
 namespace CombatSystem.outdated
 {

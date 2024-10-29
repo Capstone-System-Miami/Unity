@@ -1,8 +1,8 @@
 // Authors: Layla Hoey, Lee St Louis
 using System;
 using SystemMiami.Enums;
+using SystemMiami.Management;
 using SystemMiami.Utilities;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem
@@ -72,6 +72,8 @@ namespace SystemMiami.CombatSystem
                 _controller.OnMouseTileChanged += setDirectionalInfo;
                 _controller.OnPathTileChanged += setDirectionalInfo;
             }
+
+            GAME.MGR.CombatantDeath += onCombatantDeath;
         }
 
         private void OnDisable()
@@ -81,6 +83,8 @@ namespace SystemMiami.CombatSystem
                 _controller.OnMouseTileChanged -= setDirectionalInfo;
                 _controller.OnPathTileChanged -= setDirectionalInfo;
             }
+
+            GAME.MGR.CombatantDeath -= onCombatantDeath;
         }
 
         protected virtual void Start()
@@ -99,6 +103,14 @@ namespace SystemMiami.CombatSystem
             Stamina = new Resource(_stats.GetStat(StatType.STAMINA));
             Mana = new Resource(_stats.GetStat(StatType.MANA));
             Speed = new Resource(_stats.GetStat(StatType.SPEED));
+        }
+
+        private void Update()
+        {
+            if (Health.Get() == 0)
+            {
+                GAME.MGR.CombatantDeath.Invoke(this);
+            }
         }
 
         /// <summary>
@@ -161,6 +173,14 @@ namespace SystemMiami.CombatSystem
             SwapSprite(_direction);
         }
 
+        private void onCombatantDeath(Combatant deadCombatant)
+        {
+            if (deadCombatant == this)
+            {
+                Die();
+            }
+        }
+
         public void SwapSprite(Vector2Int direction)
         {
             TileDir dir = DirectionHelper.GetTileDir(direction);
@@ -168,7 +188,6 @@ namespace SystemMiami.CombatSystem
             currentSprite = PlayerDirSprites[(int)dir];
 
             GetComponent<SpriteRenderer>().sprite = currentSprite;
-            Debug.Log($"player should be {DirectionInfo.DirectionVec}");
         }
 
         #region ITargetable
@@ -298,5 +317,17 @@ namespace SystemMiami.CombatSystem
             HasActed = false;
         }
 
+        public virtual void Die()
+        {
+            // I'm not sure that Enemy should be a derived class of Combatant.
+
+            // If it wasn't, we would probably have something like this:
+            // if player
+                // game over
+            // else
+                // destroy game object
+
+            // But since we don't we'll let the derived class handle it for now.
+        }
     }
 }
