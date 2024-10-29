@@ -25,6 +25,8 @@ namespace SystemMiami
         private Tilemap tileMap;
         private BoundsInt bounds;
 
+        public BoundsInt Bounds { get { return bounds; } }
+
         protected override void Awake()
         {
             base.Awake(); // Handles the assignement of the static instance

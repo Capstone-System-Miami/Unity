@@ -103,6 +103,8 @@ namespace SystemMiami.CombatSystem
             Stamina = new Resource(_stats.GetStat(StatType.STAMINA));
             Mana = new Resource(_stats.GetStat(StatType.MANA));
             Speed = new Resource(_stats.GetStat(StatType.SPEED));
+
+            initPlayerDirection();
         }
 
         private void Update()
@@ -111,6 +113,12 @@ namespace SystemMiami.CombatSystem
             {
                 GAME.MGR.CombatantDeath.Invoke(this);
             }
+        }
+
+        private void initPlayerDirection()
+        {
+            Vector2Int currentPos = (Vector2Int)CurrentTile.gridLocation;
+            setDirectionalInfo(new DirectionalInfo(currentPos, Vector2Int.zero));
         }
 
         /// <summary>
@@ -183,6 +191,8 @@ namespace SystemMiami.CombatSystem
 
         public void SwapSprite(Vector2Int direction)
         {
+            if (PlayerDirSprites == null || PlayerDirSprites.Length == 0) { return; }
+
             TileDir dir = DirectionHelper.GetTileDir(direction);
 
             currentSprite = PlayerDirSprites[(int)dir];

@@ -4,6 +4,7 @@ using System.Linq;
 using SystemMiami.CombatSystem;
 using SystemMiami.Utilities;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 namespace SystemMiami
 {
@@ -80,7 +81,7 @@ namespace SystemMiami
         {
             if(character.CurrentTile != null)
             {
-                _mostRecentMouseTile = character.CurrentTile;
+                MapManager.MGR.map.TryGetValue(Vector2Int.zero, out _mostRecentMouseTile);
             }
             else
             {
