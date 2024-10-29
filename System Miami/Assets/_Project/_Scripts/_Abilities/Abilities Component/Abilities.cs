@@ -100,6 +100,8 @@ namespace SystemMiami.AbilitySystem
         /// <param name="index">Index of the ability in the abilities list.</param>
         public void OnEquip(int index)
         {
+            if (!TurnManager.Instance.isPlayerTurn) { return; }
+
             if (index >= 0 && index < _abilities.Count)
             {
                 // If already targeting an ability, unequip it
@@ -167,8 +169,7 @@ namespace SystemMiami.AbilitySystem
             // Perform the ability actions
             yield return StartCoroutine(_selectedAbility.Use());
 
-            
-            // For now,targets are locked until unequipped can change later
+            OnUnequip();
         }
 
         /// <summary>
