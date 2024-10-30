@@ -77,6 +77,7 @@ namespace SystemMiami
         public void SetDungeonColor()
         {
             _material.SetColor("_Color", _currentPreset.DoorOnColor);
+            Debug.Log("Applying color!");
         }
         
         public void TurnOffDungeonColor()
