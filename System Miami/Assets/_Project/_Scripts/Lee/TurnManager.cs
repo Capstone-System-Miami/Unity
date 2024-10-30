@@ -309,11 +309,13 @@ namespace SystemMiami
                 // Use the selected ability
                 yield return StartCoroutine(UseEnemyAbility(enemy, selectedAbility));
                 enemy.HasActed = true;
+                Debug.Log(enemy.name + " Used an ability");
             }
             else
             {
                 // No ability can be used, so end action phase
                 enemy.HasActed = true;
+                Debug.Log(enemy.name + "Can't use an ability");
             }
 
             yield return new WaitForSeconds(0.5f); // Wait for action simulation
@@ -365,11 +367,13 @@ namespace SystemMiami
                     // Check if any target is in range
                     if (IsPlayerInAbilityRange(enemy, ability))
                     {
+                        Debug.Log("Returning Ability");
                         return ability;
+                        
                     }
                 }
             }
-
+            Debug.Log("Cant use ability");
             return null; // No ability can be used
         }
 
@@ -378,7 +382,7 @@ namespace SystemMiami
         /// </summary>
         private bool IsPlayerInAbilityRange(Enemy enemy, Ability ability)
         {
-            int maxRange = 2; // Example range
+            int maxRange = 4; // Example range
 
             foreach (Combatant player in playerCharacters)
             {

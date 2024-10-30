@@ -1,4 +1,6 @@
 //Alec's script
+
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -15,6 +17,10 @@ namespace SystemMiami
 
         private void Awake(){ Instance = this; arrows = new List<GameObject>(); previousPath = new List<OverlayTile>(); }
 
+        private void Update()
+        {
+            RemoveArrows();
+        }
         public void DrawPath(List<OverlayTile> path)
         {
             if(path == null) return;
@@ -40,6 +46,21 @@ namespace SystemMiami
                 arrow.SetTileData(tile, path[i - 1], i < path.Count - 1 ? path[i + 1] : null);
 
                 arrows.Add(arrowGo);
+              //todo arrows after path
+                
+            }
+            
+        }
+
+        private void RemoveArrows()
+        {
+            if (Input.GetKeyDown(KeyCode.E) && TurnManager.Instance.currentPhase == Phase.MovementPhase)
+            {
+                foreach (GameObject arrow in arrows)
+                {
+                    Destroy(arrow);
+                }
+                arrows.Clear();
             }
         }
     }

@@ -212,7 +212,7 @@ namespace SystemMiami
         private void MoveAlongPath()
         {
             float step = speed * Time.deltaTime;
-
+            //TODO i want to add it here so that you have to confirm the movement too so that the arrows show up before you move and can show your path
             if (path.Count > 0)
             {
                 OverlayTile targetTile = path[0];

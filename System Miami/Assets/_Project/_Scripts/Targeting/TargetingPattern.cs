@@ -23,7 +23,7 @@ namespace SystemMiami.CombatSystem
         public abstract void SetTargets(DirectionalInfo userInfo);
 
 
-        public void SubscribeToDirectionUpdates(Combatant user)
+        public  void SubscribeToDirectionUpdates(Combatant user)
         {
             if (_patternOrigin == PatternOriginType.USER)
             {
@@ -37,7 +37,7 @@ namespace SystemMiami.CombatSystem
             ShowTargets();
         }
 
-        public void UnsubscribeToDirectionUpdates(Combatant user)
+        public  void UnsubscribeToDirectionUpdates(Combatant user)
         {
             
             if (_patternOrigin == PatternOriginType.USER)
@@ -57,7 +57,7 @@ namespace SystemMiami.CombatSystem
         /// <summary>
         /// Locks the targets by allowing unsubscribing from moveDirection updates without hiding the targets.
         /// </summary>
-        public void LockTargets()
+        public  void LockTargets()
         {            
             _targetsLocked = true;
             Debug.Log($"Targets locked in {name}'s TargetingPattern.");
@@ -69,7 +69,7 @@ namespace SystemMiami.CombatSystem
             Debug.Log($"Targets unlocked in {name}'s TargetingPattern");
         }
 
-        public bool ShowTargets()
+        public bool  ShowTargets()
         {            
             showTiles();
             showCombatants();
