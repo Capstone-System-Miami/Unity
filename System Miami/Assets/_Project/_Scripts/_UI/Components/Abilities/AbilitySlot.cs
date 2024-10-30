@@ -1,8 +1,6 @@
 // Author: Layla Hoey
-using UnityEngine;
-using SystemMiami.Management;
 using SystemMiami.AbilitySystem;
-using System;
+using UnityEngine;
 
 namespace SystemMiami.UI
 {
