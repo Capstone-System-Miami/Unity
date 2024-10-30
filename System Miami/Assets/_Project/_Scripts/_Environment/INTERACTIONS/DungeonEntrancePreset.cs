@@ -9,24 +9,16 @@ namespace SystemMiami
     public class DungeonEntrancePreset : ScriptableObject
     {
         [SerializeField] private DifficultyLevel _difficulty;
+        
+        //Color for the door states
+        [SerializeField] private Color _doorOffColor = Color.black;
+        
+        [ColorUsage(true, true)]
+        [SerializeField]  Color _doorOnColor;
 
-        [SerializeField] private Color _lightColor = Color.white;
-
-        [SerializeField] private Sprite _tileSprite;
-        [SerializeField] private Color _tileColor;
-
-        public DifficultyLevel Difficulty { get { return  _difficulty; } }
-        public Color LightColor { get { return  _lightColor; } }
-        public TileBase Tile
-        {
-            get
-            {
-                IsometricRuleTile newTile = CreateInstance<IsometricRuleTile>();
-                newTile.m_DefaultSprite = _tileSprite;
-
-                return newTile;
-            }
-        }
-        public Color TileColor { get { return _tileColor; } }
+        //setters
+        public DifficultyLevel Difficulty => _difficulty;
+        public Color DoorOffColor => _doorOffColor;
+        public Color DoorOnColor => _doorOnColor;
     }
 }
