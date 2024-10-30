@@ -67,11 +67,11 @@ namespace SystemMiami
 
         private void initializeWith(AttributeSet baseAttributes)
         {
-            _strength = baseAttributes.Dict[AttributeType.STRENGTH];
-            _dexterity = baseAttributes.Dict[AttributeType.DEXTERITY];
-            _constitution = baseAttributes.Dict[AttributeType.CONSTITUTION];
-            _wisdom = baseAttributes.Dict[AttributeType.WISDOM];
-            _intelligence = baseAttributes.Dict[AttributeType.INTELLIGENCE];
+            _strength = baseAttributes.Get(AttributeType.STRENGTH);
+            _dexterity = baseAttributes.Get(AttributeType.DEXTERITY);
+            _constitution = baseAttributes.Get(AttributeType.CONSTITUTION);
+            _wisdom = baseAttributes.Get(AttributeType.WISDOM);
+            _intelligence = baseAttributes.Get(AttributeType.INTELLIGENCE);
 
             updateVals(false);
         }
@@ -132,19 +132,19 @@ namespace SystemMiami
 
             if (!reverse)
             {
-                _current.Dict[AttributeType.STRENGTH]        = _strength;
-                _current.Dict[AttributeType.DEXTERITY]       = _dexterity;
-                _current.Dict[AttributeType.CONSTITUTION]    = _constitution;
-                _current.Dict[AttributeType.WISDOM]          = _wisdom;
-                _current.Dict[AttributeType.INTELLIGENCE]    = _intelligence;
+                _current.Set(AttributeType.STRENGTH,        _strength);
+                _current.Set(AttributeType.DEXTERITY,       _dexterity);
+                _current.Set(AttributeType.CONSTITUTION,    _constitution);
+                _current.Set(AttributeType.WISDOM,          _wisdom);
+                _current.Set(AttributeType.INTELLIGENCE,    _intelligence);
             }
             else
             {
-                _strength       = _current.Dict[AttributeType.STRENGTH] ;
-                _dexterity      = _current.Dict[AttributeType.DEXTERITY];
-                _constitution   = _current.Dict[AttributeType.CONSTITUTION];
-                _wisdom         = _current.Dict[AttributeType.WISDOM];
-                _intelligence   = _current.Dict[AttributeType.INTELLIGENCE];
+                _strength       = _current.Get(AttributeType.STRENGTH);
+                _dexterity      = _current.Get(AttributeType.DEXTERITY);
+                _constitution   = _current.Get(AttributeType.CONSTITUTION);
+                _wisdom         = _current.Get(AttributeType.WISDOM);
+                _intelligence   = _current.Get(AttributeType.INTELLIGENCE);
             }
         }
 
@@ -155,9 +155,11 @@ namespace SystemMiami
         private void updatePreview()
         {
             // Preview should be our current stored attributes plus stored upgrades
-            foreach (AttributeType attr in _current.Dict.Keys)
+            for ( int i = 0; i < CharacterEnums.ATTRIBUTE_COUNT; i++ )
             {
-                _preview.Dict[attr] = _current.Dict[attr] + _upgrades.Dict[attr];
+                AttributeType attr = (AttributeType)i;
+
+                _preview.Set(attr, (_current.Get(attr) + _upgrades.Get(attr)) );
             }
         }
 
@@ -198,7 +200,7 @@ namespace SystemMiami
                 print ($"Invalid Selection");
             }
 
-            _upgrades.Dict[type] += amount;            
+            _upgrades.Set(type, (_upgrades.Get(type) + amount) );            
         }
 
 

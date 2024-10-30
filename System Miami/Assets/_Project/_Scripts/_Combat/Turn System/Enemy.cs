@@ -5,7 +5,7 @@
 //{
 //    public int maxHealth = 100;      // Enemy's maximum health
 //    public int currentHealth;        // Enemy's current health
-//    public int damage = 10;          // Damage the enemy deals to the player
+//    public int damage = 10;          // Damage the enemy deals to the _player
 
 //    void Start()
 //    {
@@ -13,7 +13,7 @@
 //        currentHealth = maxHealth;
 //    }
 
-//    // This function is called when the player clicks on the enemy
+//    // This function is called when the _player clicks on the enemy
 //    void OnMouseDown()
 //    {
 //        Debug.Log("Enemy clicked!");
@@ -32,14 +32,14 @@
 //        }
 //    }
 
-//    public void AttackPlayer(GameObject player)
+//    public void AttackPlayer(GameObject _player)
 //    {
-//        Debug.Log("Enemy is trying to attack the player!");  // Add this line
-//        Player playerScript = player.GetComponent<Player>();
+//        Debug.Log("Enemy is trying to attack the _player!");  // Add this line
+//        Player playerScript = _player.GetComponent<Player>();
 //        if (playerScript != null)
 //        {
-//            Debug.Log("Enemy attacks the player!");  // Add this line
-//            playerScript.TakeDamage(damage);  // Deal damage to the player
+//            Debug.Log("Enemy attacks the _player!");  // Add this line
+//            playerScript.TakeDamage(damage);  // Deal damage to the _player
 //        }
 //        else
 //        {

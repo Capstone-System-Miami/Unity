@@ -1,5 +1,7 @@
 // Authors: Layla Hoey, Lee St Louis
 using System;
+using SystemMiami.Enums;
+using SystemMiami.Management;
 using SystemMiami.Utilities;
 using UnityEngine;
 
@@ -14,6 +16,8 @@ namespace SystemMiami.CombatSystem
 
         public DirectionalInfo DirectionInfo;
 
+        public int ID { get; set; }
+
         private Vector2Int _startFrameDirection;
         private Vector2Int _endFrameDirection;
 
@@ -22,11 +26,13 @@ namespace SystemMiami.CombatSystem
         private SpriteRenderer _renderer;
         private Color _defaultColor;
 
+        public Sprite[] PlayerDirSprites;
+        public Sprite currentSprite;
 
-        private Resource _health;
-        private Resource _stamina;
-        private Resource _mana;
-        private Resource _speed;
+        [HideInInspector] public Resource Health;
+        [HideInInspector] public Resource Stamina;
+        [HideInInspector] public Resource Mana;
+        [HideInInspector] public Resource Speed;
 
         public bool IsDamageable = true;
         public bool IsHealable = true;
@@ -34,17 +40,16 @@ namespace SystemMiami.CombatSystem
         public bool IsStunned = false;
         public bool IsInvisible = false;
 
-        Action Pause; //??
-
         // These Actions will be subscribed to by each ability's
         // CombatActions when they are equppped and targeting.
         // Which one they subscribe to will depend on the origin
         // of the pattern.
         public Action<DirectionalInfo> OnSubjectChanged;
         public Action<DirectionalInfo> OnDirectionChanged;
-
+        private Vector2Int _direction;
         public bool HasActed { get; set; }
-        public Resource Speed { get { return _speed; } }
+        public bool IsMoving { get; set; }
+
         public MouseController Controller { get { return _controller; } }
 
 
@@ -57,18 +62,17 @@ namespace SystemMiami.CombatSystem
             _renderer = GetComponent<SpriteRenderer>();
             _defaultColor = _renderer.color;
             Animator = GetComponent<Animator>();
+            currentSprite = GetComponent<SpriteRenderer>().sprite;
 
             Attributes = GetComponent<Attributes>();
-            _health = new Resource(_stats.GetStat(StatType.MAX_HEALTH));
-            _stamina = new Resource(_stats.GetStat(StatType.STAMINA));
-            _mana = new Resource(_stats.GetStat(StatType.MANA));
-            _speed = new Resource(_stats.GetStat(StatType.SPEED));
-
 
             if (_controller != null)
             {
                 _controller.OnMouseTileChanged += setDirectionalInfo;
+                _controller.OnPathTileChanged += setDirectionalInfo;
             }
+
+            GAME.MGR.CombatantDeath += onCombatantDeath;
         }
 
         private void OnDisable()
@@ -76,7 +80,10 @@ namespace SystemMiami.CombatSystem
             if (_controller != null)
             {
                 _controller.OnMouseTileChanged -= setDirectionalInfo;
+                _controller.OnPathTileChanged -= setDirectionalInfo;
             }
+
+            GAME.MGR.CombatantDeath -= onCombatantDeath;
         }
 
         protected virtual void Start()
@@ -90,6 +97,27 @@ namespace SystemMiami.CombatSystem
                     CurrentTile = MapManager.MGR.map[gridPos];
                 }
             }
+
+            Health = new Resource(_stats.GetStat(StatType.MAX_HEALTH));
+            Stamina = new Resource(_stats.GetStat(StatType.STAMINA));
+            Mana = new Resource(_stats.GetStat(StatType.MANA));
+            Speed = new Resource(_stats.GetStat(StatType.SPEED));
+
+            initPlayerDirection();
+        }
+
+        private void Update()
+        {
+            if (Health.Get() == 0)
+            {
+                GAME.MGR.CombatantDeath.Invoke(this);
+            }
+        }
+
+        private void initPlayerDirection()
+        {
+            Vector2Int currentPos = (Vector2Int)CurrentTile.gridLocation;
+            setDirectionalInfo(new DirectionalInfo(currentPos, Vector2Int.zero));
         }
 
         /// <summary>
@@ -99,20 +127,22 @@ namespace SystemMiami.CombatSystem
         /// This should be refactored once a
         /// movement system is finalized in a
         /// structured way.
-        /// Sets the player's directional info
+        /// Sets the _player's directional info
         /// </summary>
         private void setDirectionalInfo(OverlayTile mouseTile)
         {
+            if (IsMoving) { return; }
+
             Debug.LogWarning("Dir info changing");
             Vector2Int playerPos = (Vector2Int)CurrentTile.gridLocation;
             Vector2Int playerFwd;
 
-            // If the player has a Mouse Controller (is the user)
+            // If the _player has a Mouse Controller (is the user)
             if (TryGetComponent(out _controller))
             {
                 playerFwd = (Vector2Int)mouseTile.gridLocation;
             }
-            // If the player doesn't have a mouse controller (is an enemy)
+            // If the _player doesn't have a mouse controller (is an enemy)
             else
             {
                 // TODO: Set up an equivalent for enemies.
@@ -121,9 +151,9 @@ namespace SystemMiami.CombatSystem
                 // Movement component should have a currentTile and a previous tile.
                 // Enemies DirectionVec would be either
                     // [wherever they moved to] - [where they moved from] or
-                    // [player position] - [wherever they are right now]
+                    // [_player position] - [wherever they are right now]
 
-                // For now, set the enemy's forward to the player position
+                // For now, set the enemy's forward to the _player position
                 playerFwd = (Vector2Int)TurnManager.Instance.playerCharacters[0].CurrentTile.gridLocation;
             }
 
@@ -133,10 +163,40 @@ namespace SystemMiami.CombatSystem
 
             if (newDirection.DirectionVec != DirectionInfo.DirectionVec)
             {
+                SwapSprite(newDirection.DirectionVec);
                 OnDirectionChanged?.Invoke(newDirection);
             }
 
             DirectionInfo = newDirection;
+            _direction = newDirection.DirectionVec;
+        }
+
+        // As of 10/29/24 this is only being called when
+        // OnPathTileChanged is invoked on mouse controller.
+        private void setDirectionalInfo(DirectionalInfo newDirection)
+        {
+            DirectionInfo = newDirection;
+            _direction = newDirection.DirectionVec;
+            SwapSprite(_direction);
+        }
+
+        private void onCombatantDeath(Combatant deadCombatant)
+        {
+            if (deadCombatant == this)
+            {
+                Die();
+            }
+        }
+
+        public void SwapSprite(Vector2Int direction)
+        {
+            if (PlayerDirSprites == null || PlayerDirSprites.Length == 0) { return; }
+
+            TileDir dir = DirectionHelper.GetTileDir(direction);
+
+            currentSprite = PlayerDirSprites[(int)dir];
+
+            GetComponent<SpriteRenderer>().sprite = currentSprite;
         }
 
         #region ITargetable
@@ -177,7 +237,7 @@ namespace SystemMiami.CombatSystem
             {
                 print($"{name} lost {amount} health.\n");
 
-                _health.Lose(amount);
+                Health.Lose(amount);
             }
             else
             {
@@ -193,7 +253,7 @@ namespace SystemMiami.CombatSystem
             {
                 print($"{name} gained full health.\n");
 
-                _health.Reset();
+                Health.Reset();
             }
             else
             {
@@ -207,7 +267,7 @@ namespace SystemMiami.CombatSystem
             {
                 print($"{name} gained {amount} health.\n");
 
-                _health.Gain(amount);
+                Health.Gain(amount);
             }
             else
             {
@@ -262,9 +322,21 @@ namespace SystemMiami.CombatSystem
 
         public void ResetTurn()
         {
-            _speed = new Resource(_stats.GetStat(StatType.SPEED));
+            Speed = new Resource(_stats.GetStat(StatType.SPEED));
             HasActed = false;
         }
 
+        public virtual void Die()
+        {
+            // I'm not sure that Enemy should be a derived class of Combatant.
+
+            // If it wasn't, we would probably have something like this:
+            // if player
+                // game over
+            // else
+                // destroy game object
+
+            // But since we don't we'll let the derived class handle it for now.
+        }
     }
 }

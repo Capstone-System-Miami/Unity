@@ -25,6 +25,11 @@ namespace SystemMiami
             return _current;
         }
 
+        public float GetMax()
+        {
+            return _max;
+        }
+
         // Setters
         public void Reset()
         {

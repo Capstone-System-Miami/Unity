@@ -4,7 +4,7 @@ using System;
 namespace SystemMiami
 {
     /// <summary>
-    /// Manages player input and raises events when specific inputs are detected.
+    /// Manages _player input and raises events when specific inputs are detected.
     /// </summary>
     public class InputManager : MonoBehaviour
     {

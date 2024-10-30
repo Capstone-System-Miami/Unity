@@ -23,7 +23,7 @@ namespace SystemMiami.CombatSystem
         public abstract void SetTargets(DirectionalInfo userInfo);
 
 
-        public void SubscribeToDirectionUpdates(Combatant user)
+        public  void SubscribeToDirectionUpdates(Combatant user)
         {
             if (_patternOrigin == PatternOriginType.USER)
             {
@@ -37,7 +37,7 @@ namespace SystemMiami.CombatSystem
             ShowTargets();
         }
 
-        public void UnsubscribeToDirectionUpdates(Combatant user)
+        public  void UnsubscribeToDirectionUpdates(Combatant user)
         {
             
             if (_patternOrigin == PatternOriginType.USER)
@@ -57,7 +57,7 @@ namespace SystemMiami.CombatSystem
         /// <summary>
         /// Locks the targets by allowing unsubscribing from moveDirection updates without hiding the targets.
         /// </summary>
-        public void LockTargets()
+        public  void LockTargets()
         {            
             _targetsLocked = true;
             Debug.Log($"Targets locked in {name}'s TargetingPattern.");
@@ -69,7 +69,7 @@ namespace SystemMiami.CombatSystem
             Debug.Log($"Targets unlocked in {name}'s TargetingPattern");
         }
 
-        public bool ShowTargets()
+        public bool  ShowTargets()
         {            
             showTiles();
             showCombatants();
@@ -132,7 +132,7 @@ namespace SystemMiami.CombatSystem
                 // If the pattern originates from a non-user target,
                 // We should use whatever the user is looking at
                 // as the 'A' point for the moveDirection of the pattern.
-                // If the user is the player, userDirectionInfo.MapPositionB will be the
+                // If the user is the _player, userDirectionInfo.MapPositionB will be the
                 // mouse position.
                 return new DirectionalInfo(userInfo.MapPositionB, userInfo.MapForwardB);
             }
@@ -173,9 +173,11 @@ namespace SystemMiami.CombatSystem
             if (StoredTargets.Combatants == null) return;
             if (StoredTargets.Combatants.Count == 0) { return; }
 
-            foreach (Combatant combatant in StoredTargets.Combatants)
+            for (int i = 0; i < StoredTargets.Combatants.Count; i++)
             {
-                combatant.Highlight(TargetedCombatantColor);
+                if (StoredTargets.Combatants[i] == null) { continue; }
+
+                StoredTargets.Combatants[i].Highlight(TargetedCombatantColor);
             }
         }
 
@@ -197,9 +199,11 @@ namespace SystemMiami.CombatSystem
             if (StoredTargets.Combatants == null) return;
             if (StoredTargets.Combatants.Count == 0) { return; }
 
-            foreach (Combatant combatant in StoredTargets.Combatants)
+            for (int i = 0; i < StoredTargets.Combatants.Count; i++)
             {                
-                combatant.UnHighlight();
+                if (StoredTargets.Combatants[i] == null) { continue; }
+
+                StoredTargets.Combatants[i].UnHighlight();
             }
         }
         #endregion Private

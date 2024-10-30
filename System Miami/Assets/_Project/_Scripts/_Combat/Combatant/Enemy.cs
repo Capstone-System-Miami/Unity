@@ -1,11 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using SystemMiami.AbilitySystem;
-using SystemMiami.CombatSystem;
 using UnityEngine;
 
-
-
+namespace SystemMiami.CombatSystem
+{
     public enum EnemyType
     {
         Regular,
@@ -32,5 +31,12 @@ using UnityEngine;
                 }
             }
         }
+
+        public override void Die()
+        {
+            TurnManager.Instance.enemyCharacters.Remove(this);
+            Destroy(gameObject);
+        }
     }
+}
 

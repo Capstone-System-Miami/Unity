@@ -46,12 +46,12 @@ namespace SystemMiami.Outdated
     //        // If action is a projectile
     //        if (_action is SomethingElse projectile)
     //        {
-    //            // If this is player
+    //            // If this is _player
     //            // If the mouse boardPosition is less than the range (how will we do this?)
     //            // Pattern origin = mouse boardPosition
     //            // If this is the enemy
-    //            // If the player boardPosition is less than the range (how?)
-    //            // Pattern origin = player boardPosition
+    //            // If the _player boardPosition is less than the range (how?)
+    //            // Pattern origin = _player boardPosition
 
     //            // Return a zero'd moveDirection info
     //            // if projectile targeting failed?

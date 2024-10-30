@@ -25,7 +25,8 @@ namespace SystemMiami.AbilitySystem
         private float _resourceCost;
 
         [SerializeField, Tooltip("The icon that will appear in the ui for this ability")]
-        private Sprite Icon;
+        private Sprite _icon;
+        public Sprite Icon { get { return _icon; } }
 
 
         [Header("Actions"), Space(5)]
@@ -47,7 +48,7 @@ namespace SystemMiami.AbilitySystem
         public bool isOnCooldown => currentCooldown > 0;
 
         [HideInInspector] public Combatant User;
-
+        public AbilityType Type { get { return _type; } }
         public CombatAction[] Actions { get { return _actions; } }
         public bool IsBusy { get; private set; }
 
@@ -96,7 +97,14 @@ namespace SystemMiami.AbilitySystem
 
         public IEnumerator Use()
         {
-            // TODO: Decrement resource
+            Resource resource = _requiredResource switch
+            {
+                ResourceType.STAMINA    => User.Stamina,
+                ResourceType.MANA       => User.Mana,
+                _                       => User.Stamina
+            };
+
+            resource.Lose(_resourceCost);
 
 
             yield return null;
