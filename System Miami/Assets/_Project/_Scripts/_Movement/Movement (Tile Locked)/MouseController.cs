@@ -109,6 +109,11 @@ namespace SystemMiami
                     // button for end phase
                 }
 
+                if (Input.GetKeyDown(KeyCode.Q))
+                {
+                    TurnManager.Instance.EndPlayerTurn();
+                }
+
                 // Handle movement phase
                 if (TurnManager.Instance.currentPhase == Phase.MovementPhase)
                 {

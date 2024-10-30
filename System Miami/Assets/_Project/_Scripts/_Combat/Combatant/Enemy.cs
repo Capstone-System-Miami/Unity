@@ -34,6 +34,7 @@ namespace SystemMiami.CombatSystem
 
         public override void Die()
         {
+            TurnManager.Instance.enemyCharacters.Remove(this);
             Destroy(gameObject);
         }
     }

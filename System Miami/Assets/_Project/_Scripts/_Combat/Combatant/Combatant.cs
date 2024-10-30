@@ -16,6 +16,8 @@ namespace SystemMiami.CombatSystem
 
         public DirectionalInfo DirectionInfo;
 
+        public int ID { get; set; }
+
         private Vector2Int _startFrameDirection;
         private Vector2Int _endFrameDirection;
 
@@ -27,7 +29,6 @@ namespace SystemMiami.CombatSystem
         public Sprite[] PlayerDirSprites;
         public Sprite currentSprite;
 
-
         [HideInInspector] public Resource Health;
         [HideInInspector] public Resource Stamina;
         [HideInInspector] public Resource Mana;
@@ -38,8 +39,6 @@ namespace SystemMiami.CombatSystem
         public bool IsMovable = true;
         public bool IsStunned = false;
         public bool IsInvisible = false;
-
-        Action Pause; //??
 
         // These Actions will be subscribed to by each ability's
         // CombatActions when they are equppped and targeting.

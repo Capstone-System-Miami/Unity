@@ -30,6 +30,8 @@ namespace SystemMiami.AbilitySystem
 
         public Action<AbilityType, int> EquipAbility;
         public Action UnequipAbility;
+        public Action<Ability> LockTargets;
+        public Action<Ability> UseAbility;
 
         void Awake()
         {
@@ -86,8 +88,11 @@ namespace SystemMiami.AbilitySystem
             if (_isTargeting && !_isConfirming)
             {
                 Debug.Log("Locking targets.");
+                TurnManager.Instance.EndMovementPhase();
                 _selectedAbility.ConfirmTargets();
                 _isConfirming = true;
+
+                LockTargets.Invoke(_selectedAbility);
             }
             else
             {
@@ -168,10 +173,10 @@ namespace SystemMiami.AbilitySystem
             // Ability is confirmed
             _isUsing = true;
 
-            TurnManager.Instance.EndMovementPhase();
-
             // Execute the ability
             StartCoroutine(OnUse());
+
+            UseAbility.Invoke(_selectedAbility);
         }
 
         /// <summary>

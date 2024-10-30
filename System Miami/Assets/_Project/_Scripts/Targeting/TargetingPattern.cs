@@ -163,7 +163,7 @@ namespace SystemMiami.CombatSystem
             
             foreach (OverlayTile tile in StoredTargets.Tiles)
             {
-                tile?.Highlight(TargetedTileColor);
+                tile.Highlight(TargetedTileColor);
             }
         }
 
@@ -173,9 +173,11 @@ namespace SystemMiami.CombatSystem
             if (StoredTargets.Combatants == null) return;
             if (StoredTargets.Combatants.Count == 0) { return; }
 
-            foreach (Combatant combatant in StoredTargets.Combatants)
+            for (int i = 0; i < StoredTargets.Combatants.Count; i++)
             {
-                combatant?.Highlight(TargetedCombatantColor);
+                if (StoredTargets.Combatants[i] == null) { continue; }
+
+                StoredTargets.Combatants[i].Highlight(TargetedCombatantColor);
             }
         }
 
@@ -187,7 +189,7 @@ namespace SystemMiami.CombatSystem
 
             foreach (OverlayTile tile in StoredTargets.Tiles)
             {
-               tile?.UnHighlight();
+               tile.UnHighlight();
             }
         }
 
@@ -197,9 +199,11 @@ namespace SystemMiami.CombatSystem
             if (StoredTargets.Combatants == null) return;
             if (StoredTargets.Combatants.Count == 0) { return; }
 
-            foreach (Combatant combatant in StoredTargets.Combatants)
+            for (int i = 0; i < StoredTargets.Combatants.Count; i++)
             {                
-                combatant?.UnHighlight();
+                if (StoredTargets.Combatants[i] == null) { continue; }
+
+                StoredTargets.Combatants[i].UnHighlight();
             }
         }
         #endregion Private

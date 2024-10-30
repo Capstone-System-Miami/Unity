@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using SystemMiami.CombatSystem;
 using SystemMiami.AbilitySystem;
 using SystemMiami.Utilities;
+using System;
 
 namespace SystemMiami
 {
@@ -49,6 +50,9 @@ namespace SystemMiami
         public bool isPlayerTurn = true;
 
         public int enemyDetectionRadius = 2;
+
+        public Action<Combatant> BeginTurn;
+        public Action<Phase> NewTurnPhase;
 
         #region Unity  Methods
         //===============================
@@ -103,7 +107,11 @@ namespace SystemMiami
                 character.ResetTurn();
             }
 
-           // currentPlayerIndex = 0;
+            // currentPlayerIndex = 0;
+
+            // (layla added) Actions for other scripts to use
+            BeginTurn?.Invoke(playerCharacters[0]);
+            NewTurnPhase?.Invoke(Phase.MovementPhase);
 
             Debug.Log("Player's turn started. Movement Phase.");
         }
@@ -112,7 +120,7 @@ namespace SystemMiami
         /// Starts the enemy's turn.
         /// Resets movement points and action flags for each enemy character.
         /// </summary>
-        public void StartEnemyTurn()
+        public void StartAllEnemyTurns()
         {
             isPlayerTurn = false;
             currentPhase = Phase.MovementPhase;
@@ -128,7 +136,7 @@ namespace SystemMiami
             Debug.Log("Enemy's turn started.");
 
             // Start enemy AI coroutine
-            StartCoroutine(EnemyTurn());
+            StartCoroutine(AllEnemyTurns());
         }
 
         /// <summary>
@@ -146,7 +154,7 @@ namespace SystemMiami
                 player.Attributes.UpdateStatusEffects();
             }
             // After _player turn ends, start enemy turn
-            StartEnemyTurn();
+            StartAllEnemyTurns();
         }
 
         /// <summary>
@@ -158,12 +166,12 @@ namespace SystemMiami
             if (isPlayerTurn)
             {
                 currentPhase = Phase.ActionPhase;
+                NewTurnPhase?.Invoke(Phase.ActionPhase);
                 Debug.Log("Player's Action Phase started.");
-                // Update UI or allow _player to perform actions TODO
             }
             else
             {
-                // For enemies, this is called in the EnemyTurn coroutine
+                // For enemies, this is called in the AllEnemyTurns coroutine
             }
         }
 
@@ -177,7 +185,7 @@ namespace SystemMiami
         /// Coroutine for handling enemy turns.
         /// Each enemy takes their movement and action phases in sequence.
         /// </summary>
-        private IEnumerator EnemyTurn()
+        private IEnumerator AllEnemyTurns()
         {
             while (currentEnemyIndex < enemyCharacters.Count)
             {
@@ -186,6 +194,10 @@ namespace SystemMiami
                 // Enemy movement phase
                 currentPhase = Phase.MovementPhase;
 
+                // (layla added) Actions for other scripts to use
+                BeginTurn?.Invoke(enemy);
+                NewTurnPhase?.Invoke(Phase.MovementPhase);
+
                 Debug.Log("Enemy " + currentEnemyIndex + " Movement Phase.");
 
                 // Enemy AI for movement
@@ -193,6 +205,9 @@ namespace SystemMiami
 
                 // Enemy action phase
                 currentPhase = Phase.ActionPhase;
+
+                // (layla added) Action for other scripts to use
+                NewTurnPhase?.Invoke(Phase.ActionPhase);
 
                 Debug.Log("Enemy " + currentEnemyIndex + " Action Phase.");
 
@@ -473,7 +488,7 @@ namespace SystemMiami
                 enemy.Speed.Lose(1);
 
                 // Choose a random tile
-                int index = Random.Range(0, walkableTiles.Count);
+                int index = UnityEngine.Random.Range(0, walkableTiles.Count);
                 OverlayTile tile = walkableTiles[index];
 
                 // Update tiles' currentCharacter
@@ -533,6 +548,10 @@ namespace SystemMiami
                     GameObject enemyGO = Instantiate(enemyPrefab);
                     Enemy enemy = enemyGO.GetComponent<Enemy>();
 
+                    // For use in UI, probably wont need when
+                    // combatants have names / named types
+                    enemy.ID = i + 1;
+
                     // Position enemy on the tile
                     PositionCharacterOnTile(enemy, spawnTile);
 
@@ -567,7 +586,7 @@ namespace SystemMiami
             if (unblockedTiles.Count > 0)
             {
                 // Select a random tile
-                int index = Random.Range(0, unblockedTiles.Count);
+                int index = UnityEngine.Random.Range(0, unblockedTiles.Count);
                 return unblockedTiles[index];
             }
 
