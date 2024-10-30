@@ -17,10 +17,16 @@ namespace SystemMiami
 
         private void Awake(){ Instance = this; arrows = new List<GameObject>(); previousPath = new List<OverlayTile>(); }
 
-        private void Update()
+        private void OnEnable()
         {
-            RemoveArrows();
+            TurnManager.Instance.NewTurnPhase += RemoveArrows;
         }
+
+        private void OnDisable()
+        {
+            TurnManager.Instance.NewTurnPhase -= RemoveArrows;
+        }
+
         public void DrawPath(List<OverlayTile> path)
         {
             if(path == null) return;
@@ -52,16 +58,13 @@ namespace SystemMiami
             
         }
 
-        private void RemoveArrows()
+        private void RemoveArrows(Phase newPhase)
         {
-            if (Input.GetKeyDown(KeyCode.E) && TurnManager.Instance.currentPhase == Phase.MovementPhase)
+            foreach (GameObject arrow in arrows)
             {
-                foreach (GameObject arrow in arrows)
-                {
-                    Destroy(arrow);
-                }
-                arrows.Clear();
+                Destroy(arrow);
             }
+            arrows.Clear();
         }
     }
 }
