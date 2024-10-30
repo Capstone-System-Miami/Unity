@@ -8,13 +8,13 @@ namespace CombatSystem
 {
     public class TurnManager : MonoBehaviour
     {
-        public List<Hero> allHeros;  // All player and enemy Heros
+        public List<Hero> allHeros;  // All _player and enemy Heros
         private int currentHeroIndex = 0;
-        private Hero playerHero;  // Reference to the player Hero with Rigidbody2D
+        private Hero playerHero;  // Reference to the _player Hero with Rigidbody2D
         private void Start()
         {
             allHeros = new List<Hero>(FindObjectsOfType<Hero>()); // Automatically finds all Hero objects in the scene
-            FindPlayerWithRigidbody();    // Find the player with Rigidbody2D at the start
+            FindPlayerWithRigidbody();    // Find the _player with Rigidbody2D at the start
         }
 
 
@@ -24,13 +24,13 @@ namespace CombatSystem
             HandleTurn();
         }
 
-        // Method to find the player with Rigidbody2D
+        // Method to find the _player with Rigidbody2D
         private void FindPlayerWithRigidbody()
         {
             foreach (Hero hero in allHeros)
             {
                 Rigidbody2D rb = hero.GetComponent<Rigidbody2D>();
-                if (rb != null && hero.IsPlayerControlled)  // Check if the hero is player-controlled and has a Rigidbody2D
+                if (rb != null && hero.IsPlayerControlled)  // Check if the hero is _player-controlled and has a Rigidbody2D
                 {
                     playerHero = hero;
                     Debug.Log("Player hero found: " + playerHero.heroName);
@@ -100,7 +100,7 @@ namespace CombatSystem
                     {
                         MoveHeroToTile(hero, clickedTile);
                         hero.actionPoints--; // Deduct action points after movement
-                        return; // Exit after movement, wait for next player action
+                        return; // Exit after movement, wait for next _player action
                     }
                 }
 
@@ -114,7 +114,7 @@ namespace CombatSystem
                     {
                         AttackHero(hero, targetHero);
                         hero.actionPoints--; // Deduct action points after attack
-                        return; // Exit after attack, wait for next player action
+                        return; // Exit after attack, wait for next _player action
                     }
                 }
             }
@@ -175,7 +175,7 @@ namespace CombatSystem
         // End Player Turn
         private void EndPlayerTurn(Hero hero)
         {
-            // Reset hero's action points for the next turn
+            // SetDefault hero's action points for the next turn
             hero.actionPoints = hero.maxActionPoints;
             Debug.Log("Player turn ended for: " + hero.heroName);
             NextTurn(); // Switch to the next hero in the turn order
@@ -192,7 +192,7 @@ namespace CombatSystem
 
         // Helper Functions
 
-        // Convert World MapPosition to Grid Coordinates
+        // Convert World MapPositionA to Grid Coordinates
         private Vector2 WorldToGrid(Vector3 worldPosition)
         {
             int x = Mathf.FloorToInt(worldPosition.x); // Example of conversion
@@ -200,7 +200,7 @@ namespace CombatSystem
             return new Vector2(x, y);
         }
 
-        // Convert Grid Coordinates to World MapPosition
+        // Convert Grid Coordinates to World MapPositionA
         private Vector3 GridToWorld(int x, int y)
         {
             float worldX = (x - y) * 0.5f;  // Cast to float

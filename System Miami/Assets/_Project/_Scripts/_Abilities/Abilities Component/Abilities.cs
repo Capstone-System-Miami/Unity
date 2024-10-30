@@ -1,11 +1,11 @@
-// Authors: Layla Hoey
-using SystemMiami.CombatSystem;
-using System.Collections;
+// Authors: Layla Hoey, Lee St Louis
+using System;
 using System.Collections.Generic;
-using SystemMiami.Utilities;
+using SystemMiami.CombatSystem;
+using SystemMiami.Management;
+using SystemMiami.UI;
 using UnityEngine;
-using System.Net;
-using Unity.VisualScripting;
+using UnityEngine.XR;
 
 namespace SystemMiami.AbilitySystem
 {
@@ -14,80 +14,240 @@ namespace SystemMiami.AbilitySystem
     /// </summary>
     public class Abilities : MonoBehaviour
     {
-        [SerializeField] private KeyCode[] _keys =
-        {
-            KeyCode.Alpha1,
-            KeyCode.Alpha2,
-            KeyCode.Alpha3,
-            KeyCode.Alpha4,
-            KeyCode.Alpha5,
-        };
+        [SerializeField] private List<Ability> _physical = new List<Ability>(); // List of phys abilities
+        [SerializeField] private List<Ability> _magical = new List<Ability>(); // List of magic abilities
+        [SerializeField] Ability _selectedAbility; // Currently selected ability
+        [SerializeField] private bool _isTargeting = false; // check if in targeting mode
+        [SerializeField] private bool _isUsing = false; // check if the ability has been confirmed
+        [SerializeField] private bool _isConfirming = false; // heck if targets are locked
 
-        [SerializeField] private List<Ability> _abilities = new List<Ability>();
-        [SerializeField] private Ability _selectedAbility;
-        [SerializeField] private bool _isTargeting = false;
-        
-        [SerializeField] private GameObject[] targs;
+        private Combatant _combatant; // Reference to the combatant component
 
-        private Combatant _combatant;
-        private MouseController _mouseController;
+        private InputManager _inputManager; // Reference to the InputManager
 
-        private Vector2Int startFrameDirection;
-        private Vector2Int endFrameDirection;
+        public List<Ability> Physical { get { return _physical; } }
+        public List<Ability> Magical { get { return _magical; } }
 
-        private bool _isUpdating;
-
-        TargetingPattern _targetingPattern;
+        public Action<AbilityType, int> EquipAbility;
+        public Action UnequipAbility;
+        public Action<Ability> LockTargets;
+        public Action<Ability> UseAbility;
 
         void Awake()
         {
             _combatant = GetComponent<Combatant>();
-            _mouseController = _combatant.GetComponent<MouseController>();
+            _inputManager = InputManager.Instance;
         }
-
-        
 
         private void OnEnable()
         {
-            // Initialize abilities with the combatant reference
-            foreach (Ability ability in _abilities)
-            {
-                ability.Init(_combatant);
-            }
-
-            // Subscribe to InputManager events
-            InputManager.Instance.OnAbilityKeyPressed += HandleAbilityKeyPressed;
-            InputManager.Instance.OnLeftMouseDown += HandleLeftMouseDown;
-            InputManager.Instance.OnRightMouseDown += HandleRightMouseDown;
-            InputManager.Instance.OnEnterPressed += HandleEnterPressed;
+            EquipAbility += OnEquip;
+            UnequipAbility += OnUnequip;
+            Management.UI.MGR.SlotClicked += onSlotClicked;
         }
 
         private void OnDisable()
         {
-            // Unsubscribe from InputManager events
-            if (InputManager.Instance != null)
-            {
-                InputManager.Instance.OnAbilityKeyPressed -= HandleAbilityKeyPressed;
-                InputManager.Instance.OnLeftMouseDown -= HandleLeftMouseDown;
-                InputManager.Instance.OnRightMouseDown -= HandleRightMouseDown;
-                InputManager.Instance.OnEnterPressed -= HandleEnterPressed;
-            }
+            EquipAbility -= OnEquip;
+            UnequipAbility -= OnUnequip;
+            Management.UI.MGR.SlotClicked -= onSlotClicked;
+        }
 
-            // Unsubscribe from MouseController event
-            if (_mouseController != null)
+        private Ability getAbility(AbilityType type, int index)
+        {
+            List<Ability> typePool = type switch
             {
-                _mouseController.OnMouseTileChanged -= HandleMouseTile;
+                AbilityType.PHYSICAL => _physical,
+                AbilityType.MAGICAL => _magical,
+                _ => _physical
+            };
+
+            if (index >= typePool.Count) { return null; }
+
+            return typePool[index];
+        }
+
+        private void onSlotClicked(AbilitySlot slot)
+        {
+            if (getAbility(slot.Type, slot.Index) == _selectedAbility)
+            {
+                UnequipAbility.Invoke();
+            }
+            else
+            {
+                EquipAbility.Invoke(slot.Type, slot.Index);
             }
         }
 
         /// <summary>
-        /// Adds a new ability to the combatant. //thought of an easier way than resource folder, just make them game objects lol
+        /// Called when the left mouse button is clicked.
+        /// </summary>
+        private void OnLeftMouseDown()
+        {
+            Debug.Log("OnLeftMouseDown called.");
+            if (_isTargeting && !_isConfirming)
+            {
+                Debug.Log("Locking targets.");
+                TurnManager.Instance.EndMovementPhase();
+                _selectedAbility.ConfirmTargets();
+                _isConfirming = true;
+
+                LockTargets.Invoke(_selectedAbility);
+            }
+            else
+            {
+                Debug.Log("Left-click ignored. Either not targeting or targets already locked.");
+            }
+        }
+
+        /// <summary>
+        /// Called when the right mouse button is clicked.
+        /// </summary>
+        private void OnRightMouseDown()
+        {
+            if (_isTargeting)
+            {
+                UnequipAbility.Invoke();
+            }
+        }
+
+        /// <summary>
+        /// Called when the Enter key is pressed.
+        /// </summary>
+        private void OnEnterPressed()
+        {
+            if (_isTargeting && _isConfirming && !_isUsing)
+            {
+                OnConfirm();
+            }
+        }
+
+        // CALL THIS FROM ABILITY BUTTON
+        /// <summary>
+        /// Called when an ability is equipped (selected) by pressing the corresponding key.
+        /// </summary>
+        /// <param name="index">Index of the ability in the abilities list.</param>
+        private void OnEquip(AbilityType type, int index)
+        {
+            if (!TurnManager.Instance.isPlayerTurn) { return; }
+            if (index < 0) { return; }
+
+            
+            // If already targeting an ability, unequip it
+            if (_isTargeting)
+            {
+                UnequipAbility.Invoke();
+            }
+
+            // Select the new ability
+            _selectedAbility = getAbility(type, index);
+            if (_selectedAbility == null) { return; }
+
+            _selectedAbility.Init(_combatant);
+
+            // Begin targeting mode
+            _selectedAbility.BeginTargeting();
+            _isTargeting = true;
+            _isUsing = false;
+            _isConfirming = false;
+
+            // Subscribe to input events
+            if (_inputManager != null)
+            {
+                _inputManager.OnEnterPressed += OnEnterPressed;
+                _inputManager.OnLeftMouseDown += OnLeftMouseDown;
+                _inputManager.OnRightMouseDown += OnRightMouseDown;
+            }
+        }
+
+        /// <summary>
+        /// Called when the _player confirms the ability usage (e.g., by pressing Enter).
+        /// Executes the ability.
+        /// </summary>
+        private void OnConfirm()
+        {
+            if (_selectedAbility == null) { return; }
+            if (!_isTargeting) { return; }
+            if (!_isConfirming) { return; }
+
+            // Ability is confirmed
+            _isUsing = true;
+
+            // Execute the ability
+            StartCoroutine(OnUse());
+
+            UseAbility.Invoke(_selectedAbility);
+        }
+
+        /// <summary>
+        /// Executes the ability, starting cooldowns, applying status effects, and handling animations.
+        /// </summary>
+        private System.Collections.IEnumerator OnUse()
+        {
+            if (_selectedAbility._overrideController == null) { yield break; }
+            if (_combatant.Animator == null) { yield break; }
+
+            _combatant.Animator.runtimeAnimatorController = _selectedAbility._overrideController;
+            _combatant.Animator.SetTrigger("UseAbility");
+
+            // TODO: Wait for the animation to finish
+            // For now, just wait 3 secs
+            for (int i = 3; i >= 0; i--)
+            {
+                Debug.Log($"Placeholder for animation time. Activates in {i} seconds.");
+                yield return new WaitForSeconds(1f);
+            }
+
+            // Perform the ability actions
+            yield return StartCoroutine(_selectedAbility.Use());
+
+            // Unequip when the Ability's Use() coroutine is over.
+            UnequipAbility.Invoke();
+        }
+
+        /// <summary>
+        /// Called when the _player unequips the ability (e.g., by right-clicking).
+        /// Cancels the ability, removes the preview, and allows equipping a different ability.
+        /// </summary>
+        private void OnUnequip()
+        {
+            Debug.Log("OnUnequip called.");
+            if (_selectedAbility == null) { return; }
+            if (!_isTargeting) { return; }
+
+            // Cancel the ability, which hides the targets
+            _selectedAbility.CancelTargeting();
+            _isTargeting = false;
+            _isUsing = false;
+            _isConfirming = false;
+
+            // Unsubscribe from input events
+            if (_inputManager != null)
+            {
+                _inputManager.OnEnterPressed -= OnEnterPressed;
+                _inputManager.OnLeftMouseDown -= OnLeftMouseDown;
+                _inputManager.OnRightMouseDown -= OnRightMouseDown;
+            }
+
+            // Clear the selected ability
+            _selectedAbility = null;            
+        }
+
+        /// <summary>
+        /// Adds a new ability to the combatant.
         /// </summary>
         public void AddAbility(Ability newAbility)
         {
-            if (!_abilities.Contains(newAbility))
+            List<Ability> pool = newAbility.Type switch
             {
-                _abilities.Add(newAbility);
+                AbilityType.PHYSICAL    => _physical,
+                AbilityType.MAGICAL     => _magical,
+                _                       => _physical
+            };
+
+            if (!pool.Contains(newAbility))
+            {
+                pool.Add(newAbility);
                 newAbility.Init(_combatant);
             }
         }
@@ -97,136 +257,10 @@ namespace SystemMiami.AbilitySystem
         /// </summary>
         public void ReduceCooldowns()
         {
-            foreach (Ability ability in _abilities)
+            foreach (Ability ability in _physical)
             {
                 ability.ReduceCooldown();
             }
         }
-        #region InputEvents
-
-
-        /// <summary>
-        /// Handles ability selection when an ability key is pressed.
-        /// </summary>
-        /// <param name="index">Index of the ability key pressed.</param>
-        private void HandleAbilityKeyPressed(int index)
-        {
-            if (index >= 0 && index < _abilities.Count)
-            {
-                _selectedAbility = _abilities[index];
-                _selectedAbility?.Init(_combatant);
-            }
-        }
-
-        /// <summary>
-        /// Handles entering targeting mode on left mouse click.
-        /// </summary>
-        private void HandleLeftMouseDown()
-        {
-            if (_selectedAbility != null)
-            {
-                if (!_isTargeting)
-                {
-                    if (_selectedAbility.IsPreviewing)
-                    {
-                        StartCoroutine(_selectedAbility.HideAllTargets());
-
-                    }
-                    _isTargeting = true;
-
-                    //subscribe to MouseController's tile change event
-                    _mouseController.OnMouseTileChanged += HandleMouseTile;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Handles exiting targeting mode on right mouse click.
-        /// </summary>
-        private void HandleRightMouseDown()
-        {
-            if (_selectedAbility != null)
-            {
-                if (_isTargeting)
-                {
-                    _isTargeting = false;
-                    StartCoroutine(_selectedAbility.HideAllTargets());
-
-                    //unsubscribe
-                    _mouseController.OnMouseTileChanged -= HandleMouseTile;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Handles ability execution when Enter key is pressed.
-        /// </summary>
-        private void HandleEnterPressed()
-        {
-            if (_selectedAbility != null && _isTargeting)
-            {
-                Debug.Log("Press enter");
-                StartCoroutine(_selectedAbility.Use());
-                _isTargeting = false;
-                _mouseController.OnMouseTileChanged -= HandleMouseTile;
-            }
-        }
-
-        /// <summary>
-        /// Updates target preview when the mouse moves over a new tile.
-        /// </summary>
-        /// <param name="tile">The new tile under the mouse cursor.</param>
-        private void HandleMouseTile(OverlayTile tile)
-        {
-            //update target preview based on new tile
-            if (_selectedAbility != null)
-            {
-                StartCoroutine(_selectedAbility.ShowAllTargets());
-            }
-            
-        }
-        #endregion
-        #region LaylaStuff
-
-
-
-
-        private void Update()
-        {
-            startFrameDirection = _combatant.DirectionInfo.DirectionVec;
-
-            if (_isUpdating) { return; }
-
-
-        }
-
-        private void LateUpdate()
-        {
-            
-            endFrameDirection = _combatant.DirectionInfo.DirectionVec;
-            if (endFrameDirection != startFrameDirection)
-            {
-                if (_selectedAbility != null)
-                {
-                    StartCoroutine(onDirectionChange());
-                }
-            }
-        }
-
-        private IEnumerator onDirectionChange()
-        {
-            _isUpdating = true;
-            yield return null;
-
-            //StartCoroutine(_selectedAbility.HideAllTargets());//yield return new WaitUntil(() => !_selectedAbility.IsPreviewing);
-            //yield return null;
-
-            StartCoroutine(_selectedAbility.ShowAllTargets());
-            yield return new WaitUntil(() => _selectedAbility.IsPreviewing);
-            yield return null;
-
-          _isUpdating = false;
-        }
-        #endregion
     }
 }

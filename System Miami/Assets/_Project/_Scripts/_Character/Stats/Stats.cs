@@ -9,6 +9,7 @@ namespace SystemMiami
     {
         #region VARS
         //===============================
+        [SerializeField] private bool _printReports;
 
         [SerializeField] private StatData _statData;
 
@@ -36,7 +37,7 @@ namespace SystemMiami
         private void Update()
         {
             setAll();
-            print(getStatsReport());
+            if (_printReports) { print(getStatsReport()); }
         }
 
         private void setAll()

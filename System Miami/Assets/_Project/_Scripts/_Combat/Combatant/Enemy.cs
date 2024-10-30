@@ -1,11 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using SystemMiami.AbilitySystem;
-using SystemMiami.CombatSystem;
 using UnityEngine;
 
-
-
+namespace SystemMiami.CombatSystem
+{
     public enum EnemyType
     {
         Regular,
@@ -16,7 +15,7 @@ using UnityEngine;
         public EnemyType enemyType;
         public List<Ability> abilities = new List<Ability>();
 
-        private void Awake()
+        protected override void Start()
         {
             base.Start();
             // Initialize abilities
@@ -32,5 +31,12 @@ using UnityEngine;
                 }
             }
         }
+
+        public override void Die()
+        {
+            TurnManager.Instance.enemyCharacters.Remove(this);
+            Destroy(gameObject);
+        }
     }
+}
 

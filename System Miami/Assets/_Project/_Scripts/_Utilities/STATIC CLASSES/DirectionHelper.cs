@@ -7,7 +7,7 @@ namespace SystemMiami.Utilities
 {
     public static class DirectionHelper
     {
-        // An unchanging dict of direction vectors, accessable by TileDir
+        // An unchanging dict of moveDirection vectors, accessable by TileDir
         public static readonly Dictionary<TileDir, Vector2Int> MapDirectionsByEnum =
             new Dictionary<TileDir, Vector2Int>()
             {
@@ -21,7 +21,7 @@ namespace SystemMiami.Utilities
                 { TileDir.FORWARD_L,   new Vector2Int(-1,  1)  }
             };
 
-        // An unchanging dict of TileDirs, accessable by direction vector
+        // An unchanging dict of TileDirs, accessable by moveDirection vector
         public static readonly Dictionary<Vector2Int, TileDir> DirectionEnumsByVector =
             new Dictionary<Vector2Int, TileDir>()
             {
@@ -65,17 +65,17 @@ namespace SystemMiami.Utilities
             x = Mathf.RoundToInt(difference.x);
             y = Mathf.RoundToInt(difference.y);
 
-            // Return the direction vector.
+            // Return the moveDirection vector.
             // ex1. Returns (-1, 0), a vector
             // equivalent to MapDirectionsByEnum[MIDDLE_L]
             // ex2. Returns (-1, -1), a vector
-            // euqivalent to MapDirectionsByEnum[BACKWARD_L]
+            // equivalent to MapDirectionsByEnum[BACKWARD_L]
             return new Vector2Int(x, y);
         }
 
         public static TileDir GetTileDir(Vector2Int directionVec)
         {
-            if (DirectionHelper.DirectionEnumsByVector.TryGetValue(directionVec, out TileDir dirEnum))
+            if (DirectionEnumsByVector.TryGetValue(directionVec, out TileDir dirEnum))
             {
                 return dirEnum;
             }
@@ -87,7 +87,7 @@ namespace SystemMiami.Utilities
 
         public static void Print(DirectionalInfo dirInfo, string objectName)
         {
-            Debug.LogWarning($"{objectName}|  MapOrigin {dirInfo.MapPosition}, MapFWD {dirInfo.MapForward}, " +
+            Debug.LogWarning($"{objectName}|  MapOrigin {dirInfo.MapPositionA}, MapFWD {dirInfo.MapForwardA}, " +
                 $"MapDir{dirInfo.DirectionVec}, DirName {dirInfo.DirectionName}");
         }
 
@@ -115,40 +115,42 @@ namespace SystemMiami.Utilities
     /// </summary>
     public struct DirectionalInfo
     {
-        public Vector2Int A { get; private set; }
-        public Vector2Int B { get; private set; }
+        // The unchanged mapPositionA coordinate
+        public Vector2Int MapPositionA { get; private set; }
 
-        // MapPosition (on the game board) of a tile
-        public Vector2Int MapPosition { get; private set; }
+        // The unchanged mapPositionB coordinate
+        public Vector2Int MapPositionB { get; private set; }
 
-        // MapPosition (on the game board) of whatever
-        // we consider to be "mapPositionB" from myPos.
-        public Vector2Int MapForward { get; private set; }
-
-        // The direction the object is mapPositionB
+        // The moveDirection the object is facing
         public Vector2Int DirectionVec { get; private set; }
-
         public TileDir DirectionName { get; private set; }
+
+        /// <summary>
+        /// Map (game board) coordinates one tile in
+        /// whatever moveDirection we've determined to be "forward"
+        /// from MapPositionA
+        /// </summary>
+        public Vector2Int MapForwardA { get; private set; }
+
+        /// <summary>
+        /// Map (game board) coordinates one tile in
+        /// whatever moveDirection we've determined to be "forward"
+        /// from MapPositionB
+        /// </summary>
+        public Vector2Int MapForwardB { get; private set; }
+
 
         public DirectionalInfo(Vector2Int mapPositionA, Vector2Int mapPositionB)
         {
-            A = mapPositionA;
-            B = mapPositionB;
+            MapPositionA = mapPositionA;
+            MapPositionB = mapPositionB;
 
-            MapPosition = mapPositionA;
             DirectionVec = DirectionHelper.GetDirectionVec(mapPositionA, mapPositionB);
 
-            TileDir directionName;
-            if (DirectionHelper.DirectionEnumsByVector.TryGetValue(DirectionVec, out directionName))
-            {
-                DirectionName = directionName;
-            }
-            else
-            {
-                DirectionName = (TileDir)0;
-            }
+            DirectionName = DirectionHelper.GetTileDir(DirectionVec);
 
-            MapForward = MapPosition + DirectionVec;
+            MapForwardA = MapPositionA + DirectionVec;
+            MapForwardB = MapPositionB + DirectionVec;
         }
     }
     #endregion

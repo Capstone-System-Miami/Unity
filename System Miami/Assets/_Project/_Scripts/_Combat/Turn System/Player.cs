@@ -8,11 +8,11 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        // Initialize the player's health to max at the start
+        // Initialize the _player's health to max at the start
         currentHealth = maxHealth;
     }
 
-    // This function is called to deal damage to the player
+    // This function is called to deal damage to the _player
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
@@ -30,11 +30,11 @@ public class Player : MonoBehaviour
         Player playerScript = player.GetComponent<Player>();
         if (playerScript != null)
         {
-            playerScript.TakeDamage(10);  // Deal 10 damage to the player
+            playerScript.TakeDamage(10);  // Deal 10 damage to the _player
         }
     }
 
-    // This function can be called to heal the player
+    // This function can be called to heal the _player
     public void Heal(int amount)
     {
         currentHealth += amount;
@@ -52,6 +52,6 @@ public class Player : MonoBehaviour
     {
         Debug.Log("Player has died!");
         // Optionally, implement a respawn or game over system here
-        Destroy(gameObject);  // This will destroy the player GameObject
+        Destroy(gameObject);  // This will destroy the _player GameObject
     }
 }

@@ -4,22 +4,21 @@ using UnityEngine;
 namespace SystemMiami.CombatSystem
 {
     [System.Serializable]
-    [CreateAssetMenu(fileName = "New Status Effect", menuName = "CombatAction/Status Effects")]
+    [CreateAssetMenu(fileName = "New Status Effect", menuName = "Abilities/CombatActions/Inflict Status Effect")]
     public class InflictStatusEffect : CombatAction
     {
         [SerializeField] AttributeSetSO statusEffectAttributesSO;
         [SerializeField] int durationTurns;
 
-        public override void Perform(Targets targets)
+        public override void Perform()
         {
             StatusEffect statusEffect = new StatusEffect(statusEffectAttributesSO, durationTurns);
 
-            foreach (Combatant target in targets.Combatants)
+            foreach (Combatant target in TargetingPattern.StoredTargets.Combatants)
             {
                 if (target != null)
                 {
-                    target._attributes.AddStatusEffect(statusEffect);
-                    
+                    target.Attributes.AddStatusEffect(statusEffect);
                 }
             }
         }

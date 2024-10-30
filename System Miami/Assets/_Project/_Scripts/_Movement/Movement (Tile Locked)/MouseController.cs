@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using SystemMiami.CombatSystem;
+using SystemMiami.Utilities;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 namespace SystemMiami
 {
@@ -16,6 +18,7 @@ namespace SystemMiami
         private List<OverlayTile> path = new List<OverlayTile>();
 
         public event Action<OverlayTile> OnMouseTileChanged; // event for tile change
+        public event Action<DirectionalInfo> OnPathTileChanged;
 
         #region Layla Added Vars
         private OverlayTile _mostRecentMouseTile;
@@ -34,7 +37,7 @@ namespace SystemMiami
             }
 
             // Remove character instantiation from Start()
-            // We'll instantiate the character when the player clicks on a starting tile
+            // We'll instantiate the character when the _player clicks on a starting tile
             // (layla) ^^ I'm wondering why? ^^           
         }
 
@@ -78,19 +81,21 @@ namespace SystemMiami
         {
             if(character.CurrentTile != null)
             {
-                _mostRecentMouseTile = character.CurrentTile;
+                MapManager.MGR.map.TryGetValue(Vector2Int.zero, out _mostRecentMouseTile);
             }
             else
             {
                 _mostRecentMouseTile = MapManager.MGR.GetRandomUnblockedTile();
             }
+
+            OnMouseTileChanged?.Invoke(_mostRecentMouseTile);
         }
         #endregion
 
         // Update is called once per frame
         void LateUpdate()
         {
-            // Check if it's player's turn
+            // Check if it's _player's turn
             if (TurnManager.Instance.isPlayerTurn)
             {
                 // Handle input for ending phases
@@ -101,17 +106,18 @@ namespace SystemMiami
                         // End movement phase
                         TurnManager.Instance.EndMovementPhase();
                     }
-                    else if (TurnManager.Instance.currentPhase == Phase.ActionPhase)
-                    {
-                        // End player turn
-                        TurnManager.Instance.EndPlayerTurn();
-                    }
+                    // button for end phase
+                }
+
+                if (Input.GetKeyDown(KeyCode.Q))
+                {
+                    TurnManager.Instance.EndPlayerTurn();
                 }
 
                 // Handle movement phase
                 if (TurnManager.Instance.currentPhase == Phase.MovementPhase)
                 {
-                    // Allow player to select a tile to move to
+                    // Allow _player to select a tile to move to
                     var focusedTileHit = GetFocusedOnTile();
 
                     if (focusedTileHit.HasValue)
@@ -167,7 +173,12 @@ namespace SystemMiami
 
                     if (path.Count > 0)
                     {
+                        character.IsMoving = true;
                         MoveAlongPath();
+                    }
+                    else
+                    {
+                        character.IsMoving = false;
                     }
 
                     IsBusy = false; // layla added
@@ -175,16 +186,16 @@ namespace SystemMiami
                 // Handle action phase
                 else if (TurnManager.Instance.currentPhase == Phase.ActionPhase)
                 {
-                    // Allow player to perform an action if they haven't already
+                    // Allow _player to perform an action if they haven't already
                     if (!character.HasActed)
                     {
                         // Placeholder for action selection
-                        if (Input.GetKeyDown(KeyCode.Space))
-                        {
-                            // Perform basic attack
-                            character.HasActed = true;
-                            Debug.Log("Player performed basic attack.");
-                        }
+                        //if (Input.GetKeyDown(KeyCode.Space))
+                        //{
+                        //    // Perform basic attack
+                        //    character.HasActed = true;
+                        //    Debug.Log("Player performed basic attack.");
+                        //}
                     }
                     else
                     {
@@ -201,7 +212,7 @@ namespace SystemMiami
         private void MoveAlongPath()
         {
             float step = speed * Time.deltaTime;
-
+            //TODO i want to add it here so that you have to confirm the movement too so that the arrows show up before you move and can show your path
             if (path.Count > 0)
             {
                 OverlayTile targetTile = path[0];
@@ -211,6 +222,13 @@ namespace SystemMiami
 
                 if (Vector2.Distance(character.transform.position, targetTile.transform.position) < 0.0001f)
                 {
+                    // Directional info based on the current tile
+                    // and the one we're moving to.
+                    DirectionalInfo newDir = new DirectionalInfo((Vector2Int)character.CurrentTile.gridLocation, (Vector2Int)targetTile.gridLocation);
+
+                    // Let any subscribers know that we are moving along path
+                    OnPathTileChanged(newDir);
+
                     PositionCharacterOnTile(targetTile);
                     path.RemoveAt(0);
                 }
@@ -218,7 +236,7 @@ namespace SystemMiami
             else
             {
                 // Movement finished
-                // You can check if player wants to end movement phase
+                // You can check if _player wants to end movement phase
             }
         }
 
@@ -257,7 +275,7 @@ namespace SystemMiami
             // Update CurrentTile
             character.CurrentTile = tile;
 
-            // Set tile's currentCharacter
+            // SetAll tile's currentCharacter
             tile.currentCharacter = character;
         }
     }

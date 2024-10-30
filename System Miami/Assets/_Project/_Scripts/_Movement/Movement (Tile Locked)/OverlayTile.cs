@@ -63,14 +63,14 @@ namespace SystemMiami
             ShowTile();
         }
 
-        public void Target(Color color)
+        public void Highlight(Color color)
         {
             ShowTile();
 
             _renderer.color = color;
         }
 
-        public void UnTarget()
+        public void UnHighlight()
         {
             HideTile();
             _renderer.color = _defaultColor;

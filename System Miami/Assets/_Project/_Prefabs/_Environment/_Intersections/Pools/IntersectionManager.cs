@@ -38,7 +38,7 @@ public class IntersectionManager : MonoBehaviour
         new Vector2Int(-1, 0)  // Left
     };
 
-    // Mapping from direction vectors to ExitDirection enums.
+    // Mapping from moveDirection vectors to ExitDirection enums.
     private Dictionary<Vector2Int, ExitDirection> dirToExit = new Dictionary<Vector2Int, ExitDirection> {
         { new Vector2Int(0, 1), ExitDirection.North }, // Up corresponds to North exit.
         { new Vector2Int(0, -1), ExitDirection.South }, // Down corresponds to South exit.
@@ -46,7 +46,7 @@ public class IntersectionManager : MonoBehaviour
         { new Vector2Int(-1, 0), ExitDirection.West } // Left corresponds to West exit.
     };
     
-    // Mapping from direction vectors to the opposite ExitDirection enums.
+    // Mapping from moveDirection vectors to the opposite ExitDirection enums.
     private Dictionary<Vector2Int, ExitDirection> dirToOppositeExit = new Dictionary<Vector2Int, ExitDirection> {
         { new Vector2Int(0, 1), ExitDirection.South }, // Up's opposite is South.
         { new Vector2Int(0, -1), ExitDirection.North }, // Down's opposite is North.
@@ -54,7 +54,7 @@ public class IntersectionManager : MonoBehaviour
         { new Vector2Int(-1, 0), ExitDirection.East } // Left's opposite is East.
     };
     
-    // Mapping from ExitDirection enums to direction vectors.
+    // Mapping from ExitDirection enums to moveDirection vectors.
     private Dictionary<ExitDirection, Vector2Int> exitToDir = new Dictionary<ExitDirection, Vector2Int> {
         { ExitDirection.North, new Vector2Int(0, 1) }, // North exit corresponds to Up.
         { ExitDirection.South, new Vector2Int(0, -1) }, // South exit corresponds to Down.
@@ -73,7 +73,7 @@ public class IntersectionManager : MonoBehaviour
     void Start()
     {
         InitializeStreetPoolDictionary(); // Prepare the dictionary mapping StreetTypes to StreetPools.
-        InitializeStreetGrid(); // Set up the grid data structure for street generation.
+        InitializeStreetGrid(); // SetAll up the grid data structure for street generation.
         StartStreetGenerationFromStreet(new Vector2Int(gridSizeX / 2, gridSizeY / 2)); // Begin street generation from the center of the grid.
     }
 
@@ -120,7 +120,7 @@ public class IntersectionManager : MonoBehaviour
         }
     }
 
-    // Set up the 2D array representing the grid, and initialize each cell with a new StreetData instance.
+    // SetAll up the 2D array representing the grid, and initialize each cell with a new StreetData instance.
     private void InitializeStreetGrid()
     {
         streetGrid = new StreetData[gridSizeX, gridSizeY];
@@ -160,7 +160,7 @@ public class IntersectionManager : MonoBehaviour
         // List of directions where new streets can potentially be generated.
         List<Vector2Int> availableDirs = new List<Vector2Int>();
 
-        // Check each possible direction to determine where we can generate new streets.
+        // Check each possible moveDirection to determine where we can generate new streets.
         foreach (var dir in directions)
         {
             int nx = x + dir.x;
@@ -171,13 +171,13 @@ public class IntersectionManager : MonoBehaviour
             StreetData neighborStreet = streetGrid[nx, ny];
             if (neighborStreet.hasStreet && neighborStreet.exits.Contains(dirToOppositeExit[dir]))
             {
-                // If the neighboring cell has a street and its exits include the opposite direction,
-                // then we need to add an exit in the current street in this direction to connect them.
+                // If the neighboring cell has a street and its exits include the opposite moveDirection,
+                // then we need to add an exit in the current street in this moveDirection to connect them.
                 currentStreet.exits.Add(dirToExit[dir]);
             }
             else if (!neighborStreet.hasStreet)
             {
-                // If the neighboring cell doesn't have a street, it's an available direction to expand into.
+                // If the neighboring cell doesn't have a street, it's an available moveDirection to expand into.
                 availableDirs.Add(dir);
             }
         }
@@ -209,9 +209,9 @@ public class IntersectionManager : MonoBehaviour
             // Check if we have not exceeded the maximum number of streets to generate.
             if (streetCount + streetQueue.Count < maxStreets)
             {
-                // Add an exit in the current street in this direction.
+                // Add an exit in the current street in this moveDirection.
                 currentStreet.exits.Add(dirToExit[dir]);
-                // Add an exit in the neighboring street in the opposite direction.
+                // Add an exit in the neighboring street in the opposite moveDirection.
                 neighborStreet.exits.Add(dirToOppositeExit[dir]);
                 // If the neighbor has not been enqueued yet, enqueue it for generation.
                 if (!neighborStreet.enqueued)
@@ -285,7 +285,7 @@ public class IntersectionManager : MonoBehaviour
                 int x = streetData.gridIndex.x;
                 int y = streetData.gridIndex.y;
     
-                // Check each exit direction to see if it connects to a valid street.
+                // Check each exit moveDirection to see if it connects to a valid street.
                 foreach (ExitDirection exit in streetData.exits)
                 {
                     Vector2Int dir = exitToDir[exit];
@@ -295,7 +295,7 @@ public class IntersectionManager : MonoBehaviour
                     if (nx < 0 || nx >= gridSizeX || ny < 0 || ny >= gridSizeY) continue;
     
                     StreetData neighborStreet = streetGrid[nx, ny];
-                    // If the neighbor has a street and its exits include the opposite direction, the connection is valid.
+                    // If the neighbor has a street and its exits include the opposite moveDirection, the connection is valid.
                     if (neighborStreet.hasStreet && neighborStreet.exits.Contains(dirToOppositeExit[dir]))
                     {
                         validExits.Add(exit);
@@ -351,7 +351,7 @@ public class IntersectionManager : MonoBehaviour
         }
         streetObjects.Clear(); // Clear the list of street objects.
     
-        // Reset the street grid by creating new StreetData instances.
+        // SetDefault the street grid by creating new StreetData instances.
         for (int x = 0; x < gridSizeX; x++)
         {
             for (int y = 0; y < gridSizeY; y++)
@@ -361,8 +361,8 @@ public class IntersectionManager : MonoBehaviour
         }
     
         streetQueue.Clear(); // Clear the street generation queue.
-        streetCount = 0; // Reset the street count.
-        generationComplete = false; // Set generation as not complete.
+        streetCount = 0; // SetDefault the street count.
+        generationComplete = false; // SetAll generation as not complete.
     
         // Restart street generation from the center of the grid.
         StartStreetGenerationFromStreet(new Vector2Int(gridSizeX / 2, gridSizeY / 2));
@@ -401,7 +401,7 @@ public class IntersectionManager : MonoBehaviour
         int y = streetIndex.y;
         int count = 0;
     
-        // Check each direction for neighboring streets.
+        // Check each moveDirection for neighboring streets.
         foreach (Vector2Int dir in directions)
         {
             int nx = x + dir.x;
