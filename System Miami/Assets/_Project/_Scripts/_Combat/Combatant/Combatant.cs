@@ -53,7 +53,7 @@ namespace SystemMiami.CombatSystem
         public MouseController Controller { get { return _controller; } }
 
 
-        public Attributes Attributes;
+        public Stats Stats;
 
         private void OnEnable()
         {
@@ -64,7 +64,7 @@ namespace SystemMiami.CombatSystem
             Animator = GetComponent<Animator>();
             currentSprite = GetComponent<SpriteRenderer>().sprite;
 
-            Attributes = GetComponent<Attributes>();
+            Stats = GetComponent<Stats>();
 
             if (_controller != null)
             {

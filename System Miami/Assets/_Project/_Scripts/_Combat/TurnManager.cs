@@ -151,7 +151,7 @@ namespace SystemMiami
             foreach (Combatant player in playerCharacters)
             {
                 player.GetComponent<Abilities>().ReduceCooldowns();
-                player.Attributes.UpdateStatusEffects();
+                player.Stats.UpdateStatusEffects();
             }
             // After _player turn ends, start enemy turn
             StartAllEnemyTurns();

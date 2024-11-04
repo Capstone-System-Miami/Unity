@@ -1,4 +1,4 @@
-// Authors: Layla Hoey
+// Authors: Layla Hoey, Lee St Louis
 using System;
 using System.Collections.Generic;
 using SystemMiami.CombatSystem;
@@ -34,9 +34,6 @@ namespace SystemMiami
 
         // A preview of what our new attributes would be if we confirmed the upgrades.
         private AttributeSet _preview = new AttributeSet();
-
-        // Buffer for storing the attributes prior to a confirmed upgrade
-        private AttributeSet _buffer = new AttributeSet();
 
         private List<StatusEffect> _statusEffects = new List<StatusEffect>();
 
@@ -127,9 +124,6 @@ namespace SystemMiami
         /// </summary>
         private void updateVals(bool reverse)
         {
-            if (_current.Dict == null) { return; }
-            if (_current.Dict.Count == 0) { return; }
-
             if (!reverse)
             {
                 _current.Set(AttributeType.STRENGTH,        _strength);
@@ -170,18 +164,17 @@ namespace SystemMiami
     //===============================
 
         /// <summary>
-        /// Returns the value of the specified attribute, including status effects
+        /// Returns the value of the specified attribute
         /// </summary>
         public int GetAttribute(AttributeType type)
         {
-            // In case something asks for this while it's still being initialized
-            if (_current.Dict == null) { return 0; }
-
             // If upgrade mode show preview
-            int baseValue = _upgradeMode ? _preview.Get(type) : _current.Get(type);
-            int statusEffectValue = GetStatusEffectValue(type);
+            return _upgradeMode ? _preview.Get(type) : _current.Get(type);
+        }
 
-            return baseValue + statusEffectValue;            
+        public AttributeSet GetSet()
+        {
+            return _upgradeMode ? _preview : _current;
         }
 
         /// <summary>
@@ -192,7 +185,7 @@ namespace SystemMiami
         {
             // If the upgrade we're trying to add would bring us
             // under the min or over the max
-            if (_preview.Dict[type] + amount < _minValue || _preview.Dict[type] > _maxValue)
+            if (_preview.Get(type) + amount < _minValue || _preview.Get(type) > _maxValue)
             {
                 // TODO: send this to UI.
                 // Could also refactor to be bool TryAddToUpgrades(...)
@@ -203,16 +196,11 @@ namespace SystemMiami
             _upgrades.Set(type, (_upgrades.Get(type) + amount) );            
         }
 
-
         /// <summary>
         /// Adds the stored upgrades to our current attributes.
         /// </summary>
         public void ConfirmUpgrades()
         {
-            // Just to be safe, store the current attributes
-            // in a buffer before we change them.
-            _buffer = _current;
-
             _current = _preview;
 
             // Clear the upgrades
@@ -226,39 +214,6 @@ namespace SystemMiami
         {
             _upgrades = new AttributeSet();
         }
-
-        public void AddStatusEffect(StatusEffect effect)
-        {
-            _statusEffects.Add(effect);
-            Debug.Log($"{name} received a status effect for {effect.Duration} turns.");
-            updateVals(false);
-        }
-
-        public int GetStatusEffectValue(AttributeType type)
-        {
-            int result = 0;
-
-            foreach (StatusEffect statusEffect in _statusEffects)
-            {
-                result += statusEffect.Effect.Get(type);
-            }
-
-            return result;
-        }
-
-        public void UpdateStatusEffects()
-        {
-            for (int i = _statusEffects.Count - 1; i >= 0; i--)
-            {
-                _statusEffects[i].DecrementDuration();
-
-                if (_statusEffects[i].IsExpired())
-                {
-                    _statusEffects.RemoveAt(i);
-                }
-            }
-        }
-
     //===============================
     #endregion // ^public^
     }
