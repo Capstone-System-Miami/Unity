@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SystemMiami.UI
+namespace SystemMiami.ui
 {
     public enum SelectionState { UNSELECTED, SELECTED, DISABLED }
 }

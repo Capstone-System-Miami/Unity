@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using SystemMiami.CombatSystem;
 using SystemMiami.Management;
-using SystemMiami.UI;
+using SystemMiami.ui;
 using UnityEngine;
 using UnityEngine.XR;
 

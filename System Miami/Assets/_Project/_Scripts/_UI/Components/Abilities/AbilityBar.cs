@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using SystemMiami.AbilitySystem;
 using UnityEngine;
 
-namespace SystemMiami.UI
+namespace SystemMiami.ui
 {
     public class AbilityBar : MonoBehaviour
     {

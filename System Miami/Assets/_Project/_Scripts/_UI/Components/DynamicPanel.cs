@@ -1,7 +1,7 @@
 // Author: Layla Hoey
 using UnityEngine;
 
-namespace SystemMiami.UI
+namespace SystemMiami.ui
 {
     public class DynamicPanel : MonoBehaviour
     {

@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 4869729533987529571}
   - component: {fileID: 88358522417391319}
   - component: {fileID: 2414507691699690512}
+  - component: {fileID: 2947330204336433884}
   m_Layer: 0
   m_Name: enemy
   m_TagString: Untagged
@@ -189,7 +190,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CurrentTile: {fileID: 0}
-  Animator: {fileID: 0}
+  Animator: {fileID: 2947330204336433884}
   PlayerDirSprites: []
   currentSprite: {fileID: 0}
   IsDamageable: 1
@@ -201,3 +202,24 @@ MonoBehaviour:
   enemyType: 0
   abilities:
   - {fileID: 11400000, guid: c581097b9ccb2fc4997a4c29aa9e9804, type: 2}
+--- !u!95 &2947330204336433884
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5985083666047915755}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 4a36d742937832e4a8becdb250e21997, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
