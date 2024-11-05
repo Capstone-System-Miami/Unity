@@ -115,7 +115,7 @@ namespace SystemMiami.AbilitySystem
 
                 _actions[i].TargetingPattern.UnlockTargets();
                 _actions[i].TargetingPattern.HideTargets();
-                Debug.Log("Doing My actions");             
+                //Debug.Log("Doing My actions");
             }
 
             currentCooldown = coolDownTurns;

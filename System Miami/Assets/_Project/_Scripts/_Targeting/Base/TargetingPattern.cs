@@ -60,13 +60,13 @@ namespace SystemMiami.CombatSystem
         public  void LockTargets()
         {            
             _targetsLocked = true;
-            Debug.Log($"Targets locked in {name}'s TargetingPattern.");
+            //Debug.Log($"Targets locked in {name}'s TargetingPattern.");
         }
 
         public void UnlockTargets()
         {
             _targetsLocked = false;
-            Debug.Log($"Targets unlocked in {name}'s TargetingPattern");
+            //Debug.Log($"Targets unlocked in {name}'s TargetingPattern");
         }
 
         public bool  ShowTargets()
@@ -86,7 +86,7 @@ namespace SystemMiami.CombatSystem
                 return true;
             }
 
-            Debug.Log("HideTargets called. Hiding targets.");
+            //Debug.Log("HideTargets called. Hiding targets.");
             hideTiles();
             hideCombatants();
             return true;
@@ -97,7 +97,7 @@ namespace SystemMiami.CombatSystem
         #region Protected
         protected void onTargetChanged(DirectionalInfo dir)
         {
-            Debug.Log($"OnTargetChanged called. Targets locked: {_targetsLocked}");
+            //Debug.Log($"OnTargetChanged called. Targets locked: {_targetsLocked}");
             if (_targetsLocked)
             {          
                 ShowTargets();

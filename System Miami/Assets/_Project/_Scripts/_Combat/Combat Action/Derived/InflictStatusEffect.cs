@@ -17,7 +17,7 @@ namespace SystemMiami.CombatSystem
             {
                 if (target != null)
                 {
-                    target.Stats.AddStatusEffect(statusEffect);
+                    target.InflictStatusEffect(statusEffect);
                 }
             }
         }

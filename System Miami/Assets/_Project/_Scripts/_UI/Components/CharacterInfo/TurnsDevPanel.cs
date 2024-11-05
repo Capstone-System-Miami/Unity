@@ -89,7 +89,6 @@ namespace SystemMiami
 
         private void onNewTurnPhase(Phase phase)
         {
-            print ("hi");
             switch (phase)
             {
                 default:

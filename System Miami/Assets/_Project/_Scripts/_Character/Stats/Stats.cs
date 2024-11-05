@@ -42,14 +42,13 @@ namespace SystemMiami
         private void Start()
         {
             _beforeEffects = new StatSet(_attributes.GetSet(), _statData);
+            updateEffects();
         }
 
         private void Update()
         {
             _beforeEffects = new StatSet(_attributes.GetSet(), _statData);
-
             updateEffects();
-
             if (_printReports) { print(getStatsReport()); }
         }
 

@@ -29,9 +29,9 @@ namespace SystemMiami
         public static TurnManager Instance;
 
         // List of all _player characters
-        public List<Combatant> playerCharacters;
+        public List<Combatant> playerCharacters = new List<Combatant>();
         // List of all enemy characters
-        public List<Enemy> enemyCharacters;
+        public List<Enemy> enemyCharacters = new List<Enemy>();
 
         // The current phase (Movement or Action)
         public Phase currentPhase;
@@ -65,17 +65,17 @@ namespace SystemMiami
             else
                 Destroy(gameObject);
 
-            // Initialize lists
-            if (playerCharacters == null)
-            {
-                playerCharacters = new List<Combatant>();
-            }
-            if (enemyCharacters == null)
-            {
-                enemyCharacters = new List<Enemy>();
-            }
+            //// Initialize lists
+            //if (playerCharacters == null)
+            //{
+            //    playerCharacters = new List<Combatant>();
+            //}
+            //if (enemyCharacters == null)
+            //{
+            //    enemyCharacters = new List<Enemy>();
+            //}
             
-            // SetAll starting phase
+            // Set starting phase
             currentPhase = Phase.MovementPhase;
         }
 
@@ -217,11 +217,11 @@ namespace SystemMiami
                 currentEnemyIndex++;
             }
             // Reduce cooldowns and update status effects for enemies
-            //foreach (Combatant enemy in enemyCharacters)
-            //{
-            //   // enemy.GetComponent<Abilities>().ReduceCooldowns();
-            //    enemy.Attributes.UpdateStatusEffects();
-            //}
+            foreach (Combatant enemy in enemyCharacters)
+            {
+                // enemy.GetComponent<Abilities>().ReduceCooldowns();
+                enemy.Stats.UpdateStatusEffects();
+            }
 
             // After enemies have taken their turns, start _player turn
             StartPlayerTurn();
@@ -561,7 +561,7 @@ namespace SystemMiami
 
                     // Add to enemy list
                     enemyCharacters.Add(enemy);
-                    Debug.Log("Spawning Enemies");
+                    Debug.Log($"Spawning {enemy}");
                 }
                 else
                 {

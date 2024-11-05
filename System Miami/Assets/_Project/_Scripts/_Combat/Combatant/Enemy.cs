@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using SystemMiami.AbilitySystem;
+using UnityEngine;
 
 namespace SystemMiami.CombatSystem
 {
@@ -23,9 +24,8 @@ namespace SystemMiami.CombatSystem
                 if (abilities[i] != null)
                 {
                     // Instantiate a new instance of the ability to avoid modifying the original asset
-                    Ability abilityInstance = Instantiate(abilities[i]);
-                    abilityInstance.Init(this);
-                    abilities[i] = abilityInstance;
+                    abilities[i] = ScriptableObject.CreateInstance<Ability>();
+                    abilities[i].Init(this);
                 }
             }
         }

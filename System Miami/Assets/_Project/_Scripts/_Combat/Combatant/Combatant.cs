@@ -53,7 +53,7 @@ namespace SystemMiami.CombatSystem
         public MouseController Controller { get { return _controller; } }
 
 
-        public Stats Stats;
+        public Stats Stats { get { return _stats; } }
 
         private void OnEnable()
         {
@@ -63,8 +63,6 @@ namespace SystemMiami.CombatSystem
             _defaultColor = _renderer.color;
             Animator = GetComponent<Animator>();
             currentSprite = GetComponent<SpriteRenderer>().sprite;
-
-            Stats = GetComponent<Stats>();
 
             if (_controller != null)
             {
@@ -112,6 +110,16 @@ namespace SystemMiami.CombatSystem
             {
                 GAME.MGR.CombatantDeath.Invoke(this);
             }
+
+            updateResources();
+        }
+
+        private void updateResources()
+        {
+            Health = new Resource(_stats.GetStat(StatType.MAX_HEALTH), Health.Get());
+            Stamina = new Resource(_stats.GetStat(StatType.STAMINA), Stamina.Get());
+            Mana = new Resource(_stats.GetStat(StatType.MANA), Mana.Get());
+            Speed = new Resource(_stats.GetStat(StatType.SPEED), Speed.Get());
         }
 
         private void initPlayerDirection()
@@ -133,7 +141,7 @@ namespace SystemMiami.CombatSystem
         {
             if (IsMoving) { return; }
 
-            Debug.LogWarning("Dir info changing");
+            //Debug.LogWarning("Dir info changing");
             Vector2Int playerPos = (Vector2Int)CurrentTile.gridLocation;
             Vector2Int playerFwd;
 
@@ -220,7 +228,7 @@ namespace SystemMiami.CombatSystem
 
         public void UnHighlight()
         {
-            print($"{name} is not longer highlighted");
+            print($"{name} is no longer highlighted");
             _renderer.color = _defaultColor;
         }
 
@@ -319,6 +327,11 @@ namespace SystemMiami.CombatSystem
             }
         }
         #endregion
+
+        public void InflictStatusEffect(StatusEffect effect)
+        {
+            _stats.AddStatusEffect(effect);
+        }
 
         public void ResetTurn()
         {
