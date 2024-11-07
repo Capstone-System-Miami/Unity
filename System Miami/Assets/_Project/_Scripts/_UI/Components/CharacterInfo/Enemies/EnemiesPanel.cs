@@ -22,7 +22,7 @@ namespace SystemMiami
 
         private void setEnemyPanels()
         {
-            List<Enemy> enemies = TurnManager.Instance.enemyCharacters;
+            List<Combatant> enemies = TurnManager.Instance.enemyCharacters;
 
             for (int i = 0; i < _enemyHealthDevPanels.Count; i++)
             {
