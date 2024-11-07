@@ -142,7 +142,7 @@ namespace SystemMiami.CombatSystem
                 Debug.Log($"{enemy.name} can't use any abilities.");
             }
 
-            yield return new WaitForSeconds(0.5f); // Wait for action simulation
+            yield return new WaitForSeconds(0.5f); 
         }
 
         /// <summary>

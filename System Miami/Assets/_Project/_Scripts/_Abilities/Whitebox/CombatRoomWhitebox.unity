@@ -5950,6 +5950,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ad32c278bc44c04494652f25e65ab16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _dungeonIndex: 0
+  _neighborhoodIndex: 0
 --- !u!224 &1523799289 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8515660109222632797, guid: 87efd5d5b9050d34e842c7063b3798a0, type: 3}
@@ -7400,7 +7402,6 @@ MonoBehaviour:
   bossPrefab: {fileID: 0}
   numberOfEnemies: 3
   isPlayerTurn: 1
-  enemyDetectionRadius: 2
 --- !u!224 &1933114683 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8515660109222632797, guid: 87efd5d5b9050d34e842c7063b3798a0, type: 3}
@@ -8382,7 +8383,7 @@ SpriteRenderer:
   m_SortingLayerID: -110400129
   m_SortingLayer: 2
   m_SortingOrder: 100
-  m_Sprite: {fileID: 1397287157, guid: 868b47644e5e4e84ea1b9b25baf351a4, type: 3}
+  m_Sprite: {fileID: 504766812, guid: 82236648256b77d4588c22a84d4da636, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -8986,14 +8987,14 @@ MonoBehaviour:
   CurrentTile: {fileID: 0}
   Animator: {fileID: 7803342958832123495}
   PlayerDirSprites:
-  - {fileID: -1768972267, guid: 94ca57d33a8bfb24e9052a0ba9787593, type: 3}
-  - {fileID: 1397287157, guid: 868b47644e5e4e84ea1b9b25baf351a4, type: 3}
-  - {fileID: 826731703, guid: 94ca57d33a8bfb24e9052a0ba9787593, type: 3}
-  - {fileID: 1884406871, guid: 94ca57d33a8bfb24e9052a0ba9787593, type: 3}
-  - {fileID: 228154353, guid: 94ca57d33a8bfb24e9052a0ba9787593, type: 3}
-  - {fileID: 318792625, guid: 868b47644e5e4e84ea1b9b25baf351a4, type: 3}
-  - {fileID: 43976266, guid: 94ca57d33a8bfb24e9052a0ba9787593, type: 3}
-  - {fileID: -167328149, guid: 94ca57d33a8bfb24e9052a0ba9787593, type: 3}
+  - {fileID: -1891642137, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
+  - {fileID: 504766812, guid: 82236648256b77d4588c22a84d4da636, type: 3}
+  - {fileID: 1549921822, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
+  - {fileID: 1181817085, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
+  - {fileID: -1962472897, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
+  - {fileID: -663491783, guid: 82236648256b77d4588c22a84d4da636, type: 3}
+  - {fileID: -1403138823, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
+  - {fileID: 820659288, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
   currentSprite: {fileID: 0}
   IsDamageable: 1
   IsHealable: 1
