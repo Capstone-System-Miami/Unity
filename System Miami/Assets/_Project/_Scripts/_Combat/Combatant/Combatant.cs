@@ -21,7 +21,7 @@ namespace SystemMiami.CombatSystem
 
         private Vector2Int _direction;
 
-        private MouseController _controller;
+        private CombatantController _controller;
         private Stats _stats;
         private SpriteRenderer _renderer;
         private Color _defaultColor;
@@ -50,7 +50,7 @@ namespace SystemMiami.CombatSystem
         public bool HasActed { get; set; }
         public bool IsMoving { get; set; }
 
-        public MouseController Controller { get { return _controller; } }
+        public CombatantController Controller { get { return _controller; } }
 
 
         public Stats Stats { get { return _stats; } }
@@ -58,7 +58,7 @@ namespace SystemMiami.CombatSystem
         private void OnEnable()
         {
             _stats = GetComponent<Stats>();
-            _controller = GetComponent<MouseController>();
+            _controller = GetComponent<CombatantController>();
             _renderer = GetComponent<SpriteRenderer>();
             _defaultColor = _renderer.color;
             Animator = GetComponent<Animator>();
@@ -66,8 +66,8 @@ namespace SystemMiami.CombatSystem
 
             if (_controller != null)
             {
-                _controller.OnMouseTileChanged += setDirectionalInfo;
-                _controller.OnPathTileChanged += SetDirectionalInfo;
+                _controller.FocusedTileChanged += onFocusedTileChanged;
+                _controller.PathTileChanged += onPathTileChanged;
             }
 
             GAME.MGR.CombatantDeath += onCombatantDeath;
@@ -77,8 +77,8 @@ namespace SystemMiami.CombatSystem
         {
             if (_controller != null)
             {
-                _controller.OnMouseTileChanged -= setDirectionalInfo;
-                _controller.OnPathTileChanged -= SetDirectionalInfo;
+                _controller.FocusedTileChanged -= onFocusedTileChanged;
+                _controller.PathTileChanged -= onPathTileChanged;
             }
 
             GAME.MGR.CombatantDeath -= onCombatantDeath;
@@ -128,12 +128,25 @@ namespace SystemMiami.CombatSystem
             SetDirectionalInfo(new DirectionalInfo(currentPos, Vector2Int.zero));
         }
 
+        private void onFocusedTileChanged(OverlayTile newTile)
+        {
+            SetDirectionByTile(newTile);
+        }
+
+        private void onPathTileChanged(DirectionalInfo newDirection)
+        {
+            SetDirectionalInfo(newDirection);
+
+            // Decrement speed when combatant moves to a new tile.
+            Speed.Lose(1);
+        }
+
         /// <summary>
         /// Sets the combatant's directional info.
         /// For players, this is based on mouse position.
         /// For enemies, it's based on their target or movement.
         /// </summary>
-        private void setDirectionalInfo(OverlayTile targetTile)
+        private void SetDirectionByTile(OverlayTile targetTile)
         {
             if (IsMoving) { return; }
 
