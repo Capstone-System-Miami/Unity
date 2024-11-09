@@ -1,99 +1,51 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using SystemMiami.CombatSystem;
 using SystemMiami.Utilities;
 using UnityEngine;
 
-namespace SystemMiami
+namespace SystemMiami.CombatSystem
+
 {
-    // TODO:
-    // This is just a cleaned up version of the previous MouseController.
-    // It should be refactored into an abstract class that
-    // A player controller & enemy controller can derive from.
-    public class CombatantController : MonoBehaviour
+    // An abstract class that PlayerController and
+    // EnemyController controller can derive from.
+    public abstract class CombatantController : MonoBehaviour
     {
         public float movementSpeed;
 
-        private Combatant combatant;
+        protected Combatant combatant;
 
-        private PathFinder pathFinder;
-        private List<OverlayTile> path = new List<OverlayTile>();
-        private int currentPathCost;
+        protected PathFinder pathFinder;
+        protected List<OverlayTile> path = new List<OverlayTile>();
+        protected int currentPathCost;
 
-        public event Action<OverlayTile> FocusedTileChanged;
-        public event Action<DirectionalInfo> PathTileChanged;
+        public OverlayTile FocusedTile { get; protected set; }
 
-        // PLAYER
-        private OverlayTile _mostRecentMouseTile;
+        public Action<OverlayTile> FocusedTileChanged;
+        public Action<DirectionalInfo> PathTileChanged;
 
-        // PLAYER
-        public OverlayTile MostRecentMouseTile { get { return _mostRecentMouseTile; } }
+        public bool IsMoving { get; protected set; }
 
+        public Phase TurnPhase { get; protected set; }
+
+        #region Unity
         private void Start()
         {
             pathFinder = new PathFinder();
 
-            if(!TryGetComponent(out combatant))
+            if (!TryGetComponent(out combatant))
             {
                 print($"Didnt find a Combatant component on {name}.");
-            }      
+            }
         }
 
         private void Update()
         {
-            if (_mostRecentMouseTile == null)
-            {
-                resetMouseTile();
-            }
-            else if (TurnManager.Instance.isPlayerTurn)
-            {
-                setMouseTile();
-            }
+            if (!IsMyTurn()) { return; }
+
+            updateFocusedTile();
         }
 
-        // ABSTRACT ===================================
-        /// <summary>
-        /// Checks the MouseController for an overlay tile under the cursor.
-        /// If one is found, MostRecentMouseTile is set to the tile.
-        /// If none is found, MostRecentMouseTile is unchanged.
-        /// </summary>
-        private void setMouseTile()
-        {
-            RaycastHit2D? mouseHit = getMouseHitInfo();
-            OverlayTile mouseTile = getTileFromRaycast(mouseHit);
-
-            if (mouseTile == null) { return; }
-            if (mouseTile == _mostRecentMouseTile) { return; }
-
-            _mostRecentMouseTile = mouseTile;
-
-            // Raise event when mouse tile  changes
-            FocusedTileChanged?.Invoke(mouseTile);
-        }
-
-        // ABSTRACT ===========================================
-        /// <summary>
-        /// Resets the mouse tile.
-        /// If character's CurrentTile is found, MostRecentMouseTile is set to that.
-        /// If character's CurrentTile is not found, MRMT is set to a random tile.
-        /// </summary>
-        private void resetMouseTile()
-        {
-            if(combatant.CurrentTile != null)
-            {
-                MapManager.MGR.map.TryGetValue((Vector2Int)combatant.CurrentTile.gridLocation, out _mostRecentMouseTile);
-            }
-            else
-            {
-                _mostRecentMouseTile = MapManager.MGR.GetRandomUnblockedTile();
-            }
-
-            FocusedTileChanged?.Invoke(_mostRecentMouseTile);
-        }
-
-        // Update is called once per frame
-        void LateUpdate()
+        private void LateUpdate()
         {
             if (!IsMyTurn()) { return; }
 
@@ -103,28 +55,66 @@ namespace SystemMiami
                 TurnManager.Instance.EndPlayerTurn();
             }
 
-            if (TurnManager.Instance.currentPhase != Phase.MovementPhase) { return; }
-            
-         
-            // E to end movement
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                TurnManager.Instance.EndMovementPhase();
-            }
-     
-            // Allow _player to select a tile to move to
-            RaycastHit2D? focusedTileHit = getMouseHitInfo();
-            OverlayTile focusedTile = getTileFromRaycast(focusedTileHit);
-     
-            if (focusedTile != null)
-            {
-                if (Input.GetMouseButtonDown(0))
-                {
-                    createPathTo(focusedTile);
-                }
-            }
-            
+            handleMovementPhase();
             moveAlongPath();
+
+            handleActionPhase();
+        }
+        #endregion Unity
+
+        #region Focused Tile
+        protected void updateFocusedTile()
+        {
+            OverlayTile newFocus = getFocusedTile();
+
+            if (newFocus == null) { return; }
+
+            if (newFocus == FocusedTile) { return; }
+
+            FocusedTile = newFocus;
+
+            // Raise event when mouse tile  changes
+            FocusedTileChanged?.Invoke(newFocus);
+        }
+        protected abstract void resetFocusedTile();
+        protected abstract OverlayTile getFocusedTile();
+        #endregion Focused Tile
+
+        #region Phase Handling
+        protected virtual void handleMovementPhase()
+        {
+            if (TurnManager.Instance.currentPhase != Phase.MovementPhase) { return; }
+        }
+        protected virtual void handleActionPhase()
+        {
+            if (TurnManager.Instance.currentPhase != Phase.ActionPhase) { return; }
+        }
+        #endregion Phase Handling
+
+        #region Movement
+        protected void createPathTo(OverlayTile tile)
+        {
+            // Calculate path
+            List<OverlayTile> pathToTry = pathFinder.FindPath(combatant.CurrentTile, tile);
+
+            // Check if path length is within movement points
+            if (pathToTry.Count <= combatant.Speed.Get())
+            {
+                // If so, set global vars.
+                path = pathToTry;
+                currentPathCost = pathToTry.Count;
+
+                // Subtract movement points
+                //combatant.Speed.Lose(path.Count);
+
+                // Start moving along path
+                // Note: We should not call MoveAlongPath() here; instead, we should let Update() handle the movement
+            }
+            else
+            {
+                // Not enough movement points
+                Debug.Log("Not enough movement points to move to that tile.");
+            }
         }
 
         /// <summary>
@@ -132,13 +122,13 @@ namespace SystemMiami
         /// </summary>
         private void moveAlongPath()
         {
-            if (path.Count <= 0)
+            if (path.Count <= 0 || combatant.Speed.Get() == 0)
             {
-                combatant.IsMoving = false;
+                IsMoving = false;
                 return;
             }
 
-            combatant.IsMoving = true;
+            IsMoving = true;
 
             float step = movementSpeed * Time.deltaTime;
 
@@ -164,33 +154,6 @@ namespace SystemMiami
                 positionCharacterOnTile(targetTile);
                 path.RemoveAt(0);
             }
-
-        }
-
-        /// <summary>
-        /// Gets the raycastHit info for whatever
-        /// the mouse is currently over.
-        /// </summary>
-        private RaycastHit2D? getMouseHitInfo()
-        {
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector3 mousePos2d = new Vector2(mousePos.x, mousePos.y);
-
-            RaycastHit2D[] hits = Physics2D.RaycastAll(mousePos2d, Vector2.zero);
-
-            if (hits.Length > 0)
-            {
-                return hits.OrderByDescending(i => i.collider.transform.position.z).First();
-            }
-
-            return null;
-        }
-
-        private OverlayTile getTileFromRaycast(RaycastHit2D? hit)
-        {
-            if (!hit.HasValue) { return null; }
-
-            return hit.Value.collider.gameObject.GetComponent<OverlayTile>();  
         }
 
         /// <summary>
@@ -208,50 +171,26 @@ namespace SystemMiami
             // Set tile's currentCharacter
             tile.currentCharacter = combatant;
         }
+        #endregion Movement
 
-        private void createPathTo(OverlayTile tile)
-        {
-            // Calculate path
-            path = pathFinder.FindPath(combatant.CurrentTile, tile);
-            currentPathCost = path.Count;
-
-            // Check if path length is within movement points
-            if (path.Count <= combatant.Speed.Get())
-            {
-                // Subtract movement points
-                //combatant.Speed.Lose(path.Count);
-
-                // Start moving along path
-                // Note: We should not call MoveAlongPath() here; instead, we should let Update() handle the movement
-            }
-            else
-            {
-                // Not enough movement points
-                Debug.Log("Not enough movement points to move to that tile.");
-            }
-        }
-
-        private void updateMovement()
-        {
-
-        }
-
+        #region General
         public bool IsMyTurn()
         {
             // TODO: Ask turn manager
             return TurnManager.Instance.isPlayerTurn;
         }
 
-        // ABSTRACT
-        public void EndTurn()
+        protected virtual void onStartTurn()
         {
-
         }
 
-        // ABSTRACT
-        public void EndMovementPhase()
+        protected virtual void onNewPhase()
         {
-
         }
+
+        protected virtual void onEndTurn()
+        {
+        }
+        #endregion General
     }
 }

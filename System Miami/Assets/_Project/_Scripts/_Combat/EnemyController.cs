@@ -104,7 +104,7 @@ namespace SystemMiami.CombatSystem
 
                     // Move enemy's position
                     enemy.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y + 0.0001f, tile.transform.position.z);
-                    enemy.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
+                    //enemy.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
 
                     yield return new WaitForSeconds(0.2f); // Wait for movement simulation
                 }
@@ -161,7 +161,7 @@ namespace SystemMiami.CombatSystem
                     (Vector2Int)targetPlayer.CurrentTile.gridLocation
                 );
 
-                enemy.SetDirectionalInfo(directionInfo);
+                //enemy.setDirection(directionInfo);
 
                 // Set targets for each action in the ability
                 foreach (CombatAction action in ability.Actions)
@@ -253,7 +253,7 @@ namespace SystemMiami.CombatSystem
 
                 // Move enemy's position
                 enemy.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y + 0.0001f, tile.transform.position.z);
-                enemy.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
+                //enemy.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
 
                 yield return new WaitForSeconds(0.2f); // Wait for movement simulation
             }

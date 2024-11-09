@@ -4,11 +4,15 @@ using System.Linq;
 using SystemMiami.Enums;
 using SystemMiami.Management;
 using SystemMiami.Utilities;
+using SystemMiami.AbilitySystem;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem
 {
-    [RequireComponent(typeof(Stats))]
+    [RequireComponent(
+        typeof(Stats),
+        typeof(Abilities)
+        /*typeof(CombatantController)*/)]
     public class Combatant : MonoBehaviour, ITargetable, IDamageable, IHealable, IMovable
     {
         public OverlayTile CurrentTile;
@@ -18,8 +22,6 @@ namespace SystemMiami.CombatSystem
         public DirectionalInfo DirectionInfo;
 
         public int ID { get; set; }
-
-        private Vector2Int _direction;
 
         private CombatantController _controller;
         private Stats _stats;
@@ -52,10 +54,11 @@ namespace SystemMiami.CombatSystem
 
         public CombatantController Controller { get { return _controller; } }
 
-
         public Stats Stats { get { return _stats; } }
 
-        private void OnEnable()
+
+        #region Unity
+        private void Awake()
         {
             _stats = GetComponent<Stats>();
             _controller = GetComponent<CombatantController>();
@@ -63,28 +66,52 @@ namespace SystemMiami.CombatSystem
             _defaultColor = _renderer.color;
             Animator = GetComponent<Animator>();
             currentSprite = GetComponent<SpriteRenderer>().sprite;
+        }
 
-            if (_controller != null)
-            {
-                _controller.FocusedTileChanged += onFocusedTileChanged;
-                _controller.PathTileChanged += onPathTileChanged;
-            }
-
+        private void OnEnable()
+        {
             GAME.MGR.CombatantDeath += onCombatantDeath;
+
+            if (_controller == null) { return; }
+            _controller.FocusedTileChanged += onFocusedTileChanged;
+            _controller.PathTileChanged += onPathTileChanged;
         }
 
         private void OnDisable()
         {
-            if (_controller != null)
-            {
-                _controller.FocusedTileChanged -= onFocusedTileChanged;
-                _controller.PathTileChanged -= onPathTileChanged;
-            }
-
             GAME.MGR.CombatantDeath -= onCombatantDeath;
+
+            if (_controller == null) { return; }
+            _controller.FocusedTileChanged -= onFocusedTileChanged;
+            _controller.PathTileChanged -= onPathTileChanged;
         }
 
         protected virtual void Start()
+        {
+            initResources();
+            initCurrentTile();
+            initDirection();
+        }
+
+        private void Update()
+        {
+            if (_controller != null) IsMoving = _controller.IsMoving;
+
+            checkDead();
+            updateResources();
+        }
+        #endregion Unity
+
+        #region Construction
+        private void initResources()
+        {
+            Health = new Resource(_stats.GetStat(StatType.MAX_HEALTH));
+            Stamina = new Resource(_stats.GetStat(StatType.STAMINA));
+            Mana = new Resource(_stats.GetStat(StatType.MANA));
+            Speed = new Resource(_stats.GetStat(StatType.SPEED));
+        }
+
+        private void initCurrentTile()
         {
             if (CurrentTile == null)
             {
@@ -95,23 +122,37 @@ namespace SystemMiami.CombatSystem
                     CurrentTile = MapManager.MGR.map[gridPos];
                 }
             }
-
-            Health = new Resource(_stats.GetStat(StatType.MAX_HEALTH));
-            Stamina = new Resource(_stats.GetStat(StatType.STAMINA));
-            Mana = new Resource(_stats.GetStat(StatType.MANA));
-            Speed = new Resource(_stats.GetStat(StatType.SPEED));
-
-            initDirection();
         }
 
-        private void Update()
+        private void initDirection()
+        {
+            Vector2Int currentPos = (Vector2Int)CurrentTile.gridLocation;
+            setDirection(new DirectionalInfo(currentPos,  currentPos + Vector2Int.one));
+        }
+        #endregion Construction
+
+        #region Subscriptions
+        private void onFocusedTileChanged(OverlayTile newTile)
+        {
+            setDirectionByTile(newTile);
+        }
+
+        private void onPathTileChanged(DirectionalInfo newDirection)
+        {
+            setDirection(newDirection);
+
+            // Decrement speed when combatant moves to a new tile.
+            Speed.Lose(1);
+        }
+        #endregion Subscriptions
+
+        #region Update
+        private void checkDead()
         {
             if (Health.Get() == 0)
             {
                 GAME.MGR.CombatantDeath.Invoke(this);
             }
-
-            updateResources();
         }
 
         private void updateResources()
@@ -121,32 +162,15 @@ namespace SystemMiami.CombatSystem
             Mana = new Resource(_stats.GetStat(StatType.MANA), Mana.Get());
             Speed = new Resource(_stats.GetStat(StatType.SPEED), Speed.Get());
         }
+        #endregion Update
 
-        private void initDirection()
-        {
-            Vector2Int currentPos = (Vector2Int)CurrentTile.gridLocation;
-            SetDirectionalInfo(new DirectionalInfo(currentPos, Vector2Int.zero));
-        }
-
-        private void onFocusedTileChanged(OverlayTile newTile)
-        {
-            SetDirectionByTile(newTile);
-        }
-
-        private void onPathTileChanged(DirectionalInfo newDirection)
-        {
-            SetDirectionalInfo(newDirection);
-
-            // Decrement speed when combatant moves to a new tile.
-            Speed.Lose(1);
-        }
-
+        #region Directions (priv)
         /// <summary>
         /// Sets the combatant's directional info.
         /// For players, this is based on mouse position.
         /// For enemies, it's based on their target or movement.
         /// </summary>
-        private void SetDirectionByTile(OverlayTile targetTile)
+        private void setDirectionByTile(OverlayTile targetTile)
         {
             if (IsMoving) { return; }
 
@@ -176,17 +200,17 @@ namespace SystemMiami.CombatSystem
             }
 
             DirectionInfo = newDirection;
-            _direction = newDirection.DirectionVec;
         }
+        #endregion Directions (priv)
 
         /// <summary>
         /// Allows setting directional info directly, useful for enemies.
         /// </summary>
-        public void SetDirectionalInfo(DirectionalInfo newDirection)
+        private void setDirection(DirectionalInfo newDirection)
         {
             DirectionInfo = newDirection;
-            _direction = newDirection.DirectionVec;
-            SwapSprite(_direction);
+
+            SwapSprite(newDirection.DirectionVec);
 
             OnSubjectChanged?.Invoke(newDirection);
             OnDirectionChanged?.Invoke(newDirection);

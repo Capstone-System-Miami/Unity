@@ -7205,7 +7205,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1865162774}
   - component: {fileID: 1865162773}
-  - component: {fileID: 1865162772}
   m_Layer: 0
   m_Name: Cursor
   m_TagString: Untagged
@@ -7213,20 +7212,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!114 &1865162772
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1865162771}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7619524ca78a93045aab7ba6837c3374, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movementSpeed: 0
-  characterPrefab: {fileID: 7719785247104517706, guid: b8b0f82d5c6569e48bd39dfc9ebc2f05, type: 3}
 --- !u!212 &1865162773
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -8392,9 +8377,9 @@ GameObject:
   - component: {fileID: 7803342958832123493}
   - component: {fileID: 7803342958832123492}
   - component: {fileID: 7803342958832123491}
-  - component: {fileID: 7803342958832123490}
   - component: {fileID: 7803342958832123494}
   - component: {fileID: 7803342958832123495}
+  - component: {fileID: 7803342958832123496}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -9264,20 +9249,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -4}
   m_SizeDelta: {x: 111, y: 38}
   m_Pivot: {x: 0.5, y: 1}
---- !u!114 &7803342958832123490
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 442757516161023013}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7619524ca78a93045aab7ba6837c3374, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movementSpeed: 2
-  characterPrefab: {fileID: 442757516161023013}
 --- !u!114 &7803342958832123491
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9398,6 +9369,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &7803342958832123496
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 442757516161023013}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cd1c907f5a30504195dad71d0b41e5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementSpeed: 2
+  _endTurnKey: 113
+  _endMovementPhaseKey: 101
 --- !u!1 &7815272304641771727
 GameObject:
   m_ObjectHideFlags: 0
