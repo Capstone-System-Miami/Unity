@@ -7,6 +7,7 @@ using UnityEngine;
 public class IntersectionManager : MonoBehaviour
 {
     // Serialized fields allow these private variables to be set in the Unity Editor.
+    [Header("Street Generation Settings")]
     [SerializeField] private IntersectionPool[] streetPools; // Array of StreetPools, which contain prefabs for different street types.
     [SerializeField] private int maxStreets; // Maximum number of streets to generate.
     [SerializeField] private int minStreets; // Minimum number of streets to generate.
@@ -16,6 +17,9 @@ public class IntersectionManager : MonoBehaviour
     [SerializeField] private int gridSizeY; // The height of the street grid.
     [SerializeField] private int maxExits = 4; // Maximum number of exits per street.
     [SerializeField] private int maxStreetsToConnect = 4; // Maximum number of streets that can be connected from one street.
+    
+    [Header("Player Settings")]
+    [SerializeField] private GameObject playerPrefab; // The player prefab to instantiate in the scene.
     
     // List to keep track of instantiated street GameObjects.
     private List<GameObject> streetObjects = new List<GameObject>();
@@ -141,8 +145,18 @@ public class IntersectionManager : MonoBehaviour
         streetQueue.Enqueue(streetIndex);
         // Mark the street as enqueued to prevent it from being enqueued again.
         streetGrid[streetIndex.x, streetIndex.y].enqueued = true;
+        
+        // Spawn the player at the center of the grid.
+        SpawnPlayer();
     }
 
+    private void SpawnPlayer()
+    {
+        // Instantiate the player prefab at the center of the grid.
+        Vector3 playerPosition = GetPositionFromGridIndex(new Vector2Int(gridSizeX / 2, gridSizeY / 2));
+        Instantiate(playerPrefab, playerPosition, Quaternion.identity);
+    }
+    
     // Attempt to generate a street at the specified grid index.
     private void TryGenerateStreet(Vector2Int streetIndex)
     {
