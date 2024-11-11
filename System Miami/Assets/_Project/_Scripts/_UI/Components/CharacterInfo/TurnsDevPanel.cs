@@ -29,14 +29,14 @@ namespace SystemMiami
 
         private void OnEnable()
         {
-            TurnManager.Instance.BeginTurn += onBeginTurn;
-            TurnManager.Instance.NewTurnPhase += onNewTurnPhase;
+            TurnManager.MGR.BeginTurn += onBeginTurn;
+            TurnManager.MGR.NewTurnPhase += onNewTurnPhase;
         }
 
         private void OnDisable()
         {
-            TurnManager.Instance.BeginTurn -= onBeginTurn;
-            TurnManager.Instance.NewTurnPhase -= onNewTurnPhase;
+            TurnManager.MGR.BeginTurn -= onBeginTurn;
+            TurnManager.MGR.NewTurnPhase -= onNewTurnPhase;
         }
 
         private void Start()

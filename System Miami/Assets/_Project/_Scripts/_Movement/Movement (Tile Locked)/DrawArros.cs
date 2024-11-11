@@ -21,12 +21,12 @@ namespace SystemMiami
 
         private void OnEnable()
         {
-            TurnManager.Instance.NewTurnPhase += onNewTurnPhase;
+            TurnManager.MGR.NewTurnPhase += onNewTurnPhase;
         }
 
         private void OnDisable()
         {
-            TurnManager.Instance.NewTurnPhase -= onNewTurnPhase;
+            TurnManager.MGR.NewTurnPhase -= onNewTurnPhase;
         }
 
         private void onNewTurnPhase(Phase newPhase)

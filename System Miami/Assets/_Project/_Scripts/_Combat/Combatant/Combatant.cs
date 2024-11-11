@@ -364,23 +364,25 @@ namespace SystemMiami.CombatSystem
 
         public virtual void Die()
         {
-            if (TurnManager.Instance.playerCharacters.Contains(this))
+            if (!TurnManager.MGR.combatants.Contains(this))
+            {
+                // Not found in any list
+                Debug.Log($"{name} has died but was not found in any character list.");
+                Destroy(gameObject);
+            }
+
+            else if (Controller is PlayerController)
             {
                 // Player died
                 Debug.Log($"{name} (Player) has died.");
                 // Handle player death logic here
             }
-            else if (TurnManager.Instance.enemyCharacters.Contains(this))
+            else if (TurnManager.MGR.enemyCharacters.Contains(this))
             {
                 // Enemy died
                 Debug.Log($"{name} (Enemy) has died.");
-                TurnManager.Instance.enemyCharacters.Remove(this);
-                Destroy(gameObject);
-            }
-            else
-            {
-                // Not found in any list
-                Debug.Log($"{name} has died but was not found in any character list.");
+                TurnManager.MGR.enemyCharacters.Remove(this);
+                TurnManager.MGR.combatants.Remove(this);
                 Destroy(gameObject);
             }
         }

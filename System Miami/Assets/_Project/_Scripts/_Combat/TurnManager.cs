@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using SystemMiami.CombatSystem;
 using SystemMiami.AbilitySystem;
 using System;
+using SystemMiami.Management;
 
 namespace SystemMiami
 {
@@ -21,18 +22,15 @@ namespace SystemMiami
     /// Handles switching between player and enemy turns,
     /// as well as movement and action phases.
     /// </summary>
-    public class TurnManager : MonoBehaviour
+    public class TurnManager : Singleton<TurnManager>
     {
-        // Singleton instance of the TurnManager
-        public static TurnManager Instance;
+        public Combatant playerCharacter;
 
-        // List of all player characters
-        public List<Combatant> playerCharacters;
         // List of all enemy characters
-        public List<Combatant> enemyCharacters;
+        public List<Combatant> enemyCharacters = new List<Combatant>();
 
-        // The current phase (Movement or Action)
-        public Phase currentPhase;
+        // List of all Combatants
+        public List<Combatant> combatants = new List<Combatant>();
 
         public GameObject enemyPrefab;
         public GameObject bossPrefab; // TODO: Assign boss prefab
@@ -44,41 +42,40 @@ namespace SystemMiami
 
         public Action<Combatant> BeginTurn;
         public Action<Phase> NewTurnPhase;
+        public Action<Combatant> EndTurn;
 
         public Combatant CurrentTurnOwner { get; private set; }
+
+        public bool IsGameOver = false;
 
         #region Unity Methods
         //===============================
 
-        private void Awake()
-        {
-            // Initialize singleton instance
-            if (Instance == null)
-                Instance = this;
-            else
-                Destroy(gameObject);
-
-            // Initialize lists
-            if (playerCharacters == null)
-            {
-                playerCharacters = new List<Combatant>();
-            }
-            if (enemyCharacters == null)
-            {
-                enemyCharacters = new List<Combatant>();
-            }
-
-            // Set starting phase
-            currentPhase = Phase.MovementPhase;
-        }
-
         private void Start()
         {
             SpawnEnemies();
-            // Initialize turns, start with first player
-            StartPlayerTurn();
+
+            combatants.Add(playerCharacter);
+            combatants.AddRange(enemyCharacters);
+
+            //// Initialize turns, start with first player
+            //StartPlayerTurn();
+
+            StartCoroutine(TurnSequence());
         }
 
+
+        private void Update()
+        {
+            if (CurrentTurnOwner == null)
+                { return; }
+
+            Debug.Log($"Current Turn Owner: {CurrentTurnOwner.name}");
+            if (!CurrentTurnOwner.Controller.IsMyTurn)
+            {
+
+            }
+        }
         //===============================
         #endregion // ^Unity Methods^
 
@@ -91,20 +88,11 @@ namespace SystemMiami
         /// </summary>
         public void StartPlayerTurn()
         {
-            isPlayerTurn = true;
-            currentPhase = Phase.MovementPhase;
-
-            //// Reset player actions and movement points
-            //foreach (Combatant character in playerCharacters)
-            //{
-            //    character.ResetTurn();
-            //}
-
-            playerCharacters[0].Controller.StartTurn();
-            CurrentTurnOwner = playerCharacters[0];
+            playerCharacter.Controller.StartTurn();
+            CurrentTurnOwner = playerCharacter;
 
             // Actions for other scripts to use
-            BeginTurn?.Invoke(playerCharacters[0]);
+            BeginTurn?.Invoke(playerCharacter);
             NewTurnPhase?.Invoke(Phase.MovementPhase);
 
             Debug.Log("Player's turn started. Movement Phase.");
@@ -116,42 +104,40 @@ namespace SystemMiami
         /// </summary>
         public void StartAllEnemyTurns()
         {
-            isPlayerTurn = false;
-            currentPhase = Phase.MovementPhase;
-
-            // Reset enemy actions and movement points
-            foreach (Combatant enemy in enemyCharacters)
-            {
-                enemy.ResetTurn();
-            }
-
-            Debug.Log("Enemy's turn started.");
-
             // Start enemy AI coroutine
-            StartCoroutine(EnemyTurnSequence());
+            StartCoroutine(TurnSequence());
         }
 
         /// <summary>
         /// Coroutine for handling enemy turns.
         /// Each enemy takes their movement and action phases in sequence.
         /// </summary>
-        private IEnumerator EnemyTurnSequence()
+        private IEnumerator TurnSequence()
         {
-            foreach (Combatant enemyCombatant in enemyCharacters)
+            while (!IsGameOver)
             {
-                EnemyController enemyController = enemyCombatant.GetComponent<EnemyController>();
-                if (enemyController != null)
+                foreach (Combatant combatant in combatants)
                 {
-                    yield return StartCoroutine(enemyController.TakeTurn());
-                }
-                else
-                {
-                    Debug.LogWarning("EnemyController not found on enemy " + enemyCombatant.name);
-                }
-            }
+                    if (combatant == null)
+                    { continue; }
 
-            // After enemies have taken their turns, start player turn
-            StartPlayerTurn();
+                    if (combatant.Controller == null)
+                    {
+                        Debug.LogWarning($"CombatantController not found in {combatant} on {combatant.name}");
+                        continue;
+                    }
+
+                    CurrentTurnOwner = combatant;
+                    combatant.Controller.StartTurn();
+
+                    yield return new WaitForEndOfFrame();
+                    yield return new WaitUntil(() => !combatant.Controller.IsMyTurn);
+
+                    //yield return StartCoroutine(controller.TakeTurn()); 
+                }
+
+                yield return null;
+            }
         }
 
 
@@ -164,11 +150,8 @@ namespace SystemMiami
             Debug.Log("Player's turn ended.");
 
             // Reduce cooldowns and update status effects for player
-            foreach (Combatant player in playerCharacters)
-            {
-                player.GetComponent<Abilities>().ReduceCooldowns();
-                player.Stats.UpdateStatusEffects();
-            }
+            playerCharacter.GetComponent<Abilities>().ReduceCooldowns();
+            playerCharacter.Stats.UpdateStatusEffects();
             // After player turn ends, start enemy turn
             StartAllEnemyTurns();
         }
@@ -179,12 +162,8 @@ namespace SystemMiami
         /// </summary>
         public void EndMovementPhase()
         {
-            if (isPlayerTurn)
-            {
-                currentPhase = Phase.ActionPhase;
-                NewTurnPhase?.Invoke(Phase.ActionPhase);
-                Debug.Log("Player's Action Phase started.");
-            }
+            CurrentTurnOwner.Controller.TryNextPhase();
+            Debug.Log($"{CurrentTurnOwner.name}'s Action Phase started.");
         }
 
         //===============================
@@ -210,13 +189,13 @@ namespace SystemMiami
                         enemyCombatant = enemyGO.AddComponent<Combatant>();
                     }
 
-                    // Ensure the enemy has an EnemyController
-                    EnemyController enemyController = enemyGO.GetComponent<EnemyController>();
-                    if (enemyController == null)
-                    {
-                        enemyController = enemyGO.AddComponent<EnemyController>();
-                        // You can also initialize enemyController properties here if needed
-                    }
+                    //// Ensure the enemy has an EnemyController
+                    //EnemyController enemyController = enemyGO.GetComponent<EnemyController>();
+                    //if (enemyController == null)
+                    //{
+                    //    enemyController = enemyGO.AddComponent<EnemyController>();
+                    //    // You can also initialize enemyController properties here if needed
+                    //}
 
                     // Set enemy ID
                     enemyCombatant.ID = i + 1;

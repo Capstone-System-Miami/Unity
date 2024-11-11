@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using SystemMiami.Utilities;
+using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
 
 namespace SystemMiami.CombatSystem
 
@@ -40,6 +42,12 @@ namespace SystemMiami.CombatSystem
         protected List<Phase> remainingPhases = new List<Phase>();
 
         #region Unity
+        // ======================================
+
+        private void Awake()
+        {
+            combatant = GetComponent<Combatant>();
+        }
         private void Start()
         {
             pathFinder = new PathFinder();
@@ -57,7 +65,7 @@ namespace SystemMiami.CombatSystem
             updateFocusedTile();
         }
 
-        private void LateUpdate()
+        protected virtual void LateUpdate()
         {
             if (!IsMyTurn) { return; }
 
@@ -85,39 +93,73 @@ namespace SystemMiami.CombatSystem
                     break;
             }
         }
-        #endregion Unity
+
+        // ======================================
+        #endregion // Unity =====================
+
+
+        #region Turn Management
+        // ======================================
+
+        public virtual void StartTurn()
+        {
+            Debug.Log($"Starting Turn: {name}");
+
+            remainingPhases = defaultPhases;
+
+            TurnManager.MGR.BeginTurn?.Invoke(combatant);
+
+            // Probably just subscribe in combatant?? Maybe??
+            combatant.ResetTurn();
+
+            if (TryNextPhase())
+            {
+                IsMyTurn = true;
+            }
+            else
+            {
+                EndTurn();
+            }
+        }
+
+        public virtual bool TryNextPhase()
+        {
+            if (remainingPhases.Count == 0)
+                { return false; }
+
+            CurrentPhase = remainingPhases[0];
+            remainingPhases.RemoveAt(0);
+
+            TurnManager.MGR.NewTurnPhase(CurrentPhase);
+
+            return true;
+        }
+
+        public virtual void EndTurn()
+        {
+            // TODO
+            // Other end of turn things.
+            IsMyTurn = false;
+        }
+        // ======================================
+        #endregion // Turn Management ===========
+
 
         #region Triggers
+        // ======================================
         protected abstract bool endTurnTriggered();
         protected abstract bool nextPhaseTriggered();
         protected abstract bool beginMovementTriggered();
-        protected /*abstract*/ bool useAbilityTriggered() { return false; }
-        #endregion Triggers
+        protected abstract bool useAbilityTriggered();
 
-        #region Focused Tile
-        protected void updateFocusedTile()
-        {
-            OverlayTile newFocus = getFocusedTile();
+        // ======================================
+        #endregion // Triggers ==================
 
-            if (newFocus == null) { return; }
 
-            if (newFocus == FocusedTile) { return; }
-
-            FocusedTile = newFocus;
-
-            // Raise event when mouse tile  changes
-            FocusedTileChanged?.Invoke(newFocus);
-        }
-        protected abstract void resetFocusedTile();
-        protected abstract OverlayTile getFocusedTile();
-        #endregion Focused Tile
-
-        #region Movement Phase
+        #region Phase Handling
+        // ======================================
         protected virtual void handleMovementPhase()
         {
-            if (CurrentPhase != Phase.MovementPhase) { return; }
-            Debug.Log($"{name} Pathcount: {currentPath?.Count}");
-
             if (beginMovementTriggered())
             {
                 Debug.Log($"{name} is beginning movement");
@@ -133,6 +175,46 @@ namespace SystemMiami.CombatSystem
                 clearMovement();
             }
         }
+
+        protected virtual void handleActionPhase()
+        {
+            if (useAbilityTriggered())
+            {
+                // use ability
+            }
+        }
+
+        // ======================================
+        #endregion // Phase Handling ============
+
+
+        #region Focused Tile
+        // ======================================
+        protected void updateFocusedTile()
+        {
+            OverlayTile newFocus = getFocusedTile();
+
+            if (newFocus == null)
+                { return; }
+
+            if (newFocus == FocusedTile)
+                { return; }
+
+            FocusedTile = newFocus;
+
+            // Raise event when mouse tile  changes
+            FocusedTileChanged?.Invoke(newFocus);
+        }
+
+        protected abstract void resetFocusedTile();
+        protected abstract OverlayTile getFocusedTile();
+
+        // ======================================
+        #endregion // Focused Tile ==============
+
+
+        #region Movement
+        // ======================================
 
         /// <summary>
         /// Sets the destination tile.
@@ -301,53 +383,68 @@ namespace SystemMiami.CombatSystem
             // Set tile's currentCharacter
             tile.currentCharacter = combatant;
         }
-        #endregion Movement Phase
 
-        #region Action Phase
-        protected virtual void handleActionPhase()
+        // ======================================
+        #endregion // Movement ==================
+
+
+        #region Abilities
+        // ======================================
+        protected abstract void useAbility();
+        // ======================================
+        #endregion // Abilities =================
+
+
+        #region Detection
+        // ======================================
+
+        /// <summary>
+        /// Finds the nearest combatant to the enemy.
+        /// </summary>
+        protected Combatant FindNearestPlayer(List<Combatant> toCheck)
         {
-            if (CurrentPhase != Phase.ActionPhase) { return; }
+            Combatant nearestPlayer = null;
+            int shortestDistance = int.MaxValue;
 
-            if (useAbilityTriggered())
+            foreach (Combatant player in toCheck)
             {
-                // use ability
+                int distance = Mathf.Abs(combatant.CurrentTile.gridLocation.x - player.CurrentTile.gridLocation.x) +
+                               Mathf.Abs(combatant.CurrentTile.gridLocation.y - player.CurrentTile.gridLocation.y);
+
+                if (distance < shortestDistance)
+                {
+                    shortestDistance = distance;
+                    nearestPlayer = player;
+                }
             }
+
+            return nearestPlayer;
         }
-        #endregion Action Phase
 
-        #region General
-        public virtual void StartTurn()
+        /// <summary>
+        /// Finds the nearest combatant within a given radius of this combatant.
+        /// </summary>
+        protected Combatant FindNearestPlayerWithinRadius(List<Combatant> toCheck, int radius)
         {
-            remainingPhases = defaultPhases;
+            Combatant nearestPlayer = null;
+            int shortestDistance = int.MaxValue;
 
-            if (TryNextPhase())
+            foreach (Combatant player in toCheck)
             {
-                IsMyTurn = true;               
+                int distance = Mathf.Abs(combatant.CurrentTile.gridLocation.x - player.CurrentTile.gridLocation.x) +
+                               Mathf.Abs(combatant.CurrentTile.gridLocation.y - player.CurrentTile.gridLocation.y);
+
+                if (distance <= radius && distance < shortestDistance)
+                {
+                    shortestDistance = distance;
+                    nearestPlayer = player;
+                }
             }
-            else
-            {
-                EndTurn();
-            }
+
+            return nearestPlayer;
         }
 
-        public virtual bool TryNextPhase()
-        {
-            if (remainingPhases.Count == 0)
-                { return false; }
-
-            CurrentPhase = remainingPhases[0];
-            remainingPhases.RemoveAt(0);
-            TurnManager.Instance.NewTurnPhase(CurrentPhase);
-            return true;
-        }
-
-        public virtual void EndTurn()
-        {
-            combatant.ResetTurn();
-            // TODO
-            // Other end of turn things.
-            IsMyTurn = false;
-        }
-        #endregion General
+        // ======================================
+        #endregion // Detection =================
     }
 }

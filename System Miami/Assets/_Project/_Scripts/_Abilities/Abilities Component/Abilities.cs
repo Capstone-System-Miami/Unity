@@ -88,7 +88,7 @@ namespace SystemMiami.AbilitySystem
             if (_isTargeting && !_isConfirming)
             {
                 Debug.Log("Locking targets.");
-                TurnManager.Instance.EndMovementPhase();
+                TurnManager.MGR.EndMovementPhase();
                 _selectedAbility.ConfirmTargets();
                 _isConfirming = true;
 
@@ -129,7 +129,7 @@ namespace SystemMiami.AbilitySystem
         /// <param name="index">Index of the ability in the abilities list.</param>
         private void OnEquip(AbilityType type, int index)
         {
-            if (!TurnManager.Instance.isPlayerTurn) { return; }
+            if (!TurnManager.MGR.isPlayerTurn) { return; }
             if (index < 0) { return; }
 
             

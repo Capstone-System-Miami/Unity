@@ -8,7 +8,10 @@ namespace SystemMiami.CombatSystem
         [SerializeField] private KeyCode _endTurnKey;
         [SerializeField] private KeyCode _endPhaseKey;
 
+
         #region Triggers
+        // ======================================
+
         protected override bool endTurnTriggered()
         {
             return Input.GetKeyDown(_endTurnKey);
@@ -29,9 +32,20 @@ namespace SystemMiami.CombatSystem
 
             return Input.GetMouseButtonDown(0);
         }
-        #endregion Triggers
+
+        protected override bool useAbilityTriggered()
+        {
+            // TODO
+            return false;
+        }
+
+        // ======================================
+        #endregion // Triggers ==================
+
 
         #region Focused Tile
+        // ======================================
+
         /// <summary>
         /// Resets the mouse tile to board (1, 1)
         /// </summary>
@@ -80,32 +94,19 @@ namespace SystemMiami.CombatSystem
         /// either the tile found within the Hit,
         /// or null if no tile was found in the Hit.
         /// </summary>
-        /// <param name="hit"></param>
-        /// <returns></returns>
         private OverlayTile getTileFromRaycast(RaycastHit2D? hit)
         {
             if (!hit.HasValue) { return null; }
 
             return hit.Value.collider.gameObject.GetComponent<OverlayTile>();
         }
-        #endregion Focused Tile
 
-        #region Movement
-
-        #endregion Movement
-
-        #region Phase Handling
-        protected override void handleMovementPhase()
+        protected override void useAbility()
         {
-            base.handleMovementPhase();
+            // TODO
+            HasActed = true;
         }
-
-        protected override void handleActionPhase()
-        {
-            base.handleActionPhase();
-        }
-        #endregion Phase Handling
-
-
+        // ======================================
+        #endregion // Focused Tile ==============
     }
 }

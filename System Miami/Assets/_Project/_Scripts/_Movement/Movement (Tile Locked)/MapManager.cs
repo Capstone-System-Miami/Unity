@@ -84,6 +84,8 @@ namespace SystemMiami
         // to create a new list of unblocked tiles
         public OverlayTile GetRandomUnblockedTile()
         {
+            OverlayTile result = null;
+
             int x, y;
             Vector2Int randomPos;
 
@@ -102,9 +104,10 @@ namespace SystemMiami
                     break;
                 }
 
-            } while (map[randomPos].isBlocked);
+                map.TryGetValue(randomPos, out result);
+            } while (result == null || result.isBlocked);
 
-            return map[randomPos];
+            return result;
         }
         #endregion
 

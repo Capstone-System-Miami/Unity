@@ -16,13 +16,13 @@ namespace SystemMiami
 
         private IEnumerator waitThenFill()
         {
-            yield return new WaitUntil(() => TurnManager.Instance.enemyCharacters.Count > 0);
+            yield return new WaitUntil(() => TurnManager.MGR.enemyCharacters.Count > 0);
             setEnemyPanels();
         }
 
         private void setEnemyPanels()
         {
-            List<Combatant> enemies = TurnManager.Instance.enemyCharacters;
+            List<Combatant> enemies = TurnManager.MGR.enemyCharacters;
 
             for (int i = 0; i < _enemyHealthDevPanels.Count; i++)
             {

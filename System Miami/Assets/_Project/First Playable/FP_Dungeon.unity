@@ -7685,14 +7685,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c65c9bbc9fccad74793f2b8ea463fcf5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerCharacters:
-  - {fileID: 7803342958832123491}
+  playerCharacter: {fileID: 7803342958832123491}
   enemyCharacters: []
-  currentPhase: 0
-  enemyPrefab: {fileID: 5985083666047915755, guid: 0992dae8a10eab24da3ffdab83f92baf, type: 3}
+  combatants: []
+  enemyPrefab: {fileID: 5985083666047915755, guid: eae0eae8fe396f84493cde92e333db05, type: 3}
   bossPrefab: {fileID: 5985083666047915755, guid: 0992dae8a10eab24da3ffdab83f92baf, type: 3}
   numberOfEnemies: 3
   isPlayerTurn: 1
+  IsGameOver: 0
 --- !u!224 &1933114683 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8515660109222632797, guid: 87efd5d5b9050d34e842c7063b3798a0, type: 3}
