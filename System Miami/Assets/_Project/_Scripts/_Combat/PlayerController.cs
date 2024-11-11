@@ -8,6 +8,8 @@ namespace SystemMiami.CombatSystem
         [SerializeField] private KeyCode _endTurnKey;
         [SerializeField] private KeyCode _endPhaseKey;
 
+        public KeyCode EndTurnKey { get { return _endTurnKey; } }
+        public KeyCode EndPhaseKey { get { return _endPhaseKey; } }
 
         #region Triggers
         // ======================================
@@ -19,6 +21,9 @@ namespace SystemMiami.CombatSystem
 
         protected override bool nextPhaseTriggered()
         {
+            if (IsMoving) { return false; }
+            if (IsActing) { return false; }
+
             return Input.GetKeyDown(_endPhaseKey);
         }
 
@@ -56,6 +61,22 @@ namespace SystemMiami.CombatSystem
             FocusedTile = newFocus;
 
             FocusedTileChanged?.Invoke(FocusedTile);
+        }
+
+        protected override void updateFocusedTile()
+        {
+            OverlayTile newFocus = getFocusedTile();
+
+            if (newFocus == null)
+            { return; }
+
+            if (newFocus == FocusedTile)
+            { return; }
+
+            FocusedTile = newFocus;
+
+            // Raise event when mouse tile  changes
+            FocusedTileChanged?.Invoke(newFocus);
         }
 
         /// <summary>

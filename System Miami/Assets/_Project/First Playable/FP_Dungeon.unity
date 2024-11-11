@@ -1142,11 +1142,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _panelLabel: {fileID: 805075895}
-  _turn: {fileID: 1339380349074696359}
-  _playerColor: {r: 0.37161046, g: 0.5566038, b: 0.15490389, a: 1}
-  _enemyColor: {r: 0.5568628, g: 0.24892995, b: 0.15686274, a: 1}
-  _phase: {fileID: 1148930113}
-  _prompts: {fileID: 2015011732}
+  _combatantField: {fileID: 1339380349074696359}
+  _phaseField: {fileID: 1148930113}
+  _movementColor: {r: 0.4498176, g: 0.5377358, b: 0.017755438, a: 1}
+  _actionColor: {r: 0.6981132, g: 0.18111429, b: 0.18111429, a: 1}
+  _promptsBox: {fileID: 2015011732}
   _promptsTextColor: {r: 0.5, g: 0.28797337, b: 0, a: 1}
 --- !u!114 &318832099
 MonoBehaviour:
@@ -7691,7 +7691,6 @@ MonoBehaviour:
   enemyPrefab: {fileID: 5985083666047915755, guid: eae0eae8fe396f84493cde92e333db05, type: 3}
   bossPrefab: {fileID: 5985083666047915755, guid: 0992dae8a10eab24da3ffdab83f92baf, type: 3}
   numberOfEnemies: 3
-  isPlayerTurn: 1
   IsGameOver: 0
 --- !u!224 &1933114683 stripped
 RectTransform:
@@ -9261,6 +9260,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5dad0a304e458cf459016a52e1ee441a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _colorTag: {r: 0.21688704, g: 0.6603774, b: 0.20870416, a: 1}
   CurrentTile: {fileID: 0}
   Animator: {fileID: 7803342958832123495}
   PlayerDirSprites:

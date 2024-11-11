@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using SystemMiami.Management;
 using SystemMiami.Utilities;
+using SystemMiami.CombatSystem;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -66,7 +67,7 @@ namespace SystemMiami
                             Vector3 cellWorldPosition = Coordinates.IsoToScreen(tileLocation, gridTilesHeight);
 
                             overlayTile.transform.position = new Vector3(cellWorldPosition.x, cellWorldPosition.y, cellWorldPosition.z);
-                            overlayTile.GetComponent<SpriteRenderer>().sortingOrder = tileMap.GetComponent<TilemapRenderer>().sortingOrder;
+                            //overlayTile.GetComponent<SpriteRenderer>().sortingOrder = tileMap.GetComponent<TilemapRenderer>().sortingOrder;
                             overlayTile.gridLocation = tileLocation;
                             map.Add(tileKey, overlayTile);
                         }
@@ -75,41 +76,18 @@ namespace SystemMiami
             }
         }
 
-        # region layla addition
-        // the following is a reworked copy of
-        // GetRandomUnblockedTile in TurnManager.
-        // That function is still there, but other scripts
-        // need this in Start,
-        // before the TurnManager has time
-        // to create a new list of unblocked tiles
-        public OverlayTile GetRandomUnblockedTile()
+        /// <summary>
+        /// Positions a character on the specified tile.
+        /// </summary>
+        public void PositionCharacterOnTile(Combatant character, OverlayTile tile)
         {
-            OverlayTile result = null;
+            character.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y + 0.0001f, tile.transform.position.z);
+            //character.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
+            character.CurrentTile = tile;
 
-            int x, y;
-            Vector2Int randomPos;
-
-            int iterationCount = 0;
-            int maxIterations = 1000;
-            do
-            {
-                x = Random.Range(bounds.min.x, bounds.max.x);
-                y = Random.Range(bounds.min.y, bounds.max.y);
-                randomPos = new Vector2Int(x, y);
-
-                if(++iterationCount >= maxIterations)
-                {
-                    Debug.LogWarning("Every tile is blocked," +
-                        "or we are very very unlucky");
-                    break;
-                }
-
-                map.TryGetValue(randomPos, out result);
-            } while (result == null || result.isBlocked);
-
-            return result;
+            // Update tile's current character
+            tile.currentCharacter = character;
         }
-        #endregion
 
         public Vector3 IsoToScreen(Vector3Int tileLocation){
             return Coordinates.IsoToScreen(tileLocation, gridTilesHeight);

@@ -13,8 +13,10 @@ namespace SystemMiami
         private bool FLAG_EndTurn;
         private bool FLAG_NextPhase;
         private bool FLAG_BeginMovement;
-        private bool FLAG_TakeAction;
+        private bool FLAG_UseAbility;
         #endregion
+
+        private bool focusBeenSet;
 
 
         #region Unity
@@ -39,7 +41,38 @@ namespace SystemMiami
 
         #region Turn Management
         // ======================================
+        public override void StartTurn()
+        {
+            FocusedTile = null;
 
+            base.StartTurn();
+
+            StartCoroutine(TakeTurn());
+        }
+
+        public override void OnNextPhaseFailed()
+        {
+            base.OnNextPhaseFailed();
+            FLAG_EndTurn = true;
+        }
+
+        private IEnumerator TakeTurn()
+        {
+            yield return new WaitForSeconds(.5f);
+
+            FLAG_BeginMovement = true;
+            yield return new WaitUntil(() => destinationReached());
+            yield return new WaitForSeconds(.5f);
+
+            FLAG_NextPhase = true;
+            yield return null;
+
+            FLAG_UseAbility = true;
+            yield return new WaitUntil(() => HasActed);
+            yield return new WaitForSeconds(.5f);
+
+            FLAG_EndTurn = true;
+        }
         // ======================================
         #endregion // Turn Management ===========
 
@@ -64,7 +97,7 @@ namespace SystemMiami
 
         protected override bool useAbilityTriggered()
         {
-            return FLAG_TakeAction;
+            return FLAG_UseAbility;
         }
 
         private void resetFlags()
@@ -72,10 +105,15 @@ namespace SystemMiami
             FLAG_EndTurn = false;
             FLAG_NextPhase = false;
             FLAG_BeginMovement = false;
+            FLAG_UseAbility = false;
         }
 
         // ======================================
         #endregion // Triggers ==================
+
+
+        #region Phase Handling
+        #endregion
 
 
         #region Focused Tile
@@ -83,44 +121,38 @@ namespace SystemMiami
 
         protected override void resetFocusedTile()
         {
-            FocusedTile = MapManager.MGR.GetRandomUnblockedTile();
+            FocusedTile = TurnManager.MGR.GetRandomUnblockedTile();
+
+            FocusedTileChanged.Invoke(FocusedTile);
+        }
+
+        protected override void updateFocusedTile()
+        {
+            if (FocusedTile != null) { return; }
+
+            FocusedTile = getFocusedTile();
+
+            FocusedTileChanged.Invoke(FocusedTile);
         }
 
         protected override OverlayTile getFocusedTile()
         {
             Combatant targetPlayer = TurnManager.MGR.playerCharacter;
 
-            // If player is not in range, don't change focus.
             if (IsInDetectionRange(targetPlayer))
             {
                 return targetPlayer.CurrentTile;
             }
             else
             {
-                return MapManager.MGR.GetRandomUnblockedTile();
+                return TurnManager.MGR.GetRandomUnblockedTile();
             }
         }
         // ======================================
         #endregion // Focused Tile ==============
 
-        protected override void useAbility()
-        {
-            HasActed = true;
-        }
 
-        private bool IsInDetectionRange(Combatant target)
-        {
-            int distance = Mathf.Abs(combatant.CurrentTile.gridLocation.x - target.CurrentTile.gridLocation.x) +
-               Mathf.Abs(combatant.CurrentTile.gridLocation.y - target.CurrentTile.gridLocation.y);
-
-            if (distance <= detectionRadius)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
+        #region Movement
         /// <summary>
         /// Coroutine for combatant random movement when not chasing the player.
         /// </summary>
@@ -178,33 +210,30 @@ namespace SystemMiami
 
             return walkableTiles;
         }
+        #endregion
 
-        public override void StartTurn()
+
+        #region Abilities
+        protected override void useAbility()
         {
-            base.StartTurn();
-            
-            if (!IsMyTurn)
-                { return; }
-
-            StartCoroutine(TakeTurn());
+            HasActed = true;
         }
+        #endregion
 
-        private IEnumerator TakeTurn()
+
+        #region Detection
+        private bool IsInDetectionRange(Combatant target)
         {
-            yield return new WaitForSeconds(.5f);
+            int distance = Mathf.Abs(combatant.CurrentTile.gridLocation.x - target.CurrentTile.gridLocation.x) +
+               Mathf.Abs(combatant.CurrentTile.gridLocation.y - target.CurrentTile.gridLocation.y);
 
-            FLAG_BeginMovement = true;
-            yield return new WaitUntil(() => destinationReached());
-            yield return new WaitForSeconds(.5f);
+            if (distance <= detectionRadius)
+            {
+                return true;
+            }
 
-            FLAG_NextPhase = true;
-            yield return null;
-
-            FLAG_TakeAction = true;
-            yield return new WaitUntil(() => HasActed);
-            yield return new WaitForSeconds(.5f);
-
-            FLAG_EndTurn = true;
+            return false;
         }
+        #endregion
     }
 }

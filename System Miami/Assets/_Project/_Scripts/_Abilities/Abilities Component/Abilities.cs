@@ -129,7 +129,7 @@ namespace SystemMiami.AbilitySystem
         /// <param name="index">Index of the ability in the abilities list.</param>
         private void OnEquip(AbilityType type, int index)
         {
-            if (!TurnManager.MGR.isPlayerTurn) { return; }
+            if (!TurnManager.MGR.IsPlayerTurn) { return; }
             if (index < 0) { return; }
 
             

@@ -15,6 +15,8 @@ namespace SystemMiami.CombatSystem
         /*typeof(CombatantController)*/)]
     public class Combatant : MonoBehaviour, ITargetable, IDamageable, IHealable, IMovable
     {
+        [SerializeField] private Color _colorTag = Color.white;
+
         public OverlayTile CurrentTile;
 
         public Animator Animator;
@@ -25,6 +27,8 @@ namespace SystemMiami.CombatSystem
 
         private CombatantController _controller;
         private Stats _stats;
+        private Abilities _abilities;
+
         private SpriteRenderer _renderer;
         private Color _defaultColor;
 
@@ -42,6 +46,8 @@ namespace SystemMiami.CombatSystem
         public bool IsStunned = false;
         public bool IsInvisible = false;
 
+        public Color ColorTag { get { return _colorTag; } }
+
         // These Actions will be subscribed to by each ability's
         // CombatActions when they are equipped and targeting.
         // Which one they subscribe to will depend on the origin
@@ -56,11 +62,14 @@ namespace SystemMiami.CombatSystem
 
         public Stats Stats { get { return _stats; } }
 
+        public Abilities Abilities { get { return _abilities; } }
+
 
         #region Unity
         private void Awake()
         {
             _stats = GetComponent<Stats>();
+            _abilities = GetComponent<Abilities>();
             _controller = GetComponent<CombatantController>();
             _renderer = GetComponent<SpriteRenderer>();
             _defaultColor = _renderer.color;

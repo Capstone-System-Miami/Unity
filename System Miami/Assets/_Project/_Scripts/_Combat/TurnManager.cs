@@ -1,10 +1,10 @@
-using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using SystemMiami.CombatSystem;
 using SystemMiami.AbilitySystem;
-using System;
+using SystemMiami.CombatSystem;
 using SystemMiami.Management;
+using UnityEngine;
 
 namespace SystemMiami
 {
@@ -13,8 +13,9 @@ namespace SystemMiami
     /// </summary>
     public enum Phase
     {
-        MovementPhase,
-        ActionPhase
+        Movement,
+        Action,
+        None
     }
 
     /// <summary>
@@ -37,8 +38,13 @@ namespace SystemMiami
 
         public int numberOfEnemies = 3;
 
-        // Flag indicating if it's the player's turn
-        public bool isPlayerTurn = true;
+        public bool IsPlayerTurn
+        {
+            get
+            {
+                return CurrentTurnOwner.Controller is PlayerController;
+            }
+        }
 
         public Action<Combatant> BeginTurn;
         public Action<Phase> NewTurnPhase;
@@ -93,7 +99,7 @@ namespace SystemMiami
 
             // Actions for other scripts to use
             BeginTurn?.Invoke(playerCharacter);
-            NewTurnPhase?.Invoke(Phase.MovementPhase);
+            NewTurnPhase?.Invoke(Phase.Movement);
 
             Debug.Log("Player's turn started. Movement Phase.");
         }
@@ -201,7 +207,7 @@ namespace SystemMiami
                     enemyCombatant.ID = i + 1;
 
                     // Position enemy on the tile
-                    PositionCharacterOnTile(enemyCombatant, spawnTile);
+                    MapManager.MGR.PositionCharacterOnTile(enemyCombatant, spawnTile);
 
                     // Add to enemy list
                     enemyCharacters.Add(enemyCombatant);
@@ -220,7 +226,7 @@ namespace SystemMiami
         /// Finds a random unblocked tile on the map.
         /// </summary>
         /// <returns>An unblocked OverlayTile or null if none are available.</returns>
-        private OverlayTile GetRandomUnblockedTile()
+        public OverlayTile GetRandomUnblockedTile()
         {
             // Get all unblocked tiles
             List<OverlayTile> unblockedTiles = new List<OverlayTile>();
@@ -241,19 +247,6 @@ namespace SystemMiami
             }
 
             return null;
-        }
-
-        /// <summary>
-        /// Positions a character on the specified tile.
-        /// </summary>
-        private void PositionCharacterOnTile(Combatant character, OverlayTile tile)
-        {
-            character.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y + 0.0001f, tile.transform.position.z);
-            //character.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
-            character.CurrentTile = tile;
-
-            // Update tile's current character
-            tile.currentCharacter = character;
         }
 
         //===============================

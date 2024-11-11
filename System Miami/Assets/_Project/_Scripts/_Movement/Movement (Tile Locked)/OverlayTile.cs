@@ -28,6 +28,14 @@ namespace SystemMiami
 
         public Vector3Int gridLocation;
 
+        public bool Valid
+        {
+            get
+            {
+                return (currentCharacter == null) && (!isBlocked);
+            }
+        }
+
         private SpriteRenderer _renderer;
         private Color _defaultColor;
 

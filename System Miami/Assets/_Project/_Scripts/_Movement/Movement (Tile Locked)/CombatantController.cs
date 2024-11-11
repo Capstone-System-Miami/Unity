@@ -1,9 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using SystemMiami.Utilities;
-using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
-using static UnityEngine.EventSystems.EventTrigger;
 
 namespace SystemMiami.CombatSystem
 
@@ -16,7 +15,7 @@ namespace SystemMiami.CombatSystem
 
         protected Combatant combatant;
 
-        protected PathFinder pathFinder;
+        protected PathFinder pathFinder = new PathFinder();
         protected List<OverlayTile> currentPath = new List<OverlayTile>();
         protected int currentPathCost;
 
@@ -25,18 +24,48 @@ namespace SystemMiami.CombatSystem
 
         public Action<OverlayTile> FocusedTileChanged;
         public Action<DirectionalInfo> PathTileChanged;
-        
+
+        #region Properties
+        public bool CanMove
+        {
+            get
+            {
+                if (combatant == null) { return false; }
+                if (CurrentPhase != Phase.Movement) { return false; }
+                if (IsMoving) { return false; }
+
+                return combatant.Speed.Get() > 0;
+            }
+        }
+
         public bool IsMoving { get; protected set; }
+
+        public bool CanAct
+        {
+            get
+            {
+                if (combatant == null) { return false; }
+                if (CurrentPhase != Phase.Action) { return false; }
+                if (IsActing) { return false; }
+
+                return !HasActed;
+            }
+        }
+
         public bool IsActing { get; protected set; }
+
         public bool HasActed { get; protected set; }
+
         public bool IsMyTurn { get; protected set; }
 
+
         public Phase CurrentPhase { get; protected set; }
+        #endregion
 
         protected List<Phase> defaultPhases = new List<Phase>
         {
-            Phase.MovementPhase,
-            Phase.ActionPhase
+            Phase.Movement,
+            Phase.Action
         };
 
         protected List<Phase> remainingPhases = new List<Phase>();
@@ -50,8 +79,6 @@ namespace SystemMiami.CombatSystem
         }
         private void Start()
         {
-            pathFinder = new PathFinder();
-
             if (!TryGetComponent(out combatant))
             {
                 print($"Didnt find a Combatant component on {name}.");
@@ -77,19 +104,25 @@ namespace SystemMiami.CombatSystem
 
             if (nextPhaseTriggered())
             {
-                TryNextPhase();
+                if (!TryNextPhase())
+                {
+                    OnNextPhaseFailed();
+                }
                 return;
             }
 
             switch (CurrentPhase)
             {
-                default:
-                case Phase.MovementPhase:
+                case Phase.Movement:
                     handleMovementPhase();
                     break;
 
-                case Phase.ActionPhase:
+                case Phase.Action:
                     handleActionPhase();
+                    break;
+
+                default:
+                case Phase.None:
                     break;
             }
         }
@@ -103,27 +136,21 @@ namespace SystemMiami.CombatSystem
 
         public virtual void StartTurn()
         {
-            Debug.Log($"Starting Turn: {name}");
-
+            combatant.ResetTurn();
             remainingPhases = defaultPhases;
 
-            TurnManager.MGR.BeginTurn?.Invoke(combatant);
+            IsMyTurn = true;
 
-            // Probably just subscribe in combatant?? Maybe??
-            combatant.ResetTurn();
-
-            if (TryNextPhase())
+            if (!TryNextPhase())
             {
-                IsMyTurn = true;
-            }
-            else
-            {
-                EndTurn();
+                OnNextPhaseFailed();
             }
         }
 
         public virtual bool TryNextPhase()
         {
+            CurrentPhase = Phase.None;
+
             if (remainingPhases.Count == 0)
                 { return false; }
 
@@ -133,6 +160,13 @@ namespace SystemMiami.CombatSystem
             TurnManager.MGR.NewTurnPhase(CurrentPhase);
 
             return true;
+        }
+
+        public virtual void OnNextPhaseFailed()
+        {
+            Debug.Log($"{combatant} is trying" +
+                        $"to move to the next phase,\n" +
+                        $"But has no phases remaining.");
         }
 
         public virtual void EndTurn()
@@ -160,7 +194,7 @@ namespace SystemMiami.CombatSystem
         // ======================================
         protected virtual void handleMovementPhase()
         {
-            if (beginMovementTriggered())
+            if (beginMovementTriggered() && CanMove)
             {
                 Debug.Log($"{name} is beginning movement");
                 beginMovement();
@@ -170,8 +204,11 @@ namespace SystemMiami.CombatSystem
             {
                 moveAlongPath();
             }
-            else
+            else if (DestinationTile != null)
             {
+                Debug.Log($"{name} Destination Reached. {DestinationTile?.gridLocation}");
+
+                IsMoving = false;
                 clearMovement();
             }
         }
@@ -190,23 +227,10 @@ namespace SystemMiami.CombatSystem
 
         #region Focused Tile
         // ======================================
-        protected void updateFocusedTile()
-        {
-            OverlayTile newFocus = getFocusedTile();
-
-            if (newFocus == null)
-                { return; }
-
-            if (newFocus == FocusedTile)
-                { return; }
-
-            FocusedTile = newFocus;
-
-            // Raise event when mouse tile  changes
-            FocusedTileChanged?.Invoke(newFocus);
-        }
+        protected abstract void updateFocusedTile();
 
         protected abstract void resetFocusedTile();
+
         protected abstract OverlayTile getFocusedTile();
 
         // ======================================
@@ -265,13 +289,10 @@ namespace SystemMiami.CombatSystem
         protected bool destinationReached()
         {
             if (DestinationTile == null)
-                { return true; }
+                { return false; }
 
             if (currentPath == null)
-                { return true; }
-
-            if (currentPath.Count == 0)
-                { return true; }
+                { return false; }
 
             return combatant.CurrentTile == DestinationTile;
         }
@@ -335,7 +356,7 @@ namespace SystemMiami.CombatSystem
             if (currentPath.Count == 0)
                 { return; }
 
-            Debug.Log($"{name} calling move along path and tilecount is {currentPath.Count}");
+            //Debug.Log($"{name} calling move along path and tilecount is {currentPath.Count}");
 
             IsMoving = true;
 
@@ -363,25 +384,9 @@ namespace SystemMiami.CombatSystem
                 // Let any subscribers know that we are moving along path
                 PathTileChanged(newDir);
 
-                positionCharacterOnTile(targetTile);
+                MapManager.MGR.PositionCharacterOnTile(combatant, targetTile);
                 currentPath.RemoveAt(0);
             }
-        }
-
-        /// <summary>
-        /// Positions the character on the specified tile.
-        /// </summary>
-        private void positionCharacterOnTile(OverlayTile tile)
-        {
-            combatant.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y + 0.0001f, tile.transform.position.z);
-
-            //character.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
-
-            // Update CurrentTile
-            combatant.CurrentTile = tile;
-
-            // Set tile's currentCharacter
-            tile.currentCharacter = combatant;
         }
 
         // ======================================
