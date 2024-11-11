@@ -80,9 +80,8 @@ namespace SystemMiami
                 finishedList.Add(currentTile);
                 currentTile = currentTile.previous;
             }
-            finishedList.Reverse();
 
-            DrawArrows.Instance.DrawPath(finishedList);
+            finishedList.Reverse();
 
             return finishedList;
          }

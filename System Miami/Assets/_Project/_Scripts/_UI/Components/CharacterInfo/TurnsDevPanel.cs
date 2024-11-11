@@ -17,6 +17,7 @@ namespace SystemMiami
         [SerializeField] TextBox _prompts;
         [SerializeField] private Color _promptsTextColor = Color.white;
 
+        private Combatant _turnOwner;
         private Abilities _turnOwnerAbilities;
 
         private string _turnText;
@@ -58,6 +59,8 @@ namespace SystemMiami
 
         private void onBeginTurn(Combatant combatant)
         {
+            _turnOwner = combatant;
+
             if (combatant.TryGetComponent(out _turnOwnerAbilities))
             {
                 _turnOwnerAbilities.EquipAbility += onEquipAbility;
@@ -73,7 +76,7 @@ namespace SystemMiami
                 _turnOwnerAbilities.UseAbility -= onUseAbility;
             }
 
-            if (combatant.tag == "Player")
+            if (combatant.Controller is CombatSystem.PlayerController)
             {
                 _turnText = $"Player";
                 _turn.Value.SetForeground(_playerColor);

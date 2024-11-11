@@ -6,29 +6,32 @@ namespace SystemMiami.CombatSystem
     public class PlayerController : CombatantController
     {
         [SerializeField] private KeyCode _endTurnKey;
-        [SerializeField] private KeyCode _endMovementPhaseKey;
+        [SerializeField] private KeyCode _endPhaseKey;
 
-        protected override void handleMovementPhase()
+        #region Triggers
+        protected override bool endTurnTriggered()
         {
-            base.handleMovementPhase();
-
-            // E to end movement
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                TurnManager.Instance.EndMovementPhase();
-            }
-
-            if (Input.GetMouseButtonDown(0) && !IsMoving)
-            {
-                createPathTo(FocusedTile);
-            }
+            return Input.GetKeyDown(_endTurnKey);
         }
 
-        protected override void handleActionPhase()
+        protected override bool nextPhaseTriggered()
         {
-            base.handleActionPhase();
+            return Input.GetKeyDown(_endPhaseKey);
         }
 
+        protected override bool beginMovementTriggered()
+        {
+            if (IsMoving)
+                { return false; }
+
+            if (FocusedTile == null)
+                { return false; }
+
+            return Input.GetMouseButtonDown(0);
+        }
+        #endregion Triggers
+
+        #region Focused Tile
         /// <summary>
         /// Resets the mouse tile to board (1, 1)
         /// </summary>
@@ -85,5 +88,24 @@ namespace SystemMiami.CombatSystem
 
             return hit.Value.collider.gameObject.GetComponent<OverlayTile>();
         }
+        #endregion Focused Tile
+
+        #region Movement
+
+        #endregion Movement
+
+        #region Phase Handling
+        protected override void handleMovementPhase()
+        {
+            base.handleMovementPhase();
+        }
+
+        protected override void handleActionPhase()
+        {
+            base.handleActionPhase();
+        }
+        #endregion Phase Handling
+
+
     }
 }

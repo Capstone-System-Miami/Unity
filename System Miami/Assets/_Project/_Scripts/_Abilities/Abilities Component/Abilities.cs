@@ -43,14 +43,14 @@ namespace SystemMiami.AbilitySystem
         {
             EquipAbility += OnEquip;
             UnequipAbility += OnUnequip;
-            Management.UI.MGR.SlotClicked += onSlotClicked;
+            UI.MGR.SlotClicked += onSlotClicked;
         }
 
         private void OnDisable()
         {
             EquipAbility -= OnEquip;
             UnequipAbility -= OnUnequip;
-            Management.UI.MGR.SlotClicked -= onSlotClicked;
+            UI.MGR.SlotClicked -= onSlotClicked;
         }
 
         private Ability getAbility(AbilityType type, int index)
@@ -154,9 +154,9 @@ namespace SystemMiami.AbilitySystem
             // Subscribe to input events
             if (_inputManager != null)
             {
-                _inputManager.OnEnterPressed += OnEnterPressed;
-                _inputManager.OnLeftMouseDown += OnLeftMouseDown;
-                _inputManager.OnRightMouseDown += OnRightMouseDown;
+                _inputManager.EnterPressed += OnEnterPressed;
+                _inputManager.LeftMouseDown += OnLeftMouseDown;
+                _inputManager.RightMouseDown += OnRightMouseDown;
             }
         }
 
@@ -224,9 +224,9 @@ namespace SystemMiami.AbilitySystem
             // Unsubscribe from input events
             if (_inputManager != null)
             {
-                _inputManager.OnEnterPressed -= OnEnterPressed;
-                _inputManager.OnLeftMouseDown -= OnLeftMouseDown;
-                _inputManager.OnRightMouseDown -= OnRightMouseDown;
+                _inputManager.EnterPressed -= OnEnterPressed;
+                _inputManager.LeftMouseDown -= OnLeftMouseDown;
+                _inputManager.RightMouseDown -= OnRightMouseDown;
             }
 
             // Clear the selected ability

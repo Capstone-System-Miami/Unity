@@ -45,6 +45,8 @@ namespace SystemMiami
         public Action<Combatant> BeginTurn;
         public Action<Phase> NewTurnPhase;
 
+        public Combatant CurrentTurnOwner { get; private set; }
+
         #region Unity Methods
         //===============================
 
@@ -92,11 +94,14 @@ namespace SystemMiami
             isPlayerTurn = true;
             currentPhase = Phase.MovementPhase;
 
-            // Reset player actions and movement points
-            foreach (Combatant character in playerCharacters)
-            {
-                character.ResetTurn();
-            }
+            //// Reset player actions and movement points
+            //foreach (Combatant character in playerCharacters)
+            //{
+            //    character.ResetTurn();
+            //}
+
+            playerCharacters[0].Controller.StartTurn();
+            CurrentTurnOwner = playerCharacters[0];
 
             // Actions for other scripts to use
             BeginTurn?.Invoke(playerCharacters[0]);
