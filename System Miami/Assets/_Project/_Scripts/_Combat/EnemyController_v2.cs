@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using SystemMiami.CombatSystem;
+using SystemMiami.AbilitySystem;
 using UnityEngine;
 
 namespace SystemMiami
@@ -13,21 +14,16 @@ namespace SystemMiami
         private bool FLAG_EndTurn;
         private bool FLAG_NextPhase;
         private bool FLAG_BeginMovement;
+
+        private bool FLAG_Unequip;
+        private bool FLAG_Equip;
+        private bool FLAG_LockTargets;
         private bool FLAG_UseAbility;
+
         #endregion
-
-        private bool focusBeenSet;
-
 
         #region Unity
         // ======================================
-
-        protected override void LateUpdate()
-        {
-            base.LateUpdate();
-
-            resetFlags();
-        }
 
         private void OnDestroy()
         {
@@ -60,6 +56,7 @@ namespace SystemMiami
         {
             yield return new WaitForSeconds(.5f);
 
+            // Movement
             FLAG_BeginMovement = true;
             yield return new WaitUntil(() => destinationReached());
             yield return new WaitForSeconds(.5f);
@@ -67,9 +64,53 @@ namespace SystemMiami
             FLAG_NextPhase = true;
             yield return null;
 
-            FLAG_UseAbility = true;
-            yield return new WaitUntil(() => HasActed);
-            yield return new WaitForSeconds(.5f);
+            // Equip Ability
+            typeToEquip = AbilityType.PHYSICAL;
+            indexToEquip = 0;
+            FLAG_Equip = true;
+            yield return new WaitUntil(() => combatant.Abilities.CurrentState == Abilities.State.EQUIPPED);
+
+            if (IsInDetectionRange(TurnManager.MGR.playerCharacter))
+            {
+                FocusedTile = TurnManager.MGR.playerCharacter.CurrentTile;
+            }
+            else
+            {
+                float lookAroundDuration = 2f;
+                float changeTargetInterval = .5f;
+                while (lookAroundDuration > 0)
+                {
+                    lookAroundDuration -= changeTargetInterval;
+                    yield return new WaitForSeconds(changeTargetInterval);
+
+                    FocusedTile = TurnManager.MGR.GetRandomUnblockedTile();                    
+                    FocusedTileChanged?.Invoke(FocusedTile);
+
+                    if (combatant.Abilities.SelectedAbility == null) { continue; }
+
+                    if (combatant.Abilities.SelectedAbility.PlayerFoundInTargets)
+                    {
+                        FLAG_LockTargets = true;
+                        Debug.Log($"{name} waiting for targ lock");
+                        yield return new WaitUntil(() => combatant.Abilities.CurrentState == Abilities.State.TARGETS_LOCKED);
+
+                        FLAG_UseAbility = true;
+                        Debug.Log($"{name} waiting for execute");
+                        yield return new WaitUntil(() => combatant.Abilities.CurrentState == Abilities.State.EXECUTING);
+
+                        Debug.Log($"{name} waiting for complete");
+                        yield return new WaitUntil(() => combatant.Abilities.CurrentState == Abilities.State.COMPLETE);
+                        break;
+                    }
+                }
+            }
+
+            FLAG_Unequip = true;
+            Debug.Log($"{name} waiting for unequip");
+            yield return new WaitUntil(() => combatant.Abilities.CurrentState == Abilities.State.UNEQUIPPED);
+
+            yield return new WaitForSeconds(1f);
+
 
             FLAG_EndTurn = true;
         }
@@ -95,16 +136,35 @@ namespace SystemMiami
             return FLAG_BeginMovement;
         }
 
+
+        protected override bool unequipTriggered()
+        {
+            return FLAG_Unequip;
+        }
+
+        protected override bool equipTriggered()
+        {
+            return FLAG_Equip;
+        }
+
+        protected override bool lockTargetsTriggered()
+        {
+            return FLAG_LockTargets;
+        }
+
         protected override bool useAbilityTriggered()
         {
             return FLAG_UseAbility;
         }
 
-        private void resetFlags()
+        protected override void resetFlags()
         {
             FLAG_EndTurn = false;
             FLAG_NextPhase = false;
             FLAG_BeginMovement = false;
+            FLAG_Unequip = false;
+            FLAG_Equip = false;
+            FLAG_LockTargets = false;
             FLAG_UseAbility = false;
         }
 
@@ -123,7 +183,7 @@ namespace SystemMiami
         {
             FocusedTile = TurnManager.MGR.GetRandomUnblockedTile();
 
-            FocusedTileChanged.Invoke(FocusedTile);
+            FocusedTileChanged?.Invoke(FocusedTile);
         }
 
         protected override void updateFocusedTile()
@@ -132,7 +192,7 @@ namespace SystemMiami
 
             FocusedTile = getFocusedTile();
 
-            FocusedTileChanged.Invoke(FocusedTile);
+            FocusedTileChanged?.Invoke(FocusedTile);
         }
 
         protected override OverlayTile getFocusedTile()
@@ -214,10 +274,6 @@ namespace SystemMiami
 
 
         #region Abilities
-        protected override void useAbility()
-        {
-            HasActed = true;
-        }
         #endregion
 
 

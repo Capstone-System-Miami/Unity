@@ -19,21 +19,28 @@ namespace SystemMiami.ui
 
         private void OnEnable()
         {
-            _playerAbilities.EquipAbility += onEquipAbility;
-            _playerAbilities.UnequipAbility += onUnequipAbility;
+            _playerAbilities.AbilityEquipped += onEquipAbility;
+            _playerAbilities.AbilityUnequipped += onUnequipAbility;
         }
 
         private void OnDisable()
         {
-            _playerAbilities.EquipAbility -= onEquipAbility;
-            _playerAbilities.UnequipAbility -= onUnequipAbility;
+            _playerAbilities.AbilityEquipped -= onEquipAbility;
+            _playerAbilities.AbilityUnequipped -= onUnequipAbility;
         }
 
-        private void onEquipAbility(AbilityType type, int index)
+        private void onEquipAbility(Ability ability)
         {
-            if (type != _barType) { return; }
+            if (ability == null) { print($"{ name } ability null"); return; }
+            if (ability.Type != _barType) { return; }
 
-            _slots[index].Select();
+            for (int i = 0 ; i < _slots.Length ; i++)
+            {
+                if (_slots[i].Ability == ability)
+                {
+                    _slots[i].Select();
+                }
+            }
             _unequipPrompt.Show();
         }
 

@@ -1,5 +1,9 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using SystemMiami.AbilitySystem;
+using SystemMiami.ui;
 using SystemMiami.Utilities;
 using UnityEngine;
 
@@ -10,6 +14,19 @@ namespace SystemMiami.CombatSystem
     // EnemyController controller can derive from.
     public abstract class CombatantController : MonoBehaviour
     {
+        #region EVENTS
+        // ======================================
+
+        // Tiles
+        public Action<OverlayTile> FocusedTileChanged;
+        public Action<DirectionalInfo> PathTileChanged;
+
+        // 
+
+        // ======================================
+        #endregion // EVENTS
+
+
         #region SERIALIZED
         // ======================================
 
@@ -25,19 +42,23 @@ namespace SystemMiami.CombatSystem
         // Components
         protected Combatant combatant;
 
-        // Pathing
-        protected PathFinder pathFinder = new PathFinder();
-        protected List<OverlayTile> currentPath = new List<OverlayTile>();
-        protected int currentPathCost;
-
         // Phases
-        protected List<Phase> defaultPhases = new List<Phase>
+        protected readonly Phase[] defaultPhases = 
         {
             Phase.Movement,
             Phase.Action
         };
 
         protected List<Phase> remainingPhases = new List<Phase>();
+
+        // Pathing
+        protected PathFinder pathFinder = new PathFinder();
+        protected List<OverlayTile> currentPath = new List<OverlayTile>();
+        protected int currentPathCost;
+
+        // Abilities
+        protected AbilityType typeToEquip;
+        protected int indexToEquip;
 
         // ======================================
         #endregion // PROTECTED VARS
@@ -46,11 +67,9 @@ namespace SystemMiami.CombatSystem
         #region PROPERTIES
         // ======================================
 
-        // Tiles
+        // Movement
         public OverlayTile FocusedTile { get; protected set; }
         public OverlayTile DestinationTile { get; protected set; }
-
-        // Movement
         public bool CanMove
         {
             get
@@ -64,19 +83,33 @@ namespace SystemMiami.CombatSystem
         }
         public bool IsMoving { get; protected set; }
 
-        // Action
+        // Abilities
         public bool CanAct
         {
             get
             {
                 if (combatant == null) { return false; }
                 if (CurrentPhase != Phase.Action) { return false; }
-                if (IsActing) { return false; }
+                if (combatant.Abilities.CurrentState == Abilities.State.COMPLETE) { return false; }
+                if (combatant.Abilities.CurrentState == Abilities.State.EXECUTING) { return false; }
+                if (IsActing) { print($"{name} is acting"); return false; }
+                if (HasActed) { print($"{name} has acted"); return false; }
 
-                return !HasActed;
+                return true;
             }
         }
-        public bool IsActing { get; protected set; }
+
+        public bool IsActing
+        {
+            get
+            {
+                if (combatant == null) { return false; }
+                if (CurrentPhase != Phase.Action) { return false; }
+
+                return combatant.Abilities.CurrentState == Abilities.State.EXECUTING;
+            }
+        }
+
         public bool HasActed { get; protected set; }
 
         // Turns
@@ -85,17 +118,6 @@ namespace SystemMiami.CombatSystem
 
         // ======================================
         #endregion // PROPERTIES
-
-
-        #region EVENTS
-        // ======================================
-
-        // Tiles
-        public Action<OverlayTile> FocusedTileChanged;
-        public Action<DirectionalInfo> PathTileChanged;
-
-        // ======================================
-        #endregion // EVENTS
 
 
         #region UNITY METHODS
@@ -115,18 +137,19 @@ namespace SystemMiami.CombatSystem
 
         private void Update()
         {
-            if (!IsMyTurn) { return; }
+            if (!IsMyTurn) {return; }
 
             updateFocusedTile();
         }
 
         protected virtual void LateUpdate()
         {
-            if (!IsMyTurn) { return; }
+            if (!IsMyTurn) { resetFlags(); return; }
 
             if (endTurnTriggered())
             {
                 EndTurn();
+                resetFlags();
                 return;
             }
 
@@ -136,6 +159,7 @@ namespace SystemMiami.CombatSystem
                 {
                     OnNextPhaseFailed();
                 }
+                resetFlags();
                 return;
             }
 
@@ -153,6 +177,8 @@ namespace SystemMiami.CombatSystem
                 case Phase.None:
                     break;
             }
+
+            resetFlags();
         }
         // ======================================
         #endregion // UNITY METHODS
@@ -163,8 +189,11 @@ namespace SystemMiami.CombatSystem
 
         public virtual void StartTurn()
         {
+            print ($"{name} starting turn");
             combatant.ResetTurn();
-            remainingPhases = defaultPhases;
+            remainingPhases.Clear();
+            remainingPhases = defaultPhases.ToList();
+            HasActed = false;
 
             IsMyTurn = true;
 
@@ -208,10 +237,22 @@ namespace SystemMiami.CombatSystem
 
         #region TRIGGERS
         // ======================================
+
+        // Turn Control Triggers
         protected abstract bool endTurnTriggered();
         protected abstract bool nextPhaseTriggered();
+
+        // Movement Triggers
         protected abstract bool beginMovementTriggered();
+
+        // Ability Triggers
+        protected abstract bool unequipTriggered();
+        protected abstract bool equipTriggered();
+        protected abstract bool lockTargetsTriggered();
         protected abstract bool useAbilityTriggered();
+
+        protected abstract void resetFlags();
+
         // ======================================
         #endregion // TRIGGERS
 
@@ -242,9 +283,31 @@ namespace SystemMiami.CombatSystem
 
         protected virtual void handleActionPhase()
         {
+            if (!CanAct) { print($"{name} cant act"); return; }
+
+            if (unequipTriggered())
+            {
+                combatant.Abilities.TryUnequip();
+            }
+
+            if (equipTriggered())
+            {
+                combatant.Abilities.TryEquip(typeToEquip, indexToEquip);
+            }
+
+            if (lockTargetsTriggered())
+            {
+                combatant.Abilities.TryLockTargets();
+            }
+
             if (useAbilityTriggered())
             {
-                // use ability
+                if (combatant.Abilities.AbilityExecutionIsValid(out IEnumerator abilityProcess))
+                {
+                    StartCoroutine(abilityProcess);
+                }
+
+                HasActed = true;
             }
         }
         // ======================================
@@ -306,9 +369,9 @@ namespace SystemMiami.CombatSystem
         }
 
         /// <summary>
-        /// Returns true if there is
-        /// no current destination tile,
-        /// no current path,
+        /// Returns false if there is
+        /// no current destination tile.
+        /// Returns true if there is no current path,
         /// or if the combatant's current tile is the same
         /// as the current destination tile.
         /// </summary>
@@ -319,7 +382,7 @@ namespace SystemMiami.CombatSystem
                 { return false; }
 
             if (currentPath == null)
-                { return false; }
+                { return true; }
 
             return combatant.CurrentTile == DestinationTile;
         }
@@ -367,6 +430,17 @@ namespace SystemMiami.CombatSystem
             if (tilesToRemove > 0)
             {
                 path.RemoveRange(truncatedLength, tilesToRemove);
+            }
+
+
+            if (path.Count > 0 && !path[path.Count - 1].Valid)
+            {
+                path.RemoveAt(path.Count - 1);
+
+                if (path.Count == 0)
+                {
+                    return null;
+                }
             }
 
             return path;
@@ -422,7 +496,6 @@ namespace SystemMiami.CombatSystem
 
         #region ABILITIES
         // ======================================
-        protected abstract void useAbility();
 
         // ======================================
         #endregion // ABILITIES

@@ -195,24 +195,24 @@ namespace SystemMiami
         #region Ability Subscriptions
         private void subscribeToAbilities(Combatant combatant)
         {
-            combatant.Abilities.EquipAbility += onEquipAbility;
-            combatant.Abilities.UnequipAbility += onUnequipAbility;
-            combatant.Abilities.LockTargets += onLockedTargets;
-            combatant.Abilities.UseAbility += onUseAbility;
+            combatant.Abilities.AbilityEquipped += onEquipAbility;
+            combatant.Abilities.AbilityUnequipped += onUnequipAbility;
+            combatant.Abilities.TargetsLocked += onLockedTargets;
+            combatant.Abilities.ExecuteAbilityStarted += onUseAbility;
         }
 
         private void unsubscribeToAbilities(Combatant combatant)
         {
-            combatant.Abilities.EquipAbility -= onEquipAbility;
-            combatant.Abilities.UnequipAbility -= onUnequipAbility;
-            combatant.Abilities.LockTargets -= onLockedTargets;
-            combatant.Abilities.UseAbility -= onUseAbility;
+            combatant.Abilities.AbilityEquipped -= onEquipAbility;
+            combatant.Abilities.AbilityUnequipped -= onUnequipAbility;
+            combatant.Abilities.TargetsLocked -= onLockedTargets;
+            combatant.Abilities.ExecuteAbilityStarted -= onUseAbility;
         }
         #endregion
 
 
         #region Ability Responses
-        private void onEquipAbility(AbilityType type, int index)
+        private void onEquipAbility(Ability ability)
         {
             _overrideActionPrompt = true;
             _actionText = $"Left Click a Tile to Lock Targets";

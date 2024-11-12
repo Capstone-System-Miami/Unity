@@ -42,7 +42,7 @@ namespace SystemMiami
                 foreach (var neighbour in neighbourTiles)
                 {
                     //skip any tiles already explored or tiles that have different z-axis, (can be edited to include tiles with blocked tag)
-                    if(neighbour.isBlocked || closedList.Contains(neighbour)|| Mathf.Abs(currentOverlayTile.gridLocation.z - neighbour.gridLocation.z) > 1)
+                    if(!neighbour.Valid || closedList.Contains(neighbour)|| Mathf.Abs(currentOverlayTile.gridLocation.z - neighbour.gridLocation.z) > 1)
                     {
                         continue;
                     }

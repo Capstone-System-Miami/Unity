@@ -1,6 +1,9 @@
 // Authors: Layla Hoey, Lee St. Louis
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using SystemMiami.CombatSystem;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 namespace SystemMiami.AbilitySystem
@@ -52,6 +55,28 @@ namespace SystemMiami.AbilitySystem
         public CombatAction[] Actions { get { return _actions; } }
         public bool IsBusy { get; private set; }
 
+        public bool PlayerFoundInTargets
+        {
+            get
+            {
+                foreach (CombatAction action in _actions)
+                {
+                    List<Combatant> targets = action.TargetingPattern.StoredTargets.Combatants;
+
+                    if (targets == null) { continue; }
+
+                    Combatant player = targets.Find(c => c.Controller is PlayerController);
+
+                    if (player != null)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        }
+
         #region LaylaStuff
 
         public void Init(Combatant user)
@@ -83,7 +108,7 @@ namespace SystemMiami.AbilitySystem
         /// <summary>
         /// Locks the targets by unsubscribing from moveDirection updates without hiding the targets.
         /// </summary>
-        public void ConfirmTargets()
+        public void LockTargets()
         {
             foreach (CombatAction action in _actions)
             {
@@ -106,7 +131,6 @@ namespace SystemMiami.AbilitySystem
 
             resource.Lose(_resourceCost);
 
-
             yield return null;
 
             for (int i = 0; i < _actions.Length; i++)
@@ -120,7 +144,8 @@ namespace SystemMiami.AbilitySystem
 
             currentCooldown = coolDownTurns;
 
-            yield return new WaitForEndOfFrame();
+
+            yield return null;
         }
 
         /// <summary>

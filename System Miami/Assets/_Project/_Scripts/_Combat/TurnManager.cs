@@ -88,31 +88,31 @@ namespace SystemMiami
         #region Turn Management
         //===============================
 
-        /// <summary>
-        /// Starts the player's turn.
-        /// Resets movement points and action flags for each player character.
-        /// </summary>
-        public void StartPlayerTurn()
-        {
-            playerCharacter.Controller.StartTurn();
-            CurrentTurnOwner = playerCharacter;
+        ///// <summary>
+        ///// Starts the player's turn.
+        ///// Resets movement points and action flags for each player character.
+        ///// </summary>
+        //public void StartPlayerTurn()
+        //{
+        //    playerCharacter.Controller.StartTurn();
+        //    CurrentTurnOwner = playerCharacter;
 
-            // Actions for other scripts to use
-            BeginTurn?.Invoke(playerCharacter);
-            NewTurnPhase?.Invoke(Phase.Movement);
+        //    // Actions for other scripts to use
+        //    BeginTurn?.Invoke(playerCharacter);
+        //    NewTurnPhase?.Invoke(Phase.Movement);
 
-            Debug.Log("Player's turn started. Movement Phase.");
-        }
+        //    Debug.Log("Player's turn started. Movement Phase.");
+        //}
 
-        /// <summary>
-        /// Starts the enemy's turn.
-        /// Resets movement points and action flags for each enemy character.
-        /// </summary>
-        public void StartAllEnemyTurns()
-        {
-            // Start enemy AI coroutine
-            StartCoroutine(TurnSequence());
-        }
+        ///// <summary>
+        ///// Starts the enemy's turn.
+        ///// Resets movement points and action flags for each enemy character.
+        ///// </summary>
+        //public void StartAllEnemyTurns()
+        //{
+        //    // Start enemy AI coroutine
+        //    StartCoroutine(TurnSequence());
+        //}
 
         /// <summary>
         /// Coroutine for handling enemy turns.
@@ -147,20 +147,20 @@ namespace SystemMiami
         }
 
 
-        /// <summary>
-        /// Called when the player has finished their turn.
-        /// Starts the enemy turn.
-        /// </summary>
-        public void EndPlayerTurn()
-        {
-            Debug.Log("Player's turn ended.");
+        ///// <summary>
+        ///// Called when the player has finished their turn.
+        ///// Starts the enemy turn.
+        ///// </summary>
+        //public void EndPlayerTurn()
+        //{
+        //    Debug.Log("Player's turn ended.");
 
-            // Reduce cooldowns and update status effects for player
-            playerCharacter.GetComponent<Abilities>().ReduceCooldowns();
-            playerCharacter.Stats.UpdateStatusEffects();
-            // After player turn ends, start enemy turn
-            StartAllEnemyTurns();
-        }
+        //    // Reduce cooldowns and update status effects for player
+        //    playerCharacter.GetComponent<Abilities>().ReduceCooldowns();
+        //    playerCharacter.Stats.UpdateStatusEffects();
+        //    // After player turn ends, start enemy turn
+        //    StartAllEnemyTurns();
+        //}
 
         //===============================
         #endregion // ^Turn Management^

@@ -83,10 +83,16 @@ namespace SystemMiami
         {
             character.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y + 0.0001f, tile.transform.position.z);
             //character.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
-            character.CurrentTile = tile;
 
-            // Update tile's current character
+            // Let the old tile know that we're gone
+            if (character.CurrentTile != null)
+            {
+                character.CurrentTile.currentCharacter = null;
+            }
+
+            // Update new tile's current character
             tile.currentCharacter = character;
+            character.CurrentTile = tile;
         }
 
         public Vector3 IsoToScreen(Vector3Int tileLocation){

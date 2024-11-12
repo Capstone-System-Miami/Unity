@@ -1,4 +1,7 @@
+using System;
 using System.Linq;
+using SystemMiami.Management;
+using SystemMiami.ui;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem
@@ -10,6 +13,50 @@ namespace SystemMiami.CombatSystem
 
         public KeyCode EndTurnKey { get { return _endTurnKey; } }
         public KeyCode EndPhaseKey { get { return _endPhaseKey; } }
+
+        #region Flags
+        private bool FLAG_Unequip;
+        private bool FLAG_Equip;
+        private bool FLAG_LockTargets;
+        private bool FLAG_UseAbility;
+        #endregion
+
+        #region UNITY METHODS
+        // ======================================
+
+        private void OnEnable()
+        {
+            UI.MGR.SlotClicked += onSlotClicked;
+        }
+
+
+        private void OnDisable()
+        {
+            UI.MGR.SlotClicked -= onSlotClicked;
+        }
+        #endregion // UNITY METHODS =============
+
+
+        #region SUBSCRIPTIONS
+        // ======================================
+
+        private void onSlotClicked(AbilitySlot slot)
+        {
+            if (slot.State != SelectionState.SELECTED)
+            {
+                typeToEquip = slot.Type;
+                indexToEquip = slot.Index;
+                FLAG_Equip = true;
+            }
+            else
+            {
+                indexToEquip = -1;
+                FLAG_Unequip = true;
+            }
+        }
+
+        #endregion // SUBSCRIPTIONS =============
+
 
         #region Triggers
         // ======================================
@@ -29,7 +76,7 @@ namespace SystemMiami.CombatSystem
 
         protected override bool beginMovementTriggered()
         {
-            if (IsMoving)
+            if (!CanMove)
                 { return false; }
 
             if (FocusedTile == null)
@@ -38,10 +85,44 @@ namespace SystemMiami.CombatSystem
             return Input.GetMouseButtonDown(0);
         }
 
+        protected override bool unequipTriggered()
+        {
+            return Input.GetMouseButtonDown(1) || FLAG_Unequip;
+        }
+
+        protected override bool equipTriggered()
+        {
+            if (!CanAct)
+                { return false; }
+
+            if (indexToEquip == -1)
+                { return false; }
+
+            return FLAG_Equip;
+        }
+
+        protected override bool lockTargetsTriggered()
+        {
+            if (!CanAct)
+                { return false; }
+
+            return Input.GetMouseButtonDown(0);
+        }
+
         protected override bool useAbilityTriggered()
         {
-            // TODO
-            return false;
+            if (!CanAct)
+                { return false; }
+
+            return Input.GetKeyDown(KeyCode.Return);
+        }
+
+        protected override void resetFlags()
+        {
+            FLAG_Unequip = false;
+            FLAG_Equip = false;
+            FLAG_LockTargets = false;
+            FLAG_UseAbility = false;
         }
 
         // ======================================
@@ -122,11 +203,6 @@ namespace SystemMiami.CombatSystem
             return hit.Value.collider.gameObject.GetComponent<OverlayTile>();
         }
 
-        protected override void useAbility()
-        {
-            // TODO
-            HasActed = true;
-        }
         // ======================================
         #endregion // Focused Tile ==============
     }

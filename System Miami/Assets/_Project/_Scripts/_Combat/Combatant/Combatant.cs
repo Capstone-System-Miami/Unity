@@ -186,17 +186,7 @@ namespace SystemMiami.CombatSystem
             Vector2Int currentPos = (Vector2Int)CurrentTile.gridLocation;
             Vector2Int forwardPos;
 
-            // If the combatant has a Mouse Controller (is the player)
-            if (TryGetComponent(out _controller))
-            {
-                forwardPos = (Vector2Int)targetTile.gridLocation;
-            }
-            else
-            {
-                // For enemies, forward direction can be set manually
-                // or towards the player. Here, we'll keep the current direction.
-                return;
-            }
+            forwardPos = (Vector2Int)targetTile.gridLocation;
 
             DirectionalInfo newDirection = new DirectionalInfo(currentPos, forwardPos);
 
