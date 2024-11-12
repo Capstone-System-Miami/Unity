@@ -162,16 +162,6 @@ namespace SystemMiami
             StartAllEnemyTurns();
         }
 
-        /// <summary>
-        /// Called when the player wants to end the movement phase.
-        /// Switches to action phase.
-        /// </summary>
-        public void EndMovementPhase()
-        {
-            CurrentTurnOwner.Controller.TryNextPhase();
-            Debug.Log($"{CurrentTurnOwner.name}'s Action Phase started.");
-        }
-
         //===============================
         #endregion // ^Turn Management^
 

@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using SystemMiami.Utilities;
 using UnityEngine;
@@ -11,21 +10,47 @@ namespace SystemMiami.CombatSystem
     // EnemyController controller can derive from.
     public abstract class CombatantController : MonoBehaviour
     {
+        #region SERIALIZED
+        // ======================================
+
         [SerializeField] protected float movementSpeed;
 
+        // ======================================
+        #endregion // SERIALIZED
+
+
+        #region PROTECTED VARS
+        // ======================================
+
+        // Components
         protected Combatant combatant;
 
+        // Pathing
         protected PathFinder pathFinder = new PathFinder();
         protected List<OverlayTile> currentPath = new List<OverlayTile>();
         protected int currentPathCost;
 
+        // Phases
+        protected List<Phase> defaultPhases = new List<Phase>
+        {
+            Phase.Movement,
+            Phase.Action
+        };
+
+        protected List<Phase> remainingPhases = new List<Phase>();
+
+        // ======================================
+        #endregion // PROTECTED VARS
+
+
+        #region PROPERTIES
+        // ======================================
+
+        // Tiles
         public OverlayTile FocusedTile { get; protected set; }
         public OverlayTile DestinationTile { get; protected set; }
 
-        public Action<OverlayTile> FocusedTileChanged;
-        public Action<DirectionalInfo> PathTileChanged;
-
-        #region Properties
+        // Movement
         public bool CanMove
         {
             get
@@ -37,9 +62,9 @@ namespace SystemMiami.CombatSystem
                 return combatant.Speed.Get() > 0;
             }
         }
-
         public bool IsMoving { get; protected set; }
 
+        // Action
         public bool CanAct
         {
             get
@@ -51,26 +76,29 @@ namespace SystemMiami.CombatSystem
                 return !HasActed;
             }
         }
-
         public bool IsActing { get; protected set; }
-
         public bool HasActed { get; protected set; }
 
+        // Turns
         public bool IsMyTurn { get; protected set; }
-
-
         public Phase CurrentPhase { get; protected set; }
-        #endregion
 
-        protected List<Phase> defaultPhases = new List<Phase>
-        {
-            Phase.Movement,
-            Phase.Action
-        };
+        // ======================================
+        #endregion // PROPERTIES
 
-        protected List<Phase> remainingPhases = new List<Phase>();
 
-        #region Unity
+        #region EVENTS
+        // ======================================
+
+        // Tiles
+        public Action<OverlayTile> FocusedTileChanged;
+        public Action<DirectionalInfo> PathTileChanged;
+
+        // ======================================
+        #endregion // EVENTS
+
+
+        #region UNITY METHODS
         // ======================================
 
         private void Awake()
@@ -126,12 +154,11 @@ namespace SystemMiami.CombatSystem
                     break;
             }
         }
-
         // ======================================
-        #endregion // Unity =====================
+        #endregion // UNITY METHODS
 
 
-        #region Turn Management
+        #region TURN MANAGEMENT
         // ======================================
 
         public virtual void StartTurn()
@@ -147,7 +174,7 @@ namespace SystemMiami.CombatSystem
             }
         }
 
-        public virtual bool TryNextPhase()
+        protected virtual bool TryNextPhase()
         {
             CurrentPhase = Phase.None;
 
@@ -162,7 +189,7 @@ namespace SystemMiami.CombatSystem
             return true;
         }
 
-        public virtual void OnNextPhaseFailed()
+        protected virtual void OnNextPhaseFailed()
         {
             Debug.Log($"{combatant} is trying" +
                         $"to move to the next phase,\n" +
@@ -176,22 +203,22 @@ namespace SystemMiami.CombatSystem
             IsMyTurn = false;
         }
         // ======================================
-        #endregion // Turn Management ===========
+        #endregion // TURN MANAGEMENT
 
 
-        #region Triggers
+        #region TRIGGERS
         // ======================================
         protected abstract bool endTurnTriggered();
         protected abstract bool nextPhaseTriggered();
         protected abstract bool beginMovementTriggered();
         protected abstract bool useAbilityTriggered();
-
         // ======================================
-        #endregion // Triggers ==================
+        #endregion // TRIGGERS
 
 
-        #region Phase Handling
+        #region PHASE HANDLING
         // ======================================
+
         protected virtual void handleMovementPhase()
         {
             if (beginMovementTriggered() && CanMove)
@@ -220,13 +247,13 @@ namespace SystemMiami.CombatSystem
                 // use ability
             }
         }
-
         // ======================================
-        #endregion // Phase Handling ============
+        #endregion // PHASE HANDLING ============
 
 
-        #region Focused Tile
+        #region FOCUSED TILE
         // ======================================
+
         protected abstract void updateFocusedTile();
 
         protected abstract void resetFocusedTile();
@@ -234,10 +261,10 @@ namespace SystemMiami.CombatSystem
         protected abstract OverlayTile getFocusedTile();
 
         // ======================================
-        #endregion // Focused Tile ==============
+        #endregion // FOCUSED TILE
 
 
-        #region Movement
+        #region MOVEMENT
         // ======================================
 
         /// <summary>
@@ -390,17 +417,18 @@ namespace SystemMiami.CombatSystem
         }
 
         // ======================================
-        #endregion // Movement ==================
+        #endregion // MOVEMENT
 
 
-        #region Abilities
+        #region ABILITIES
         // ======================================
         protected abstract void useAbility();
+
         // ======================================
-        #endregion // Abilities =================
+        #endregion // ABILITIES
 
 
-        #region Detection
+        #region DETECTION
         // ======================================
 
         /// <summary>
@@ -450,6 +478,6 @@ namespace SystemMiami.CombatSystem
         }
 
         // ======================================
-        #endregion // Detection =================
+        #endregion // DETECTION
     }
 }

@@ -50,7 +50,7 @@ namespace SystemMiami
             StartCoroutine(TakeTurn());
         }
 
-        public override void OnNextPhaseFailed()
+        protected override void OnNextPhaseFailed()
         {
             base.OnNextPhaseFailed();
             FLAG_EndTurn = true;

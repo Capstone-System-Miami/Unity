@@ -14,16 +14,23 @@ namespace SystemMiami.AbilitySystem
     /// </summary>
     public class Abilities : MonoBehaviour
     {
+        // ======================================
+        #region Serialized
+
         [SerializeField] private List<Ability> _physical = new List<Ability>(); // List of phys abilities
         [SerializeField] private List<Ability> _magical = new List<Ability>(); // List of magic abilities
+
+        #endregion // Serialized ================
+
+        // ======================================
+        #region Private Vars
+        #endregion // Private Vars
         [SerializeField] Ability _selectedAbility; // Currently selected ability
         [SerializeField] private bool _isTargeting = false; // check if in targeting mode
         [SerializeField] private bool _isUsing = false; // check if the ability has been confirmed
         [SerializeField] private bool _isConfirming = false; // heck if targets are locked
 
         private Combatant _combatant; // Reference to the combatant component
-
-        private InputManager _inputManager; // Reference to the InputManager
 
         public List<Ability> Physical { get { return _physical; } }
         public List<Ability> Magical { get { return _magical; } }
@@ -36,7 +43,6 @@ namespace SystemMiami.AbilitySystem
         void Awake()
         {
             _combatant = GetComponent<Combatant>();
-            _inputManager = InputManager.Instance;
         }
 
         private void OnEnable()
@@ -88,7 +94,6 @@ namespace SystemMiami.AbilitySystem
             if (_isTargeting && !_isConfirming)
             {
                 Debug.Log("Locking targets.");
-                TurnManager.MGR.EndMovementPhase();
                 _selectedAbility.ConfirmTargets();
                 _isConfirming = true;
 
@@ -152,11 +157,11 @@ namespace SystemMiami.AbilitySystem
             _isConfirming = false;
 
             // Subscribe to input events
-            if (_inputManager != null)
+            if (InputManager.Instance != null)
             {
-                _inputManager.EnterPressed += OnEnterPressed;
-                _inputManager.LeftMouseDown += OnLeftMouseDown;
-                _inputManager.RightMouseDown += OnRightMouseDown;
+                InputManager.Instance.EnterPressed += OnEnterPressed;
+                InputManager.Instance.LeftMouseDown += OnLeftMouseDown;
+                InputManager.Instance.RightMouseDown += OnRightMouseDown;
             }
         }
 
@@ -222,11 +227,11 @@ namespace SystemMiami.AbilitySystem
             _isConfirming = false;
 
             // Unsubscribe from input events
-            if (_inputManager != null)
+            if (InputManager.Instance != null)
             {
-                _inputManager.EnterPressed -= OnEnterPressed;
-                _inputManager.LeftMouseDown -= OnLeftMouseDown;
-                _inputManager.RightMouseDown -= OnRightMouseDown;
+                InputManager.Instance.EnterPressed -= OnEnterPressed;
+                InputManager.Instance.LeftMouseDown -= OnLeftMouseDown;
+                InputManager.Instance.RightMouseDown -= OnRightMouseDown;
             }
 
             // Clear the selected ability
