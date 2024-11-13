@@ -1,9 +1,9 @@
+// Authors: Layla Hoey, Lee St Louis
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using SystemMiami.AbilitySystem;
-using SystemMiami.ui;
 using SystemMiami.Utilities;
 using UnityEngine;
 
@@ -21,7 +21,8 @@ namespace SystemMiami.CombatSystem
         public Action<OverlayTile> FocusedTileChanged;
         public Action<DirectionalInfo> PathTileChanged;
 
-        // 
+        // TODO:
+        // Should the TRIGGERS below be refactored into events?
 
         // ======================================
         #endregion // EVENTS
@@ -67,9 +68,15 @@ namespace SystemMiami.CombatSystem
         #region PROPERTIES
         // ======================================
 
-        // Movement
+        // Turns
+        public bool IsMyTurn { get; protected set; }
+        public Phase CurrentPhase { get; protected set; }
+
+        // Tiles
         public OverlayTile FocusedTile { get; protected set; }
         public OverlayTile DestinationTile { get; protected set; }
+
+        // Movement
         public bool CanMove
         {
             get
@@ -92,8 +99,8 @@ namespace SystemMiami.CombatSystem
                 if (CurrentPhase != Phase.Action) { return false; }
                 if (combatant.Abilities.CurrentState == Abilities.State.COMPLETE) { return false; }
                 if (combatant.Abilities.CurrentState == Abilities.State.EXECUTING) { return false; }
-                if (IsActing) { print($"{name} is acting"); return false; }
-                if (HasActed) { print($"{name} has acted"); return false; }
+                if (IsActing) { Debug.Log($"{name} is already acting"); return false; }
+                if (HasActed) { Debug.Log($"{name} has already acted"); return false; }
 
                 return true;
             }
@@ -112,10 +119,6 @@ namespace SystemMiami.CombatSystem
 
         public bool HasActed { get; protected set; }
 
-        // Turns
-        public bool IsMyTurn { get; protected set; }
-        public Phase CurrentPhase { get; protected set; }
-
         // ======================================
         #endregion // PROPERTIES
 
@@ -127,6 +130,7 @@ namespace SystemMiami.CombatSystem
         {
             combatant = GetComponent<Combatant>();
         }
+
         private void Start()
         {
             if (!TryGetComponent(out combatant))
@@ -137,12 +141,12 @@ namespace SystemMiami.CombatSystem
 
         private void Update()
         {
-            if (!IsMyTurn) {return; }
+            if (!IsMyTurn) { resetFlags(); return; }
 
             updateFocusedTile();
         }
 
-        protected virtual void LateUpdate()
+        protected void LateUpdate()
         {
             if (!IsMyTurn) { resetFlags(); return; }
 
@@ -180,6 +184,7 @@ namespace SystemMiami.CombatSystem
 
             resetFlags();
         }
+
         // ======================================
         #endregion // UNITY METHODS
 
@@ -189,7 +194,8 @@ namespace SystemMiami.CombatSystem
 
         public virtual void StartTurn()
         {
-            print ($"{name} starting turn");
+            Debug.Log($"{name} starting turn");
+
             combatant.ResetTurn();
             remainingPhases.Clear();
             remainingPhases = defaultPhases.ToList();
@@ -268,22 +274,23 @@ namespace SystemMiami.CombatSystem
                 beginMovement();
             }
 
+            if (!IsMoving) { return; }
+
             if (!destinationReached())
             {
                 moveAlongPath();
-            }
-            else if (DestinationTile != null)
+            }            
+            else
             {
                 Debug.Log($"{name} Destination Reached. {DestinationTile?.gridLocation}");
 
-                IsMoving = false;
                 clearMovement();
             }
         }
 
         protected virtual void handleActionPhase()
         {
-            if (!CanAct) { print($"{name} cant act"); return; }
+            if (!CanAct) { return; }
 
             if (unequipTriggered())
             {
@@ -310,6 +317,7 @@ namespace SystemMiami.CombatSystem
                 HasActed = true;
             }
         }
+
         // ======================================
         #endregion // PHASE HANDLING ============
 
@@ -346,6 +354,8 @@ namespace SystemMiami.CombatSystem
             // combatant will be out of Speed (movement points)
             List<OverlayTile> truncatedPath = getTruncatedPathTo(DestinationTile);
 
+            if (truncatedPath == null) { return; }
+
             if (truncatedPath.Count > 0)
             {
                 // New Destination Tile is the
@@ -360,12 +370,16 @@ namespace SystemMiami.CombatSystem
                 // To draw the arrows.
                 List<OverlayTile> inclusivePath = currentPath;
                 inclusivePath.Insert(0, combatant.CurrentTile);
-                DrawArrows.Instance.DrawPath(inclusivePath);
+                DrawArrows.MGR.DrawPath(inclusivePath);
             }
             else
             {
-                Debug.Log($"{name} has no Speed remaining.");
+                DestinationTile = combatant.CurrentTile;
+                Debug.Log($"{name} tried to move but cant. " +
+                    $"Their calculated path was {truncatedPath.Count} tiles long.");
             }
+
+            IsMoving = true;
         }
 
         /// <summary>
@@ -378,12 +392,6 @@ namespace SystemMiami.CombatSystem
         /// <returns></returns>
         protected bool destinationReached()
         {
-            if (DestinationTile == null)
-                { return false; }
-
-            if (currentPath == null)
-                { return true; }
-
             return combatant.CurrentTile == DestinationTile;
         }
 
@@ -432,15 +440,11 @@ namespace SystemMiami.CombatSystem
                 path.RemoveRange(truncatedLength, tilesToRemove);
             }
 
-
+            // If the destination is blocked (e.g. bc theres a charac there),
+            // remove it from the end.
             if (path.Count > 0 && !path[path.Count - 1].Valid)
             {
                 path.RemoveAt(path.Count - 1);
-
-                if (path.Count == 0)
-                {
-                    return null;
-                }
             }
 
             return path;
@@ -451,15 +455,7 @@ namespace SystemMiami.CombatSystem
         /// </summary>
         private void moveAlongPath()
         {
-            if (currentPath == null)
-                { return; }
-
-            if (currentPath.Count == 0)
-                { return; }
-
             //Debug.Log($"{name} calling move along path and tilecount is {currentPath.Count}");
-
-            IsMoving = true;
 
             float step = movementSpeed * Time.deltaTime;
 
@@ -494,60 +490,57 @@ namespace SystemMiami.CombatSystem
         #endregion // MOVEMENT
 
 
-        #region ABILITIES
-        // ======================================
-
-        // ======================================
-        #endregion // ABILITIES
-
-
         #region DETECTION
         // ======================================
 
         /// <summary>
-        /// Finds the nearest combatant to the enemy.
+        /// Currently only returns null.
+        /// TODO:
+        /// Should find the nearest combatant to the enemy.
         /// </summary>
-        protected Combatant FindNearestPlayer(List<Combatant> toCheck)
+        protected Combatant GetNearestCombatant(List<Combatant> toCheck)
         {
-            Combatant nearestPlayer = null;
-            int shortestDistance = int.MaxValue;
+            Combatant nearestCombatant = null;
+            //int shortestDistance = int.MaxValue;
 
-            foreach (Combatant player in toCheck)
-            {
-                int distance = Mathf.Abs(combatant.CurrentTile.gridLocation.x - player.CurrentTile.gridLocation.x) +
-                               Mathf.Abs(combatant.CurrentTile.gridLocation.y - player.CurrentTile.gridLocation.y);
+            //foreach (Combatant combatant in toCheck)
+            //{
+            //    int distance = Mathf.Abs(combatant.CurrentTile.gridLocation.x - combatant.CurrentTile.gridLocation.x) +
+            //                   Mathf.Abs(combatant.CurrentTile.gridLocation.y - combatant.CurrentTile.gridLocation.y);
 
-                if (distance < shortestDistance)
-                {
-                    shortestDistance = distance;
-                    nearestPlayer = player;
-                }
-            }
+            //    if (distance < shortestDistance)
+            //    {
+            //        shortestDistance = distance;
+            //        nearestCombatant = combatant;
+            //    }
+            //}
 
-            return nearestPlayer;
+            return nearestCombatant;
         }
 
         /// <summary>
-        /// Finds the nearest combatant within a given radius of this combatant.
+        /// Currently only returns null.
+        /// TODO:
+        /// Should find the nearest combatant within a given radius of this combatant.
         /// </summary>
-        protected Combatant FindNearestPlayerWithinRadius(List<Combatant> toCheck, int radius)
+        protected Combatant GetNearestCombatantWithinRadius(List<Combatant> toCheck, int radius)
         {
-            Combatant nearestPlayer = null;
-            int shortestDistance = int.MaxValue;
+            Combatant nearestCombatant = null;
+            //int shortestDistance = int.MaxValue;
 
-            foreach (Combatant player in toCheck)
-            {
-                int distance = Mathf.Abs(combatant.CurrentTile.gridLocation.x - player.CurrentTile.gridLocation.x) +
-                               Mathf.Abs(combatant.CurrentTile.gridLocation.y - player.CurrentTile.gridLocation.y);
+            //foreach (Combatant combatant in toCheck)
+            //{
+            //    int distance = Mathf.Abs(this.combatant.CurrentTile.gridLocation.x - combatant.CurrentTile.gridLocation.x) +
+            //                   Mathf.Abs(this.combatant.CurrentTile.gridLocation.y - combatant.CurrentTile.gridLocation.y);
 
-                if (distance <= radius && distance < shortestDistance)
-                {
-                    shortestDistance = distance;
-                    nearestPlayer = player;
-                }
-            }
+            //    if (distance <= radius && distance < shortestDistance)
+            //    {
+            //        shortestDistance = distance;
+            //        nearestCombatant = combatant;
+            //    }
+            //}
 
-            return nearestPlayer;
+            return nearestCombatant;
         }
 
         // ======================================

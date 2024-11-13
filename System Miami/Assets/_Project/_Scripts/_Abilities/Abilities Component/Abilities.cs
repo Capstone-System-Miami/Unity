@@ -155,47 +155,6 @@ namespace SystemMiami.AbilitySystem
         #endregion // UNITY METHODS ==============
 
 
-        #region SUBSCRIPTIONS
-        // ======================================
-        //private void onSlotClicked(AbilitySlot slot)
-        //{
-
-        //}
-
-        ///// <summary>
-        ///// Called when the left mouse button is clicked.
-        ///// </summary>
-        //private void OnLeftMouseDown()
-        //{
-        //    Debug.Log("OnLeftMouseDown called.");
-        //    TryLockTargets();
-        //}
-
-        ///// <summary>
-        ///// Called when the right mouse button is clicked.
-        ///// </summary>
-        //private void OnRightMouseDown()
-        //{
-        //    if (_state.Get() == State.EQUIPPED)
-        //    {
-        //        unequip();
-        //    }
-        //}
-
-        ///// <summary>
-        ///// Called when the Enter key is pressed.
-        ///// </summary>
-        //private void OnEnterPressed()
-        //{
-        //    if (_state.Get() == State.TARGETS_LOCKED)
-        //    {
-        //        StartCoroutine(executeSelected());
-        //    }
-        //}
-
-        #endregion // SUBSCRIPTIONS ============
-
-
         #region PUBLIC METHODS
         // ======================================
         /// <summary>
@@ -235,6 +194,13 @@ namespace SystemMiami.AbilitySystem
         /// </summary>
         public bool TryUnequip()
         {
+            if (_state.Get() != State.EQUIPPED)
+            {
+                Debug.LogWarning($"{name} failed to unequip. " +
+                    $"There is nothing equipped to unequip.");
+                return false;
+            }
+
             unequip();
             return true;
         }
@@ -362,14 +328,6 @@ namespace SystemMiami.AbilitySystem
             // Begin targeting mode
             _selectedAbility.BeginTargeting();
 
-            // Subscribe to input events
-            //if (InputManager.Instance != null)
-            //{
-            //    InputManager.Instance.EnterPressed += OnEnterPressed;
-            //    InputManager.Instance.LeftMouseDown += OnLeftMouseDown;
-            //    InputManager.Instance.RightMouseDown += OnRightMouseDown;
-            //}
-
             _state.Set(State.EQUIPPED);
         }
 
@@ -382,14 +340,6 @@ namespace SystemMiami.AbilitySystem
             Debug.Log("Unequip called.");
 
             _selectedAbility.CancelTargeting();
-
-            // Unsubscribe from input events
-            //if (InputManager.Instance != null)
-            //{
-            //    InputManager.Instance.EnterPressed -= OnEnterPressed;
-            //    InputManager.Instance.LeftMouseDown -= OnLeftMouseDown;
-            //    InputManager.Instance.RightMouseDown -= OnRightMouseDown;
-            //}
 
             // Clear the selected ability
             _selectedAbility = null;
@@ -441,6 +391,11 @@ namespace SystemMiami.AbilitySystem
             yield return null;
         }
 
+        /// <summary>
+        /// Determines which type list to index,
+        /// indexes that list to return the
+        /// ability at the index.
+        /// </summary>
         private Ability getAbility(AbilityType type, int index)
         {
             List<Ability> typePool = type switch

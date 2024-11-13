@@ -55,9 +55,6 @@ namespace SystemMiami.CombatSystem
         public Action<DirectionalInfo> OnSubjectChanged;
         public Action<DirectionalInfo> OnDirectionChanged;
 
-        public bool HasActed { get; set; }
-        public bool IsMoving { get; set; }
-
         public CombatantController Controller { get { return _controller; } }
 
         public Stats Stats { get { return _stats; } }
@@ -104,11 +101,10 @@ namespace SystemMiami.CombatSystem
 
         private void Update()
         {
-            if (_controller != null) IsMoving = _controller.IsMoving;
-
             checkDead();
             updateResources();
         }
+
         #endregion Unity
 
         #region Construction
@@ -181,7 +177,7 @@ namespace SystemMiami.CombatSystem
         /// </summary>
         private void setDirectionByTile(OverlayTile targetTile)
         {
-            if (IsMoving) { return; }
+            if (_controller.IsMoving) { return; }
 
             Vector2Int currentPos = (Vector2Int)CurrentTile.gridLocation;
             Vector2Int forwardPos;
@@ -358,7 +354,8 @@ namespace SystemMiami.CombatSystem
         public void ResetTurn()
         {
             Speed = new Resource(_stats.GetStat(StatType.SPEED));
-            HasActed = false;
+            _abilities.ReduceCooldowns();
+            _stats.UpdateStatusEffects();
         }
 
         public virtual void Die()
@@ -367,23 +364,11 @@ namespace SystemMiami.CombatSystem
             {
                 // Not found in any list
                 Debug.Log($"{name} has died but was not found in any character list.");
-                Destroy(gameObject);
             }
 
-            else if (Controller is PlayerController)
-            {
-                // Player died
-                Debug.Log($"{name} (Player) has died.");
-                // Handle player death logic here
-            }
-            else if (TurnManager.MGR.enemyCharacters.Contains(this))
-            {
-                // Enemy died
-                Debug.Log($"{name} (Enemy) has died.");
-                TurnManager.MGR.enemyCharacters.Remove(this);
-                TurnManager.MGR.combatants.Remove(this);
-                Destroy(gameObject);
-            }
+            // Player died
+            Debug.Log($"{name} has died.");
+            Destroy(gameObject);
         }
     }
 }

@@ -4,6 +4,8 @@ using UnityEngine;
 
 namespace SystemMiami.CombatSystem
 {
+    // TODO
+    // 1. Create a function for setting targets without showing it (for enemy use)
     public enum PatternOriginType { USER, MOUSE };
 
     public abstract class TargetingPattern : ScriptableObject
@@ -22,6 +24,10 @@ namespace SystemMiami.CombatSystem
         #region Public
         public abstract void SetTargets(DirectionalInfo userInfo);
 
+        public void ClearTargets()
+        {
+            StoredTargets = Targets.empty;
+        }
 
         public  void SubscribeToDirectionUpdates(Combatant user)
         {
@@ -38,8 +44,7 @@ namespace SystemMiami.CombatSystem
         }
 
         public  void UnsubscribeToDirectionUpdates(Combatant user)
-        {
-            
+        {            
             if (_patternOrigin == PatternOriginType.USER)
             {
                 user.OnDirectionChanged -= onTargetChanged;

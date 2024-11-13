@@ -1,3 +1,4 @@
+// Authors: Lee
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,7 +6,7 @@ using SystemMiami.AbilitySystem;
 using SystemMiami.Utilities;
 using SystemMiami.CombatSystem;
 
-namespace SystemMiami.CombatSystem
+namespace SystemMiami.CombatSystem.Outdated
 {
     public enum EnemyType
     {
@@ -14,7 +15,7 @@ namespace SystemMiami.CombatSystem
     }
 
     [RequireComponent(typeof(Combatant))]
-    public class EnemyController : MonoBehaviour
+    public class EnemyController_lee : MonoBehaviour
     {
         //public EnemyType enemyType;
         //public List<Ability> abilities = new List<Ability>();
@@ -202,6 +203,7 @@ namespace SystemMiami.CombatSystem
         //    return null; // No ability can be used
         //}
 
+        // TRANSFERED
         ///// <summary>
         ///// Checks if any player is within the ability's range.
         ///// </summary>
@@ -223,6 +225,7 @@ namespace SystemMiami.CombatSystem
         //    return false;
         //}
 
+        // TRANSFERED
         ///// <summary>
         ///// Coroutine for enemy random movement when not chasing the player.
         ///// </summary>
@@ -261,6 +264,7 @@ namespace SystemMiami.CombatSystem
         //    yield return null;
         //}
 
+        // TRANSFERED
         ///// <summary>
         ///// Gets walkable neighbor tiles for random movement.
         ///// </summary>
@@ -281,6 +285,7 @@ namespace SystemMiami.CombatSystem
         //    return walkableTiles;
         //}
 
+        // TRANSFERED
         ///// <summary>
         ///// Finds the nearest player character to the enemy.
         ///// </summary>
@@ -304,6 +309,7 @@ namespace SystemMiami.CombatSystem
         //    return nearestPlayer;
         //}
 
+        // TRANSFERED
         ///// <summary>
         ///// Finds the nearest player character within a given radius of the enemy.
         ///// </summary>

@@ -1,3 +1,4 @@
+// Authors: Layla
 using System;
 using System.Linq;
 using SystemMiami.Management;
@@ -106,7 +107,7 @@ namespace SystemMiami.CombatSystem
             if (!CanAct)
                 { return false; }
 
-            return Input.GetMouseButtonDown(0);
+            return Input.GetMouseButtonDown(0) || FLAG_LockTargets;
         }
 
         protected override bool useAbilityTriggered()
@@ -114,7 +115,7 @@ namespace SystemMiami.CombatSystem
             if (!CanAct)
                 { return false; }
 
-            return Input.GetKeyDown(KeyCode.Return);
+            return Input.GetKeyDown(KeyCode.Return) || FLAG_UseAbility;
         }
 
         protected override void resetFlags()

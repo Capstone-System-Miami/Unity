@@ -1,4 +1,4 @@
-// Author: Alec
+// Author: Alec, Lee
 using System.Collections.Generic;
 using SystemMiami.Management;
 using SystemMiami.Utilities;
@@ -77,6 +77,34 @@ namespace SystemMiami
         }
 
         /// <summary>
+        /// (Lee)
+        /// Finds a random unblocked tile on the map.
+        /// </summary>
+        /// <returns>An unblocked OverlayTile or null if none are available.</returns>
+        public OverlayTile GetRandomUnblockedTile()
+        {
+            // Get all unblocked tiles
+            List<OverlayTile> unblockedTiles = new List<OverlayTile>();
+
+            foreach (OverlayTile tile in map.Values)
+            {
+                if (!tile.isBlocked && tile.currentCharacter == null)
+                {
+                    unblockedTiles.Add(tile);
+                }
+            }
+
+            if (unblockedTiles.Count > 0)
+            {
+                // Select a random tile
+                int index = UnityEngine.Random.Range(0, unblockedTiles.Count);
+                return unblockedTiles[index];
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Positions a character on the specified tile.
         /// </summary>
         public void PositionCharacterOnTile(Combatant character, OverlayTile tile)
@@ -95,7 +123,8 @@ namespace SystemMiami
             character.CurrentTile = tile;
         }
 
-        public Vector3 IsoToScreen(Vector3Int tileLocation){
+        public Vector3 IsoToScreen(Vector3Int tileLocation)
+        {
             return Coordinates.IsoToScreen(tileLocation, gridTilesHeight);
         }
     }

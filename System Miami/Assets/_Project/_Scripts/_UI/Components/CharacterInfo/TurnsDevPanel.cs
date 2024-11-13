@@ -1,3 +1,4 @@
+// Authors: Layla
 using SystemMiami.AbilitySystem;
 using SystemMiami.CombatSystem;
 using UnityEngine;
@@ -180,6 +181,8 @@ namespace SystemMiami
 
             _promptsBox.ShowBackground();
             _promptsBox.ShowForeground();
+
+            _promptsEnabled = true;
         }
 
         private void disablePrompts()
@@ -188,6 +191,8 @@ namespace SystemMiami
 
             _promptsBox.HideBackground();
             _promptsBox.HideForeground();
+
+            _promptsEnabled = false;
         }
         #endregion
 

@@ -1,20 +1,21 @@
-//Alec's script
+//Alec's script, layla minor edits
 
 using System.Collections.Generic;
+using SystemMiami.Management;
 using UnityEngine;
 
 namespace SystemMiami
 {
-    public class DrawArrows : MonoBehaviour
+    public class DrawArrows : Singleton<DrawArrows>
     {
-        public static DrawArrows Instance;
         public GameObject arrowPrefab;
         public List<GameObject> arrows;
         public List<OverlayTile> previousPath;
 
-        private void Awake()
+        protected override void Awake()
         {
-            Instance = this;
+            base.Awake();
+
             arrows = new List<GameObject>();
             previousPath = new List<OverlayTile>();
         }

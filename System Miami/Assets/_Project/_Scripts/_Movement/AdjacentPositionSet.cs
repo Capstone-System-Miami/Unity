@@ -3,12 +3,11 @@ using System;
 using System.Collections.Generic;
 using SystemMiami.Enums;
 using SystemMiami.Utilities;
-using UnityEditor;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem
 {
-    
+
     // Take the moveDirection that something is facing,
     // and translate their local adjacent positions
     // into the static/unchanging positions on the Board/Map
@@ -18,9 +17,8 @@ namespace SystemMiami.CombatSystem
         private Dictionary<TileDir, Vector2Int> _positionsRelativeToMap;
         private Dictionary<TileDir, Vector2Int> _directionsRelativeToSelf;
         private List<TileDir> rotatedDirs;
-        private TargetingPattern targetingPattern;
         public Dictionary<TileDir, Vector2Int> AdjacentPositions { get; private set; }
-        public Dictionary<TileDir, Vector2Int> AdjacentDirections { get; private set; }
+        public Dictionary<TileDir, Vector2Int> AdjacentDirectionVecs { get; private set; }
         public bool IsReady { get; private set; }
 
         // Constructors
@@ -44,7 +42,7 @@ namespace SystemMiami.CombatSystem
             }
 
             AdjacentPositions = _positionsRelativeToMap;
-            AdjacentDirections = _directionsRelativeToMap;
+            AdjacentDirectionVecs = _directionsRelativeToMap;
 
             //DirectionHelper.Print(AdjacentPositions, "Adjacent");
             IsReady = true;

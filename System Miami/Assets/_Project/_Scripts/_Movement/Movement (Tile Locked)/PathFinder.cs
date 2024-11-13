@@ -1,4 +1,4 @@
-// Author: Alec
+// Author: Alec, layla minor edits
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -19,8 +19,11 @@ namespace SystemMiami
             //adds starting tile to list
             openList.Add(start);
 
+            //int i = 0;
             while(openList.Count > 0)
             {
+                //Debug.Log($"in loop. iteration {i++}");
+
                 //tile with lowest F score
                 OverlayTile currentOverlayTile = openList.OrderBy(x => x.F).First();
 
@@ -40,12 +43,16 @@ namespace SystemMiami
 
                 //loop through eac
                 foreach (var neighbour in neighbourTiles)
-                {
-                    //skip any tiles already explored or tiles that have different z-axis, (can be edited to include tiles with blocked tag)
-                    if(!neighbour.Valid || closedList.Contains(neighbour)|| Mathf.Abs(currentOverlayTile.gridLocation.z - neighbour.gridLocation.z) > 1)
-                    {
-                        continue;
-                    }
+                {                    
+                    // skip any tiles already explored
+                    if (closedList.Contains(neighbour)) { continue; }
+
+                    // skip tiles that have different z-axis
+                    if (Mathf.Abs(currentOverlayTile.gridLocation.z - neighbour.gridLocation.z) > 1) { continue; }
+
+                    // skip blocked, unless it's the end tile
+                    if(!neighbour.Valid && neighbour != end) { continue; }
+
 
                     //calculate g and h
                     neighbour.G = GetManhattenDistance(start, neighbour);
@@ -63,9 +70,8 @@ namespace SystemMiami
             }
 
             //if there is no path return empty list
+            //Debug.Log ("returning an empty list");
             return new List<OverlayTile>();
-
-
         }
 
         //reconstructs path by backtracking from end to start
