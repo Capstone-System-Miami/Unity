@@ -10,13 +10,26 @@ namespace SystemMiami
 
         [SerializeField] private KeyCode _interactKey;
 
+        [SerializeField] private PromptBox _promptBox;
+
         private IInteractable _storedInteraction;
+
+        private void Start()
+        {
+            
+        }
 
         private void Update()
         {
+            if (_storedInteraction == null)
+            {
+                _promptBox.Clear();
+                return;
+            }
+
             if (Input.GetKeyDown(_interactKey))
             {
-                _storedInteraction?.Interact();
+                _storedInteraction.Interact();
             }
         }
 
@@ -41,6 +54,8 @@ namespace SystemMiami
             _storedInteraction?.PlayerExit();
             _storedInteraction = collidedInteraction;
             _storedInteraction.PlayerEnter();
+            
+            _promptBox.ShowPrompt(_storedInteraction, _interactKey);
         }
 
         private void OnTriggerExit2D(Collider2D collision)
@@ -64,7 +79,6 @@ namespace SystemMiami
 
             // Stop storing it
             _storedInteraction = null;
-        }
-        
+        }       
     }
 }

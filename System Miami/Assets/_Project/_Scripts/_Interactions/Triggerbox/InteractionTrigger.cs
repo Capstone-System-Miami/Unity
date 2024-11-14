@@ -11,6 +11,8 @@ namespace SystemMiami
         [SerializeField] private UnityEvent OnInteract;
         [SerializeField] private UnityEvent OnExit;
 
+        [SerializeField] private string _promptAction;
+
         // Because we've declared that this script is using IInteractable,
         // We have to implement (define) what we "promised" we would
         // in the interface definition.
@@ -34,6 +36,11 @@ namespace SystemMiami
         public virtual void PlayerExit()
         {
             OnExit.Invoke();
+        }
+
+        public virtual string GetActionPrompt()
+        {
+            return _promptAction;
         }
         #endregion
     }

@@ -7,5 +7,6 @@ namespace SystemMiami
         void Interact();
         void PlayerEnter();
         void PlayerExit();
+        string GetActionPrompt();
     }
 }
