@@ -1,3 +1,4 @@
+// Authors: Layla
 using SystemMiami.AbilitySystem;
 using SystemMiami.CombatSystem;
 using UnityEngine;
@@ -6,144 +7,238 @@ namespace SystemMiami
 {
     public class TurnsDevPanel : MonoBehaviour
     {
+        // Vars
+        #region Serialized
         [SerializeField] private TextBox _panelLabel;
 
-        [SerializeField] private LabeledField _turn;
-        [SerializeField] private Color _playerColor = Color.white;
-        [SerializeField] private Color _enemyColor = Color.white;
+        [SerializeField] private LabeledField _combatantField;
 
-        [SerializeField] private LabeledField _phase;
+        [SerializeField] private LabeledField _phaseField;
+        [SerializeField] private Color _movementColor;
+        [SerializeField] private Color _actionColor;
 
-        [SerializeField] TextBox _prompts;
+        [SerializeField] TextBox _promptsBox;
+        private string _movementText;
+        private string _actionText;
         [SerializeField] private Color _promptsTextColor = Color.white;
+        #endregion
 
-        private Abilities _turnOwnerAbilities;
+        #region Private
+        /// <summary>
+        /// This script will break if this variable
+        /// is changed directly. It is a backing field
+        /// for the turnOwner Property and should
+        /// should only be modified that way.
+        /// </summary>
+        private Combatant _turnOwner;
+        #endregion
 
-        private string _turnText;
-        private string _phaseText;
-        private string _promptsText;
+        #region Properties
+        private Combatant turnOwner
+        {
+            get
+            {
+                return _turnOwner;
+            }
 
+            set
+            {
+                if (value == null) { return; }
+                if (_turnOwner == value) { return; }
+
+                if (_turnOwner != null)
+                {
+                    unsubscribeToAbilities(_turnOwner);
+                }
+
+                subscribeToAbilities(value);
+
+                _turnOwner = value;
+            }
+        }
+        #endregion
+
+        #region Bools
         private bool _promptsEnabled;
-        private bool _canAct;
+        private bool _overrideActionPrompt;
+        #endregion
 
-        private void OnEnable()
-        {
-            TurnManager.Instance.BeginTurn += onBeginTurn;
-            TurnManager.Instance.NewTurnPhase += onNewTurnPhase;
-        }
 
-        private void OnDisable()
-        {
-            TurnManager.Instance.BeginTurn -= onBeginTurn;
-            TurnManager.Instance.NewTurnPhase -= onNewTurnPhase;
-        }
-
-        private void Start()
+        // Methods
+        #region Unity
+        private void Start() 
         {
             _panelLabel.SetForeground("Turn Indicator Dev Panel");
-            _turn.Label.SetForeground("Combatant:");
-            _phase.Label.SetForeground("Phase:");
+            _combatantField.Label.SetForeground("Combatant:");
+            _phaseField.Label.SetForeground("Phase:");
         }
 
         private void Update()
         {
-            _turn.Value.SetForeground(_turnText);
-            _phase.Value.SetForeground(_phaseText);
+            turnOwner = TurnManager.MGR.CurrentTurnOwner;
 
-            if (_promptsEnabled)
-            {
-                _prompts.SetForeground(_promptsText);
-            }
-        }
+            updateCombatantPanel();
+            updatePhasePanel();
 
-        private void onBeginTurn(Combatant combatant)
-        {
-            if (combatant.TryGetComponent(out _turnOwnerAbilities))
+            if (TurnManager.MGR.IsPlayerTurn)
             {
-                _turnOwnerAbilities.EquipAbility += onEquipAbility;
-                _turnOwnerAbilities.UnequipAbility += onUnequipAbility;
-                _turnOwnerAbilities.LockTargets += onLockedTargets;
-                _turnOwnerAbilities.UseAbility += onUseAbility;
-            }
-            else if (_turnOwnerAbilities != null)
-            {
-                _turnOwnerAbilities.EquipAbility -= onEquipAbility;
-                _turnOwnerAbilities.UnequipAbility -= onUnequipAbility;
-                _turnOwnerAbilities.LockTargets -= onLockedTargets;
-                _turnOwnerAbilities.UseAbility -= onUseAbility;
-            }
-
-            if (combatant.tag == "Player")
-            {
-                _turnText = $"Player";
-                _turn.Value.SetForeground(_playerColor);
                 enablePrompts();
+                updatePromptsPanel();
             }
             else
             {
-                _turnText = $"Enemy {combatant.ID}";
-                _turn.Value.SetForeground(_enemyColor);
                 disablePrompts();
             }
         }
+        #endregion
 
-        private void onNewTurnPhase(Phase phase)
+
+        #region Panel Updates
+        private void updateCombatantPanel()
         {
-            switch (phase)
+            _combatantField.Value.SetForeground($"{turnOwner.name}");
+            _combatantField.Value.SetForeground(turnOwner.ColorTag);
+        }
+
+        private void updatePhasePanel()
+        {
+            Phase currentPhase = turnOwner.Controller.CurrentPhase;
+
+            Color phaseColor = currentPhase switch
             {
-                default:
-                case Phase.MovementPhase:
-                    _phaseText = "Movement";
-                    _promptsText = $"Click a tile to move,\n\n" +
-                        $"Press E to end Movement Phase\n\n" +
-                        $"Or Press Q to end Turn";
-                    break;
+                Phase.Movement => _movementColor,
+                Phase.Action => _actionColor,
+                Phase.None => Color.black,
+                _ => Color.black
+            };
 
-                case Phase.ActionPhase:
-                    _phaseText = "Action";
-                    _promptsText = $"Select an Ability,\n\n Or Press Q to end Turn";
-                    _canAct = true;
-                    break;
+            _phaseField.Value.SetForeground($"{turnOwner.Controller.CurrentPhase}");
+            _phaseField.Value.SetForeground(phaseColor);
+        }
+
+        private void updatePromptsPanel()
+        {
+            _movementText = getMovementPrompt();
+
+            if (!_overrideActionPrompt)
+            {               
+                _actionText = getActionPrompt();
             }
+
+            string prompt = turnOwner.Controller.CurrentPhase switch
+            {
+                Phase.Movement  => _movementText,
+                Phase.Action    => _actionText,
+                Phase.None      => _movementText,
+                _               => _movementText
+            };
+
+            _promptsBox.SetForeground(prompt);
+            _promptsBox.SetForeground(_promptsTextColor);
         }
 
-        private void onEquipAbility(AbilityType type, int index)
+        private string getMovementPrompt()
         {
-            enablePrompts();
-            _promptsText = $"Left Click To Lock Targets";
+            string result = "";
+
+            if (turnOwner.Controller.CanMove)
+            {
+                result += $"Click a tile to move,\n\n";
+            }
+            else if (turnOwner.Speed.Get() > 0)
+            {
+                result += $"Moving To Tile.\n\n";
+            }
+            else
+            {
+                result += $"Speed Depleted\n\n";
+            }
+
+            result += $"Press E to end Movement Phase\n\n" +
+                        $"Or Press Q to end Turn.";
+
+            return result;
         }
 
-        private void onUnequipAbility()
-        {           
-            _promptsText = _canAct ? $"Select an Ability\n\nOr press Q to End Turn" : $"Press Q to End Turn";
-        }
-
-        private void onLockedTargets(Ability ability)
+        private string getActionPrompt()
         {
-            enablePrompts();
-            _promptsText = $"Press Enter to Use {ability.name}";
-        }
+            string result = "";
 
-        private void onUseAbility(Ability ability)
-        {
-            enablePrompts();
-            _promptsText = $"Using {ability.name}";
-            _canAct = false;
+            if (turnOwner.Controller.CanAct)
+            {
+                result += $"Click an Ability to Equip it,\n\n" +
+                    $"Or ";
+            }
+
+            result += $"Press Q to End Turn.";
+
+            return result;
         }
 
         private void enablePrompts()
         {
+            if (_promptsEnabled) { return; }
+
+            _promptsBox.ShowBackground();
+            _promptsBox.ShowForeground();
+
             _promptsEnabled = true;
-            _prompts.ShowBackground();
-            _prompts.ShowForeground();
-            _prompts.SetForeground(_promptsTextColor);
         }
 
         private void disablePrompts()
         {
+            if (!_promptsEnabled) { return; }
+
+            _promptsBox.HideBackground();
+            _promptsBox.HideForeground();
+
             _promptsEnabled = false;
-            _prompts.HideBackground();
-            _prompts.HideForeground();
         }
+        #endregion
+
+
+        #region Ability Subscriptions
+        private void subscribeToAbilities(Combatant combatant)
+        {
+            combatant.Abilities.AbilityEquipped += onEquipAbility;
+            combatant.Abilities.AbilityUnequipped += onUnequipAbility;
+            combatant.Abilities.TargetsLocked += onLockedTargets;
+            combatant.Abilities.ExecuteAbilityStarted += onUseAbility;
+        }
+
+        private void unsubscribeToAbilities(Combatant combatant)
+        {
+            combatant.Abilities.AbilityEquipped -= onEquipAbility;
+            combatant.Abilities.AbilityUnequipped -= onUnequipAbility;
+            combatant.Abilities.TargetsLocked -= onLockedTargets;
+            combatant.Abilities.ExecuteAbilityStarted -= onUseAbility;
+        }
+        #endregion
+
+
+        #region Ability Responses
+        private void onEquipAbility(Ability ability)
+        {
+            _overrideActionPrompt = true;
+            _actionText = $"Left Click a Tile to Lock Targets";
+        }
+
+        private void onUnequipAbility()
+        {
+            _overrideActionPrompt = false;
+        }
+
+        private void onLockedTargets(Ability ability)
+        {
+            _overrideActionPrompt = true;
+            _actionText = $"Press Enter to Use {ability.name}";
+        }
+
+        private void onUseAbility(Ability ability)
+        {
+            _overrideActionPrompt = true;
+            _actionText = $"Using {ability.name}";
+        }
+        #endregion
     }
 }

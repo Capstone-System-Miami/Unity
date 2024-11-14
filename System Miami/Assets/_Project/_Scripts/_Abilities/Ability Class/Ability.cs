@@ -1,13 +1,11 @@
 // Authors: Layla Hoey, Lee St. Louis
 using System.Collections;
+using System.Collections.Generic;
 using SystemMiami.CombatSystem;
 using UnityEngine;
 
 namespace SystemMiami.AbilitySystem
 {
-    // TODO
-    // Incomplete, chaotic, and partially tested
-    // Depends on the creation & refactoring of other scripts.
     [CreateAssetMenu(fileName = "New Ability", menuName = "Abilities/Ability")]
     public class Ability : ScriptableObject
     {
@@ -52,7 +50,27 @@ namespace SystemMiami.AbilitySystem
         public CombatAction[] Actions { get { return _actions; } }
         public bool IsBusy { get; private set; }
 
-        #region LaylaStuff
+        public bool PlayerFoundInTargets
+        {
+            get
+            {
+                foreach (CombatAction action in _actions)
+                {
+                    List<Combatant> targets = action.TargetingPattern.StoredTargets.Combatants;
+
+                    if (targets == null) { continue; }
+
+                    Combatant player = targets.Find(c => c.Controller is PlayerController);
+
+                    if (player != null)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        }
 
         public void Init(Combatant user)
         {
@@ -76,6 +94,8 @@ namespace SystemMiami.AbilitySystem
             foreach (CombatAction action in _actions)
             {
                 action.TargetingPattern.UnlockTargets();
+                action.TargetingPattern.HideTargets();
+                action.TargetingPattern.ClearTargets();
                 action.TargetingPattern.UnsubscribeToDirectionUpdates(User);
             }
         }
@@ -83,7 +103,7 @@ namespace SystemMiami.AbilitySystem
         /// <summary>
         /// Locks the targets by unsubscribing from moveDirection updates without hiding the targets.
         /// </summary>
-        public void ConfirmTargets()
+        public void LockTargets()
         {
             foreach (CombatAction action in _actions)
             {
@@ -106,7 +126,6 @@ namespace SystemMiami.AbilitySystem
 
             resource.Lose(_resourceCost);
 
-
             yield return null;
 
             for (int i = 0; i < _actions.Length; i++)
@@ -120,7 +139,8 @@ namespace SystemMiami.AbilitySystem
 
             currentCooldown = coolDownTurns;
 
-            yield return new WaitForEndOfFrame();
+
+            yield return null;
         }
 
         /// <summary>
@@ -135,65 +155,6 @@ namespace SystemMiami.AbilitySystem
                 _ => ResourceType.STAMINA,
             };
         }
-        #endregion
-
-        #region StuffLeeAdded
-
-        /// <summary>
-        /// Updates the target preview based on the tile under the mouse cursor.
-        /// </summary>
-        /// <param name = "targetTile" > The tile under the mouse cursor.</param>
-        //public IEnumerator UpdateTargetPreview(OverlayTile targetTile)
-        //{
-        //    if (IsBusy)
-        //    {
-        //        yield break;
-        //    }
-
-        //    IsBusy = true;
-        //    yield return null;
-
-        //    //hide previous targets
-        //    for (int i = 0; i < _actions.Length; i++)
-        //    {
-        //        yield return new WaitUntil(() => hideTilesOf(_actions[i]));
-        //        yield return new WaitUntil(() => hideCombatantsOf(_actions[i]));
-        //    }
-
-        //    //create a new DirectionalInfo based on user pos and target tile
-        //    Vector2Int userPosition = (Vector2Int)User.CurrentTile.gridLocation;
-        //    Vector2Int targetPosition = (Vector2Int)targetTile.gridLocation;
-
-        //    DirectionalInfo newDirectionInfo = new DirectionalInfo(userPosition, targetPosition);
-
-        //    // If the moveDirection vector is zero, do not update targets
-        //    if (newDirectionInfo.DirectionVec == Vector2Int.zero)
-        //    {
-        //        IsBusy = false;
-        //        IsTargeting = false;
-        //        yield break;
-        //    }
-
-        //    //update stored targets for each action
-        //    for (int i = 0; i < _actions.Length; i++)
-        //    {
-        //        _actions[i].GetUpdatedTargets(newDirectionInfo);
-        //    }
-
-        //    // Show new targets
-        //    for (int i = 0; i < _actions.Length; i++)
-        //    {
-        //        yield return new WaitUntil(() => showTilesOf(_actions[i]));
-        //        yield return new WaitUntil(() => showCombatantsOf(_actions[i]));
-        //    }
-
-        //    yield return new WaitForEndOfFrame();
-        //    IsBusy = false;
-        //    IsTargeting = true;
-
-        //}
-
-        #endregion
 
         #region Cooldowns
 
