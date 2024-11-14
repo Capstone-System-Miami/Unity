@@ -4,6 +4,8 @@ using UnityEngine;
 
 namespace SystemMiami.CombatSystem
 {
+    // TODO
+    // 1. Create a function for setting targets without showing it (for enemy use)
     public enum PatternOriginType { USER, MOUSE };
 
     public abstract class TargetingPattern : ScriptableObject
@@ -22,6 +24,10 @@ namespace SystemMiami.CombatSystem
         #region Public
         public abstract void SetTargets(DirectionalInfo userInfo);
 
+        public void ClearTargets()
+        {
+            StoredTargets = Targets.empty;
+        }
 
         public  void SubscribeToDirectionUpdates(Combatant user)
         {
@@ -38,8 +44,7 @@ namespace SystemMiami.CombatSystem
         }
 
         public  void UnsubscribeToDirectionUpdates(Combatant user)
-        {
-            
+        {            
             if (_patternOrigin == PatternOriginType.USER)
             {
                 user.OnDirectionChanged -= onTargetChanged;
@@ -60,13 +65,13 @@ namespace SystemMiami.CombatSystem
         public  void LockTargets()
         {            
             _targetsLocked = true;
-            Debug.Log($"Targets locked in {name}'s TargetingPattern.");
+            //Debug.Log($"Targets locked in {name}'s TargetingPattern.");
         }
 
         public void UnlockTargets()
         {
             _targetsLocked = false;
-            Debug.Log($"Targets unlocked in {name}'s TargetingPattern");
+            //Debug.Log($"Targets unlocked in {name}'s TargetingPattern");
         }
 
         public bool  ShowTargets()
@@ -86,7 +91,7 @@ namespace SystemMiami.CombatSystem
                 return true;
             }
 
-            Debug.Log("HideTargets called. Hiding targets.");
+            //Debug.Log("HideTargets called. Hiding targets.");
             hideTiles();
             hideCombatants();
             return true;
@@ -97,7 +102,7 @@ namespace SystemMiami.CombatSystem
         #region Protected
         protected void onTargetChanged(DirectionalInfo dir)
         {
-            Debug.Log($"OnTargetChanged called. Targets locked: {_targetsLocked}");
+            //Debug.Log($"OnTargetChanged called. Targets locked: {_targetsLocked}");
             if (_targetsLocked)
             {          
                 ShowTargets();

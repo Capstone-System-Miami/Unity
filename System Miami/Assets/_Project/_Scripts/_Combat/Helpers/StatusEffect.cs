@@ -7,20 +7,14 @@ namespace SystemMiami
     [System.Serializable]
     public class StatusEffect 
     {
-        public AttributeSet Effect { get; private set; }
+        public StatSet Effect { get; private set; }
         public int Duration { get; private set; }
 
-        public StatusEffect(AttributeSetSO effect, int duration)
+        public StatusEffect(StatSetSO effect, int duration)
         {
-            Effect = new AttributeSet(effect);
+            Effect = new StatSet(effect);
             Duration = duration;
         }
-
-        //public StatusEffect(AttributeSet effect, int duration)
-        //{
-        //    Effect = effect;
-        //    Duration = duration;
-        //}
 
         /// <summary>
         /// Decreases the duration of the status effect by one turn.

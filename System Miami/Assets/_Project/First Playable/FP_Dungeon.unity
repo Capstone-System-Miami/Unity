@@ -1142,11 +1142,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _panelLabel: {fileID: 805075895}
-  _turn: {fileID: 1339380349074696359}
-  _playerColor: {r: 0.37161046, g: 0.5566038, b: 0.15490389, a: 1}
-  _enemyColor: {r: 0.5568628, g: 0.24892995, b: 0.15686274, a: 1}
-  _phase: {fileID: 1148930113}
-  _prompts: {fileID: 2015011732}
+  _combatantField: {fileID: 1339380349074696359}
+  _phaseField: {fileID: 1148930113}
+  _movementColor: {r: 0.4498176, g: 0.5377358, b: 0.017755438, a: 1}
+  _actionColor: {r: 0.6981132, g: 0.18111429, b: 0.18111429, a: 1}
+  _promptsBox: {fileID: 2015011732}
   _promptsTextColor: {r: 0.5, g: 0.28797337, b: 0, a: 1}
 --- !u!114 &318832099
 MonoBehaviour:
@@ -4027,7 +4027,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -1
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0.5, z: 0}
   m_MaxChunkCount: 16
@@ -7205,7 +7205,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1865162774}
   - component: {fileID: 1865162773}
-  - component: {fileID: 1865162772}
   m_Layer: 0
   m_Name: Cursor
   m_TagString: Untagged
@@ -7213,20 +7212,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!114 &1865162772
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1865162771}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7619524ca78a93045aab7ba6837c3374, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 2
-  characterPrefab: {fileID: 7719785247104517706, guid: b8b0f82d5c6569e48bd39dfc9ebc2f05, type: 3}
 --- !u!212 &1865162773
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -7700,15 +7685,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c65c9bbc9fccad74793f2b8ea463fcf5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerCharacters:
-  - {fileID: 7803342958832123491}
+  playerCharacter: {fileID: 7803342958832123491}
   enemyCharacters: []
-  currentPhase: 0
-  enemyPrefab: {fileID: 5985083666047915755, guid: 0992dae8a10eab24da3ffdab83f92baf, type: 3}
-  bossPrefab: {fileID: 0}
+  combatants: []
+  enemyPrefab: {fileID: 5985083666047915755, guid: eae0eae8fe396f84493cde92e333db05, type: 3}
+  bossPrefab: {fileID: 5985083666047915755, guid: 0992dae8a10eab24da3ffdab83f92baf, type: 3}
   numberOfEnemies: 3
-  isPlayerTurn: 1
-  enemyDetectionRadius: 2
+  IsGameOver: 0
 --- !u!224 &1933114683 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8515660109222632797, guid: 87efd5d5b9050d34e842c7063b3798a0, type: 3}
@@ -8393,9 +8376,9 @@ GameObject:
   - component: {fileID: 7803342958832123493}
   - component: {fileID: 7803342958832123492}
   - component: {fileID: 7803342958832123491}
-  - component: {fileID: 7803342958832123490}
   - component: {fileID: 7803342958832123494}
   - component: {fileID: 7803342958832123495}
+  - component: {fileID: 7803342958832123496}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -8687,10 +8670,10 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -110400129
-  m_SortingLayer: 2
-  m_SortingOrder: 100
-  m_Sprite: {fileID: 1397287157, guid: 868b47644e5e4e84ea1b9b25baf351a4, type: 3}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 1
+  m_Sprite: {fileID: 504766812, guid: 82236648256b77d4588c22a84d4da636, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -9265,20 +9248,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -4}
   m_SizeDelta: {x: 111, y: 38}
   m_Pivot: {x: 0.5, y: 1}
---- !u!114 &7803342958832123490
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 442757516161023013}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7619524ca78a93045aab7ba6837c3374, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 2
-  characterPrefab: {fileID: 442757516161023013}
 --- !u!114 &7803342958832123491
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9291,6 +9260,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5dad0a304e458cf459016a52e1ee441a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _colorTag: {r: 0.21688704, g: 0.6603774, b: 0.20870416, a: 1}
   CurrentTile: {fileID: 0}
   Animator: {fileID: 7803342958832123495}
   PlayerDirSprites:
@@ -9308,7 +9278,6 @@ MonoBehaviour:
   IsMovable: 1
   IsStunned: 0
   IsInvisible: 0
-  Attributes: {fileID: 0}
 --- !u!114 &7803342958832123492
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9375,10 +9344,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: dbd15121c6839b74e9cef4cb5a187157, type: 2}
   - {fileID: 11400000, guid: b35a5b9b3040e524eb59c91d64d68170, type: 2}
   - {fileID: 11400000, guid: f43504aa81fefc24582a02bbb095c7d5, type: 2}
-  _selectedAbility: {fileID: 0}
-  _isTargeting: 0
-  _isUsing: 0
-  _isConfirming: 0
 --- !u!95 &7803342958832123495
 Animator:
   serializedVersion: 5
@@ -9400,6 +9365,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &7803342958832123496
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 442757516161023013}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cd1c907f5a30504195dad71d0b41e5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementSpeed: 2
+  _endTurnKey: 113
+  _endPhaseKey: 101
 --- !u!1 &7815272304641771727
 GameObject:
   m_ObjectHideFlags: 0

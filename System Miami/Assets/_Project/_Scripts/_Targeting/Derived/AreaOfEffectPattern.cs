@@ -1,3 +1,4 @@
+// Authors: Layla, Lee
 using System.Collections.Generic;
 using SystemMiami.Enums;
 using SystemMiami.Utilities;
@@ -36,7 +37,6 @@ namespace SystemMiami.CombatSystem
         /// pattern in the inspector.
         /// </summary>
         private List<TileDir> _directionsToCheck;
-
 
 
         public override void SetTargets(DirectionalInfo userInfo)
@@ -81,7 +81,7 @@ namespace SystemMiami.CombatSystem
                     Combatant checkedEnemy;
 
                     checkedPosition = _adjacent.AdjacentPositions[direction] +
-                        _adjacent.AdjacentDirections[direction] * (radial);
+                        _adjacent.AdjacentDirectionVecs[direction] * (radial);
 
                     checkedPositions.Add(checkedPosition);
 
