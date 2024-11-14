@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using SystemMiami.CombatSystem;
 using SystemMiami.Management;
+using SystemMiami.Utilities;
 using UnityEngine;
 
 namespace SystemMiami
@@ -64,6 +65,12 @@ namespace SystemMiami
 
         private void Start()
         {
+            if (playerCharacter != null)
+            {
+                Vector3Int charTilePos = Coordinates.ScreenToIso(playerCharacter.transform.position, 0);
+                MapManager.MGR.map.TryGetValue((Vector2Int)charTilePos, out OverlayTile charTile);
+                MapManager.MGR.PositionCharacterOnTile(playerCharacter, charTile);
+            }
             SpawnEnemies();
 
             combatants.Add(playerCharacter);
