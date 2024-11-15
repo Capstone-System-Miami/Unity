@@ -112,13 +112,13 @@ namespace SystemMiami.CombatSystem
 
                 if (IsActing)
                 {
-                    Debug.Log($"{name} is already acting");
+                    //Debug.Log($"{name} is already acting");
                     return false;
                 }
 
                 if (HasActed)
                 {
-                    Debug.Log($"{name} has already acted");
+                    //Debug.Log($"{name} has already acted");
                     return false;
                 }
 

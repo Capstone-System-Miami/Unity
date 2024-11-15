@@ -390,8 +390,8 @@ namespace SystemMiami.AbilitySystem
             _combatant.Animator.SetTrigger("UseAbility");
 
             // TODO: Wait for the animation to finish
-            // For now, just wait 3 secs
-            for (int i = 3; i >= 0; i--)
+            // For now, just wait 2 secs
+            for (int i = 2; i >= 0; i--)
             {
                 Debug.Log($"Placeholder for animation time. Activates in {i} seconds.");
                 yield return new WaitForSeconds(1f);
