@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using SystemMiami.AbilitySystem;
 using SystemMiami.CombatSystem;
 using SystemMiami.Enums;
+using SystemMiami.Utilities;
 using UnityEngine;
 
 namespace SystemMiami
@@ -58,26 +59,22 @@ namespace SystemMiami
             // TODO use selectAbility() once that logic is figured out.
             typeToEquip = AbilityType.PHYSICAL;
             indexToEquip = 0;
+            Debug.Log($"{name} starting equip cor.");
             yield return StartCoroutine(equipAbility());
+            yield return null;
 
             // Can see player, check every direction rapidly.
             if (IsInDetectionRange(TurnManager.MGR.playerCharacter))
             {
                 FocusedTile = TurnManager.MGR.playerCharacter.CurrentTile;
+                yield return null;
+                FocusedTileChanged?.Invoke(FocusedTile);
 
-                for(int i = 0; i < System.Enum.GetValues(typeof(TileDir)).Length; i++)
+                for (int i = 0; i < System.Enum.GetValues(typeof(TileDir)).Length; i++)
                 {
-                    AdjacentPositionSet adj = new AdjacentPositionSet(combatant.DirectionInfo);
-
-                    Vector2Int newMapPosToFace = adj.AdjacentPositions[(TileDir)i];
-
-                    if (!MapManager.MGR.map.TryGetValue(newMapPosToFace, out OverlayTile newTileToFace))
-                    {
-                        continue;
-                    }
-
-                    FocusedTile = newTileToFace;
                     FocusedTileChanged?.Invoke(FocusedTile);
+
+                    yield return new WaitForSeconds(1f);
 
                     // If the player is found in Ability's targets,
                     // lock the ability and hold for a moment, then execute.
@@ -89,6 +86,15 @@ namespace SystemMiami
 
                         yield return StartCoroutine(executeAbility());
                         break;
+                    }
+
+                    // Turn Clockwise 45degrees
+                    AdjacentPositionSet adj = new AdjacentPositionSet(combatant.DirectionInfo);
+                    Vector2Int newMapPosToFace = adj.AdjacentPositions[(TileDir)1];
+
+                    if (MapManager.MGR.map.TryGetValue(newMapPosToFace, out OverlayTile newTileToFace))
+                    {
+                        FocusedTile = newTileToFace;
                     }
                 }
             }
@@ -117,11 +123,11 @@ namespace SystemMiami
                     yield return new WaitForSeconds(changeTargetInterval);
                 }
 
-                yield return StartCoroutine(unequipAbility());
-
-                yield return new WaitForSeconds(1f);
             }
 
+            yield return StartCoroutine(unequipAbility());
+
+            yield return new WaitForSeconds(1f);
             FLAG_EndTurn = true;
         }
         // ======================================
@@ -381,10 +387,12 @@ namespace SystemMiami
         #region Detection
         private bool IsInDetectionRange(Combatant target)
         {
-            int distance = Mathf.Abs(combatant.CurrentTile.gridLocation.x - target.CurrentTile.gridLocation.x) +
-               Mathf.Abs(combatant.CurrentTile.gridLocation.y - target.CurrentTile.gridLocation.y);
+            //int distance = Mathf.Abs(combatant.CurrentTile.gridLocation.x - target.CurrentTile.gridLocation.x) +
+            //   Mathf.Abs(combatant.CurrentTile.gridLocation.y - target.CurrentTile.gridLocation.y);
 
-            if (distance <= detectionRadius)
+            List<OverlayTile> path = getPathTo(target.CurrentTile);
+
+            if (path.Count <= detectionRadius)
             {
                 return true;
             }

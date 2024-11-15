@@ -95,12 +95,33 @@ namespace SystemMiami.CombatSystem
         {
             get
             {
-                if (combatant == null) { return false; }
-                if (CurrentPhase != Phase.Action) { return false; }
-                if (combatant.Abilities.CurrentState == Abilities.State.COMPLETE) { return false; }
-                if (combatant.Abilities.CurrentState == Abilities.State.EXECUTING) { return false; }
-                if (IsActing) { Debug.Log($"{name} is already acting"); return false; }
-                if (HasActed) { Debug.Log($"{name} has already acted"); return false; }
+                if (combatant == null)
+                    { return false; }
+
+                if (CurrentPhase != Phase.Action)
+                    { return false; }
+
+                if (combatant.Abilities.CurrentState == Abilities.State.COMPLETE)
+                {
+                    HasActed = true;
+                    return false;
+                }
+
+                if (combatant.Abilities.CurrentState == Abilities.State.EXECUTING)
+                    { return false; }
+
+                if (IsActing)
+                {
+                    Debug.Log($"{name} is already acting");
+                    return false;
+                }
+
+                if (HasActed)
+                {
+                    Debug.Log($"{name} has already acted");
+                    return false;
+                }
+
 
                 return true;
             }
@@ -135,7 +156,7 @@ namespace SystemMiami.CombatSystem
         {
             if (!TryGetComponent(out combatant))
             {
-                print($"Didnt find a Combatant component on {name}.");
+                Debug.LogWarning($"Didnt find a Combatant component on {name}.");
             }
         }
 
@@ -144,11 +165,6 @@ namespace SystemMiami.CombatSystem
             if (!IsMyTurn) { resetFlags(); return; }
 
             updateFocusedTile();
-        }
-
-        protected void LateUpdate()
-        {
-            if (!IsMyTurn) { resetFlags(); return; }
 
             if (endTurnTriggered())
             {
@@ -185,6 +201,45 @@ namespace SystemMiami.CombatSystem
             resetFlags();
         }
 
+        protected void LateUpdate()
+        {
+            if (!IsMyTurn) { resetFlags(); return; }
+
+            //if (endTurnTriggered())
+            //{
+            //    EndTurn();
+            //    resetFlags();
+            //    return;
+            //}
+
+            //if (nextPhaseTriggered())
+            //{
+            //    if (!TryNextPhase())
+            //    {
+            //        OnNextPhaseFailed();
+            //    }
+            //    resetFlags();
+            //    return;
+            //}
+
+            //switch (CurrentPhase)
+            //{
+            //    case Phase.Movement:
+            //        handleMovementPhase();
+            //        break;
+
+            //    case Phase.Action:
+            //        handleActionPhase();
+            //        break;
+
+            //    default:
+            //    case Phase.None:
+            //        break;
+            //}
+
+            //resetFlags();
+        }
+
         // ======================================
         #endregion // UNITY METHODS
 
@@ -199,6 +254,11 @@ namespace SystemMiami.CombatSystem
             combatant.ResetTurn();
             remainingPhases.Clear();
             remainingPhases = defaultPhases.ToList();
+
+            FocusedTile = null;
+            DestinationTile = null;
+
+            IsMoving = false;
             HasActed = false;
 
             IsMyTurn = true;
@@ -226,13 +286,14 @@ namespace SystemMiami.CombatSystem
 
         protected virtual void OnNextPhaseFailed()
         {
-            Debug.Log($"{combatant} is trying" +
+            Debug.LogWarning($"{combatant} is trying" +
                         $"to move to the next phase,\n" +
                         $"But has no phases remaining.");
         }
 
         public virtual void EndTurn()
         {
+            Debug.Log($"{name}Calling end of turn");
             // TODO
             // Other end of turn things.
             IsMyTurn = false;
@@ -282,8 +343,6 @@ namespace SystemMiami.CombatSystem
             }            
             else
             {
-                Debug.Log($"{name} Destination Reached. {DestinationTile?.gridLocation}");
-
                 clearMovement();
             }
         }
@@ -291,6 +350,7 @@ namespace SystemMiami.CombatSystem
         protected virtual void handleActionPhase()
         {
             if (!CanAct) { return; }
+
 
             if (unequipTriggered())
             {
@@ -313,8 +373,6 @@ namespace SystemMiami.CombatSystem
                 {
                     StartCoroutine(abilityProcess);
                 }
-
-                HasActed = true;
             }
         }
 
@@ -356,14 +414,15 @@ namespace SystemMiami.CombatSystem
 
             if (truncatedPath == null) { return; }
 
+            // New path is the truncated one.
+            currentPath = truncatedPath;
+
             if (truncatedPath.Count > 0)
             {
                 // New Destination Tile is the
                 // last one in the truncated path.
                 DestinationTile = truncatedPath[truncatedPath.Count - 1];
 
-                // New path is the truncated one.
-                currentPath = truncatedPath;
 
                 // Create a copy of our path that contains the
                 // starting position. We can use this modified list
@@ -401,7 +460,7 @@ namespace SystemMiami.CombatSystem
         /// </summary>
         protected void clearMovement()
         {
-            DestinationTile = null;
+            DestinationTile = combatant.CurrentTile;
             currentPath = null;
             IsMoving = false;
         }

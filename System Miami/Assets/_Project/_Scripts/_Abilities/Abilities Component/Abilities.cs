@@ -194,15 +194,32 @@ namespace SystemMiami.AbilitySystem
         /// </summary>
         public bool TryUnequip()
         {
-            if (_state.Get() != State.EQUIPPED)
+            switch (_state.Get())
             {
-                Debug.LogWarning($"{name} failed to unequip. " +
-                    $"There is nothing equipped to unequip.");
-                return false;
-            }
+                default:
+                case Abilities.State.UNEQUIPPED:
+                    Debug.LogWarning($"{name} failed to unequip. " +
+                        $"There is nothing equipped to unequip.");
+                    return false;
 
-            unequip();
-            return true;
+                case Abilities.State.EQUIPPED:
+                    unequip();
+                    return true;
+
+                case Abilities.State.TARGETS_LOCKED:
+                    unequip();
+                    return true;
+
+                case Abilities.State.EXECUTING:
+                    Debug.LogWarning($"{name} failed to unequip. " +
+                        $"{_selectedAbility} is already in use!");
+                    return false;
+
+                case Abilities.State.COMPLETE:
+                    Debug.LogWarning($"{name} failed to unequip. " +
+                        $"{_selectedAbility} is already finishing execution!");
+                    return false;
+            }
         }
 
         public bool TryLockTargets()

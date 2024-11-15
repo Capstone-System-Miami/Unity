@@ -83,6 +83,12 @@ namespace SystemMiami.CombatSystem
             if (FocusedTile == null)
                 { return false; }
 
+            if (FLAG_Equip)
+                {return false; }
+
+            if (FLAG_Unequip)
+                { return false; }
+
             return Input.GetMouseButtonDown(0);
         }
 
@@ -149,11 +155,11 @@ namespace SystemMiami.CombatSystem
         {
             OverlayTile newFocus = getFocusedTile();
 
-            if (newFocus == null)
-            { return; }
+            //if (newFocus == null)
+            //    { return; }
 
             if (newFocus == FocusedTile)
-            { return; }
+                { return; }
 
             FocusedTile = newFocus;
 

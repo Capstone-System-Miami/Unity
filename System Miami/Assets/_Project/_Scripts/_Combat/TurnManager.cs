@@ -58,7 +58,16 @@ namespace SystemMiami
 
         public Combatant CurrentTurnOwner { get; private set; }
 
-        public bool IsGameOver = false;
+        public bool IsGameOver
+        {
+            get
+            {
+                if (playerCharacter == null) { return true; }
+                if (enemyCharacters.Count == 0) { return true; }
+
+                return false;
+            }
+        }
 
         #region Unity Methods
         //===============================
@@ -71,6 +80,7 @@ namespace SystemMiami
                 MapManager.MGR.map.TryGetValue((Vector2Int)charTilePos, out OverlayTile charTile);
                 MapManager.MGR.PositionCharacterOnTile(playerCharacter, charTile);
             }
+
             SpawnEnemies();
 
             combatants.Add(playerCharacter);
@@ -86,10 +96,6 @@ namespace SystemMiami
                 { return; }
 
             Debug.Log($"Current Turn Owner: {CurrentTurnOwner.name}");
-            if (!CurrentTurnOwner.Controller.IsMyTurn)
-            {
-
-            }
         }
         //===============================
         #endregion // ^Unity Methods^
@@ -105,12 +111,6 @@ namespace SystemMiami
         {
             while (!IsGameOver)
             {
-                // TODO =====================================================
-                // This doesn't work properly when a combatant is removed
-                // from the list on dying. Not sure if theres an extra step
-                // to the garbage collection beyond just removing it from the
-                // list, but it throws an error when anything dies.
-                // ==========================================================
                 foreach (Combatant combatant in combatants)
                 {
                     if (combatant == null)

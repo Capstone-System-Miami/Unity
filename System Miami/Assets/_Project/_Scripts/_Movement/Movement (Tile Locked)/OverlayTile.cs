@@ -47,10 +47,10 @@ namespace SystemMiami
 
         void Update()
         {
-            if (Input.GetMouseButton(0))
-            {
-                HideTile();
-            }
+            //if (Input.GetMouseButton(0))
+            //{
+            //    HideTile();
+            //}
         }
 
         public void ShowTile()
@@ -81,6 +81,7 @@ namespace SystemMiami
         public void UnHighlight()
         {
             HideTile();
+
             _renderer.color = _defaultColor;
         }
 

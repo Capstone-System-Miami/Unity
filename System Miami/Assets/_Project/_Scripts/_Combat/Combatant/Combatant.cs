@@ -178,6 +178,9 @@ namespace SystemMiami.CombatSystem
         private void setDirectionByTile(OverlayTile targetTile)
         {
             if (_controller.IsMoving) { return; }
+            if (_abilities.CurrentState == Abilities.State.TARGETS_LOCKED) { return; }
+            if (_abilities.CurrentState == Abilities.State.EXECUTING) { return; }
+            if (targetTile == null) { return; }
 
             Vector2Int currentPos = (Vector2Int)CurrentTile.gridLocation;
             Vector2Int forwardPos;
@@ -188,18 +191,17 @@ namespace SystemMiami.CombatSystem
 
             OnSubjectChanged?.Invoke(newDirection);
 
-            if (newDirection.DirectionVec != DirectionInfo.DirectionVec)
-            {
+            //if (newDirection.DirectionVec != DirectionInfo.DirectionVec)
+            //{
                 SwapSprite(newDirection.DirectionVec);
                 OnDirectionChanged?.Invoke(newDirection);
-            }
+            //}
 
             DirectionInfo = newDirection;
         }
-        #endregion Directions (priv)
 
         /// <summary>
-        /// Allows setting directional info directly, useful for enemies.
+        /// Allows setting directional info directly.
         /// </summary>
         private void setDirection(DirectionalInfo newDirection)
         {
@@ -210,6 +212,8 @@ namespace SystemMiami.CombatSystem
             OnSubjectChanged?.Invoke(newDirection);
             OnDirectionChanged?.Invoke(newDirection);
         }
+        #endregion Directions (priv)
+
 
         private void onCombatantDeath(Combatant deadCombatant)
         {
@@ -360,12 +364,6 @@ namespace SystemMiami.CombatSystem
 
         public virtual void Die()
         {
-            if (!TurnManager.MGR.combatants.Contains(this))
-            {
-                // Not found in any list
-                Debug.Log($"{name} has died but was not found in any character list.");
-            }
-
             // Player died
             Debug.Log($"{name} has died.");
             Destroy(gameObject);

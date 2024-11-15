@@ -29,7 +29,7 @@ namespace SystemMiami.CombatSystem
             StoredTargets = Targets.empty;
         }
 
-        public  void SubscribeToDirectionUpdates(Combatant user)
+        public void SubscribeToDirectionUpdates(Combatant user)
         {
             if (_patternOrigin == PatternOriginType.USER)
             {
@@ -39,8 +39,7 @@ namespace SystemMiami.CombatSystem
             {
                 user.OnSubjectChanged += onTargetChanged;
             }
-            _targetsLocked = false;
-            ShowTargets();
+            //ShowTargets();
         }
 
         public  void UnsubscribeToDirectionUpdates(Combatant user)
@@ -53,10 +52,10 @@ namespace SystemMiami.CombatSystem
             {
                 user.OnSubjectChanged -= onTargetChanged;
             }
-            if (!_targetsLocked)
-            {
-                HideTargets();
-            }
+            //if (!_targetsLocked)
+            //{
+            //    HideTargets();
+            //}
         }
 
         /// <summary>
@@ -83,13 +82,13 @@ namespace SystemMiami.CombatSystem
 
         public bool HideTargets()
         {
-            if (_targetsLocked)
-            {
-                // Shouldn't this condition check be somewhere else?
-                // This function is supposed to hide the targets no matter what.
-                Debug.Log("hideTargets called but targets are locked. Skipping hiding.");
-                return true;
-            }
+            //if (_targetsLocked)
+            //{
+            //    // Shouldn't this condition check be somewhere else?
+            //    // This function is supposed to hide the targets no matter what.
+            //    Debug.Log("hideTargets called but targets are locked. Skipping hiding.");
+            //    return true;
+            //}
 
             //Debug.Log("HideTargets called. Hiding targets.");
             hideTiles();
@@ -103,11 +102,11 @@ namespace SystemMiami.CombatSystem
         protected void onTargetChanged(DirectionalInfo dir)
         {
             //Debug.Log($"OnTargetChanged called. Targets locked: {_targetsLocked}");
-            if (_targetsLocked)
-            {          
-                ShowTargets();
-                return;
-            }
+            //if (_targetsLocked)
+            //{          
+            //    ShowTargets();
+            //    return;
+            //}
 
             HideTargets();
             SetTargets(dir);
@@ -161,8 +160,7 @@ namespace SystemMiami.CombatSystem
 
         #region Private
         private void showTiles()
-        {
-           
+        {           
             if (StoredTargets.Tiles == null) return;
             if (StoredTargets.Tiles.Count == 0) { return; }
             
@@ -173,8 +171,7 @@ namespace SystemMiami.CombatSystem
         }
 
         private void showCombatants()
-        {
-          
+        {          
             if (StoredTargets.Combatants == null) return;
             if (StoredTargets.Combatants.Count == 0) { return; }
 
@@ -187,8 +184,7 @@ namespace SystemMiami.CombatSystem
         }
 
         private void hideTiles()
-        {
-            
+        {            
             if (StoredTargets.Tiles == null) return;
             if (StoredTargets.Tiles.Count == 0) { return; }
 
@@ -200,7 +196,6 @@ namespace SystemMiami.CombatSystem
 
         private void hideCombatants()
         {
-            if (_targetsLocked) { Debug.Log("Not Calling Hide Combatants"); return; }
             if (StoredTargets.Combatants == null) return;
             if (StoredTargets.Combatants.Count == 0) { return; }
 
