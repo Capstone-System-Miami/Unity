@@ -2,7 +2,7 @@
 using SystemMiami.AbilitySystem;
 using UnityEngine;
 
-namespace SystemMiami.UI
+namespace SystemMiami.ui
 {
     public class AbilitySlot : MonoBehaviour
     {
@@ -21,12 +21,15 @@ namespace SystemMiami.UI
         [SerializeField] private SelectableText _name;
         [SerializeField] private SelectableSprite _nameBKG;
 
+        private Ability _ability;
+
         private int _index;
         private AbilityType _type;
         private SelectionState _selectionState;
 
-        public AbilityType Type { get { return _type; } }
+        public Ability Ability { get { return _ability; } }
         public int Index { get { return _index; } }
+        public AbilityType Type { get { return _type; } }
 
         public SelectionState State { get { return _selectionState; } }
 
@@ -59,14 +62,16 @@ namespace SystemMiami.UI
 
         public void Fill(Ability ability)
         {
+            _ability = ability;
+
             // This also won't change for now, but
             // we have the option to later, depending on
             // what the artists cook up UI-wise.
-            _icon.SetAllSprites(ability.Icon);
+            _icon.SetAllSprites(_ability.Icon);
 
-            _name.SetAllMessages(ability.name);
+            _name.SetAllMessages(_ability.name);
 
-            _type = ability.Type;
+            _type = _ability.Type;
         }
 
         public void OnClick()

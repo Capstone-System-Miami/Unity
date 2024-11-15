@@ -4,7 +4,7 @@ using System.Collections;
 using UnityEngine;
 using static UnityEngine.RuleTile.TilingRuleOutput;
 
-namespace SystemMiami.UI
+namespace SystemMiami.ui
 {
     [RequireComponent(typeof(RectTransform))]
     public class Transformer : MonoBehaviour

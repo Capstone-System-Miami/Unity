@@ -1,4 +1,3 @@
-using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem
@@ -7,21 +6,20 @@ namespace SystemMiami.CombatSystem
     [CreateAssetMenu(fileName = "New Status Effect", menuName = "Abilities/CombatActions/Inflict Status Effect")]
     public class InflictStatusEffect : CombatAction
     {
-        [SerializeField] AttributeSetSO statusEffectAttributesSO;
+        [SerializeField] StatSetSO effectStats;
         [SerializeField] int durationTurns;
 
         public override void Perform()
         {
-            StatusEffect statusEffect = new StatusEffect(statusEffectAttributesSO, durationTurns);
+            StatusEffect statusEffect = new StatusEffect(effectStats, durationTurns);
 
             foreach (Combatant target in TargetingPattern.StoredTargets.Combatants)
             {
                 if (target != null)
                 {
-                    target.Attributes.AddStatusEffect(statusEffect);
+                    target.InflictStatusEffect(statusEffect);
                 }
             }
         }
-
     }
 }

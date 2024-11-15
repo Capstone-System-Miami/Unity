@@ -1,6 +1,6 @@
 // Author: Layla Hoey
 using UnityEngine;
-using SystemMiami.UI;
+using SystemMiami.ui;
 
 namespace SystemMiami
 {

@@ -28,6 +28,14 @@ namespace SystemMiami
 
         public Vector3Int gridLocation;
 
+        public bool Valid
+        {
+            get
+            {
+                return (currentCharacter == null) && (!isBlocked);
+            }
+        }
+
         private SpriteRenderer _renderer;
         private Color _defaultColor;
 
@@ -39,10 +47,10 @@ namespace SystemMiami
 
         void Update()
         {
-            if (Input.GetMouseButton(0))
-            {
-                HideTile();
-            }
+            //if (Input.GetMouseButton(0))
+            //{
+            //    HideTile();
+            //}
         }
 
         public void ShowTile()
@@ -73,6 +81,7 @@ namespace SystemMiami
         public void UnHighlight()
         {
             HideTile();
+
             _renderer.color = _defaultColor;
         }
 

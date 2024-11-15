@@ -19,6 +19,12 @@ namespace SystemMiami
             _current = _max;
         }
 
+        public Resource(float max, float current)
+        {
+            _max = max;
+            _current = current;
+        }
+
         // Getters
         public float Get()
         {

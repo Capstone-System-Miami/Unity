@@ -1,15 +1,22 @@
 // Authors: Layla Hoey, Lee St Louis
 using System;
+using System.Linq;
 using SystemMiami.Enums;
 using SystemMiami.Management;
 using SystemMiami.Utilities;
+using SystemMiami.AbilitySystem;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem
 {
-    [RequireComponent(typeof(Stats))]
+    [RequireComponent(
+        typeof(Stats),
+        typeof(Abilities)
+        /*typeof(CombatantController)*/)]
     public class Combatant : MonoBehaviour, ITargetable, IDamageable, IHealable, IMovable
     {
+        [SerializeField] private Color _colorTag = Color.white;
+
         public OverlayTile CurrentTile;
 
         public Animator Animator;
@@ -18,11 +25,10 @@ namespace SystemMiami.CombatSystem
 
         public int ID { get; set; }
 
-        private Vector2Int _startFrameDirection;
-        private Vector2Int _endFrameDirection;
-
-        private MouseController _controller;
+        private CombatantController _controller;
         private Stats _stats;
+        private Abilities _abilities;
+
         private SpriteRenderer _renderer;
         private Color _defaultColor;
 
@@ -40,53 +46,77 @@ namespace SystemMiami.CombatSystem
         public bool IsStunned = false;
         public bool IsInvisible = false;
 
+        public Color ColorTag { get { return _colorTag; } }
+
         // These Actions will be subscribed to by each ability's
-        // CombatActions when they are equppped and targeting.
+        // CombatActions when they are equipped and targeting.
         // Which one they subscribe to will depend on the origin
         // of the pattern.
         public Action<DirectionalInfo> OnSubjectChanged;
         public Action<DirectionalInfo> OnDirectionChanged;
-        private Vector2Int _direction;
-        public bool HasActed { get; set; }
-        public bool IsMoving { get; set; }
 
-        public MouseController Controller { get { return _controller; } }
+        public CombatantController Controller { get { return _controller; } }
+
+        public Stats Stats { get { return _stats; } }
+
+        public Abilities Abilities { get { return _abilities; } }
 
 
-        public Attributes Attributes;
-
-        private void OnEnable()
+        #region Unity
+        private void Awake()
         {
             _stats = GetComponent<Stats>();
-            _controller = GetComponent<MouseController>();
+            _abilities = GetComponent<Abilities>();
+            _controller = GetComponent<CombatantController>();
             _renderer = GetComponent<SpriteRenderer>();
             _defaultColor = _renderer.color;
             Animator = GetComponent<Animator>();
             currentSprite = GetComponent<SpriteRenderer>().sprite;
+        }
 
-            Attributes = GetComponent<Attributes>();
-
-            if (_controller != null)
-            {
-                _controller.OnMouseTileChanged += setDirectionalInfo;
-                _controller.OnPathTileChanged += setDirectionalInfo;
-            }
-
+        private void OnEnable()
+        {
             GAME.MGR.CombatantDeath += onCombatantDeath;
+
+            if (_controller == null) { return; }
+            _controller.FocusedTileChanged += onFocusedTileChanged;
+            _controller.PathTileChanged += onPathTileChanged;
         }
 
         private void OnDisable()
         {
-            if (_controller != null)
-            {
-                _controller.OnMouseTileChanged -= setDirectionalInfo;
-                _controller.OnPathTileChanged -= setDirectionalInfo;
-            }
-
             GAME.MGR.CombatantDeath -= onCombatantDeath;
+
+            if (_controller == null) { return; }
+            _controller.FocusedTileChanged -= onFocusedTileChanged;
+            _controller.PathTileChanged -= onPathTileChanged;
         }
 
         protected virtual void Start()
+        {
+            initResources();
+            initCurrentTile();
+            initDirection();
+        }
+
+        private void Update()
+        {
+            checkDead();
+            updateResources();
+        }
+
+        #endregion Unity
+
+        #region Construction
+        private void initResources()
+        {
+            Health = new Resource(_stats.GetStat(StatType.MAX_HEALTH));
+            Stamina = new Resource(_stats.GetStat(StatType.STAMINA));
+            Mana = new Resource(_stats.GetStat(StatType.MANA));
+            Speed = new Resource(_stats.GetStat(StatType.SPEED));
+        }
+
+        private void initCurrentTile()
         {
             if (CurrentTile == null)
             {
@@ -97,16 +127,32 @@ namespace SystemMiami.CombatSystem
                     CurrentTile = MapManager.MGR.map[gridPos];
                 }
             }
-
-            Health = new Resource(_stats.GetStat(StatType.MAX_HEALTH));
-            Stamina = new Resource(_stats.GetStat(StatType.STAMINA));
-            Mana = new Resource(_stats.GetStat(StatType.MANA));
-            Speed = new Resource(_stats.GetStat(StatType.SPEED));
-
-            initPlayerDirection();
         }
 
-        private void Update()
+        private void initDirection()
+        {
+            Vector2Int currentPos = (Vector2Int)CurrentTile.gridLocation;
+            setDirection(new DirectionalInfo(currentPos,  currentPos + Vector2Int.one));
+        }
+        #endregion Construction
+
+        #region Subscriptions
+        private void onFocusedTileChanged(OverlayTile newTile)
+        {
+            setDirectionByTile(newTile);
+        }
+
+        private void onPathTileChanged(DirectionalInfo newDirection)
+        {
+            setDirection(newDirection);
+
+            // Decrement speed when combatant moves to a new tile.
+            Speed.Lose(1);
+        }
+        #endregion Subscriptions
+
+        #region Update
+        private void checkDead()
         {
             if (Health.Get() == 0)
             {
@@ -114,71 +160,60 @@ namespace SystemMiami.CombatSystem
             }
         }
 
-        private void initPlayerDirection()
+        private void updateResources()
         {
-            Vector2Int currentPos = (Vector2Int)CurrentTile.gridLocation;
-            setDirectionalInfo(new DirectionalInfo(currentPos, Vector2Int.zero));
+            Health = new Resource(_stats.GetStat(StatType.MAX_HEALTH), Health.Get());
+            Stamina = new Resource(_stats.GetStat(StatType.STAMINA), Stamina.Get());
+            Mana = new Resource(_stats.GetStat(StatType.MANA), Mana.Get());
+            Speed = new Resource(_stats.GetStat(StatType.SPEED), Speed.Get());
         }
+        #endregion Update
 
+        #region Directions (priv)
         /// <summary>
-        /// TODO:
-        /// Because this is now tied into a MouseController event,
-        /// it will do nothing for enemies, who don't have mouse controllers.
-        /// This should be refactored once a
-        /// movement system is finalized in a
-        /// structured way.
-        /// Sets the _player's directional info
+        /// Sets the combatant's directional info.
+        /// For players, this is based on mouse position.
+        /// For enemies, it's based on their target or movement.
         /// </summary>
-        private void setDirectionalInfo(OverlayTile mouseTile)
+        private void setDirectionByTile(OverlayTile targetTile)
         {
-            if (IsMoving) { return; }
+            if (_controller.IsMoving) { return; }
+            if (_abilities.CurrentState == Abilities.State.TARGETS_LOCKED) { return; }
+            if (_abilities.CurrentState == Abilities.State.EXECUTING) { return; }
+            if (targetTile == null) { return; }
 
-            Debug.LogWarning("Dir info changing");
-            Vector2Int playerPos = (Vector2Int)CurrentTile.gridLocation;
-            Vector2Int playerFwd;
+            Vector2Int currentPos = (Vector2Int)CurrentTile.gridLocation;
+            Vector2Int forwardPos;
 
-            // If the _player has a Mouse Controller (is the user)
-            if (TryGetComponent(out _controller))
-            {
-                playerFwd = (Vector2Int)mouseTile.gridLocation;
-            }
-            // If the _player doesn't have a mouse controller (is an enemy)
-            else
-            {
-                // TODO: Set up an equivalent for enemies.
-                // Right now, I guess this would happen in TurnManager?
-                // That's were enemy movement is currently being handled.
-                // Movement component should have a currentTile and a previous tile.
-                // Enemies DirectionVec would be either
-                    // [wherever they moved to] - [where they moved from] or
-                    // [_player position] - [wherever they are right now]
+            forwardPos = (Vector2Int)targetTile.gridLocation;
 
-                // For now, set the enemy's forward to the _player position
-                playerFwd = (Vector2Int)TurnManager.Instance.playerCharacters[0].CurrentTile.gridLocation;
-            }
-
-            DirectionalInfo newDirection = new DirectionalInfo(playerPos, playerFwd);
+            DirectionalInfo newDirection = new DirectionalInfo(currentPos, forwardPos);
 
             OnSubjectChanged?.Invoke(newDirection);
 
-            if (newDirection.DirectionVec != DirectionInfo.DirectionVec)
-            {
+            //if (newDirection.DirectionVec != DirectionInfo.DirectionVec)
+            //{
                 SwapSprite(newDirection.DirectionVec);
                 OnDirectionChanged?.Invoke(newDirection);
-            }
+            //}
 
             DirectionInfo = newDirection;
-            _direction = newDirection.DirectionVec;
         }
 
-        // As of 10/29/24 this is only being called when
-        // OnPathTileChanged is invoked on mouse controller.
-        private void setDirectionalInfo(DirectionalInfo newDirection)
+        /// <summary>
+        /// Allows setting directional info directly.
+        /// </summary>
+        private void setDirection(DirectionalInfo newDirection)
         {
             DirectionInfo = newDirection;
-            _direction = newDirection.DirectionVec;
-            SwapSprite(_direction);
+
+            SwapSprite(newDirection.DirectionVec);
+
+            OnSubjectChanged?.Invoke(newDirection);
+            OnDirectionChanged?.Invoke(newDirection);
         }
+        #endregion Directions (priv)
+
 
         private void onCombatantDeath(Combatant deadCombatant)
         {
@@ -220,7 +255,7 @@ namespace SystemMiami.CombatSystem
 
         public void UnHighlight()
         {
-            print($"{name} is not longer highlighted");
+            print($"{name} is no longer highlighted");
             _renderer.color = _defaultColor;
         }
 
@@ -235,7 +270,7 @@ namespace SystemMiami.CombatSystem
         {
             if (IsDamageable)
             {
-                print($"{name} lost {amount} health.\n");
+                print($"{name} lost {amount} health.");
 
                 Health.Lose(amount);
             }
@@ -251,7 +286,7 @@ namespace SystemMiami.CombatSystem
         {
             if (IsHealable)
             {
-                print($"{name} gained full health.\n");
+                print($"{name} gained full health.");
 
                 Health.Reset();
             }
@@ -265,7 +300,7 @@ namespace SystemMiami.CombatSystem
         {
             if (IsHealable)
             {
-                print($"{name} gained {amount} health.\n");
+                print($"{name} gained {amount} health.");
 
                 Health.Gain(amount);
             }
@@ -286,13 +321,13 @@ namespace SystemMiami.CombatSystem
         {
             if (IsMovable)
             {
-                // TODO: Move the character to a certain position
-                print($"{name} would be moved to {tilePos}, but this mechanic has not been implemented");
+                // TODO: Implement movement logic
+                print($"{name} would move to {tilePos}, but this mechanic has not been implemented");
                 return true;
             }
             else
             {
-                print ($"{name} is sturdy");
+                print($"{name} cannot move");
                 return false;
             }
         }
@@ -301,42 +336,37 @@ namespace SystemMiami.CombatSystem
         {
             if (IsMovable)
             {
-                // TODO: Move the character a certain amount of tiles
-                // in a certain boardDirection
-                // if there are obstacles / edge of board in the way,
-                // move as far as possible before hitting them.
-                // Take damage if they hit an obstacle?
-
+                // TODO: Implement directional movement logic
                 Vector2Int newPos = (Vector2Int)CurrentTile.gridLocation + boardDirection * distance;
 
-                print($"{name} would be moved to {newPos}, but this mechanic has not been implemented");
+                print($"{name} would move to {newPos}, but this mechanic has not been implemented");
                 return true;
             }
             else
             {
-                print($"{name} is sturdy");
+                print($"{name} cannot move");
                 return false;
             }
         }
         #endregion
 
+        public void InflictStatusEffect(StatusEffect effect)
+        {
+            _stats.AddStatusEffect(effect);
+        }
+
         public void ResetTurn()
         {
             Speed = new Resource(_stats.GetStat(StatType.SPEED));
-            HasActed = false;
+            _abilities.ReduceCooldowns();
+            _stats.UpdateStatusEffects();
         }
 
         public virtual void Die()
         {
-            // I'm not sure that Enemy should be a derived class of Combatant.
-
-            // If it wasn't, we would probably have something like this:
-            // if player
-                // game over
-            // else
-                // destroy game object
-
-            // But since we don't we'll let the derived class handle it for now.
+            // Player died
+            Debug.Log($"{name} has died.");
+            Destroy(gameObject);
         }
     }
 }

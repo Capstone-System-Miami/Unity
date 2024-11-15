@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace SystemMiami.UI
+namespace SystemMiami.ui
 {
     public class UnequipPrompt : MonoBehaviour
     {

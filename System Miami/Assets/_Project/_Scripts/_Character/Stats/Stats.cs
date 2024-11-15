@@ -1,4 +1,4 @@
-// Authors: Layla Hoey
+// Authors: Layla Hoey, Lee St Louis
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,12 +11,22 @@ namespace SystemMiami
         //===============================
         [SerializeField] private bool _printReports;
 
+        // Collection of floats used in stat formulas
         [SerializeField] private StatData _statData;
 
+        // For storing a reference to a
+        // character's Attributes component
         private Attributes _attributes;
 
-        // The Dictionary of values used for the actual writing & reading of the stats.
-        private Dictionary<StatType, float> _currentStats = new Dictionary<StatType, float>();
+        // For storing our current, unmodified stats
+        private StatSet _beforeEffects = new StatSet();
+
+        // For storing our current stats,
+        // as modified by any status effects
+        private StatSet _afterEffects = new StatSet();
+
+        // For any current status effects
+        private List<StatusEffect> _statusEffects = new List<StatusEffect>();
 
         //===============================
         #endregion // ^vars^
@@ -31,114 +41,42 @@ namespace SystemMiami
 
         private void Start()
         {
-            setAll();
+            _beforeEffects = new StatSet(_attributes.GetSet(), _statData);
+            updateEffects();
         }
 
         private void Update()
         {
-            setAll();
+            _beforeEffects = new StatSet(_attributes.GetSet(), _statData);
+            updateEffects();
             if (_printReports) { print(getStatsReport()); }
         }
 
-        private void setAll()
+        /// <summary>
+        /// Adds any values from status effects to
+        /// _afterEffects, which should be the only
+        /// source that any external scripts can use
+        /// to read a Stat
+        /// </summary>
+        private void updateEffects()
         {
-            setPhysicalPower(_attributes.GetAttribute(AttributeType.STRENGTH));
-            setPhysicalSlots(_attributes.GetAttribute(AttributeType.STRENGTH));
-            setStamina(_attributes.GetAttribute(AttributeType.DEXTERITY));
-            
-            setMagicalPower(_attributes.GetAttribute(AttributeType.WISDOM));
-            setMagicalSlots(_attributes.GetAttribute(AttributeType.WISDOM));
-            setMana(_attributes.GetAttribute(AttributeType.INTELLIGENCE));
-            
-            setMaxHealth(_attributes.GetAttribute(AttributeType.CONSTITUTION));
-            setDamageReduction(_attributes.GetAttribute(AttributeType.CONSTITUTION));
-            setSpeed(_attributes.GetAttribute(AttributeType.DEXTERITY));
-        }
-
-    #region SETTERS/FORMULAS
-        private void setPhysicalPower(int strength)
-        {
-            _currentStats[StatType.PHYSICAL_PWR] = strength * _statData.EffectMultiplier;
-        }
-
-        private void setMagicalPower(int wisdom)
-        {
-            _currentStats[StatType.MAGICAL_PWR] = wisdom * _statData.EffectMultiplier;
-        }
-
-        private void setPhysicalSlots(int strength)
-        {
-            int result;
-
-            int threshold = _statData.SlotAttributeThreshold;
-            int minSlots = _statData.MinSlots;
-            int additionalSlots = (int)(strength * 2 * _statData.SlotMultiplier);
-
-            if (strength > threshold)
+            for (int i = 0; i < CharacterEnums.STATS_COUNT; i++)
             {
-                result = minSlots + additionalSlots;
+                StatType stat = (StatType)i;
+
+                _afterEffects.Set(stat, (_beforeEffects.Get(stat) + GetNetStatusEffects(stat)) );
             }
-            else
-            {
-                result = minSlots;
-            }
-
-            _currentStats[StatType.PHYSICAL_SLOTS] = result;
         }
-
-        private void setMagicalSlots(int wisdom)
-        {
-            int result;
-
-            int threshold = _statData.SlotAttributeThreshold;
-            int minSlots = _statData.MinSlots;
-            int additionalSlots = (int)(wisdom * 2 * _statData.SlotMultiplier);
-
-            if (wisdom > threshold)
-            {
-                result = minSlots + additionalSlots;
-            }
-            else
-            {
-                result = minSlots;
-            }
-
-            _currentStats[StatType.MAGICAL_SLOTS] = result;
-        }
-
-        private void setStamina(int dexterity)
-        {
-            _currentStats[StatType.STAMINA] = dexterity * _statData.ResourceMultiplier;
-        }
-
-        private void setMana(int intelligence)
-        {
-            _currentStats[StatType.MANA] = intelligence * _statData.ResourceMultiplier;
-        }
-
-        private void setMaxHealth(int constitution)
-        {
-            _currentStats[StatType.MAX_HEALTH] = constitution * _statData.HealthMultiplier;
-        }
-
-        private void setDamageReduction(int constitution)
-        {
-            _currentStats[StatType.DMG_RDX] = constitution * _statData.DamageRdxMultiplier;
-        }
-
-        private void setSpeed(int dexterity)
-        {
-            _currentStats[StatType.SPEED] = dexterity;
-        }
-        #endregion // ^setters^
 
         private string getStatsReport()
         {
             string result = "";
 
-            foreach(StatType stat in _currentStats.Keys)
+            for (int i = 0; i < CharacterEnums.STATS_COUNT; i++)
             {
-                result += $"{stat}: {_currentStats[stat]}\n";
+                StatType stat = (StatType)i;
+
+                result += $"{ stat }: \t { _beforeEffects.Get(stat) }\n";
             }
 
             return result;
@@ -150,12 +88,48 @@ namespace SystemMiami
         #region PUBLIC METHODS
         //===============================
 
+        /// <summary>
+        /// Returns a given stat, including
+        /// any mods made by active StatusEffects
+        /// </summary>
         public float GetStat(StatType type)
         {
-            if (_currentStats == null || _currentStats.Count == 0) { return 0f; }
-
-            return _currentStats[type];
+            return _afterEffects.Get(type);
         }
+
+        // PREVIOUSLY LOCATED IN ATTRIBUTES
+        #region Status Effects
+        public void AddStatusEffect(StatusEffect effect)
+        {
+            _statusEffects.Add(effect);
+            Debug.Log($"{name} received a status effect for {effect.Duration} turns.");
+        }
+
+        public float GetNetStatusEffects(StatType type)
+        {
+            float result = 0;
+
+            foreach (StatusEffect statusEffect in _statusEffects)
+            {
+                result += statusEffect.Effect.Get(type);
+            }
+
+            return result;
+        }
+
+        public void UpdateStatusEffects()
+        {
+            for (int i = _statusEffects.Count - 1; i >= 0; i--)
+            {
+                _statusEffects[i].DecrementDuration();
+
+                if (_statusEffects[i].IsExpired())
+                {
+                    _statusEffects.RemoveAt(i);
+                }
+            }
+        }
+        #endregion
 
         //===============================
         #endregion // ^public^

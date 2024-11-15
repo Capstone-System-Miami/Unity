@@ -11,10 +11,10 @@ namespace SystemMiami
         public static InputManager Instance;
 
         // Events for different input actions
-        public event Action<int> OnAbilityKeyPressed;
-        public event Action OnLeftMouseDown;
-        public event Action OnRightMouseDown;
-        public event Action OnEnterPressed;
+        public event Action<int> AbilityKeyPressed;
+        public event Action LeftMouseDown;
+        public event Action RightMouseDown;
+        public event Action EnterPressed;
 
         private void Awake()
         {
@@ -33,24 +33,24 @@ namespace SystemMiami
                 if (Input.GetKeyDown(KeyCode.Alpha1 + i))
                 {
                     // Raise event when ability key is pressed
-                    OnAbilityKeyPressed?.Invoke(i);
+                    AbilityKeyPressed?.Invoke(i);
                 }
             }
 
             // Raise events for mouse clicks and enter key
             if (Input.GetMouseButtonDown(0))
             {
-                OnLeftMouseDown?.Invoke();
+                LeftMouseDown?.Invoke();
             }
 
             if (Input.GetMouseButtonDown(1))
             {
-                OnRightMouseDown?.Invoke();
+                RightMouseDown?.Invoke();
             }
 
             if (Input.GetKeyDown(KeyCode.Return))
             {
-                OnEnterPressed?.Invoke();
+                EnterPressed?.Invoke();
             }
         }
     }

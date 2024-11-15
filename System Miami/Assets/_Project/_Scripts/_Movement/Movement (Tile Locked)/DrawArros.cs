@@ -1,27 +1,38 @@
-//Alec's script
+//Alec's script, layla minor edits
 
 using System.Collections.Generic;
+using SystemMiami.Management;
 using UnityEngine;
 
 namespace SystemMiami
 {
-    public class DrawArrows : MonoBehaviour
+    public class DrawArrows : Singleton<DrawArrows>
     {
-        public static DrawArrows Instance;
         public GameObject arrowPrefab;
         public List<GameObject> arrows;
         public List<OverlayTile> previousPath;
 
-        private void Awake(){ Instance = this; arrows = new List<GameObject>(); previousPath = new List<OverlayTile>(); }
+        protected override void Awake()
+        {
+            base.Awake();
+
+            arrows = new List<GameObject>();
+            previousPath = new List<OverlayTile>();
+        }
 
         private void OnEnable()
         {
-            TurnManager.Instance.NewTurnPhase += RemoveArrows;
+            TurnManager.MGR.NewTurnPhase += onNewTurnPhase;
         }
 
         private void OnDisable()
         {
-            TurnManager.Instance.NewTurnPhase -= RemoveArrows;
+            TurnManager.MGR.NewTurnPhase -= onNewTurnPhase;
+        }
+
+        private void onNewTurnPhase(Phase newPhase)
+        {
+            RemoveArrows();
         }
 
         public void DrawPath(List<OverlayTile> path)
@@ -30,32 +41,34 @@ namespace SystemMiami
 
             if(previousPath == path) return;
 
-            foreach(GameObject arrow in arrows){
-                Destroy(arrow);
-            }
-            arrows.Clear();
+            RemoveArrows();
 
             previousPath = new List<OverlayTile>(path);
 
             for(int i = 1; i < path.Count; i++)
             {
-                OverlayTile tile = path[i];
+                int left = i - 1;
+                int right = i + 1;
+                int last = path.Count - 1;
 
-                Vector3 arrowsPosition = MapManager.MGR.IsoToScreen(tile.gridLocation);
+                OverlayTile currentTile = path[i];
+                OverlayTile prev = ( left >= 0 )        ? path[left]  : null;
+                OverlayTile next = ( right <= last )    ? path[right] : null;
 
-                var arrowGo = Instantiate(arrowPrefab, arrowsPosition, Quaternion.identity);
+                Vector3 arrowsPosition = MapManager.MGR.IsoToScreen(currentTile.gridLocation);
+
+                GameObject arrowGo = Instantiate(arrowPrefab, arrowsPosition, Quaternion.identity);
 
                 Arrow arrow = arrowGo.GetComponent<Arrow>();
-                arrow.SetTileData(tile, path[i - 1], i < path.Count - 1 ? path[i + 1] : null);
+                arrow.SetTileData(currentTile, prev, next);
 
                 arrows.Add(arrowGo);
-              //todo arrows after path
-                
+                //todo arrows after path                
             }
             
         }
 
-        private void RemoveArrows(Phase newPhase)
+        private void RemoveArrows()
         {
             foreach (GameObject arrow in arrows)
             {
