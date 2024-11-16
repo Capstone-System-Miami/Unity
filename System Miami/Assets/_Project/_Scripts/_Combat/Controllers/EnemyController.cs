@@ -1,4 +1,4 @@
-// Authors: Layla
+// Authors: Layla, Lee
 using System.Collections;
 using System.Collections.Generic;
 using SystemMiami.AbilitySystem;
@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace SystemMiami
 {
-    public class EnemyController_layla : CombatantController
+    public class EnemyController : CombatantController
     {
         [SerializeField] private int detectionRadius = 2;
 
