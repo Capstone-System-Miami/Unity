@@ -131,7 +131,7 @@ namespace SystemMiami.CombatSystem
 
         private void initDirection()
         {
-            Vector2Int currentPos = (Vector2Int)CurrentTile.gridLocation;
+            Vector2Int currentPos = (Vector2Int)CurrentTile.GridLocation;
             setDirection(new DirectionalInfo(currentPos,  currentPos + Vector2Int.one));
         }
         #endregion Construction
@@ -182,10 +182,10 @@ namespace SystemMiami.CombatSystem
             if (_abilities.CurrentState == Abilities.State.EXECUTING) { return; }
             if (targetTile == null) { return; }
 
-            Vector2Int currentPos = (Vector2Int)CurrentTile.gridLocation;
+            Vector2Int currentPos = (Vector2Int)CurrentTile.GridLocation;
             Vector2Int forwardPos;
 
-            forwardPos = (Vector2Int)targetTile.gridLocation;
+            forwardPos = (Vector2Int)targetTile.GridLocation;
 
             DirectionalInfo newDirection = new DirectionalInfo(currentPos, forwardPos);
 
@@ -314,7 +314,7 @@ namespace SystemMiami.CombatSystem
         #region IMovable
         public Vector2Int GetTilePos()
         {
-            return (Vector2Int)CurrentTile.gridLocation;
+            return (Vector2Int)CurrentTile.GridLocation;
         }
 
         public bool TryMoveTo(Vector2Int tilePos)
@@ -337,7 +337,7 @@ namespace SystemMiami.CombatSystem
             if (IsMovable)
             {
                 // TODO: Implement directional movement logic
-                Vector2Int newPos = (Vector2Int)CurrentTile.gridLocation + boardDirection * distance;
+                Vector2Int newPos = (Vector2Int)CurrentTile.GridLocation + boardDirection * distance;
 
                 print($"{name} would move to {newPos}, but this mechanic has not been implemented");
                 return true;

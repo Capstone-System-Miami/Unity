@@ -535,7 +535,7 @@ namespace SystemMiami.CombatSystem
             {
                 // Directional info based on the current tile
                 // and the one we're moving to.
-                DirectionalInfo newDir = new DirectionalInfo((Vector2Int)combatant.CurrentTile.gridLocation, (Vector2Int)targetTile.gridLocation);
+                DirectionalInfo newDir = new DirectionalInfo((Vector2Int)combatant.CurrentTile.GridLocation, (Vector2Int)targetTile.GridLocation);
 
                 // Let any subscribers know that we are moving along path
                 PathTileChanged(newDir);

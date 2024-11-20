@@ -68,7 +68,7 @@ namespace SystemMiami
 
                             overlayTile.transform.position = new Vector3(cellWorldPosition.x, cellWorldPosition.y, cellWorldPosition.z);
                             //overlayTile.GetComponent<SpriteRenderer>().sortingOrder = tileMap.GetComponent<TilemapRenderer>().sortingOrder;
-                            overlayTile.gridLocation = tileLocation;
+                            overlayTile.GridLocation = tileLocation;
                             map.Add(tileKey, overlayTile);
                         }
                     }
@@ -88,7 +88,7 @@ namespace SystemMiami
 
             foreach (OverlayTile tile in map.Values)
             {
-                if (!tile.isBlocked && tile.currentCharacter == null)
+                if (tile.Valid)
                 {
                     unblockedTiles.Add(tile);
                 }
@@ -115,11 +115,11 @@ namespace SystemMiami
             // Let the old tile know that we're gone
             if (character.CurrentTile != null)
             {
-                character.CurrentTile.currentCharacter = null;
+                character.CurrentTile.CurrentCharacter = null;
             }
 
             // Update new tile's current character
-            tile.currentCharacter = character;
+            tile.CurrentCharacter = character;
             character.CurrentTile = tile;
         }
 

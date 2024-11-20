@@ -282,7 +282,7 @@ namespace SystemMiami
 
             foreach (OverlayTile tile in neighbours)
             {
-                if (!tile.isBlocked && tile.currentCharacter == null)
+                if (tile.Valid)
                 {
                     walkableTiles.Add(tile);
                 }

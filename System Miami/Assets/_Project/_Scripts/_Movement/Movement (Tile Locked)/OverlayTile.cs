@@ -7,50 +7,56 @@ namespace SystemMiami
 {
     public class OverlayTile : MonoBehaviour, ITargetable
     {
-        // The height of the overlay tile.
-        // Presumably NONE, since it's flat.
-        // But it's here in case we need it later.
-        public BlockHeight height;
-
+        #region PUBLIC VARS
+        // ==================================
         // ??
         public int G;
         public int H;
 
         // Reference to the character currently on this tile
-        public Combatant currentCharacter;
+        public Combatant CurrentCharacter;
 
-        // ??
-        public int F { get { return G + H; } }
+        public OverlayTile PreviousTile;
+        // ==================================
+        #endregion // PUBLIC VARS
 
-        public bool isBlocked;
+        #region PRIVATE
+        // ==================================
+        private Vector3Int gridLocation;
+        private SpriteRenderer _renderer;
+        private Color _defaultColor;
 
-        public OverlayTile previous;
+        private bool isBlocked;       
+        #endregion // PRIVATE VARS ==========
 
-        public Vector3Int gridLocation;
+        #region PROPERTIES
+        // ==================================
 
+        // Location on the game board in tile units.
+        // Cast this to Vector2Int to use it as a key
+        // for the map dict
+        public Vector3Int GridLocation { get { return gridLocation; } set { gridLocation = value; } }
+
+        /// <summary>
+        /// Whether the tile is blocked, e.g. by a character occupier.
+        /// </summary>
         public bool Valid
         {
             get
             {
-                return (currentCharacter == null) && (!isBlocked);
+                return (CurrentCharacter == null) && (!isBlocked);
             }
         }
 
-        private SpriteRenderer _renderer;
-        private Color _defaultColor;
+        // ??
+        public int F { get { return G + H; } }
+
+        #endregion // PROPERTIES ============
 
         private void Awake()
         {
             _renderer = GetComponent<SpriteRenderer>();
             _defaultColor = _renderer.color;
-        }
-
-        void Update()
-        {
-            //if (Input.GetMouseButton(0))
-            //{
-            //    HideTile();
-            //}
         }
 
         public void ShowTile()
@@ -66,6 +72,9 @@ namespace SystemMiami
             gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0);
         }
 
+        #region ITARGETABLE
+        // ==================================
+        
         public void Target()
         {
             ShowTile();
@@ -89,5 +98,7 @@ namespace SystemMiami
         {
             return gameObject;
         }
+
+        #endregion // ITARGETABLE ===========
     }
 }

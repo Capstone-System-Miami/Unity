@@ -48,7 +48,7 @@ namespace SystemMiami
                     if (closedList.Contains(neighbour)) { continue; }
 
                     // skip tiles that have different z-axis
-                    if (Mathf.Abs(currentOverlayTile.gridLocation.z - neighbour.gridLocation.z) > 1) { continue; }
+                    if (Mathf.Abs(currentOverlayTile.GridLocation.z - neighbour.GridLocation.z) > 1) { continue; }
 
                     // skip blocked, unless it's the end tile
                     if(!neighbour.Valid && neighbour != end) { continue; }
@@ -59,7 +59,7 @@ namespace SystemMiami
                     neighbour.H = GetManhattenDistance(end, neighbour);
 
                     //set the current tile as the parent of the neighbor (for path reconstrcution)
-                    neighbour.previous = currentOverlayTile;
+                    neighbour.PreviousTile = currentOverlayTile;
 
                     //add neighbor to open list
                     if (!openList.Contains(neighbour))
@@ -84,7 +84,7 @@ namespace SystemMiami
             while(currentTile != start)
             {
                 finishedList.Add(currentTile);
-                currentTile = currentTile.previous;
+                currentTile = currentTile.PreviousTile;
             }
 
             finishedList.Reverse();
@@ -94,7 +94,7 @@ namespace SystemMiami
 
         private int GetManhattenDistance(OverlayTile start, OverlayTile neighbour)
         {
-            return Mathf.Abs(start.gridLocation.x - neighbour.gridLocation.x) + Mathf.Abs(start.gridLocation.y - neighbour.gridLocation.y);
+            return Mathf.Abs(start.GridLocation.x - neighbour.GridLocation.x) + Mathf.Abs(start.GridLocation.y - neighbour.GridLocation.y);
         }
 
         public List<OverlayTile> GetNeighbourTiles(OverlayTile currentOverlayTile)
@@ -105,32 +105,32 @@ namespace SystemMiami
 
             //top
             Vector2Int locationToCheck = new Vector2Int(
-                currentOverlayTile.gridLocation.x,
-                currentOverlayTile.gridLocation.y + 1);
+                currentOverlayTile.GridLocation.x,
+                currentOverlayTile.GridLocation.y + 1);
             if(map.ContainsKey(locationToCheck))
             {
                 neighbours.Add(map[locationToCheck]);
             }
             //Bottom
              locationToCheck = new Vector2Int(
-                currentOverlayTile.gridLocation.x,
-                currentOverlayTile.gridLocation.y - 1);
+                currentOverlayTile.GridLocation.x,
+                currentOverlayTile.GridLocation.y - 1);
             if (map.ContainsKey(locationToCheck))
             {
                 neighbours.Add(map[locationToCheck]);
             }
             //Right
              locationToCheck = new Vector2Int(
-                currentOverlayTile.gridLocation.x + 1,
-                currentOverlayTile.gridLocation.y);
+                currentOverlayTile.GridLocation.x + 1,
+                currentOverlayTile.GridLocation.y);
             if (map.ContainsKey(locationToCheck))
             {
                 neighbours.Add(map[locationToCheck]);
             }
             //Left
              locationToCheck = new Vector2Int(
-                currentOverlayTile.gridLocation.x - 1,
-                currentOverlayTile.gridLocation.y);
+                currentOverlayTile.GridLocation.x - 1,
+                currentOverlayTile.GridLocation.y);
             if (map.ContainsKey(locationToCheck))
             {
                 neighbours.Add(map[locationToCheck]);
