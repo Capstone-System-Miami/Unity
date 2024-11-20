@@ -104,25 +104,6 @@ namespace SystemMiami
             return null;
         }
 
-        /// <summary>
-        /// Positions a character on the specified tile.
-        /// </summary>
-        public void PositionCharacterOnTile(Combatant character, OverlayTile tile)
-        {
-            character.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y + 0.0001f, tile.transform.position.z);
-            //character.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
-
-            // Let the old tile know that we're gone
-            if (character.CurrentTile != null)
-            {
-                character.CurrentTile.CurrentCharacter = null;
-            }
-
-            // Update new tile's current character
-            tile.CurrentCharacter = character;
-            character.CurrentTile = tile;
-        }
-
         public Vector3 IsoToScreen(Vector3Int tileLocation)
         {
             return Coordinates.IsoToScreen(tileLocation, gridTilesHeight);

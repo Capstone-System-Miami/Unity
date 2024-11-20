@@ -137,6 +137,5 @@ namespace SystemMiami
             }
             return neighbours;
         }
-
     }
 }

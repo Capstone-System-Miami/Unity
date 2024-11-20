@@ -2,6 +2,7 @@
 using SystemMiami.CombatSystem;
 using SystemMiami.Utilities;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 namespace SystemMiami
 {
@@ -9,25 +10,39 @@ namespace SystemMiami
     {
         #region PUBLIC VARS
         // ==================================
+
         // ??
         public int G;
         public int H;
 
-        // Reference to the character currently on this tile
-        public Combatant CurrentCharacter;
-
         public OverlayTile PreviousTile;
-        // ==================================
-        #endregion // PUBLIC VARS
 
-        #region PRIVATE
+        #endregion // PUBLIC VARS ===========
+
+
+        #region SERIALIZED VARS
         // ==================================
-        private Vector3Int gridLocation;
+        [SerializeField] private Color occupiedColor = Color.white;
+        [SerializeField] private Color activeCombatantColor = Color.white;
+
+        #endregion // SERIALIZED VARS =======
+
+
+        #region PRIVATE VARS
+        // ==================================
+
         private SpriteRenderer _renderer;
         private Color _defaultColor;
 
-        private bool isBlocked;       
+        private Vector3Int gridLocation;
+
+        private bool isBlocked;
+
+        private Combatant currentCombatant;
+        private Color currentColor;
+        
         #endregion // PRIVATE VARS ==========
+
 
         #region PROPERTIES
         // ==================================
@@ -37,14 +52,17 @@ namespace SystemMiami
         // for the map dict
         public Vector3Int GridLocation { get { return gridLocation; } set { gridLocation = value; } }
 
+        // Reference to the combatant currently on this tile
+        public Combatant CurrentCombatant { get { return currentCombatant; } }
+
         /// <summary>
-        /// Whether the tile is blocked, e.g. by a character occupier.
+        /// Whether the tile is blocked, e.g. by a combatant occupier.
         /// </summary>
         public bool Valid
         {
             get
             {
-                return (CurrentCharacter == null) && (!isBlocked);
+                return (currentCombatant == null) && (!isBlocked);
             }
         }
 
@@ -53,11 +71,21 @@ namespace SystemMiami
 
         #endregion // PROPERTIES ============
 
+
+        #region UNITY
+        // ==================================
+
         private void Awake()
         {
             _renderer = GetComponent<SpriteRenderer>();
             _defaultColor = _renderer.color;
         }
+
+        #endregion // UNITY =================
+
+
+        #region VISIBILITY
+        // ==================================
 
         public void ShowTile()
         {
@@ -71,10 +99,13 @@ namespace SystemMiami
             // Alpha = 0 means transparent.
             gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0);
         }
+        
+        #endregion // VISIBILITY ============
+
 
         #region ITARGETABLE
         // ==================================
-        
+
         public void Target()
         {
             ShowTile();
@@ -89,9 +120,15 @@ namespace SystemMiami
 
         public void UnHighlight()
         {
-            HideTile();
-
-            _renderer.color = _defaultColor;
+            if (currentCombatant != null)
+            {
+                _renderer.color = occupiedColor;
+            }
+            else
+            {
+                _renderer.color = _defaultColor;
+                HideTile();
+            }
         }
 
         public GameObject GameObject()
@@ -100,5 +137,42 @@ namespace SystemMiami
         }
 
         #endregion // ITARGETABLE ===========
+
+
+        /// <summary>
+        /// Positions a combatant on this tile.
+        /// If the combatant already has a CurrentTile,
+        /// this function calls RemoveCombatant() on
+        /// combatant's CurrentTile before setting it to
+        /// this tile.
+        /// </summary>
+        public void PlaceCombatant(Combatant combatant)
+        {
+            combatant.transform.position = new Vector3(transform.position.x, transform.position.y + 0.0001f, transform.position.z);
+
+            //combatant.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
+
+            // Let the old tile know that we're gone
+            if (combatant.CurrentTile != null)
+            {
+                combatant.CurrentTile.RemoveCombatant();
+            }
+
+            // Show tile
+            // set occupied color
+
+            // Update new tile's current combatant
+            currentCombatant = combatant;
+            combatant.CurrentTile = this;
+        }
+
+        public void RemoveCombatant()
+        {
+            // hide tile,
+            // set default color
+
+            currentCombatant.CurrentTile = null;
+            currentCombatant = null;
+        }
     }
 }

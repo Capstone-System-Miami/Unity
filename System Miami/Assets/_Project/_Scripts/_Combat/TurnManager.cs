@@ -78,7 +78,7 @@ namespace SystemMiami
             {
                 Vector3Int charTilePos = Coordinates.ScreenToIso(playerCharacter.transform.position, 0);
                 MapManager.MGR.map.TryGetValue((Vector2Int)charTilePos, out OverlayTile charTile);
-                MapManager.MGR.PositionCharacterOnTile(playerCharacter, charTile);
+                charTile.PlaceCombatant(playerCharacter);
             }
 
             SpawnEnemies();
@@ -166,7 +166,7 @@ namespace SystemMiami
                     enemyCombatant.name = newName;
 
                     // Position enemy on the tile
-                    MapManager.MGR.PositionCharacterOnTile(enemyCombatant, spawnTile);
+                    spawnTile.PlaceCombatant(enemyCombatant);
 
                     // Add to enemy list
                     enemyCharacters.Add(enemyCombatant);

@@ -524,11 +524,7 @@ namespace SystemMiami.CombatSystem
             //show up before you move and can show your path
             OverlayTile targetTile = currentPath[0];
 
-            //float zIndex = targetTile.transform.position.z;
-
             combatant.transform.position = Vector2.MoveTowards(combatant.transform.position, targetTile.transform.position, step);
-
-            //combatant.transform.position = new Vector3(combatant.transform.position.x, combatant.transform.position.y, zIndex);
 
             // If character is close enough to a new tile
             if (Vector2.Distance(combatant.transform.position, targetTile.transform.position) < 0.0001f)
@@ -540,7 +536,7 @@ namespace SystemMiami.CombatSystem
                 // Let any subscribers know that we are moving along path
                 PathTileChanged(newDir);
 
-                MapManager.MGR.PositionCharacterOnTile(combatant, targetTile);
+                targetTile.PlaceCombatant(combatant);
                 currentPath.RemoveAt(0);
             }
         }

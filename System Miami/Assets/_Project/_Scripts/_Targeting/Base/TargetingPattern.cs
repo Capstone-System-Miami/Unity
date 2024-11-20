@@ -147,7 +147,7 @@ namespace SystemMiami.CombatSystem
             if (MapManager.MGR.map.ContainsKey(position))
             {
                 tile = MapManager.MGR.map[position];
-                character = tile.CurrentCharacter;
+                character = tile.CurrentCombatant;
             }
             else
             {
