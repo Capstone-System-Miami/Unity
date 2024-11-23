@@ -161,6 +161,16 @@ namespace SystemMiami.CombatSystem
             if (newFocus == FocusedTile)
                 { return; }
 
+            // TODO: Layla
+            // This is not updating at the end of phases.
+            // Figure this out.
+            FocusedTile?.UnHighlight();
+
+            if (CanMove)
+            {
+                newFocus?.Highlight();
+            }
+
             FocusedTile = newFocus;
 
             // Raise event when mouse tile  changes

@@ -6,7 +6,7 @@ using UnityEngine.TextCore.Text;
 
 namespace SystemMiami
 {
-    public class OverlayTile : MonoBehaviour, ITargetable
+    public class OverlayTile : MonoBehaviour, IHighlightable
     {
         #region PUBLIC VARS
         // ==================================
@@ -22,8 +22,10 @@ namespace SystemMiami
 
         #region SERIALIZED VARS
         // ==================================
-        [SerializeField] private Color occupiedColor = Color.white;
-        [SerializeField] private Color activeCombatantColor = Color.white;
+        [SerializeField] private Color _defaultColor = Color.white;
+        [SerializeField] private Color _invalidColor = Color.white;
+        [SerializeField] private Color _occupiedColor = Color.white;
+        [SerializeField] private Color _activeCombatantColor = Color.white;
 
         #endregion // SERIALIZED VARS =======
 
@@ -32,14 +34,17 @@ namespace SystemMiami
         // ==================================
 
         private SpriteRenderer _renderer;
-        private Color _defaultColor;
 
-        private Vector3Int gridLocation;
+        private Vector3Int _gridLocation;
 
-        private bool isBlocked;
+        private bool _hasObstacle;
 
-        private Combatant currentCombatant;
-        private Color currentColor;
+        private Combatant _currentCombatant;
+
+        private bool _highlighted;
+        private bool _customHighlight;
+
+        private Color _currentColor;
         
         #endregion // PRIVATE VARS ==========
 
@@ -47,22 +52,48 @@ namespace SystemMiami
         #region PROPERTIES
         // ==================================
 
-        // Location on the game board in tile units.
-        // Cast this to Vector2Int to use it as a key
-        // for the map dict
-        public Vector3Int GridLocation { get { return gridLocation; } set { gridLocation = value; } }
-
-        // Reference to the combatant currently on this tile
-        public Combatant CurrentCombatant { get { return currentCombatant; } }
+        /// <summary>
+        /// Location on the game board in tile units.
+        /// Cast this to Vector2Int to use it as a key
+        /// for the map dict.
+        /// </summary>
+        public Vector3Int GridLocation { get { return _gridLocation; } set { _gridLocation = value; } }
 
         /// <summary>
-        /// Whether the tile is blocked, e.g. by a combatant occupier.
+        /// Reference to the combatant currently occupying this tile
         /// </summary>
-        public bool Valid
+        public Combatant CurrentCombatant { get { return _currentCombatant; } }
+
+        /// <summary>
+        /// Whether or not the tile has an obstacle on it.
+        /// </summary>
+        public bool HasObstacle
         {
             get
             {
-                return (currentCombatant == null) && (!isBlocked);
+                return _hasObstacle;
+            }
+        }
+
+        /// <summary>
+        /// Whether or not the tile is occupied by a combatant.
+        /// </summary>
+        public bool Occupied
+        {
+            get
+            {
+                return _currentCombatant != null;
+            }
+        }
+
+        /// <summary>
+        /// Whether something can be positioned onto the tile.
+        /// </summary>
+        public bool ValidForPlacement
+        {
+            get
+            {
+                return !HasObstacle && !Occupied;
             }
         }
 
@@ -78,7 +109,24 @@ namespace SystemMiami
         private void Awake()
         {
             _renderer = GetComponent<SpriteRenderer>();
-            _defaultColor = _renderer.color;
+        }
+
+        private void Start()
+        {
+            UnHighlight();
+        }
+
+        private void Update()
+        {
+            if (!_customHighlight)
+            {
+                _currentColor = _highlighted? getHighlightedColor() : getUnhighlightedColor();
+            }
+
+            if (_renderer.color != _currentColor)
+            {
+                _renderer.color = _currentColor;
+            }
         }
 
         #endregion // UNITY =================
@@ -87,48 +135,57 @@ namespace SystemMiami
         #region VISIBILITY
         // ==================================
 
-        public void ShowTile()
+        private Color getHighlightedColor()
         {
-            //Debug.Log($"{name} at {gridLocation} is trying to show self");
-            // Max vals means white.
-            gameObject.GetComponent<SpriteRenderer>().color = new Color (1, 1, 1, 1);
+            if (ValidForPlacement)
+            {
+                return _defaultColor;
+            }
+            else
+            {
+                return _invalidColor;
+            }
         }
 
-        public void HideTile()
+        private Color getUnhighlightedColor()
         {
-            // Alpha = 0 means transparent.
-            gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0);
+            if (Occupied)
+            {
+                if (CurrentCombatant.Controller.IsMyTurn)
+                {
+                    return _activeCombatantColor;
+                }
+                else
+                {
+                    return _occupiedColor;
+                }
+            }
+
+            // Alpha set to 0 means transparent.
+            return new Color(1, 1, 1, 0);
         }
         
         #endregion // VISIBILITY ============
 
 
-        #region ITARGETABLE
+        #region IHIGHLIGHTABLE
         // ==================================
 
-        public void Target()
+        public void Highlight()
         {
-            ShowTile();
+            _highlighted = true;
         }
 
         public void Highlight(Color color)
         {
-            ShowTile();
-
-            _renderer.color = color;
+            _currentColor = color;
+            _customHighlight = true;
         }
 
         public void UnHighlight()
         {
-            if (currentCombatant != null)
-            {
-                _renderer.color = occupiedColor;
-            }
-            else
-            {
-                _renderer.color = _defaultColor;
-                HideTile();
-            }
+            _highlighted = false;
+            _customHighlight = false;
         }
 
         public GameObject GameObject()
@@ -136,7 +193,7 @@ namespace SystemMiami
             return gameObject;
         }
 
-        #endregion // ITARGETABLE ===========
+        #endregion // IHIGHLIGHTABLE ========
 
 
         /// <summary>
@@ -150,29 +207,21 @@ namespace SystemMiami
         {
             combatant.transform.position = new Vector3(transform.position.x, transform.position.y + 0.0001f, transform.position.z);
 
-            //combatant.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
-
             // Let the old tile know that we're gone
             if (combatant.CurrentTile != null)
             {
                 combatant.CurrentTile.RemoveCombatant();
             }
 
-            // Show tile
-            // set occupied color
-
             // Update new tile's current combatant
-            currentCombatant = combatant;
+            _currentCombatant = combatant;
             combatant.CurrentTile = this;
         }
 
         public void RemoveCombatant()
         {
-            // hide tile,
-            // set default color
-
-            currentCombatant.CurrentTile = null;
-            currentCombatant = null;
+            _currentCombatant.CurrentTile = null;
+            _currentCombatant = null;
         }
     }
 }

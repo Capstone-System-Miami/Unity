@@ -501,7 +501,7 @@ namespace SystemMiami.CombatSystem
 
             // If the destination is blocked (e.g. bc theres a charac there),
             // remove it from the end.
-            if (path.Count > 0 && !path[path.Count - 1].Valid)
+            if (path.Count > 0 && !path[path.Count - 1].ValidForPlacement)
             {
                 path.RemoveAt(path.Count - 1);
             }

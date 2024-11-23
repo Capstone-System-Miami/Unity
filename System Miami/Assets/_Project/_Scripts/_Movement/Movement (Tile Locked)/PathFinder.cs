@@ -51,7 +51,7 @@ namespace SystemMiami
                     if (Mathf.Abs(currentOverlayTile.GridLocation.z - neighbour.GridLocation.z) > 1) { continue; }
 
                     // skip blocked, unless it's the end tile
-                    if(!neighbour.Valid && neighbour != end) { continue; }
+                    if(!neighbour.ValidForPlacement && neighbour != end) { continue; }
 
 
                     //calculate g and h

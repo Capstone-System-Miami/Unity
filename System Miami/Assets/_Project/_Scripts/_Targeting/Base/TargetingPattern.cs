@@ -109,6 +109,7 @@ namespace SystemMiami.CombatSystem
             //}
 
             HideTargets();
+            ClearTargets();
             SetTargets(dir);
             ShowTargets();
         }

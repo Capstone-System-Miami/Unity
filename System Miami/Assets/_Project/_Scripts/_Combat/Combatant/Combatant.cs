@@ -13,7 +13,7 @@ namespace SystemMiami.CombatSystem
         typeof(Stats),
         typeof(Abilities)
         /*typeof(CombatantController)*/)]
-    public class Combatant : MonoBehaviour, ITargetable, IDamageable, IHealable, IMovable
+    public class Combatant : MonoBehaviour, IHighlightable, IDamageable, IHealable, IMovable
     {
         [SerializeField] private Color _colorTag = Color.white;
 
@@ -234,10 +234,11 @@ namespace SystemMiami.CombatSystem
             GetComponent<SpriteRenderer>().sprite = currentSprite;
         }
 
-        #region ITargetable
-        public void Target()
+        #region IHighlightable
+
+        public void Highlight()
         {
-            print($"{name} is being targeted");
+            Debug.Log($"Highlight (no args overload) called on {name}");
         }
 
         public void Highlight(Color color)

@@ -282,7 +282,7 @@ namespace SystemMiami
 
             foreach (OverlayTile tile in neighbours)
             {
-                if (tile.Valid)
+                if (tile.ValidForPlacement)
                 {
                     walkableTiles.Add(tile);
                 }

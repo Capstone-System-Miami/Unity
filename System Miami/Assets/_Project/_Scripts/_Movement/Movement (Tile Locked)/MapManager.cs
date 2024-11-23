@@ -62,6 +62,7 @@ namespace SystemMiami
                         if (tileMap.HasTile(tileLocation) && !map.ContainsKey(tileKey))
                         {
                             OverlayTile overlayTile = Instantiate(overlayTilePrefab, overlayContainer.transform);
+                            overlayTile.name = $"OT { tileKey }";
 
                             // Using the function from SystemMiami.Coordinates rather than the built in worldpos tilemap fn
                             Vector3 cellWorldPosition = Coordinates.IsoToScreen(tileLocation, gridTilesHeight);
@@ -88,7 +89,7 @@ namespace SystemMiami
 
             foreach (OverlayTile tile in map.Values)
             {
-                if (tile.Valid)
+                if (tile.ValidForPlacement)
                 {
                     unblockedTiles.Add(tile);
                 }
