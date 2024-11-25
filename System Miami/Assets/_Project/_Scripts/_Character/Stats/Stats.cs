@@ -123,6 +123,10 @@ namespace SystemMiami
             {
                 _statusEffects[i].DecrementDuration();
 
+                if (_statusEffects[i].IsExpired() == false)
+                {
+                    _statusEffects.Add(_statusEffects[i]);
+                }
                 if (_statusEffects[i].IsExpired())
                 {
                     _statusEffects.RemoveAt(i);

@@ -23,7 +23,6 @@ namespace SystemMiami
         {
             Duration--;
         }
-
         /// <summary>
         /// Checks if the status effect has expired.
         /// </summary>
