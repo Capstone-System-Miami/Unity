@@ -29,6 +29,8 @@ namespace SystemMiami.CombatSystem
         private Stats _stats;
         private Abilities _abilities;
 
+        private float _endOfTurnDamage;
+
         private SpriteRenderer _renderer;
         private Color _defaultColor;
 
@@ -353,6 +355,7 @@ namespace SystemMiami.CombatSystem
         public void InflictStatusEffect(StatusEffect effect)
         {
             _stats.AddStatusEffect(effect);
+            _endOfTurnDamage = effect.Damage;
         }
 
         public void ResetTurn()
@@ -360,6 +363,7 @@ namespace SystemMiami.CombatSystem
             Speed = new Resource(_stats.GetStat(StatType.SPEED));
             _abilities.ReduceCooldowns();
             _stats.UpdateStatusEffects();
+            Health?.Lose(_endOfTurnDamage);
         }
 
         public virtual void Die()

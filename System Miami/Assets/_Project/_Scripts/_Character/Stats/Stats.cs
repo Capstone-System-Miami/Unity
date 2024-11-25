@@ -49,7 +49,8 @@ namespace SystemMiami
         {
             _beforeEffects = new StatSet(_attributes.GetSet(), _statData);
             updateEffects();
-            if (_printReports) { print(getStatsReport()); }
+            if (_printReports) { print($"{name} stat: \n" +
+                                        $"{getStatsReport()}"); }
         }
 
         /// <summary>
@@ -76,7 +77,7 @@ namespace SystemMiami
             {
                 StatType stat = (StatType)i;
 
-                result += $"{ stat }: \t { _beforeEffects.Get(stat) }\n";
+                result += $"{ stat }: \t { _afterEffects.Get(stat) }\n";
             }
 
             return result;
@@ -123,15 +124,15 @@ namespace SystemMiami
             {
                 _statusEffects[i].DecrementDuration();
 
-                if (_statusEffects[i].IsExpired() == false)
-                {
-                    _statusEffects.Add(_statusEffects[i]);
-                }
                 if (_statusEffects[i].IsExpired())
                 {
                     _statusEffects.RemoveAt(i);
                 }
             }
+        }
+        public void UpdateStatusEffectOverTime()
+        {
+
         }
         #endregion
 
