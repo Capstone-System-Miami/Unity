@@ -1,8 +1,8 @@
 // Authors: Layla
-using System;
 using System.Linq;
 using SystemMiami.Management;
 using SystemMiami.ui;
+using SystemMiami.AbilitySystem;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem
@@ -15,12 +15,17 @@ namespace SystemMiami.CombatSystem
         public KeyCode EndTurnKey { get { return _endTurnKey; } }
         public KeyCode EndPhaseKey { get { return _endPhaseKey; } }
 
+
+        private OverlayTile _mouseTile;
+
+
         #region Flags
         private bool FLAG_Unequip;
         private bool FLAG_Equip;
         private bool FLAG_LockTargets;
         private bool FLAG_UseAbility;
         #endregion
+
 
         #region UNITY METHODS
         // ======================================
@@ -139,47 +144,34 @@ namespace SystemMiami.CombatSystem
         #region Focused Tile
         // ======================================
 
-        /// <summary>
-        /// Resets the mouse tile to board (1, 1)
-        /// </summary>
-        protected override void resetFocusedTile()
-        {
-            MapManager.MGR.map.TryGetValue(Vector2Int.one, out OverlayTile newFocus);
-
-            FocusedTile = newFocus;
-
-            FocusedTileChanged?.Invoke(FocusedTile);
-        }
-
         protected override void updateFocusedTile()
         {
             OverlayTile newFocus = getFocusedTile();
 
-            //if (newFocus == null)
-            //    { return; }
-
-            if (newFocus == FocusedTile)
-                { return; }
-
-            // TODO: Layla
-            // This is not updating at the end of phases.
-            // Figure this out.
-            FocusedTile?.UnHighlight();
-
-            if (CanMove)
+            if (!isValidFocus(newFocus))
             {
-                newFocus?.Highlight();
+                if (combatant.Abilities.CurrentState != Abilities.State.TARGETS_LOCKED)
+                {
+                    FocusedTile?.HoverExit();
+                }
+
+                FocusedTile = null;
+                return;
             }
 
+            if (newFocus == FocusedTile) { return; }
+
+            FocusedTile?.HoverExit();
+            newFocus.HoverEnter();
             FocusedTile = newFocus;
 
-            // Raise event when mouse tile  changes
+            // Raise event when mouse tile  changes            
             FocusedTileChanged?.Invoke(newFocus);
         }
 
         /// <summary>
         /// Checks for an overlay tile under the cursor.
-        /// Returns null if no tile is found.
+        /// Returns null if no tile is found under the mouse.
         /// </summary>
         protected override OverlayTile getFocusedTile()
         {
@@ -218,6 +210,25 @@ namespace SystemMiami.CombatSystem
             if (!hit.HasValue) { return null; }
 
             return hit.Value.collider.gameObject.GetComponent<OverlayTile>();
+        }
+
+        private bool isValidFocus(OverlayTile tile)
+        {
+            if (tile == null) { return false; }
+
+            if (CurrentPhase == Phase.None) { return false; }
+
+            if (IsMoving) { return false; }
+
+            if (IsActing) { return false; }
+
+            if (combatant.Abilities.CurrentState != Abilities.State.UNEQUIPPED
+                && combatant.Abilities.CurrentState != Abilities.State.EQUIPPED)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         // ======================================

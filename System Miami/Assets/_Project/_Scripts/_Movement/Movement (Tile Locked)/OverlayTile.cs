@@ -1,12 +1,10 @@
 // Author: Alec
 using SystemMiami.CombatSystem;
-using SystemMiami.Utilities;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
 
 namespace SystemMiami
 {
-    public class OverlayTile : MonoBehaviour, IHighlightable
+    public class OverlayTile : MonoBehaviour, IHighlightable, IHover
     {
         #region PUBLIC VARS
         // ==================================
@@ -41,10 +39,12 @@ namespace SystemMiami
 
         private Combatant _currentCombatant;
 
-        private bool _highlighted;
+        private bool _isHovering;
+
+        private bool _isHighlighted;
         private bool _customHighlight;
 
-        private Color _currentColor;
+        private StructSwitcher<Color> _targetColor;
         
         #endregion // PRIVATE VARS ==========
 
@@ -109,6 +109,7 @@ namespace SystemMiami
         private void Awake()
         {
             _renderer = GetComponent<SpriteRenderer>();
+            _targetColor = new StructSwitcher<Color>(_defaultColor);
         }
 
         private void Start()
@@ -118,14 +119,17 @@ namespace SystemMiami
 
         private void Update()
         {
+            Color highlighted = getHighlightedColor();
+            Color unhighlighted = getUnhighlightedColor();
+
             if (!_customHighlight)
             {
-                _currentColor = _highlighted? getHighlightedColor() : getUnhighlightedColor();
+                _targetColor.Set(_isHighlighted ? highlighted : unhighlighted);
             }
 
-            if (_renderer.color != _currentColor)
+            if (_renderer.color != _targetColor.Get())
             {
-                _renderer.color = _currentColor;
+                _renderer.color = _targetColor.Get();
             }
         }
 
@@ -164,28 +168,66 @@ namespace SystemMiami
             // Alpha set to 0 means transparent.
             return new Color(1, 1, 1, 0);
         }
-        
+
         #endregion // VISIBILITY ============
 
 
-        #region IHIGHLIGHTABLE
+        #region MOUSEOVER
+        // ==================================
+
+        public void HoverEnter()
+        {
+            Highlight();
+
+            if (Occupied)
+            {
+                CurrentCombatant.Highlight();
+            }
+        }
+
+        public void HoverExit()
+        {
+            if (_customHighlight)
+            {
+                _targetColor.Revert();
+            }
+            else
+            {
+                UnHighlight();
+            }
+
+            if (Occupied)
+            {
+                CurrentCombatant.UnHighlight();
+            }
+        }
+
+        #endregion // MOUSEOVER =============
+
+
+        #region HIGHLIGHTABLE
         // ==================================
 
         public void Highlight()
         {
-            _highlighted = true;
+            _isHighlighted = true;
+
+            //print ($"{name} highlight");
         }
 
         public void Highlight(Color color)
         {
-            _currentColor = color;
+            _targetColor.Set(color);
             _customHighlight = true;
+
+            //print($"{name} cust highlight");
         }
 
         public void UnHighlight()
         {
-            _highlighted = false;
+            _isHighlighted = false;
             _customHighlight = false;
+            //print($"{name} UN");
         }
 
         public GameObject GameObject()
@@ -193,7 +235,7 @@ namespace SystemMiami
             return gameObject;
         }
 
-        #endregion // IHIGHLIGHTABLE ========
+        #endregion // HIGHLIGHTABLE =========
 
 
         /// <summary>

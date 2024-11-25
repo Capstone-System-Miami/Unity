@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using SystemMiami.AbilitySystem;
 using SystemMiami.CombatSystem;
 using SystemMiami.Enums;
-using SystemMiami.Utilities;
 using UnityEngine;
 
 namespace SystemMiami
@@ -194,13 +193,6 @@ namespace SystemMiami
 
         #region Focused Tile
         // ======================================
-
-        protected override void resetFocusedTile()
-        {
-            FocusedTile = MapManager.MGR.GetRandomUnblockedTile();
-
-            FocusedTileChanged?.Invoke(FocusedTile);
-        }
 
         protected override void updateFocusedTile()
         {

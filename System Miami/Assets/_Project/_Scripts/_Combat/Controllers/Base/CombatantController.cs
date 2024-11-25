@@ -204,40 +204,6 @@ namespace SystemMiami.CombatSystem
         protected void LateUpdate()
         {
             if (!IsMyTurn) { resetFlags(); return; }
-
-            //if (endTurnTriggered())
-            //{
-            //    EndTurn();
-            //    resetFlags();
-            //    return;
-            //}
-
-            //if (nextPhaseTriggered())
-            //{
-            //    if (!TryNextPhase())
-            //    {
-            //        OnNextPhaseFailed();
-            //    }
-            //    resetFlags();
-            //    return;
-            //}
-
-            //switch (CurrentPhase)
-            //{
-            //    case Phase.Movement:
-            //        handleMovementPhase();
-            //        break;
-
-            //    case Phase.Action:
-            //        handleActionPhase();
-            //        break;
-
-            //    default:
-            //    case Phase.None:
-            //        break;
-            //}
-
-            //resetFlags();
         }
 
         // ======================================
@@ -272,6 +238,8 @@ namespace SystemMiami.CombatSystem
         protected virtual bool TryNextPhase()
         {
             CurrentPhase = Phase.None;
+
+            FocusedTile?.UnHighlight();
 
             if (remainingPhases.Count == 0)
                 { return false; }
@@ -384,8 +352,6 @@ namespace SystemMiami.CombatSystem
         // ======================================
 
         protected abstract void updateFocusedTile();
-
-        protected abstract void resetFocusedTile();
 
         protected abstract OverlayTile getFocusedTile();
 

@@ -1,10 +1,9 @@
 // Authors: Layla Hoey, Lee St Louis
 using System;
-using System.Linq;
+using SystemMiami.AbilitySystem;
 using SystemMiami.Enums;
 using SystemMiami.Management;
 using SystemMiami.Utilities;
-using SystemMiami.AbilitySystem;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem
@@ -238,7 +237,11 @@ namespace SystemMiami.CombatSystem
 
         public void Highlight()
         {
-            Debug.Log($"Highlight (no args overload) called on {name}");
+            Debug.Log($"Highlight (no args overload) called on {name}.\n" +
+                $"This should be called from OverlayTile when the player\n" +
+                $"mouses over a tile containing a combatant.\n" +
+                $"The function should enable / instantiate a\n" +
+                $"worldspace UI canvas with combatant info.");
         }
 
         public void Highlight(Color color)
