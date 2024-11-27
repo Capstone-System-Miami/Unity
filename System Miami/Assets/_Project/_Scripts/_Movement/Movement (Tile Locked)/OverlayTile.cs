@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace SystemMiami
 {
-    public class OverlayTile : MonoBehaviour, IHighlightable, IHover
+    public class OverlayTile : MonoBehaviour, IHighlightable
     {
         #region PUBLIC VARS
         // ==================================
@@ -175,17 +175,22 @@ namespace SystemMiami
         #region MOUSEOVER
         // ==================================
 
-        public void HoverEnter()
+        public void BeginHover(PlayerController controller)
         {
-            Highlight();
-
             if (Occupied)
             {
+                Highlight();
                 CurrentCombatant.Highlight();
             }
+
+            if (!controller.IsMyTurn) { return; }
+
+            if (controller.HasActed) { return; }
+
+            Highlight();
         }
 
-        public void HoverExit()
+        public void EndHover(PlayerController controller)
         {
             if (_customHighlight)
             {

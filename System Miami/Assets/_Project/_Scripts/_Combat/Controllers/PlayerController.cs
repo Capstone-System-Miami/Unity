@@ -152,7 +152,7 @@ namespace SystemMiami.CombatSystem
             {
                 if (combatant.Abilities.CurrentState != Abilities.State.TARGETS_LOCKED)
                 {
-                    FocusedTile?.HoverExit();
+                    FocusedTile?.EndHover(this);
                 }
 
                 FocusedTile = null;
@@ -161,8 +161,8 @@ namespace SystemMiami.CombatSystem
 
             if (newFocus == FocusedTile) { return; }
 
-            FocusedTile?.HoverExit();
-            newFocus.HoverEnter();
+            FocusedTile?.EndHover(this);
+            newFocus.BeginHover(this);
             FocusedTile = newFocus;
 
             // Raise event when mouse tile  changes            
