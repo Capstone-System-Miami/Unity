@@ -73,7 +73,7 @@ namespace SystemMiami
                 {
                     FocusedTileChanged?.Invoke(FocusedTile);
 
-                    yield return new WaitForSeconds(1f);
+                    yield return new WaitForSeconds(.25f);
 
                     // If the player is found in Ability's targets,
                     // lock the ability and hold for a moment, then execute.
