@@ -1,123 +1,103 @@
+// Authors: Johnny
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class PlayerManager : MonoBehaviour
 {
-    [Header("Player Prefabs")]
-    public GameObject neighborhoodPlayerPrefab;
-    public GameObject dungeonPlayerPrefab;
+    // Singleton Instance
+    public static PlayerManager Instance { get; private set; }
 
-    private GameObject currentPlayer;
+    [Header("Component Groups")]
+    [Tooltip("Components active in all modes")]
+    public List<MonoBehaviour> sharedComponents; // Always enabled
+    [Tooltip("Components active in neighborhood mode")]
+    public List<MonoBehaviour> neighborhoodComponents;
+    [Tooltip("Components active in Dungeon mode")]
+    public List<MonoBehaviour> dungeonComponents;
 
-    void Awake()
+    [Header("Scene Names")]
+    public string neighborhoodSceneName = "Neighborhood"; // Name of the neighborhood scene
+    public string dungeonSceneName = "Dungeon"; // Name of the Dungeon scene
+
+    private void Awake()
     {
-        // Ensure this persists across scenes (if required)
-        DontDestroyOnLoad(gameObject);
+        // Enforce Singleton pattern
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject); // Persist across scenes
+        }
     }
 
-    void Start()
+    private void OnEnable()
     {
-        // Initialize the player for the current scene
-        SwitchPlayerForScene(SceneManager.GetActiveScene().name);
-    }
-
-    void OnEnable()
-    {
-        // Listen for scene changes
+        // Subscribe to scene loaded event
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-    void OnDisable()
+    private void OnDisable()
     {
-        // Unsubscribe to prevent memory leaks
+        // Unsubscribe from scene loaded event
         SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void Start()
+    {
+        // Ensure shared components are always enabled
+        EnableComponents(sharedComponents);
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        SwitchPlayerForScene(scene.name);
-    }
-
-    private void SwitchPlayerForScene(string sceneName)
-    {
-        if (currentPlayer != null)
-            Destroy(currentPlayer); // Clean up the previous player instance
-
-        // Choose the correct prefab based on the scene name
-        if (sceneName == "Neighborhood")
+        // Check the name of the loaded scene and adjust components accordingly
+        if (scene.name == neighborhoodSceneName)
         {
-            currentPlayer = Instantiate(neighborhoodPlayerPrefab, Vector3.zero, Quaternion.identity);
+            EnterNeighborhood();
         }
-        else if (sceneName == "Dungeon")
+        else if (scene.name == dungeonSceneName)
         {
-            currentPlayer = Instantiate(dungeonPlayerPrefab, Vector3.zero, Quaternion.identity);
-        }
-        else
-        {
-            Debug.LogWarning($"No player prefab assigned for scene: {sceneName}");
-        }
-
-        if (currentPlayer != null)
-        {
-            // Set Sorting Layer to "Base" and Order in Layer to 1
-            SpriteRenderer spriteRenderer = currentPlayer.GetComponent<SpriteRenderer>();
-            if (spriteRenderer != null)
-            {
-                spriteRenderer.sortingLayerName = "Default";
-                spriteRenderer.sortingOrder = 1;
-            }
-            else
-            {
-                Debug.LogWarning("No SpriteRenderer found on the player prefab!");
-            }
-
-            // Optional: Set up any shared properties or references
-            SetupPlayer(currentPlayer);
+            EnterDungeon();
         }
     }
 
-
-
-    private void SetupPlayer(GameObject player)
+    // Disables all components in the provided list
+    private void DisableComponents(List<MonoBehaviour> componentList)
     {
-        // Example: Linking player to game systems
-        Debug.Log($"Player setup complete for {player.name}");
-
-        // Inspect components on the player
-        InspectComponents(player);
-    }
-
-    private void InspectComponents(GameObject player)
-    {
-        Debug.Log($"Inspecting components for {player.name}:");
-
-        // List all attached components
-        Component[] components = player.GetComponents<Component>();
-        foreach (Component component in components)
+        foreach (var component in componentList)
         {
-            Debug.Log($" - {component.GetType().Name}");
+            if (component != null)
+                component.enabled = false;
         }
     }
 
-    public void CreatePrefabFromPlayer(GameObject player, string prefabName)
+    // Enables all components in the provided list
+    private void EnableComponents(List<MonoBehaviour> componentList)
     {
-        // Create a prefab from the current player setup
-        string path = $"Assets/Prefabs/{prefabName}.prefab";
-
-#if UNITY_EDITOR
-        UnityEditor.PrefabUtility.SaveAsPrefabAsset(player, path);
-        Debug.Log($"Prefab '{prefabName}' saved at {path}");
-#else
-        Debug.LogError("Prefab creation is only available in the Unity Editor.");
-#endif
+        foreach (var component in componentList)
+        {
+            if (component != null)
+                component.enabled = true;
+        }
     }
 
-    public void SwitchToPrefab(GameObject newPlayerPrefab)
+    // Switches to Neighborhood Mode
+    public void EnterNeighborhood()
     {
-        if (currentPlayer != null)
-            Destroy(currentPlayer);
+        Debug.Log("Entering Neighborhood Mode");
+        DisableComponents(dungeonComponents);
+        EnableComponents(neighborhoodComponents);
+    }
 
-        currentPlayer = Instantiate(newPlayerPrefab, Vector3.zero, Quaternion.identity);
-        SetupPlayer(currentPlayer);
+    // Switches to Dungeon Mode
+    public void EnterDungeon()
+    {
+        Debug.Log("Entering Dungeon Mode");
+        DisableComponents(neighborhoodComponents);
+        EnableComponents(dungeonComponents);
     }
 }
