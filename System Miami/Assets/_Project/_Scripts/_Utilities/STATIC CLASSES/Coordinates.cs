@@ -28,6 +28,7 @@ namespace SystemMiami.Utilities
         }
 
         /// <summary>
+        /// TODO: Rename IsoToWorld during next maintenance.
         /// Takes an isometric tile _gridPosition,
         /// and returns the _gridPosition of the
         /// tile origin in screen space.
@@ -53,6 +54,7 @@ namespace SystemMiami.Utilities
         }
 
         /// <summary>
+        /// TODO: Rename IsoToWorld during next maintenance.
         /// Takes an isometric tile _gridPosition,
         /// and returns the _gridPosition of the
         /// tile origin in screen space.
@@ -70,6 +72,7 @@ namespace SystemMiami.Utilities
         }
 
         /// <summary>
+        /// TODO: Rename WorldToIso during next maintenance.
         /// Takes a Vector3 screen _gridPosition (which should have a z of zero),
         /// and the zIndex of the tile and returns the isometric tile _gridPosition.
         /// zIndex must be known for this to function as expected.
@@ -99,6 +102,9 @@ namespace SystemMiami.Utilities
             return result;
         }
 
+        /// <summary>
+        /// TODO: Rename GetWorldHeight during next maintenance.
+        /// </summary>
         public static float GetScreenHeightOf(int zIndex)
         {
             return zIndex * .25f;
@@ -108,6 +114,7 @@ namespace SystemMiami.Utilities
         {
             return screenHeight * 4;
         }
+
         public static float GetHeightInTiles(int zIndex)
         {
             return zIndex * .5f;

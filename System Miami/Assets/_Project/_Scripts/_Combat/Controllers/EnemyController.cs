@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using SystemMiami.AbilitySystem;
 using SystemMiami.CombatSystem;
 using SystemMiami.Enums;
-using SystemMiami.Utilities;
 using UnityEngine;
 
 namespace SystemMiami
@@ -74,7 +73,7 @@ namespace SystemMiami
                 {
                     FocusedTileChanged?.Invoke(FocusedTile);
 
-                    yield return new WaitForSeconds(1f);
+                    yield return new WaitForSeconds(.25f);
 
                     // If the player is found in Ability's targets,
                     // lock the ability and hold for a moment, then execute.
@@ -195,13 +194,6 @@ namespace SystemMiami
         #region Focused Tile
         // ======================================
 
-        protected override void resetFocusedTile()
-        {
-            FocusedTile = MapManager.MGR.GetRandomUnblockedTile();
-
-            FocusedTileChanged?.Invoke(FocusedTile);
-        }
-
         protected override void updateFocusedTile()
         {
             if (FocusedTile != null) { return; }
@@ -282,7 +274,7 @@ namespace SystemMiami
 
             foreach (OverlayTile tile in neighbours)
             {
-                if (!tile.isBlocked && tile.currentCharacter == null)
+                if (tile.ValidForPlacement)
                 {
                     walkableTiles.Add(tile);
                 }
