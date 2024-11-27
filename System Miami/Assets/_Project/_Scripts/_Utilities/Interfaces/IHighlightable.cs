@@ -2,9 +2,9 @@ using UnityEngine;
 
 namespace SystemMiami.CombatSystem
 {
-    public interface ITargetable
+    public interface IHighlightable
     {
-        void Target();
+        void Highlight();
         void Highlight(Color color);
         void UnHighlight();
         GameObject GameObject();

@@ -5,7 +5,7 @@ using UnityEngine;
 namespace SystemMiami
 {
     [System.Serializable]
-    public class StatusEffect 
+    public class StatusEffect
     {
         public StatSet Effect { get; private set; }
         public int Duration { get; private set; }
