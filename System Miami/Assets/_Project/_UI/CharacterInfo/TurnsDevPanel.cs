@@ -75,6 +75,8 @@ namespace SystemMiami
 
         private void Update()
         {
+            if (TurnManager.MGR.CurrentTurnOwner == null) { return; }
+
             turnOwner = TurnManager.MGR.CurrentTurnOwner;
 
             updateCombatantPanel();

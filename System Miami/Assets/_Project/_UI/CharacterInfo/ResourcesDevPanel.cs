@@ -23,6 +23,13 @@ namespace SystemMiami
 
         private void Update()
         {
+            Combatant player = TurnManager.MGR.playerCharacter;
+
+            if (_player != player && player != null)
+            {
+                _player = player;
+            }
+
             if (_player == null) { return; }
 
             updateHealth();

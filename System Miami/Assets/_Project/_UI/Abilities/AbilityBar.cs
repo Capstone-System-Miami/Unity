@@ -30,6 +30,15 @@ namespace SystemMiami.ui
             _playerAbilities.AbilityUnequipped -= onUnequipAbility;
         }
 
+        private void Start()
+        {
+            _playerAbilities = TurnManager.MGR.playerCharacter.GetComponent<Abilities>();
+            _playerStats = TurnManager.MGR.playerCharacter.GetComponent<Stats>();
+
+            initializeSlots();
+            fillSlots();
+        }
+
         private void onEquipAbility(Ability ability)
         {
             if (ability == null) { print($"{ name } ability null"); return; }
@@ -57,12 +66,6 @@ namespace SystemMiami.ui
             {
                 _slots[i].Deselect();
             }
-        }
-
-        private void Start()
-        {
-            initializeSlots();
-            fillSlots();
         }
 
         private void initializeSlots()

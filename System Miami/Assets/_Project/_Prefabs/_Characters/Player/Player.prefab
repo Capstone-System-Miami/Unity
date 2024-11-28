@@ -36,8 +36,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchoredPosition: {x: 0, y: 2}
+  m_SizeDelta: {x: 200, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &4143811589695033145
 Canvas:
@@ -180,7 +180,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: press [E] to enter
+  m_Text: Interaction Prompts
 --- !u!1 &2773007214259317843
 GameObject:
   m_ObjectHideFlags: 0
@@ -209,7 +209,7 @@ Transform:
   m_GameObject: {fileID: 2773007214259317843}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: -10}
   m_LocalScale: {x: 2.1291547, y: 2.1291547, z: 2.1291547}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -250,7 +250,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 2
+  orthographic size: 6
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -336,7 +336,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &7916567998508247461
 RectTransform:
   m_ObjectHideFlags: 0
@@ -352,10 +352,10 @@ RectTransform:
   - {fileID: 6935135220161166169}
   m_Father: {fileID: 4515390487307748906}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 200}
-  m_SizeDelta: {x: 200, y: 100}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1713880540619946945
 CanvasRenderer:
@@ -480,6 +480,8 @@ MonoBehaviour:
   - {fileID: 8219263611542528465}
   - {fileID: 6386089713510983124}
   - {fileID: 4261404639173623324}
+  playerCamera: {fileID: 2773007214259317843}
+  interactionUI: {fileID: 650297918678062704}
   dungeonComponents:
   - {fileID: -487834630417795382}
   - {fileID: -6597365728956606799}
@@ -688,7 +690,7 @@ MonoBehaviour:
   body: {fileID: 3666472161562640362}
   spriteRenderer: {fileID: 4476760992286927676}
   animator: {fileID: 2705490712565707672}
-  walkSpeed: 3
+  walkSpeed: 5
   frameRate: 30
 --- !u!114 &6386089713510983124
 MonoBehaviour:
@@ -714,7 +716,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 6453553769002132252}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 8cfe7ce7860f13a44a9b0c003f690690, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -737,7 +739,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.01632309, y: 0.165165}
+  m_Offset: {x: -0.0015434623, y: 0.17185062}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0}
@@ -748,7 +750,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.5274801, y: 0.17997801}
+  m_Size: {x: 0.4988736, y: 0.16016328}
   m_EdgeRadius: 0
 --- !u!114 &-487834630417795382
 MonoBehaviour:

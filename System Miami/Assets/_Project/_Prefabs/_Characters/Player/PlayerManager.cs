@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using SystemMiami.Management;
+using SystemMiami.CombatSystem;
 
 namespace SystemMiami
 {
@@ -14,6 +15,8 @@ namespace SystemMiami
 
         [Tooltip("Components active in neighborhood mode")]
         public List<Component> neighborhoodComponents = new List<Component>();
+        public GameObject playerCamera;
+        public GameObject interactionUI;
 
         [Tooltip("Components active in Dungeon mode")]
         public List<Component> dungeonComponents = new List<Component>();
@@ -21,7 +24,6 @@ namespace SystemMiami
         [Header("Scene Names")]
         public string neighborhoodSceneName = "Neighborhood"; // Name of the neighborhood scene
         public string dungeonSceneName = "Dungeon"; // Name of the Dungeon scene
-
         private void OnEnable()
         {
             // Subscribe to scene loaded event
@@ -32,6 +34,17 @@ namespace SystemMiami
         {
             // Unsubscribe from scene loaded event
             SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
+
+        protected override void Awake()
+        {
+            if (MGR != null)
+            {
+                MGR.transform.position = transform.position;
+                TurnManager.MGR.playerCharacter = MGR.GetComponent<Combatant>();
+            }
+
+            base.Awake();
         }
 
         private void Start()
@@ -93,6 +106,11 @@ namespace SystemMiami
         public void EnterNeighborhood()
         {
             Debug.Log("Entering Neighborhood Mode");
+
+            GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            playerCamera.SetActive(true);
+            interactionUI.SetActive(true);
+
             DisableComponents(dungeonComponents);
             EnableComponents(neighborhoodComponents);
         }
@@ -101,6 +119,11 @@ namespace SystemMiami
         public void EnterDungeon()
         {
             Debug.Log("Entering Dungeon Mode");
+
+            GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            playerCamera.SetActive(false);
+            interactionUI.SetActive(false);
+
             DisableComponents(neighborhoodComponents);
             EnableComponents(dungeonComponents);
         }
