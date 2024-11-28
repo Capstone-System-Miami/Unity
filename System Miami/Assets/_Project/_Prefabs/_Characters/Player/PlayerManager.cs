@@ -110,6 +110,7 @@ namespace SystemMiami
             GetComponent<Rigidbody2D>().velocity = Vector2.zero;
             playerCamera.SetActive(true);
             interactionUI.SetActive(true);
+            interactionUI.GetComponentInChildren<PromptBox>().Clear();
 
             DisableComponents(dungeonComponents);
             EnableComponents(neighborhoodComponents);
