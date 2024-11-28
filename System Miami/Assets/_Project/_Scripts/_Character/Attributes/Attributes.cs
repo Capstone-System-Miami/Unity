@@ -12,7 +12,7 @@ namespace SystemMiami
     #region VARS
     //===============================
 
-        [SerializeField] private CharacterClassType _characterClass;
+        [SerializeField] public CharacterClassType _characterClass;
         [SerializeField] private AttributeSetSO[] _baseAttributes;
         [SerializeField] private int _minValue;
         [SerializeField] private int _maxValue;

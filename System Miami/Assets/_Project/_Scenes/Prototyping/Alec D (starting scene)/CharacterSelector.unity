@@ -135,6 +135,7 @@ GameObject:
   - component: {fileID: 137720344}
   - component: {fileID: 137720343}
   - component: {fileID: 137720342}
+  - component: {fileID: 137720346}
   m_Layer: 5
   m_Name: fighterbtn
   m_TagString: Untagged
@@ -230,6 +231,18 @@ MonoBehaviour:
           m_StringArgument: Neighborhood
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 137720346}
+        m_TargetAssemblyTypeName: SystemMiami.ClassChanger, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &137720344
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -268,6 +281,108 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 137720340}
   m_CullTransparentMesh: 1
+--- !u!114 &137720346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 137720340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 852fb1acd206712439791ff5d1852bac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  classType: 0
+  player: {fileID: 778544193}
+--- !u!1001 &155624316
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4306299752331093467, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4306299752331093467, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4306299752331093467, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4306299752331093467, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4306299752331093467, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4306299752331093467, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4306299752331093467, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4306299752331093467, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4306299752331093467, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4306299752331093467, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6453553769002132252, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
+      propertyPath: m_Name
+      value: Player
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
+--- !u!1 &197935303
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 197935304}
+  m_Layer: 0
+  m_Name: CharacterrSetter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &197935304
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 197935303}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 331.40482, y: 159.25749, z: 2.2537837}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &203719123
 GameObject:
   m_ObjectHideFlags: 0
@@ -1133,6 +1248,7 @@ GameObject:
   - component: {fileID: 616840368}
   - component: {fileID: 616840367}
   - component: {fileID: 616840366}
+  - component: {fileID: 616840370}
   m_Layer: 5
   m_Name: tankbtn
   m_TagString: Untagged
@@ -1228,6 +1344,18 @@ MonoBehaviour:
           m_StringArgument: Neighborhood
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 616840370}
+        m_TargetAssemblyTypeName: SystemMiami.ClassChanger, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &616840368
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1266,6 +1394,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 616840364}
   m_CullTransparentMesh: 1
+--- !u!114 &616840370
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 616840364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 852fb1acd206712439791ff5d1852bac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  classType: 3
+  player: {fileID: 778544193}
 --- !u!1 &672656521
 GameObject:
   m_ObjectHideFlags: 0
@@ -1279,6 +1421,7 @@ GameObject:
   - component: {fileID: 672656525}
   - component: {fileID: 672656524}
   - component: {fileID: 672656523}
+  - component: {fileID: 672656527}
   m_Layer: 5
   m_Name: magebtn
   m_TagString: Untagged
@@ -1374,6 +1517,18 @@ MonoBehaviour:
           m_StringArgument: Neighborhood
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 672656527}
+        m_TargetAssemblyTypeName: SystemMiami.ClassChanger, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &672656525
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1412,6 +1567,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 672656521}
   m_CullTransparentMesh: 1
+--- !u!114 &672656527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 672656521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 852fb1acd206712439791ff5d1852bac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  classType: 1
+  player: {fileID: 778544193}
+--- !u!1 &778544193 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6453553769002132252, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
+  m_PrefabInstance: {fileID: 155624316}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &921010250
 GameObject:
   m_ObjectHideFlags: 0
@@ -1425,6 +1599,7 @@ GameObject:
   - component: {fileID: 921010254}
   - component: {fileID: 921010253}
   - component: {fileID: 921010252}
+  - component: {fileID: 921010256}
   m_Layer: 5
   m_Name: roguebtn
   m_TagString: Untagged
@@ -1520,6 +1695,18 @@ MonoBehaviour:
           m_StringArgument: Neighborhood
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 921010256}
+        m_TargetAssemblyTypeName: SystemMiami.ClassChanger, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &921010254
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1558,6 +1745,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 921010250}
   m_CullTransparentMesh: 1
+--- !u!114 &921010256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 921010250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 852fb1acd206712439791ff5d1852bac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  classType: 2
+  player: {fileID: 778544193}
 --- !u!1 &937398326
 GameObject:
   m_ObjectHideFlags: 0
@@ -1977,3 +2178,5 @@ SceneRoots:
   - {fileID: 234369732}
   - {fileID: 313761915}
   - {fileID: 277811816}
+  - {fileID: 197935304}
+  - {fileID: 155624316}
