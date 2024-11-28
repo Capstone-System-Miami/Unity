@@ -10,13 +10,13 @@ namespace SystemMiami
     {
         [Header("Component Groups")]
         [Tooltip("Components active in all modes")]
-        public List<Component> sharedComponents; // Always enabled
+        public List<Component> sharedComponents = new List<Component>(); // Always enabled
 
         [Tooltip("Components active in neighborhood mode")]
-        public List<Component> neighborhoodComponents;
+        public List<Component> neighborhoodComponents = new List<Component>();
 
         [Tooltip("Components active in Dungeon mode")]
-        public List<Component> dungeonComponents;
+        public List<Component> dungeonComponents = new List<Component>();
 
         [Header("Scene Names")]
         public string neighborhoodSceneName = "Neighborhood"; // Name of the neighborhood scene
@@ -43,11 +43,11 @@ namespace SystemMiami
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             // Check the name of the loaded scene and adjust components accordingly
-            if (scene.name == neighborhoodSceneName)
+            if (scene.name.Contains(neighborhoodSceneName))
             {
                 EnterNeighborhood();
             }
-            else if (scene.name == dungeonSceneName)
+            else if (scene.name.Contains(dungeonSceneName))
             {
                 EnterDungeon();
             }
@@ -59,13 +59,13 @@ namespace SystemMiami
             foreach (Component component in componentList)
             {
                 // Null check
-                if (component == null) { continue; }
+                if (component == null) { print("component was null"); continue; }
 
                 // Component is not enableable, cast to Behaviour
                 Behaviour behaviour = component as Behaviour;
 
                 // If cast fails, skip this Component
-                if (behaviour == null) { continue; }
+                if (behaviour == null) { print($"cast to behaviour failed on {component}"); continue; }
 
                 behaviour.enabled = false;
             }
