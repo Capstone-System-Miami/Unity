@@ -9,8 +9,8 @@ namespace SystemMiami.Management
     {
         public Action<Combatant> CombatantDeath;
 
-        [SerializeField] int _dungeonIndex;
-        [SerializeField] int _neighborhoodIndex;
+        [SerializeField] string _dungeonSceneName;
+        [SerializeField] string _neighborhoodSceneName;
 
         protected override void Awake()
         {
@@ -28,13 +28,12 @@ namespace SystemMiami.Management
 
         public void GoToDungeon()
         {
-            switchScene(_dungeonIndex);
+            switchScene(_dungeonSceneName);
         }
 
         public void GoToNeighborhood()
         {
-            switchScene(_neighborhoodIndex);
+            switchScene(_neighborhoodSceneName);
         }
-
     }
 }
