@@ -163,6 +163,14 @@ namespace SystemMiami
     #region PUBLIC METHODS
     //===============================
 
+        public void SetClass(CharacterClassType characterClass)
+        {
+            _characterClass = characterClass;
+
+            AttributeSet classBaseAttributes = new AttributeSet(_baseAttributes[(int)_characterClass]);
+            initializeWith(classBaseAttributes);
+        }
+
         /// <summary>
         /// Returns the value of the specified attribute
         /// </summary>

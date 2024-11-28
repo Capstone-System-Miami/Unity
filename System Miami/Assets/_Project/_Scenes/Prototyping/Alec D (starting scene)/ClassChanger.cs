@@ -20,7 +20,7 @@ namespace SystemMiami
 
         public void OnClick()
         {
-            attributes._characterClass = classType;
+            attributes.SetClass(classType);
         }
     }
 }
