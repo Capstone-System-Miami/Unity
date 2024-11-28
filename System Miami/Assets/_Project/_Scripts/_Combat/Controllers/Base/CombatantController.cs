@@ -204,40 +204,6 @@ namespace SystemMiami.CombatSystem
         protected void LateUpdate()
         {
             if (!IsMyTurn) { resetFlags(); return; }
-
-            //if (endTurnTriggered())
-            //{
-            //    EndTurn();
-            //    resetFlags();
-            //    return;
-            //}
-
-            //if (nextPhaseTriggered())
-            //{
-            //    if (!TryNextPhase())
-            //    {
-            //        OnNextPhaseFailed();
-            //    }
-            //    resetFlags();
-            //    return;
-            //}
-
-            //switch (CurrentPhase)
-            //{
-            //    case Phase.Movement:
-            //        handleMovementPhase();
-            //        break;
-
-            //    case Phase.Action:
-            //        handleActionPhase();
-            //        break;
-
-            //    default:
-            //    case Phase.None:
-            //        break;
-            //}
-
-            //resetFlags();
         }
 
         // ======================================
@@ -272,6 +238,8 @@ namespace SystemMiami.CombatSystem
         protected virtual bool TryNextPhase()
         {
             CurrentPhase = Phase.None;
+
+            FocusedTile?.UnHighlight();
 
             if (remainingPhases.Count == 0)
                 { return false; }
@@ -384,8 +352,6 @@ namespace SystemMiami.CombatSystem
         // ======================================
 
         protected abstract void updateFocusedTile();
-
-        protected abstract void resetFocusedTile();
 
         protected abstract OverlayTile getFocusedTile();
 
@@ -501,7 +467,7 @@ namespace SystemMiami.CombatSystem
 
             // If the destination is blocked (e.g. bc theres a charac there),
             // remove it from the end.
-            if (path.Count > 0 && !path[path.Count - 1].Valid)
+            if (path.Count > 0 && !path[path.Count - 1].ValidForPlacement)
             {
                 path.RemoveAt(path.Count - 1);
             }
@@ -524,23 +490,19 @@ namespace SystemMiami.CombatSystem
             //show up before you move and can show your path
             OverlayTile targetTile = currentPath[0];
 
-            //float zIndex = targetTile.transform.position.z;
-
             combatant.transform.position = Vector2.MoveTowards(combatant.transform.position, targetTile.transform.position, step);
-
-            //combatant.transform.position = new Vector3(combatant.transform.position.x, combatant.transform.position.y, zIndex);
 
             // If character is close enough to a new tile
             if (Vector2.Distance(combatant.transform.position, targetTile.transform.position) < 0.0001f)
             {
                 // Directional info based on the current tile
                 // and the one we're moving to.
-                DirectionalInfo newDir = new DirectionalInfo((Vector2Int)combatant.CurrentTile.gridLocation, (Vector2Int)targetTile.gridLocation);
+                DirectionalInfo newDir = new DirectionalInfo((Vector2Int)combatant.CurrentTile.GridLocation, (Vector2Int)targetTile.GridLocation);
 
                 // Let any subscribers know that we are moving along path
                 PathTileChanged(newDir);
 
-                MapManager.MGR.PositionCharacterOnTile(combatant, targetTile);
+                targetTile.PlaceCombatant(combatant);
                 currentPath.RemoveAt(0);
             }
         }

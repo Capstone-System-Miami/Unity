@@ -1,7 +1,4 @@
 // Authors: Layla Hoey, Lee St. Louis
-using System.Collections.Generic;
-using SystemMiami.Enums;
-using SystemMiami.Utilities;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem

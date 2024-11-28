@@ -55,7 +55,7 @@ namespace SystemMiami
                 OverlayTile prev = ( left >= 0 )        ? path[left]  : null;
                 OverlayTile next = ( right <= last )    ? path[right] : null;
 
-                Vector3 arrowsPosition = MapManager.MGR.IsoToScreen(currentTile.gridLocation);
+                Vector3 arrowsPosition = MapManager.MGR.IsoToScreen(currentTile.GridLocation);
 
                 GameObject arrowGo = Instantiate(arrowPrefab, arrowsPosition, Quaternion.identity);
 

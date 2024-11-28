@@ -46,8 +46,8 @@ namespace SystemMiami
         public void CalculateArrow(){
             bool isFinal = futureTile == null;
 
-            Vector2Int pastDirection = previousTile != null ? (Vector2Int)(currentTile.gridLocation - previousTile.gridLocation) : new Vector2Int(0, 0);
-            Vector2Int futureDirection = futureTile != null ? (Vector2Int)(futureTile.gridLocation - currentTile.gridLocation) : new Vector2Int(0, 0);
+            Vector2Int pastDirection = previousTile != null ? (Vector2Int)(currentTile.GridLocation - previousTile.GridLocation) : new Vector2Int(0, 0);
+            Vector2Int futureDirection = futureTile != null ? (Vector2Int)(futureTile.GridLocation - currentTile.GridLocation) : new Vector2Int(0, 0);
             Vector2Int direction = pastDirection != futureDirection ? pastDirection + futureDirection : futureDirection;
 
             arrowNumber = (int)ArrowDirection.None;

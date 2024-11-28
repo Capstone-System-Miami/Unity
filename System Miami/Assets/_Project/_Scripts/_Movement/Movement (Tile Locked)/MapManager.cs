@@ -62,13 +62,14 @@ namespace SystemMiami
                         if (tileMap.HasTile(tileLocation) && !map.ContainsKey(tileKey))
                         {
                             OverlayTile overlayTile = Instantiate(overlayTilePrefab, overlayContainer.transform);
+                            overlayTile.name = $"OT { tileKey }";
 
                             // Using the function from SystemMiami.Coordinates rather than the built in worldpos tilemap fn
                             Vector3 cellWorldPosition = Coordinates.IsoToScreen(tileLocation, gridTilesHeight);
 
                             overlayTile.transform.position = new Vector3(cellWorldPosition.x, cellWorldPosition.y, cellWorldPosition.z);
                             //overlayTile.GetComponent<SpriteRenderer>().sortingOrder = tileMap.GetComponent<TilemapRenderer>().sortingOrder;
-                            overlayTile.gridLocation = tileLocation;
+                            overlayTile.GridLocation = tileLocation;
                             map.Add(tileKey, overlayTile);
                         }
                     }
@@ -88,7 +89,7 @@ namespace SystemMiami
 
             foreach (OverlayTile tile in map.Values)
             {
-                if (!tile.isBlocked && tile.currentCharacter == null)
+                if (tile.ValidForPlacement)
                 {
                     unblockedTiles.Add(tile);
                 }
@@ -102,25 +103,6 @@ namespace SystemMiami
             }
 
             return null;
-        }
-
-        /// <summary>
-        /// Positions a character on the specified tile.
-        /// </summary>
-        public void PositionCharacterOnTile(Combatant character, OverlayTile tile)
-        {
-            character.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y + 0.0001f, tile.transform.position.z);
-            //character.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
-
-            // Let the old tile know that we're gone
-            if (character.CurrentTile != null)
-            {
-                character.CurrentTile.currentCharacter = null;
-            }
-
-            // Update new tile's current character
-            tile.currentCharacter = character;
-            character.CurrentTile = tile;
         }
 
         public Vector3 IsoToScreen(Vector3Int tileLocation)
