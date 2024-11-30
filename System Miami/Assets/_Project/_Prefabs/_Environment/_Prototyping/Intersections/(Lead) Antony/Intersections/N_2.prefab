@@ -6369,6 +6369,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3ac68e114586ecf429cfaf34d8ff63f7, type: 2}
   - {fileID: 11400000, guid: ad458d592988c3749b0b654a882b084d, type: 2}
   _material: {fileID: 2100000, guid: b673bd577411dc242a027f4797dcd53c, type: 2}
+  _currentPreset: {fileID: 0}
 --- !u!1 &3597956185211832654
 GameObject:
   m_ObjectHideFlags: 0
@@ -8035,10 +8036,19 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 1.3787379, y: -0.22111818}
+    - - {x: 1.148407, y: -0.46885777}
+      - {x: 1.3787379, y: -0.22111818}
+      - {x: 1.0248318, y: -0.028094709}
+      - {x: 0.9957695, y: -0.0122436285}
+      - {x: 0.89089584, y: 0.0449543}
+      - {x: 0.48451233, y: 0.2029371}
+      - {x: 0.26854992, y: 0.3255155}
       - {x: 0.01696837, y: 0.4683106}
       - {x: -0.6473267, y: 0.078912385}
       - {x: -0.34343466, y: -0.07206727}
+      - {x: -0.08044052, y: -0.20984656}
+      - {x: 0.5613308, y: -0.54606366}
+      - {x: 0.6423416, y: -0.5885042}
       - {x: 0.9078469, y: -0.72759956}
   m_UseDelaunayMesh: 0
 --- !u!114 &1173523998163910301
@@ -8058,7 +8068,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 3764415484065453772}
         m_TargetAssemblyTypeName: SystemMiami.DungeonEntrance, Assembly-CSharp
-        m_MethodName: SetDungeonColor
+        m_MethodName: TurnOnDungeonColor
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
