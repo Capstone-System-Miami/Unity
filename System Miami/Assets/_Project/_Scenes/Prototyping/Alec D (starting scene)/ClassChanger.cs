@@ -13,6 +13,7 @@ namespace SystemMiami
 
         private void Start()
         {
+            
             attributes = player.GetComponent<Attributes>();
             
         }

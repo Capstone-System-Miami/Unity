@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 using SystemMiami;
+using SystemMiami.Management;
 using UnityEngine;
+using UnityEngine.Events;
 
 //Made By Antony
 
 // The main class responsible for generating and managing streets in the game.
-public class IntersectionManager : MonoBehaviour
+public class IntersectionManager : Singleton<IntersectionManager>
 {
     // Serialized fields allow these private variables to be set in the Unity Editor.
     [Header("Street Generation Settings")]
@@ -74,9 +76,17 @@ public class IntersectionManager : MonoBehaviour
     // Reference to the last StreetData object generated.
     private StreetData lastStreetGenerated;
 
+
+    void Awake()
+    {
+        DontDestroyOnLoad(this.gameObject);
+    }
+    
+
     // Unity's Start method is called before the first frame update.
     void Start()
     {
+        playerPrefab = GameObject.Find("Player");
         InitializeStreetPoolDictionary(); // Prepare the dictionary mapping StreetTypes to StreetPools.
         InitializeStreetGrid(); // SetAll up the grid data structure for street generation.
         StartStreetGenerationFromStreet(new Vector2Int(gridSizeX / 2, gridSizeY / 2)); // Begin street generation from the center of the grid.
@@ -151,11 +161,11 @@ public class IntersectionManager : MonoBehaviour
         SpawnPlayer();
     }
 
-    private void SpawnPlayer()
+    public void SpawnPlayer()
     {
         // Instantiate the player prefab at the center of the grid.
         Vector3 playerPosition = GetPositionFromGridIndex(new Vector2Int(gridSizeX / 2, gridSizeY / 2));
-        Instantiate(playerPrefab, playerPosition, Quaternion.identity);
+        playerPrefab.transform.position =  playerPosition;
     }
     
     // Attempt to generate a street at the specified grid index.
@@ -280,6 +290,8 @@ public class IntersectionManager : MonoBehaviour
             streetObjects.Add(streetInstance);
             // Keep a reference to the street instance in the StreetData.
             currentStreet.streetInstance = streetInstance;
+
+            
             
             DungeonEntrance[] dungeonEntrances = streetInstance.GetComponentsInChildren<DungeonEntrance>();
 
@@ -290,12 +302,14 @@ public class IntersectionManager : MonoBehaviour
                     Debug.LogError($"DungeonEntrance component not found in {streetInstance.name}");
                     continue;
                 }
+
                 DifficultyLevel difficulty = GetRandomDifficulty();
                 dungeonEntrance.SetDifficulty(difficulty);
                 Debug.Log($"Set difficulty of {streetIndex} to {difficulty}");
                 currentStreet.dungeonEntranceDifficulties.Add(difficulty);
+
             }
-            
+
         }
         else
         {
@@ -408,6 +422,9 @@ public class IntersectionManager : MonoBehaviour
                         streetData.dungeonEntranceDifficulties.Add(difficulty);
                     }
                     dungeonEntrance.SetDifficulty(difficulty);
+                    GameObject col = dungeonEntrances[i].transform.Find("Collider").gameObject;
+                    Debug.Log(col.name);
+                    col.GetComponent<InteractionTrigger>().OnInteract.AddListener(GAME.MGR.GoToDungeon);
                 }
             }
             else

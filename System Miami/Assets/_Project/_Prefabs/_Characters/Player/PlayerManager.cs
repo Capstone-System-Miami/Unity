@@ -111,6 +111,7 @@ namespace SystemMiami
             playerCamera.SetActive(true);
             interactionUI.SetActive(true);
             interactionUI.GetComponentInChildren<PromptBox>().Clear();
+            FindObjectOfType<IntersectionManager>().gameObject.SetActive(true);
 
             DisableComponents(dungeonComponents);
             EnableComponents(neighborhoodComponents);
@@ -124,6 +125,7 @@ namespace SystemMiami
             GetComponent<Rigidbody2D>().velocity = Vector2.zero;
             playerCamera.SetActive(false);
             interactionUI.SetActive(false);
+            FindObjectOfType<IntersectionManager>().gameObject.SetActive(false);
 
             DisableComponents(neighborhoodComponents);
             EnableComponents(dungeonComponents);
