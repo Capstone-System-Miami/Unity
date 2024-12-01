@@ -112,7 +112,7 @@ namespace SystemMiami.AbilitySystem
 
         [SerializeField] private List<Ability> _physical = new List<Ability>(); // List of phys abilities
         [SerializeField] private List<Ability> _magical = new List<Ability>(); // List of magic abilities
-
+        [SerializeField] private AnimatorOverrideController animController;
         #endregion // SERIALIZED ================
 
 
@@ -362,6 +362,7 @@ namespace SystemMiami.AbilitySystem
             _selectedAbility = null;
 
             _state.Set(State.UNEQUIPPED);
+            
         }
 
         /// <summary>
@@ -388,7 +389,8 @@ namespace SystemMiami.AbilitySystem
 
             // Start Animation
             _combatant.Animator.runtimeAnimatorController = _selectedAbility._overrideController;
-            _combatant.Animator.SetTrigger("UseAbility");
+
+            // _combatant.Animator.SetTrigger("UseAbility");
 
             // TODO: Wait for the animation to finish
             // For now, just wait 2 secs
@@ -405,6 +407,7 @@ namespace SystemMiami.AbilitySystem
             yield return null;
 
             // Unequip when the Ability's Use() coroutine is over.
+            _combatant.Animator.runtimeAnimatorController = animController;
             unequip();
             yield return null;
         }

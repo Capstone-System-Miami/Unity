@@ -194,9 +194,19 @@ namespace SystemMiami.CombatSystem
 
             //if (newDirection.DirectionVec != DirectionInfo.DirectionVec)
             //{
-                SwapSprite(newDirection.DirectionVec);
-                OnDirectionChanged?.Invoke(newDirection);
+            if ((int)newDirection.DirectionName == 0)
+            {
+
+                Animator.SetInteger("TileDir", 7);
+            }
+            else
+            {
+                Animator.SetInteger("TileDir", (int)newDirection.DirectionName - 1);
+            }
+
+            OnDirectionChanged?.Invoke(newDirection);
             //}
+            Debug.Log(newDirection.DirectionName);
 
             DirectionInfo = newDirection;
         }
@@ -207,12 +217,20 @@ namespace SystemMiami.CombatSystem
         private void setDirection(DirectionalInfo newDirection)
         {
             DirectionInfo = newDirection;
+            if ((int)newDirection.DirectionName == 0)
+            {
 
-            SwapSprite(newDirection.DirectionVec);
+              Animator.SetInteger("TileDir", 7 );
+            }
+            else
+            {
+                Animator.SetInteger("TileDir", (int)newDirection.DirectionName - 1);
+            }
 
             OnSubjectChanged?.Invoke(newDirection);
             OnDirectionChanged?.Invoke(newDirection);
-            Animator.SetInteger("TileDir",(int)newDirection.DirectionName );
+            Debug.Log(newDirection.DirectionName);
+            
         }
         #endregion Directions (priv)
 
@@ -225,16 +243,16 @@ namespace SystemMiami.CombatSystem
             }
         }
 
-        public void SwapSprite(Vector2Int direction)
-        {
-            if (PlayerDirSprites == null || PlayerDirSprites.Length == 0) { return; }
+        //public void SwapSprite(Vector2Int direction)
+        //{
+        //    if (PlayerDirSprites == null || PlayerDirSprites.Length == 0) { return; }
 
-            TileDir dir = DirectionHelper.GetTileDir(direction);
+        //    TileDir dir = DirectionHelper.GetTileDir(direction);
 
-            currentSprite = PlayerDirSprites[(int)dir];
+        //    currentSprite = PlayerDirSprites[(int)dir];
 
-            GetComponent<SpriteRenderer>().sprite = currentSprite;
-        }
+        //    GetComponent<SpriteRenderer>().sprite = currentSprite;
+        //}
 
         #region IHighlightable
 

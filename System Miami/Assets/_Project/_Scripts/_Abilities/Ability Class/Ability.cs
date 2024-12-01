@@ -80,7 +80,7 @@ namespace SystemMiami.AbilitySystem
 
         public void Init(Combatant user)
         {
-           // User = user;
+            User = user;
            // user.Animator.runtimeAnimatorController = _overrideController;
 
            // clipOverrides = new AnimationClipOverrides(_overrideController.overridesCount);
