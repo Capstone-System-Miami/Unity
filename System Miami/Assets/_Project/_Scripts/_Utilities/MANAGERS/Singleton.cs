@@ -6,6 +6,8 @@ namespace SystemMiami.Management
     {
         [SerializeField] private static T _mgr;
 
+        [SerializeField] private bool _preserveBetweenScenes;
+
         public static T MGR { get { return _mgr; } }
 
         protected virtual void Awake()
@@ -17,6 +19,11 @@ namespace SystemMiami.Management
             else
             {
                 _mgr = this as T;
+
+                if (_preserveBetweenScenes)
+                {
+                    DontDestroyOnLoad(gameObject);
+                }
             }
         }
     }

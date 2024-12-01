@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using SystemMiami.CombatSystem;
+using SystemMiami.Enums;
+using SystemMiami.Utilities;
 using UnityEngine;
 
 namespace SystemMiami.AbilitySystem
@@ -50,6 +52,10 @@ namespace SystemMiami.AbilitySystem
         public CombatAction[] Actions { get { return _actions; } }
         public bool IsBusy { get; private set; }
 
+        [SerializeField] AbilityDirections animDirs;
+
+        protected AnimationClipOverrides clipOverrides;
+
         public bool PlayerFoundInTargets
         {
             get
@@ -75,9 +81,45 @@ namespace SystemMiami.AbilitySystem
         public void Init(Combatant user)
         {
             User = user;
-            // I don't know how the animator override controller works
-            // but that stuff would (or could?) go here.
+            user.Animator.runtimeAnimatorController = _overrideController;
 
+            clipOverrides = new AnimationClipOverrides(_overrideController.overridesCount);
+           _overrideController.GetOverrides(clipOverrides);
+            Vector2Int direction = user.DirectionInfo.DirectionVec;
+            TileDir dir = DirectionHelper.GetTileDir(direction);
+            Debug.Log("This is") ;
+
+            switch ((int)dir)
+            {
+                case 0:
+                    _overrideController["UseAbility"] = animDirs.Up;
+                    break;
+                case 1:
+                    _overrideController["UseAbility"] = animDirs.UpRight;
+                    break;
+                case 2:
+                    _overrideController["UseAbility"] = animDirs.Right;
+                    break;
+                case 3:
+                    _overrideController["UseAbility"] = animDirs.DownRight;
+                    break;
+                case 4:
+                    _overrideController["UseAbility"] = animDirs.Down;
+                    break;
+                case 5:
+                    _overrideController["UseAbility"] = animDirs.DownLeft;
+                    break;
+                case 6:
+                    _overrideController["UseAbility"] = animDirs.Left;
+                    break;
+                case 7:
+                    _overrideController["UseAbility"] = animDirs.UpLeft;
+                    break;
+                default:
+                    _overrideController["UseAbility"] = animDirs.Up;
+                    break;
+            }
+         
             setResource();
         }
 

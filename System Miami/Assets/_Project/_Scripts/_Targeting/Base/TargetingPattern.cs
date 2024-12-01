@@ -42,7 +42,7 @@ namespace SystemMiami.CombatSystem
             //ShowTargets();
         }
 
-        public  void UnsubscribeToDirectionUpdates(Combatant user)
+        public void UnsubscribeToDirectionUpdates(Combatant user)
         {            
             if (_patternOrigin == PatternOriginType.USER)
             {
@@ -52,16 +52,12 @@ namespace SystemMiami.CombatSystem
             {
                 user.OnSubjectChanged -= onTargetChanged;
             }
-            //if (!_targetsLocked)
-            //{
-            //    HideTargets();
-            //}
         }
 
         /// <summary>
         /// Locks the targets by allowing unsubscribing from moveDirection updates without hiding the targets.
         /// </summary>
-        public  void LockTargets()
+        public void LockTargets()
         {            
             _targetsLocked = true;
             //Debug.Log($"Targets locked in {name}'s TargetingPattern.");
@@ -73,7 +69,7 @@ namespace SystemMiami.CombatSystem
             //Debug.Log($"Targets unlocked in {name}'s TargetingPattern");
         }
 
-        public bool  ShowTargets()
+        public bool ShowTargets()
         {            
             showTiles();
             showCombatants();
@@ -82,14 +78,6 @@ namespace SystemMiami.CombatSystem
 
         public bool HideTargets()
         {
-            //if (_targetsLocked)
-            //{
-            //    // Shouldn't this condition check be somewhere else?
-            //    // This function is supposed to hide the targets no matter what.
-            //    Debug.Log("hideTargets called but targets are locked. Skipping hiding.");
-            //    return true;
-            //}
-
             //Debug.Log("HideTargets called. Hiding targets.");
             hideTiles();
             hideCombatants();
@@ -101,14 +89,8 @@ namespace SystemMiami.CombatSystem
         #region Protected
         protected void onTargetChanged(DirectionalInfo dir)
         {
-            //Debug.Log($"OnTargetChanged called. Targets locked: {_targetsLocked}");
-            //if (_targetsLocked)
-            //{          
-            //    ShowTargets();
-            //    return;
-            //}
-
             HideTargets();
+            ClearTargets();
             SetTargets(dir);
             ShowTargets();
         }
@@ -147,7 +129,7 @@ namespace SystemMiami.CombatSystem
             if (MapManager.MGR.map.ContainsKey(position))
             {
                 tile = MapManager.MGR.map[position];
-                character = tile.currentCharacter;
+                character = tile.CurrentCombatant;
             }
             else
             {
