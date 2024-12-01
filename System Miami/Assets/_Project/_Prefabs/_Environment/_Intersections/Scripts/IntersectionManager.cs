@@ -422,9 +422,9 @@ public class IntersectionManager : Singleton<IntersectionManager>
                         streetData.dungeonEntranceDifficulties.Add(difficulty);
                     }
                     dungeonEntrance.SetDifficulty(difficulty);
-                    GameObject col = dungeonEntrances[i].transform.Find("Collider").gameObject;
+                    InteractionTrigger col = dungeonEntrances[i].GetComponentInChildren<InteractionTrigger>();
                     Debug.Log(col.name);
-                    col.GetComponent<InteractionTrigger>().OnInteract.AddListener(GAME.MGR.GoToDungeon);
+                    col.OnInteract.AddListener(GAME.MGR.GoToDungeon);
                 }
             }
             else

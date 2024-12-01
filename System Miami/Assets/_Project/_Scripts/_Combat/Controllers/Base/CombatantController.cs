@@ -32,6 +32,7 @@ namespace SystemMiami.CombatSystem
         // ======================================
 
         [SerializeField] protected float movementSpeed;
+        [SerializeField] private AnimatorOverrideController animController;
 
         // ======================================
         #endregion // SERIALIZED
@@ -322,8 +323,14 @@ namespace SystemMiami.CombatSystem
 
             if (unequipTriggered())
             {
-                combatant.Abilities.TryUnequip();
+                if (combatant.Abilities.TryUnequip())
+                {
+                    combatant.Animator.runtimeAnimatorController = animController;
+                }
+                
+
             }
+
 
             if (equipTriggered())
             {
@@ -340,7 +347,9 @@ namespace SystemMiami.CombatSystem
                 if (combatant.Abilities.AbilityExecutionIsValid(out IEnumerator abilityProcess))
                 {
                     StartCoroutine(abilityProcess);
+                    combatant.Animator.runtimeAnimatorController = combatant.Abilities.SelectedAbility._overrideController;
                 }
+
             }
         }
 

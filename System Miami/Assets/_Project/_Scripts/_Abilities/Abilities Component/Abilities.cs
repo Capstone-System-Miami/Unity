@@ -385,6 +385,7 @@ namespace SystemMiami.AbilitySystem
             _state.Set(State.EXECUTING);
             yield return null;
 
+
             // Start Animation
             _combatant.Animator.runtimeAnimatorController = _selectedAbility._overrideController;
             _combatant.Animator.SetTrigger("UseAbility");

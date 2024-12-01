@@ -212,6 +212,7 @@ namespace SystemMiami.CombatSystem
 
             OnSubjectChanged?.Invoke(newDirection);
             OnDirectionChanged?.Invoke(newDirection);
+            Animator.SetInteger("TileDir",(int)newDirection.DirectionName );
         }
         #endregion Directions (priv)
 

@@ -9,7 +9,7 @@ namespace SystemMiami
         [SerializeField] private DungeonEntrancePreset[] _presets;
         [SerializeField] private Material _material;
         
-        [HideInInspector]
+       
         public DungeonEntrancePreset _currentPreset;
         
         

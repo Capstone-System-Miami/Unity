@@ -112,7 +112,7 @@ namespace SystemMiami
             interactionUI.SetActive(true);
             interactionUI.GetComponentInChildren<PromptBox>().Clear();
             FindObjectOfType<IntersectionManager>().gameObject.SetActive(true);
-
+            
             DisableComponents(dungeonComponents);
             EnableComponents(neighborhoodComponents);
         }
