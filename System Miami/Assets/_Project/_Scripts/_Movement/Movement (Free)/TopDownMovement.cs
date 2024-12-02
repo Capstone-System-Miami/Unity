@@ -2,7 +2,7 @@
 using SystemMiami.Enums;
 using SystemMiami.Utilities;
 using UnityEngine;
-using AnimatorController = UnityEditor.Animations.AnimatorController;
+
 
 public class TopDownMovement : MonoBehaviour
 {
@@ -10,7 +10,7 @@ public class TopDownMovement : MonoBehaviour
     public SpriteRenderer spriteRenderer;
     [SerializeField] private Animator animator;
 
-    [SerializeField]private AnimatorController controller;
+    [SerializeField]private RuntimeAnimatorController controller;
     public AnimatorOverrideController[] animControllers;
 
     public float walkSpeed;
