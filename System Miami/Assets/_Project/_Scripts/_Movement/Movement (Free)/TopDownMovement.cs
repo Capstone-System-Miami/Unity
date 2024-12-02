@@ -10,7 +10,7 @@ public class TopDownMovement : MonoBehaviour
     public SpriteRenderer spriteRenderer;
     [SerializeField] private Animator animator;
 
-    [SerializeField]private RuntimeAnimatorController controller;
+    //[SerializeField]private RuntimeAnimatorController controller;
     public AnimatorOverrideController[] animControllers;
 
     public float walkSpeed;
@@ -36,11 +36,11 @@ public class TopDownMovement : MonoBehaviour
 
         if (roundedDirection == Vector2.zero)
         {
-            animator.runtimeAnimatorController = controller;
+            animator.runtimeAnimatorController = animControllers[0];
         }
         else
         {
-            animator.runtimeAnimatorController = animControllers[0];
+            animator.runtimeAnimatorController = animControllers[1];
         }
             setAnim();
 
@@ -69,7 +69,7 @@ public class TopDownMovement : MonoBehaviour
 
     private void OnDisable()
     {
-        animator.runtimeAnimatorController = controller;
+        animator.runtimeAnimatorController = animControllers[0];
     }
 
     
