@@ -1,9 +1,6 @@
 //Author: Johnny, Layla Hoey
-using System.Collections;
-using System.Collections.Generic;
 using SystemMiami.Enums;
 using SystemMiami.Utilities;
-using UnityEditorInternal;
 using UnityEngine;
 using AnimatorController = UnityEditor.Animations.AnimatorController;
 

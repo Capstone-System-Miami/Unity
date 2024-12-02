@@ -263,6 +263,9 @@ namespace SystemMiami.CombatSystem
         public virtual void EndTurn()
         {
             Debug.Log($"{name}Calling end of turn");
+
+            FocusedTile?.UnHighlight();
+
             // TODO
             // Other end of turn things.
             IsMyTurn = false;

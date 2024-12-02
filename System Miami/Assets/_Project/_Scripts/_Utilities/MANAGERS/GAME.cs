@@ -3,7 +3,7 @@ using SystemMiami.CombatSystem;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-#if UNITY_ENGINE
+#if UNITY_EDITOR
 using UnityEditor;
 #endif
 
