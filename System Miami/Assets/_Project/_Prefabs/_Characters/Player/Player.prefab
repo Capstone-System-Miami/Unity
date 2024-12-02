@@ -475,8 +475,8 @@ MonoBehaviour:
   - {fileID: 4350139501520326043}
   - {fileID: 2944738270664453915}
   - {fileID: 5403784279387507798}
-  neighborhoodComponents:
   - {fileID: 2705490712565707672}
+  neighborhoodComponents:
   - {fileID: 8219263611542528465}
   - {fileID: 6386089713510983124}
   - {fileID: 4261404639173623324}
@@ -646,6 +646,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: dbd15121c6839b74e9cef4cb5a187157, type: 2}
   - {fileID: 11400000, guid: b35a5b9b3040e524eb59c91d64d68170, type: 2}
   - {fileID: 11400000, guid: f43504aa81fefc24582a02bbb095c7d5, type: 2}
+  animController: {fileID: 22100000, guid: decd93ce417d8f74fa9d4dc0cfe24f90, type: 2}
 --- !u!114 &5403784279387507798
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -696,6 +697,9 @@ MonoBehaviour:
   body: {fileID: 3666472161562640362}
   spriteRenderer: {fileID: 4476760992286927676}
   animator: {fileID: 2705490712565707672}
+  controller: {fileID: 9100000, guid: bf4361dbd1b3bae4c8f67f0f1f85101e, type: 2}
+  animControllers:
+  - {fileID: 22100000, guid: fa6e08b1c92be634090b672d4f4f3230, type: 2}
   walkSpeed: 5
   frameRate: 30
 --- !u!114 &6386089713510983124

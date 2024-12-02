@@ -55,7 +55,7 @@ namespace SystemMiami
         {
             Show();
             _combatant = enemy;
-            _nameBox.SetForeground($"Enemy {index}");
+            _nameBox.SetForeground($"{enemy.name}");
             _health.Label.SetForeground("Health:");
         }
 

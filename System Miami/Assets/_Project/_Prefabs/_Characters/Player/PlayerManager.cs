@@ -38,7 +38,7 @@ namespace SystemMiami
 
         protected override void Awake()
         {
-            if (MGR != null)
+            if (MGR != null && TurnManager.MGR != null)
             {
                 MGR.transform.position = transform.position;
                 TurnManager.MGR.playerCharacter = MGR.GetComponent<Combatant>();

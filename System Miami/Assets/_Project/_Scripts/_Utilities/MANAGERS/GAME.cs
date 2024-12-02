@@ -1,7 +1,11 @@
 using System;
 using SystemMiami.CombatSystem;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+#if UNITY_ENGINE
+using UnityEditor;
+#endif
 
 namespace SystemMiami.Management
 {
@@ -34,6 +38,18 @@ namespace SystemMiami.Management
         public void GoToNeighborhood()
         {
             switchScene(_neighborhoodSceneName);
+        }
+
+        public void Quit()
+        {
+            #if UNITY_EDITOR
+            if (EditorApplication.isPlaying)
+            {
+                EditorApplication.isPlaying = false;
+            }
+            #else
+            Application.Quit();
+            #endif
         }
     }
 }

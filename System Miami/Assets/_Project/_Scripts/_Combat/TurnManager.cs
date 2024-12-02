@@ -162,7 +162,7 @@ namespace SystemMiami
                     // Set enemy name
                     string newName = enemyCombatant.name;
                     newName = newName.Replace("(Clone)", "");
-                    newName += $"{enemyCombatant.ID}";
+                    newName += $" {enemyCombatant.ID}";
                     enemyCombatant.name = newName;
 
                     // Position enemy on the tile

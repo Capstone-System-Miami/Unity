@@ -652,7 +652,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _preserveBetweenScenes: 0
   _dungeonSceneName: Dungeon
-  _neighborhoodSceneName: Neighborhood
+  _neighborhoodSceneName: NEIGHBORHOOD
 --- !u!4 &1443152305
 Transform:
   m_ObjectHideFlags: 0
@@ -738,7 +738,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: System Miami
+  m_Text: System Panic
 --- !u!222 &1509604328
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1083,10 +1083,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1787488501}
-        m_TargetAssemblyTypeName: SystemMiami.ButtonSceneLoader, Assembly-CSharp
-        m_MethodName: LoadScene
-        m_Mode: 5
+      - m_Target: {fileID: 1443152304}
+        m_TargetAssemblyTypeName: SystemMiami.Management.GAME, Assembly-CSharp
+        m_MethodName: Quit
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
