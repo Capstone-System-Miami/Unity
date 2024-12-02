@@ -7,11 +7,12 @@ namespace SystemMiami.CombatSystem
     public class InflictStatusEffect : CombatAction
     {
         [SerializeField] StatSetSO effectStats;
+        [SerializeField] float damage;
         [SerializeField] int durationTurns;
 
         public override void Perform()
         {
-            StatusEffect statusEffect = new StatusEffect(effectStats, durationTurns);
+            StatusEffect statusEffect = new StatusEffect(effectStats, damage, durationTurns);
 
             foreach (Combatant target in TargetingPattern.StoredTargets.Combatants)
             {

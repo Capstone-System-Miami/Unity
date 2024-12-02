@@ -1,7 +1,11 @@
 using System;
 using SystemMiami.CombatSystem;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace SystemMiami.Management
 {
@@ -9,8 +13,8 @@ namespace SystemMiami.Management
     {
         public Action<Combatant> CombatantDeath;
 
-        [SerializeField] int _dungeonIndex;
-        [SerializeField] int _neighborhoodIndex;
+        [SerializeField] string _dungeonSceneName;
+        [SerializeField] string _neighborhoodSceneName;
 
         protected override void Awake()
         {
@@ -28,13 +32,24 @@ namespace SystemMiami.Management
 
         public void GoToDungeon()
         {
-            switchScene(_dungeonIndex);
+            switchScene(_dungeonSceneName);
         }
 
         public void GoToNeighborhood()
         {
-            switchScene(_neighborhoodIndex);
+            switchScene(_neighborhoodSceneName);
         }
 
+        public void Quit()
+        {
+            #if UNITY_EDITOR
+            if (EditorApplication.isPlaying)
+            {
+                EditorApplication.isPlaying = false;
+            }
+            #else
+            Application.Quit();
+            #endif
+        }
     }
 }

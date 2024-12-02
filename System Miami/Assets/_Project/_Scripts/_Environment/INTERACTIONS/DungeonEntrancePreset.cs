@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using SystemMiami.AbilitySystem;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -20,5 +23,28 @@ namespace SystemMiami
         public DifficultyLevel Difficulty => _difficulty;
         public Color DoorOffColor => _doorOffColor;
         public Color DoorOnColor => _doorOnColor;
+
+        [Header("Dungeon Settings")]
+        public List<GameObject> easyDungeonPrefabs;
+        public List<GameObject> mediumDungeonPrefabs;
+        public List<GameObject> hardDungeonPrefabs;
+        
+        [Range(0, 100)] public int EnemyCount;
+        //public int maxEnemyCount;
+        public GameObject[] enemyPrefabs;
+
+        [Range(0, 100)] public float xpAmount;
+        //[Range(0, 100)] public float maxExpAmount;
+
+        [Range(0, 100)] public int SkillPoints;
+        //[Range(0, 100)] public int maxSkillPoints;
+
+        [Range(0,100)]public float itemDropChance;
+        [Range(0,100)]public float abilityDropChance;
+
+        public Ability abilityReward;
+        public Item itemReward;
+
+      
     }
 }

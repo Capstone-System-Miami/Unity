@@ -1,10 +1,9 @@
 // Authors: Layla Hoey, Lee St Louis
 using System;
-using System.Linq;
+using SystemMiami.AbilitySystem;
 using SystemMiami.Enums;
 using SystemMiami.Management;
 using SystemMiami.Utilities;
-using SystemMiami.AbilitySystem;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem
@@ -13,7 +12,7 @@ namespace SystemMiami.CombatSystem
         typeof(Stats),
         typeof(Abilities)
         /*typeof(CombatantController)*/)]
-    public class Combatant : MonoBehaviour, ITargetable, IDamageable, IHealable, IMovable
+    public class Combatant : MonoBehaviour, IHighlightable, IDamageable, IHealable, IMovable
     {
         [SerializeField] private Color _colorTag = Color.white;
 
@@ -28,6 +27,8 @@ namespace SystemMiami.CombatSystem
         private CombatantController _controller;
         private Stats _stats;
         private Abilities _abilities;
+
+        private float _endOfTurnDamage;
 
         private SpriteRenderer _renderer;
         private Color _defaultColor;
@@ -131,7 +132,7 @@ namespace SystemMiami.CombatSystem
 
         private void initDirection()
         {
-            Vector2Int currentPos = (Vector2Int)CurrentTile.gridLocation;
+            Vector2Int currentPos = (Vector2Int)CurrentTile.GridLocation;
             setDirection(new DirectionalInfo(currentPos,  currentPos + Vector2Int.one));
         }
         #endregion Construction
@@ -182,10 +183,10 @@ namespace SystemMiami.CombatSystem
             if (_abilities.CurrentState == Abilities.State.EXECUTING) { return; }
             if (targetTile == null) { return; }
 
-            Vector2Int currentPos = (Vector2Int)CurrentTile.gridLocation;
+            Vector2Int currentPos = (Vector2Int)CurrentTile.GridLocation;
             Vector2Int forwardPos;
 
-            forwardPos = (Vector2Int)targetTile.gridLocation;
+            forwardPos = (Vector2Int)targetTile.GridLocation;
 
             DirectionalInfo newDirection = new DirectionalInfo(currentPos, forwardPos);
 
@@ -193,9 +194,19 @@ namespace SystemMiami.CombatSystem
 
             //if (newDirection.DirectionVec != DirectionInfo.DirectionVec)
             //{
-                SwapSprite(newDirection.DirectionVec);
-                OnDirectionChanged?.Invoke(newDirection);
+            if ((int)newDirection.DirectionName == 0)
+            {
+
+                Animator.SetInteger("TileDir", 7);
+            }
+            else
+            {
+                Animator.SetInteger("TileDir", (int)newDirection.DirectionName - 1);
+            }
+
+            OnDirectionChanged?.Invoke(newDirection);
             //}
+            Debug.Log(newDirection.DirectionName);
 
             DirectionInfo = newDirection;
         }
@@ -206,11 +217,20 @@ namespace SystemMiami.CombatSystem
         private void setDirection(DirectionalInfo newDirection)
         {
             DirectionInfo = newDirection;
+            if ((int)newDirection.DirectionName == 0)
+            {
 
-            SwapSprite(newDirection.DirectionVec);
+              Animator.SetInteger("TileDir", 7 );
+            }
+            else
+            {
+                Animator.SetInteger("TileDir", (int)newDirection.DirectionName - 1);
+            }
 
             OnSubjectChanged?.Invoke(newDirection);
             OnDirectionChanged?.Invoke(newDirection);
+            Debug.Log(newDirection.DirectionName);
+            
         }
         #endregion Directions (priv)
 
@@ -223,21 +243,26 @@ namespace SystemMiami.CombatSystem
             }
         }
 
-        public void SwapSprite(Vector2Int direction)
+        //public void SwapSprite(Vector2Int direction)
+        //{
+        //    if (PlayerDirSprites == null || PlayerDirSprites.Length == 0) { return; }
+
+        //    TileDir dir = DirectionHelper.GetTileDir(direction);
+
+        //    currentSprite = PlayerDirSprites[(int)dir];
+
+        //    GetComponent<SpriteRenderer>().sprite = currentSprite;
+        //}
+
+        #region IHighlightable
+
+        public void Highlight()
         {
-            if (PlayerDirSprites == null || PlayerDirSprites.Length == 0) { return; }
-
-            TileDir dir = DirectionHelper.GetTileDir(direction);
-
-            currentSprite = PlayerDirSprites[(int)dir];
-
-            GetComponent<SpriteRenderer>().sprite = currentSprite;
-        }
-
-        #region ITargetable
-        public void Target()
-        {
-            print($"{name} is being targeted");
+            Debug.Log($"Highlight (no args overload) called on {name}.\n" +
+                $"This should be called from OverlayTile when the player\n" +
+                $"mouses over a tile containing a combatant.\n" +
+                $"The function should enable / instantiate a\n" +
+                $"worldspace UI canvas with combatant info.");
         }
 
         public void Highlight(Color color)
@@ -314,7 +339,7 @@ namespace SystemMiami.CombatSystem
         #region IMovable
         public Vector2Int GetTilePos()
         {
-            return (Vector2Int)CurrentTile.gridLocation;
+            return (Vector2Int)CurrentTile.GridLocation;
         }
 
         public bool TryMoveTo(Vector2Int tilePos)
@@ -337,7 +362,7 @@ namespace SystemMiami.CombatSystem
             if (IsMovable)
             {
                 // TODO: Implement directional movement logic
-                Vector2Int newPos = (Vector2Int)CurrentTile.gridLocation + boardDirection * distance;
+                Vector2Int newPos = (Vector2Int)CurrentTile.GridLocation + boardDirection * distance;
 
                 print($"{name} would move to {newPos}, but this mechanic has not been implemented");
                 return true;
@@ -353,6 +378,7 @@ namespace SystemMiami.CombatSystem
         public void InflictStatusEffect(StatusEffect effect)
         {
             _stats.AddStatusEffect(effect);
+            _endOfTurnDamage = effect.Damage;
         }
 
         public void ResetTurn()
@@ -360,6 +386,7 @@ namespace SystemMiami.CombatSystem
             Speed = new Resource(_stats.GetStat(StatType.SPEED));
             _abilities.ReduceCooldowns();
             _stats.UpdateStatusEffects();
+            Health?.Lose(_endOfTurnDamage);
         }
 
         public virtual void Die()

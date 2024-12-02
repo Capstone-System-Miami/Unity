@@ -8,7 +8,7 @@ namespace SystemMiami
     public class InteractionTrigger : MonoBehaviour, IInteractable
     {        
         [SerializeField] private UnityEvent OnEnter;
-        [SerializeField] private UnityEvent OnInteract;
+        [SerializeField] public UnityEvent OnInteract;
         [SerializeField] private UnityEvent OnExit;
 
         [SerializeField] private string _promptAction;

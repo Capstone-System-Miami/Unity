@@ -1,15 +1,17 @@
 //Author: Johnny, Layla Hoey
-using System.Collections;
-using System.Collections.Generic;
 using SystemMiami.Enums;
 using SystemMiami.Utilities;
 using UnityEngine;
+
 
 public class TopDownMovement : MonoBehaviour
 {
     public Rigidbody2D body; // Fixed the case of Rigidbody2D
     public SpriteRenderer spriteRenderer;
     [SerializeField] private Animator animator;
+
+    //[SerializeField]private RuntimeAnimatorController controller;
+    public AnimatorOverrideController[] animControllers;
 
     public float walkSpeed;
     public float frameRate;
@@ -34,13 +36,13 @@ public class TopDownMovement : MonoBehaviour
 
         if (roundedDirection == Vector2.zero)
         {
-            animator.enabled = false;
+            animator.runtimeAnimatorController = animControllers[0];
         }
         else
         {
-            animator.enabled = true;
-            setAnim();
+            animator.runtimeAnimatorController = animControllers[1];
         }
+            setAnim();
 
         //HandleSpriteFlip(); // Flips sprite based on movement moveDirection
         //SetAll(); // Sets the current sprite
@@ -64,6 +66,13 @@ public class TopDownMovement : MonoBehaviour
         TileDir dir = DirectionHelper.GetTileDir(roundedDirection);
         animator.SetInteger("TileDir", (int)dir);
     }
+
+    private void OnDisable()
+    {
+        animator.runtimeAnimatorController = animControllers[0];
+    }
+
+    
 
     #region old (sprite-flipper)
     //void SetAll()

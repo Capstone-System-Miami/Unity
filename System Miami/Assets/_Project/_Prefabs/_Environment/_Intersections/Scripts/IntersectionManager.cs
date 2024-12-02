@@ -1,10 +1,13 @@
 using System.Collections.Generic;
+using SystemMiami;
+using SystemMiami.Management;
 using UnityEngine;
+using UnityEngine.Events;
 
 //Made By Antony
 
 // The main class responsible for generating and managing streets in the game.
-public class IntersectionManager : MonoBehaviour
+public class IntersectionManager : Singleton<IntersectionManager>
 {
     // Serialized fields allow these private variables to be set in the Unity Editor.
     [Header("Street Generation Settings")]
@@ -73,9 +76,17 @@ public class IntersectionManager : MonoBehaviour
     // Reference to the last StreetData object generated.
     private StreetData lastStreetGenerated;
 
+
+    void Awake()
+    {
+        DontDestroyOnLoad(this.gameObject);
+    }
+    
+
     // Unity's Start method is called before the first frame update.
     void Start()
     {
+        playerPrefab = GameObject.Find("Player");
         InitializeStreetPoolDictionary(); // Prepare the dictionary mapping StreetTypes to StreetPools.
         InitializeStreetGrid(); // SetAll up the grid data structure for street generation.
         StartStreetGenerationFromStreet(new Vector2Int(gridSizeX / 2, gridSizeY / 2)); // Begin street generation from the center of the grid.
@@ -150,11 +161,11 @@ public class IntersectionManager : MonoBehaviour
         SpawnPlayer();
     }
 
-    private void SpawnPlayer()
+    public void SpawnPlayer()
     {
         // Instantiate the player prefab at the center of the grid.
         Vector3 playerPosition = GetPositionFromGridIndex(new Vector2Int(gridSizeX / 2, gridSizeY / 2));
-        Instantiate(playerPrefab, playerPosition, Quaternion.identity);
+        playerPrefab.transform.position =  playerPosition;
     }
     
     // Attempt to generate a street at the specified grid index.
@@ -279,11 +290,49 @@ public class IntersectionManager : MonoBehaviour
             streetObjects.Add(streetInstance);
             // Keep a reference to the street instance in the StreetData.
             currentStreet.streetInstance = streetInstance;
+
+            
+            
+            DungeonEntrance[] dungeonEntrances = streetInstance.GetComponentsInChildren<DungeonEntrance>();
+
+            foreach (DungeonEntrance dungeonEntrance in dungeonEntrances)
+            {
+                if (dungeonEntrance == null)
+                {
+                    Debug.LogError($"DungeonEntrance component not found in {streetInstance.name}");
+                    continue;
+                }
+
+                DifficultyLevel difficulty = GetRandomDifficulty();
+                dungeonEntrance.SetDifficulty(difficulty);
+                Debug.Log($"Set difficulty of {streetIndex} to {difficulty}");
+                currentStreet.dungeonEntranceDifficulties.Add(difficulty);
+
+            }
+
         }
         else
         {
             // Log a warning if no IntersectionPool is found for the determined IntersectionType.
             Debug.LogWarning($"No IntersectionPool found for IntersectionType: {streetType}");
+        }
+    }
+    
+    private DifficultyLevel GetRandomDifficulty()
+    {
+        float randomValue = Random.value;
+
+        if (randomValue < 0.5f)
+        {
+            return DifficultyLevel.EASY; // 50% chance
+        }
+        else if (randomValue < 0.8f)
+        {
+            return DifficultyLevel.MEDIUM; // 30% chance
+        }
+        else
+        {
+            return DifficultyLevel.HARD; // 20% chance
         }
     }
 
@@ -346,6 +395,37 @@ public class IntersectionManager : MonoBehaviour
                 streetInstance.name = $"Street [{streetData.gridIndex.x}, {streetData.gridIndex.y}]";
                 // Update the street instance reference in the StreetData.
                 streetData.streetInstance = streetInstance;
+                
+                DungeonEntrance[] dungeonEntrances = streetInstance.GetComponentsInChildren<DungeonEntrance>();
+
+                if (dungeonEntrances.Length != streetData.dungeonEntranceDifficulties.Count)
+                {
+                    Debug.LogWarning("Number of DungeonEntrances has changed");
+                }
+
+                for (int i = 0; i < dungeonEntrances.Length; i++)
+                {
+                    DungeonEntrance dungeonEntrance = dungeonEntrances[i];
+                    if (dungeonEntrance == null)
+                    {
+                        Debug.LogError($"DungeonEntrance component not found in {streetInstance.name}");
+                        continue;
+                    }
+                    DifficultyLevel difficulty;
+                    if (i < streetData.dungeonEntranceDifficulties.Count)
+                    {
+                        difficulty = streetData.dungeonEntranceDifficulties[i];
+                    }
+                    else
+                    {
+                        difficulty = GetRandomDifficulty();
+                        streetData.dungeonEntranceDifficulties.Add(difficulty);
+                    }
+                    dungeonEntrance.SetDifficulty(difficulty);
+                    InteractionTrigger col = dungeonEntrances[i].GetComponentInChildren<InteractionTrigger>();
+                    Debug.Log(col.name);
+                    col.OnInteract.AddListener(GAME.MGR.GoToDungeon);
+                }
             }
             else
             {
@@ -464,5 +544,6 @@ public class IntersectionManager : MonoBehaviour
         public bool enqueued = false; // Whether this grid location has been added to the generation queue.
         public HashSet<ExitDirection> exits = new HashSet<ExitDirection>(); // The exits (directions) this street connects to.
         public GameObject streetInstance = null; // Reference to the instantiated street GameObject in the scene.
+        public List<DifficultyLevel> dungeonEntranceDifficulties = new List<DifficultyLevel>(); // List of difficulties for DungeonEntrances.
     }
 }

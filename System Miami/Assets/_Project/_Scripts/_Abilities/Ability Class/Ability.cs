@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using SystemMiami.CombatSystem;
+using SystemMiami.Enums;
+using SystemMiami.Utilities;
 using UnityEngine;
 
 namespace SystemMiami.AbilitySystem
@@ -50,6 +52,10 @@ namespace SystemMiami.AbilitySystem
         public CombatAction[] Actions { get { return _actions; } }
         public bool IsBusy { get; private set; }
 
+       // [SerializeField] AbilityDirections animDirs;
+
+       // protected AnimationClipOverrides clipOverrides;
+
         public bool PlayerFoundInTargets
         {
             get
@@ -75,9 +81,16 @@ namespace SystemMiami.AbilitySystem
         public void Init(Combatant user)
         {
             User = user;
-            // I don't know how the animator override controller works
-            // but that stuff would (or could?) go here.
+           // user.Animator.runtimeAnimatorController = _overrideController;
 
+           // clipOverrides = new AnimationClipOverrides(_overrideController.overridesCount);
+           //_overrideController.GetOverrides(clipOverrides);
+           // Vector2Int direction = user.DirectionInfo.DirectionVec;
+           // TileDir dir = DirectionHelper.GetTileDir(direction);
+           // Debug.Log("This is") ;
+
+            
+         
             setResource();
         }
 

@@ -12,7 +12,7 @@ namespace SystemMiami
     #region VARS
     //===============================
 
-        [SerializeField] private CharacterClassType _characterClass;
+        [SerializeField] public CharacterClassType _characterClass;
         [SerializeField] private AttributeSetSO[] _baseAttributes;
         [SerializeField] private int _minValue;
         [SerializeField] private int _maxValue;
@@ -162,6 +162,14 @@ namespace SystemMiami
 
     #region PUBLIC METHODS
     //===============================
+
+        public void SetClass(CharacterClassType characterClass)
+        {
+            _characterClass = characterClass;
+
+            AttributeSet classBaseAttributes = new AttributeSet(_baseAttributes[(int)_characterClass]);
+            initializeWith(classBaseAttributes);
+        }
 
         /// <summary>
         /// Returns the value of the specified attribute
