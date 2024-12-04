@@ -432,9 +432,10 @@ GameObject:
   - component: {fileID: 4261404639173623324}
   - component: {fileID: -487834630417795382}
   - component: {fileID: -6597365728956606799}
+  - component: {fileID: 906636693638750812}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -606,7 +607,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9966b3c751b0d484a890e49dc32341fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _characterClass: 1
+  _characterClass: 0
   _baseAttributes:
   - {fileID: 11400000, guid: 8c9115a04c916e244bfdef36ea488f1f, type: 2}
   - {fileID: 11400000, guid: d19146937a49e1742ae279b06907ce80, type: 2}
@@ -669,7 +670,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6453553769002132252}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: bf4361dbd1b3bae4c8f67f0f1f85101e, type: 2}
   m_CullingMode: 0
@@ -777,6 +778,7 @@ MonoBehaviour:
   _colorTag: {r: 0.21688704, g: 0.6603774, b: 0.20870416, a: 1}
   CurrentTile: {fileID: 0}
   Animator: {fileID: 2662097473964725133, guid: bdbca1efcf89fd647b60b443969df89f, type: 3}
+  _stats: {fileID: 0}
   PlayerDirSprites:
   - {fileID: -1891642137, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
   - {fileID: 504766812, guid: 82236648256b77d4588c22a84d4da636, type: 3}
@@ -792,6 +794,7 @@ MonoBehaviour:
   IsMovable: 1
   IsStunned: 0
   IsInvisible: 0
+  Inventory: {fileID: 0}
 --- !u!114 &-6597365728956606799
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -807,3 +810,20 @@ MonoBehaviour:
   movementSpeed: 2
   _endTurnKey: 113
   _endPhaseKey: 101
+  _inventoryKey: 105
+--- !u!114 &906636693638750812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6453553769002132252}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a4fcef2a6935404aad4cc99e4e29eef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxSlots: 1
+  _inventorySlots:
+  - Item: {fileID: 11400000, guid: 7edfbaf9e53136b479e6bdf6cd7803dd, type: 2}
+    Quantity: 1

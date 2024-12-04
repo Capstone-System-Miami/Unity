@@ -11,6 +11,7 @@ namespace SystemMiami
         public float Damage { get; private set; }
         public int Duration { get; private set; }
 
+        
 
         public StatusEffect(StatSetSO effect, int duration)
         {

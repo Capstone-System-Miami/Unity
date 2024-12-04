@@ -13,6 +13,7 @@ namespace SystemMiami.CombatSystem
         [Tooltip("Directions and distance this action will check for targets")]
         [SerializeField] private TargetingPattern _targetingPattern;
 
+        [HideInInspector] public Combatant userAction; //this is for items
         public TargetingPattern TargetingPattern { get { return _targetingPattern; } }
 
         public abstract void Perform();

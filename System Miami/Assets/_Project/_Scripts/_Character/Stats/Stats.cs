@@ -49,8 +49,11 @@ namespace SystemMiami
         {
             _beforeEffects = new StatSet(_attributes.GetSet(), _statData);
             updateEffects();
-            if (_printReports) { print($"{name} stat: \n" +
-                                        $"{getStatsReport()}"); }
+            if (_printReports)
+            {
+                print($"{name} stat: \n" +
+                                        $"{getStatsReport()}");
+            }
         }
 
         /// <summary>
@@ -65,7 +68,7 @@ namespace SystemMiami
             {
                 StatType stat = (StatType)i;
 
-                _afterEffects.Set(stat, (_beforeEffects.Get(stat) + GetNetStatusEffects(stat)) );
+                _afterEffects.Set(stat, (_beforeEffects.Get(stat) + GetNetStatusEffects(stat)));
             }
         }
 
@@ -77,7 +80,7 @@ namespace SystemMiami
             {
                 StatType stat = (StatType)i;
 
-                result += $"{ stat }: \t { _afterEffects.Get(stat) }\n";
+                result += $"{stat}: \t {_afterEffects.Get(stat)}\n";
             }
 
             return result;

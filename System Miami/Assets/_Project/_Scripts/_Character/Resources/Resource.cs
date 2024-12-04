@@ -6,17 +6,21 @@ namespace SystemMiami
         private float _max;
         private float _current;
 
+       
+
         // Constructors
         public Resource()
         {
             _max = 0;
             _current = 0;
+           
         }
 
         public Resource(float max)
         {
             _max = max;
             _current = _max;
+            
         }
 
         public Resource(float max, float current)

@@ -1,8 +1,8 @@
 // Authors: Layla
 using System.Linq;
+using SystemMiami.AbilitySystem;
 using SystemMiami.Management;
 using SystemMiami.ui;
-using SystemMiami.AbilitySystem;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem
@@ -12,6 +12,9 @@ namespace SystemMiami.CombatSystem
         [SerializeField] private KeyCode _endTurnKey;
         [SerializeField] private KeyCode _endPhaseKey;
 
+       
+
+        private InventoryUI _inventoryUI;
         public KeyCode EndTurnKey { get { return _endTurnKey; } }
         public KeyCode EndPhaseKey { get { return _endPhaseKey; } }
 
@@ -29,6 +32,32 @@ namespace SystemMiami.CombatSystem
 
         #region UNITY METHODS
         // ======================================
+
+        private void Start()
+        {
+            // Existing initialization code...
+
+            _inventoryUI = FindObjectOfType<InventoryUI>();
+            //if (_inventoryUI != null)
+            //{
+            //    _inventoryUI.inventoryUIPanel.SetActive(false); // Hide inventory UI at start
+            //}
+        }
+
+        private void Update()
+        {
+            // Existing update code...
+
+            // Toggle inventory UI
+            //if (Input.GetKeyDown(_inventoryKey))
+            //{
+            //    if (_inventoryUI != null)
+            //    {
+            //        bool isActive = _inventoryUI.inventoryUIPanel.activeSelf;
+            //        _inventoryUI.inventoryUIPanel.SetActive(!isActive);
+            //    }
+            //}
+        }
 
         private void OnEnable()
         {

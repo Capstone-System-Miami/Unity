@@ -25,7 +25,7 @@ namespace SystemMiami.CombatSystem
         public int ID { get; set; }
 
         private CombatantController _controller;
-        private Stats _stats;
+        public Stats _stats;
         private Abilities _abilities;
 
         private float _endOfTurnDamage;
@@ -62,6 +62,8 @@ namespace SystemMiami.CombatSystem
 
         public Abilities Abilities { get { return _abilities; } }
 
+        public Inventory Inventory;
+
 
         #region Unity
         private void Awake()
@@ -73,6 +75,7 @@ namespace SystemMiami.CombatSystem
             _defaultColor = _renderer.color;
             Animator = GetComponent<Animator>();
             currentSprite = GetComponent<SpriteRenderer>().sprite;
+            //Inventory = GetComponent<Inventory>();
         }
 
         private void OnEnable()
@@ -133,7 +136,7 @@ namespace SystemMiami.CombatSystem
         private void initDirection()
         {
             Vector2Int currentPos = (Vector2Int)CurrentTile.GridLocation;
-            setDirection(new DirectionalInfo(currentPos,  currentPos + Vector2Int.one));
+            setDirection(new DirectionalInfo(currentPos, currentPos + Vector2Int.one));
         }
         #endregion Construction
 
@@ -220,7 +223,7 @@ namespace SystemMiami.CombatSystem
             if ((int)newDirection.DirectionName == 0)
             {
 
-              Animator.SetInteger("TileDir", 7 );
+                Animator.SetInteger("TileDir", 7);
             }
             else
             {
@@ -230,7 +233,7 @@ namespace SystemMiami.CombatSystem
             OnSubjectChanged?.Invoke(newDirection);
             OnDirectionChanged?.Invoke(newDirection);
             Debug.Log(newDirection.DirectionName);
-            
+
         }
         #endregion Directions (priv)
 
