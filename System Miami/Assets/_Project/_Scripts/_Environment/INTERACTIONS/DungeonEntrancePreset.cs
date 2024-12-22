@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using SystemMiami.AbilitySystem;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 namespace SystemMiami
 {

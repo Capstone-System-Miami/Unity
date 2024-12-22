@@ -4,11 +4,17 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using SystemMiami.Management;
 using SystemMiami.CombatSystem;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 
 namespace SystemMiami
 {
     public class PlayerManager : Singleton<PlayerManager>
     {
+        [SerializeField] bool showDebug;
+
         [Header("Component Groups")]
         [Tooltip("Components active in all modes")]
         public List<Component> sharedComponents = new List<Component>(); // Always enabled
@@ -24,6 +30,11 @@ namespace SystemMiami
         [Header("Scene Names")]
         public string neighborhoodSceneName = "Neighborhood"; // Name of the neighborhood scene
         public string dungeonSceneName = "Dungeon"; // Name of the Dungeon scene
+
+        private bool beenToCombat;
+        private Vector3 neighborhoodReturnPos;
+
+
         private void OnEnable()
         {
             // Subscribe to scene loaded event
@@ -102,6 +113,19 @@ namespace SystemMiami
             }
         }
 
+        private void returnToStoredPos()
+        {
+            if (!beenToCombat) { return; }
+
+            if (showDebug)
+            {
+                Debug.Log($"{this} is returning to a previously stored position.\n" +
+                    $"Will return to: {neighborhoodReturnPos}");
+            }
+
+            transform.position = neighborhoodReturnPos;
+        }
+
         // Switches to Neighborhood Mode
         public void EnterNeighborhood()
         {
@@ -111,10 +135,11 @@ namespace SystemMiami
             playerCamera.SetActive(true);
             interactionUI.SetActive(true);
             interactionUI.GetComponentInChildren<PromptBox>().Clear();
-            FindObjectOfType<IntersectionManager>().gameObject.SetActive(true);
             
             DisableComponents(dungeonComponents);
             EnableComponents(neighborhoodComponents);
+
+            returnToStoredPos();
         }
 
         // Switches to Dungeon Mode
@@ -122,13 +147,25 @@ namespace SystemMiami
         {
             Debug.Log("Entering Dungeon Mode");
 
+            beenToCombat = true;
+
             GetComponent<Rigidbody2D>().velocity = Vector2.zero;
             playerCamera.SetActive(false);
             interactionUI.SetActive(false);
-            FindObjectOfType<IntersectionManager>().gameObject.SetActive(false);
 
             DisableComponents(neighborhoodComponents);
             EnableComponents(dungeonComponents);
+        }
+
+        public void StoreNeighborhoodPosition()
+        {
+            if (showDebug)
+            {
+                Debug.Log($"{this}'s position is being stored for Neighborhood re-entry.\n" +
+                    $"Position is: {transform.position}");
+            }
+
+            neighborhoodReturnPos = transform.position;
         }
     }
 }

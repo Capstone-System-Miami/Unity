@@ -3,6 +3,7 @@ using SystemMiami;
 using SystemMiami.Management;
 using UnityEngine;
 using UnityEngine.Events;
+using SystemMiami.Utilities;
 
 //Made By Antony
 
@@ -76,12 +77,6 @@ public class IntersectionManager : Singleton<IntersectionManager>
     // Reference to the last StreetData object generated.
     private StreetData lastStreetGenerated;
 
-
-    void Awake()
-    {
-        DontDestroyOnLoad(this.gameObject);
-    }
-    
 
     // Unity's Start method is called before the first frame update.
     void Start()
@@ -166,7 +161,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
         // Instantiate the player prefab at the center of the grid.
         Vector3 playerPosition = GetPositionFromGridIndex(new Vector2Int(gridSizeX / 2, gridSizeY / 2));
         playerPrefab.transform.position =  playerPosition;
-    }
+    }   
     
     // Attempt to generate a street at the specified grid index.
     private void TryGenerateStreet(Vector2Int streetIndex)
