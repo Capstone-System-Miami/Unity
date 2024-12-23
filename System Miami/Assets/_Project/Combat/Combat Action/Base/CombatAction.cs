@@ -1,5 +1,6 @@
 // Authors: Layla Hoey, Lee St. Louis
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 namespace SystemMiami.CombatSystem
 {
@@ -16,5 +17,6 @@ namespace SystemMiami.CombatSystem
         public TargetingPattern TargetingPattern { get { return _targetingPattern; } }
 
         public abstract void Perform();
+       
     }
 }

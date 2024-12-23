@@ -81,16 +81,7 @@ namespace SystemMiami.AbilitySystem
         public void Init(Combatant user)
         {
             User = user;
-           // user.Animator.runtimeAnimatorController = _overrideController;
-
-           // clipOverrides = new AnimationClipOverrides(_overrideController.overridesCount);
-           //_overrideController.GetOverrides(clipOverrides);
-           // Vector2Int direction = user.DirectionInfo.DirectionVec;
-           // TileDir dir = DirectionHelper.GetTileDir(direction);
-           // Debug.Log("This is") ;
-
-            
-         
+        
             setResource();
         }
 

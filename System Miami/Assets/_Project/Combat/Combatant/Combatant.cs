@@ -336,6 +336,12 @@ namespace SystemMiami.CombatSystem
         }
         #endregion
 
+        public void RestoreResource(Resource type, float amount)
+        {
+            print($"{name} gained {amount} {type}.");
+            type.Gain(amount);
+        }
+
         #region IMovable
         public Vector2Int GetTilePos()
         {
