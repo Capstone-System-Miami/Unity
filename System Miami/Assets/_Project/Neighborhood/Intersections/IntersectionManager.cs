@@ -4,6 +4,7 @@ using SystemMiami.Management;
 using UnityEngine;
 using UnityEngine.Events;
 using SystemMiami.Utilities;
+using TreeEditor;
 
 //Made By Antony
 
@@ -372,61 +373,70 @@ public class IntersectionManager : Singleton<IntersectionManager>
     {
         // Determine the new IntersectionType based on the updated exits.
         IntersectionType streetType = GetStreetTypeFromExits(streetData.exits);
+
         if (streetData.streetInstance != null)
         {
             // Destroy the old street instance.
             Destroy(streetData.streetInstance);
+
             // Try to get a new prefab from the IntersectionPool corresponding to the new IntersectionType.
-            if (streetPoolDictionary.TryGetValue(streetType, out IntersectionPool pool))
-            {
-                // Randomly select a prefab from the pool.
-                GameObject prefabToInstantiate = pool.streetPrefabs[Random.Range(0, pool.streetPrefabs.Length)];
-                // Calculate the position in the world for this grid index.
-                Vector3 position = GetPositionFromGridIndex(streetData.gridIndex);
-                // Instantiate the new street prefab.
-                GameObject streetInstance = Instantiate(prefabToInstantiate, position, Quaternion.identity, transform);
-                
-                // Name the street instance based on its index in the grid.
-                streetInstance.name = $"Street [{streetData.gridIndex.x}, {streetData.gridIndex.y}]";
-                // Update the street instance reference in the StreetData.
-                streetData.streetInstance = streetInstance;
-                
-                DungeonEntrance[] dungeonEntrances = streetInstance.GetComponentsInChildren<DungeonEntrance>();
-
-                if (dungeonEntrances.Length != streetData.dungeonEntranceDifficulties.Count)
-                {
-                    Debug.LogWarning("Number of DungeonEntrances has changed");
-                }
-
-                for (int i = 0; i < dungeonEntrances.Length; i++)
-                {
-                    DungeonEntrance dungeonEntrance = dungeonEntrances[i];
-                    if (dungeonEntrance == null)
-                    {
-                        Debug.LogError($"DungeonEntrance component not found in {streetInstance.name}");
-                        continue;
-                    }
-                    DifficultyLevel difficulty;
-                    if (i < streetData.dungeonEntranceDifficulties.Count)
-                    {
-                        difficulty = streetData.dungeonEntranceDifficulties[i];
-                    }
-                    else
-                    {
-                        difficulty = GetRandomDifficulty();
-                        streetData.dungeonEntranceDifficulties.Add(difficulty);
-                    }
-                    dungeonEntrance.SetDifficulty(difficulty);
-                    InteractionTrigger col = dungeonEntrances[i].GetComponentInChildren<InteractionTrigger>();
-                    Debug.Log(col.name);
-                    col.OnInteract.AddListener(GAME.MGR.GoToDungeon);
-                }
-            }
-            else
+            if (!streetPoolDictionary.TryGetValue(streetType, out IntersectionPool pool))
             {
                 // Log a warning if no IntersectionPool is found for the new IntersectionType.
                 Debug.LogWarning($"No IntersectionPool found for IntersectionType: {streetType}");
+                return;
             }
+
+            InstantiateFromPool(streetData, pool);
+        }
+    }
+
+    private void InstantiateFromPool(StreetData streetData, IntersectionPool pool)
+    {
+        // Randomly select a prefab from the pool.
+        GameObject prefabToInstantiate = pool.streetPrefabs[Random.Range(0, pool.streetPrefabs.Length)];
+
+        // Calculate the position in the world for this grid index.
+        Vector3 position = GetPositionFromGridIndex(streetData.gridIndex);
+
+        // Instantiate the new street prefab.
+        GameObject streetInstance = Instantiate(prefabToInstantiate, position, Quaternion.identity, transform);
+
+        // Name the street instance based on its index in the grid.
+        streetInstance.name = $"Street [{streetData.gridIndex.x}, {streetData.gridIndex.y}]";
+
+        // Update the street instance reference in the StreetData.
+        streetData.streetInstance = streetInstance;
+
+        DungeonEntrance[] dungeonEntrances = streetInstance.GetComponentsInChildren<DungeonEntrance>();
+
+        if (dungeonEntrances.Length != streetData.dungeonEntranceDifficulties.Count)
+        {
+            Debug.LogWarning("Number of DungeonEntrances has changed");
+        }
+
+        for (int i = 0; i < dungeonEntrances.Length; i++)
+        {
+            DungeonEntrance dungeonEntrance = dungeonEntrances[i];
+            if (dungeonEntrance == null)
+            {
+                Debug.LogError($"DungeonEntrance component not found in {streetInstance.name}");
+                continue;
+            }
+            DifficultyLevel difficulty;
+            if (i < streetData.dungeonEntranceDifficulties.Count)
+            {
+                difficulty = streetData.dungeonEntranceDifficulties[i];
+            }
+            else
+            {
+                difficulty = GetRandomDifficulty();
+                streetData.dungeonEntranceDifficulties.Add(difficulty);
+            }
+            dungeonEntrance.SetDifficulty(difficulty);
+            InteractionTrigger col = dungeonEntrances[i].GetComponentInChildren<InteractionTrigger>();
+            Debug.Log(col.name);
+            col.OnInteract.AddListener(GAME.MGR.GoToDungeon);
         }
     }
 

@@ -13,38 +13,54 @@ namespace SystemMiami
 {
     public class PlayerManager : Singleton<PlayerManager>
     {
+        #region SERIALIZED
+        // ======================================
+
         [SerializeField] bool showDebug;
 
         [Header("Component Groups")]
         [Tooltip("Components active in all modes")]
-        public List<Component> sharedComponents = new List<Component>(); // Always enabled
+        [SerializeField] private List<Component> sharedComponents = new List<Component>(); // Always enabled
 
         [Tooltip("Components active in neighborhood mode")]
-        public List<Component> neighborhoodComponents = new List<Component>();
-        public GameObject playerCamera;
-        public GameObject interactionUI;
+        [SerializeField] private List<Component> neighborhoodComponents = new List<Component>();
+        [SerializeField] private GameObject playerCamera;
+        [SerializeField] private GameObject interactionUI;
 
         [Tooltip("Components active in Dungeon mode")]
-        public List<Component> dungeonComponents = new List<Component>();
+        [SerializeField] private List<Component> dungeonComponents = new List<Component>();
 
         [Header("Scene Names")]
-        public string neighborhoodSceneName = "Neighborhood"; // Name of the neighborhood scene
-        public string dungeonSceneName = "Dungeon"; // Name of the Dungeon scene
+        [SerializeField] private string neighborhoodSceneName = "Neighborhood"; // Name of the neighborhood scene
+        [SerializeField] private string dungeonSceneName = "Dungeon"; // Name of the Dungeon scene
+
+        // ======================================
+        #endregion // SERIALIZED
+
+
+        #region PRIVATE VARS
+        // ======================================
 
         private bool beenToCombat;
         private Vector3 neighborhoodReturnPos;
 
+        // ======================================
+        #endregion // SERIALIZED
+
+
+        #region UNITY METHODS
+        // ======================================
 
         private void OnEnable()
         {
             // Subscribe to scene loaded event
-            SceneManager.sceneLoaded += OnSceneLoaded;
+            SceneManager.sceneLoaded += onSceneLoaded;
         }
 
         private void OnDisable()
         {
             // Unsubscribe from scene loaded event
-            SceneManager.sceneLoaded -= OnSceneLoaded;
+            SceneManager.sceneLoaded -= onSceneLoaded;
         }
 
         protected override void Awake()
@@ -61,10 +77,15 @@ namespace SystemMiami
         private void Start()
         {
             // Ensure shared components are always enabled
-            EnableComponents(sharedComponents);
+            enableComponents(sharedComponents);
         }
+        // ======================================
+        #endregion
 
-        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+
+        #region PRIVATE METHODS
+        // ======================================
+        private void onSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             // Check the name of the loaded scene and adjust components accordingly
             if (scene.name.Contains(neighborhoodSceneName))
@@ -78,7 +99,7 @@ namespace SystemMiami
         }
 
         // Disables all components in the provided list
-        private void DisableComponents(List<Component> componentList)
+        private void disableComponents(List<Component> componentList)
         {
             foreach (Component component in componentList)
             {
@@ -96,7 +117,7 @@ namespace SystemMiami
         }
 
         // Enables all components in the provided list
-        private void EnableComponents(List<Component> componentList)
+        private void enableComponents(List<Component> componentList)
         {
             foreach (Component component in componentList)
             {
@@ -125,6 +146,12 @@ namespace SystemMiami
 
             transform.position = neighborhoodReturnPos;
         }
+        // ======================================
+        #endregion
+
+
+        #region PUBLIC METHODS
+        // ======================================
 
         // Switches to Neighborhood Mode
         public void EnterNeighborhood()
@@ -136,8 +163,8 @@ namespace SystemMiami
             interactionUI.SetActive(true);
             interactionUI.GetComponentInChildren<PromptBox>().Clear();
             
-            DisableComponents(dungeonComponents);
-            EnableComponents(neighborhoodComponents);
+            disableComponents(dungeonComponents);
+            enableComponents(neighborhoodComponents);
 
             returnToStoredPos();
         }
@@ -153,8 +180,8 @@ namespace SystemMiami
             playerCamera.SetActive(false);
             interactionUI.SetActive(false);
 
-            DisableComponents(neighborhoodComponents);
-            EnableComponents(dungeonComponents);
+            disableComponents(neighborhoodComponents);
+            enableComponents(dungeonComponents);
         }
 
         public void StoreNeighborhoodPosition()
@@ -167,5 +194,7 @@ namespace SystemMiami
 
             neighborhoodReturnPos = transform.position;
         }
+        // ======================================
+        #endregion
     }
 }
