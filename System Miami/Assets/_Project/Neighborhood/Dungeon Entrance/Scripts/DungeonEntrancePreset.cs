@@ -11,22 +11,29 @@ namespace SystemMiami
     {
         [SerializeField] private DifficultyLevel _difficulty;
         
-        //Color for the door states
-        [SerializeField] private Color _doorOffColor = Color.black;
-        
+        [Header("Color Settings")]
+        [SerializeField] private Material _material;
+
+        [Tooltip("OFF position. The color of the emissive texture when the player is NOT near enough to interact with the entrance.")]
         [ColorUsage(true, true)]
-        [SerializeField]  Color _doorOnColor;
+        [SerializeField] private Color _doorOffColor = Color.black;
 
-        //setters
-        public DifficultyLevel Difficulty => _difficulty;
-        public Color DoorOffColor => _doorOffColor;
-        public Color DoorOnColor => _doorOnColor;
+        [Tooltip("ON position. The color of the emissive texture when the player IS near enough to interact with the entrance.")]
+        [ColorUsage(true, true)]
+        [SerializeField] private Color _doorOnColor = Color.black;
 
-        [Header("Dungeon Settings")]
-        public List<GameObject> easyDungeonPrefabs;
-        public List<GameObject> mediumDungeonPrefabs;
-        public List<GameObject> hardDungeonPrefabs;
+
+        public DifficultyLevel Difficulty { get { return _difficulty; } }
+        public Material EmmissiveMaterial { get { return _material; } }
+        public Color DoorOffColor { get { return _doorOffColor; } }
+        public Color DoorOnColor { get { return _doorOnColor; } }
+
+        [Header("Environment Prefabs")]
+        [SerializeField] private List<GameObject> easyDungeonPrefabs;
+        [SerializeField] private List<GameObject> mediumDungeonPrefabs;
+        [SerializeField] private List<GameObject> hardDungeonPrefabs;
         
+        [Header("Settings")]
         [Range(0, 100)] public int EnemyCount;
         //public int maxEnemyCount;
         public GameObject[] enemyPrefabs;
