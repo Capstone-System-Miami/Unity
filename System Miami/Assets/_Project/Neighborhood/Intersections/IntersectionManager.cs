@@ -23,6 +23,11 @@ public class IntersectionManager : Singleton<IntersectionManager>
     [SerializeField] private int maxExits = 4; // Maximum number of exits per street.
     [SerializeField] private int maxStreetsToConnect = 4; // Maximum number of streets that can be connected from one street.
     
+    // List to pull from when assigning difficulty to entrances.
+    // These will be passed to DungeonEntrances, which will
+    // construct themselves based on the information in the presets.
+    [SerializeField] private List<DungeonEntrancePreset> dungeonEntrancePresets = new();
+
     [Header("Player Settings")]
     [SerializeField] private GameObject playerPrefab; // The player prefab to instantiate in the scene.
     
@@ -298,14 +303,14 @@ public class IntersectionManager : Singleton<IntersectionManager>
                     Debug.LogError($"DungeonEntrance component not found in {streetInstance.name}");
                     continue;
                 }
+                
+                DungeonEntrancePreset preset = GetRandomPreset();
 
-                DifficultyLevel difficulty = GetRandomDifficulty();
-                dungeonEntrance.SetDifficulty(difficulty);
-                Debug.Log($"Set difficulty of {streetIndex} to {difficulty}");
-                currentStreet.dungeonEntranceDifficulties.Add(difficulty);
+                dungeonEntrance.ApplyPreset(preset);
 
+                Debug.Log($"Set difficulty of {streetIndex} to {preset.Difficulty}");
+                currentStreet.dungeonEntranceDifficulties.Add(preset.Difficulty);
             }
-
         }
         else
         {
@@ -314,21 +319,21 @@ public class IntersectionManager : Singleton<IntersectionManager>
         }
     }
     
-    private DifficultyLevel GetRandomDifficulty()
+    private DungeonEntrancePreset GetRandomPreset()
     {
         float randomValue = Random.value;
 
         if (randomValue < 0.5f)
         {
-            return DifficultyLevel.EASY; // 50% chance
+            return dungeonEntrancePresets[(int)DifficultyLevel.EASY]; // 50% chance
         }
         else if (randomValue < 0.8f)
         {
-            return DifficultyLevel.MEDIUM; // 30% chance
+            return dungeonEntrancePresets[(int)DifficultyLevel.MEDIUM]; // 30% chance
         }
         else
         {
-            return DifficultyLevel.HARD; // 20% chance
+            return dungeonEntrancePresets[(int)DifficultyLevel.HARD]; // 20% chance
         }
     }
 
@@ -418,25 +423,27 @@ public class IntersectionManager : Singleton<IntersectionManager>
         for (int i = 0; i < dungeonEntrances.Length; i++)
         {
             DungeonEntrance dungeonEntrance = dungeonEntrances[i];
+
             if (dungeonEntrance == null)
             {
                 Debug.LogError($"DungeonEntrance component not found in {streetInstance.name}");
                 continue;
             }
-            DifficultyLevel difficulty;
+
+            DungeonEntrancePreset preset = GetRandomPreset();
+
             if (i < streetData.dungeonEntranceDifficulties.Count)
             {
-                difficulty = streetData.dungeonEntranceDifficulties[i];
+                DifficultyLevel existingDifficulty = streetData.dungeonEntranceDifficulties[i];
+
+                preset = dungeonEntrancePresets[(int)existingDifficulty];
             }
             else
             {
-                difficulty = GetRandomDifficulty();
-                streetData.dungeonEntranceDifficulties.Add(difficulty);
+                streetData.dungeonEntranceDifficulties.Add(preset.Difficulty);
             }
-            dungeonEntrance.SetDifficulty(difficulty);
-            InteractionTrigger col = dungeonEntrances[i].GetComponentInChildren<InteractionTrigger>();
-            Debug.Log(col.name);
-            col.OnInteract.AddListener(GAME.MGR.GoToDungeon);
+
+            dungeonEntrance.ApplyPreset(preset);
         }
     }
 
