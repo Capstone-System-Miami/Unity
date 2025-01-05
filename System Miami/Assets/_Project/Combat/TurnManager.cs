@@ -37,6 +37,7 @@ namespace SystemMiami
 
         public GameObject enemyPrefab;
         public GameObject bossPrefab; // TODO: Assign boss prefab
+        public List<GameObject> enemyPrefabs = new();
 
         public int numberOfEnemies = 3;
 
@@ -81,7 +82,14 @@ namespace SystemMiami
                 charTile.PlaceCombatant(playerCharacter);
             }
 
-            SpawnEnemies();
+            if (GAME.MGR.TryGetEnemies(out enemyPrefabs))
+            {
+                SpawnEnemies(enemyPrefabs);
+            }
+            else
+            {
+                SpawnEnemies();
+            }
 
             combatants.Add(playerCharacter);
             combatants.AddRange(enemyCharacters);
@@ -146,38 +154,56 @@ namespace SystemMiami
                 // Find a random unblocked tile to place the enemy
                 OverlayTile spawnTile = MapManager.MGR.GetRandomUnblockedTile();
 
-                if (spawnTile != null)
-                {
-                    // Instantiate enemy
-                    GameObject enemyGO = Instantiate(enemyPrefab);
-                    Combatant enemyCombatant = enemyGO.GetComponent<Combatant>();
-                    if (enemyCombatant == null)
-                    {
-                        enemyCombatant = enemyGO.AddComponent<Combatant>();
-                    }
-
-                    // Set enemy ID
-                    enemyCombatant.ID = i + 1;
-
-                    // Set enemy name
-                    string newName = enemyCombatant.name;
-                    newName = newName.Replace("(Clone)", "");
-                    newName += $" {enemyCombatant.ID}";
-                    enemyCombatant.name = newName;
-
-                    // Position enemy on the tile
-                    spawnTile.PlaceCombatant(enemyCombatant);
-
-                    // Add to enemy list
-                    enemyCharacters.Add(enemyCombatant);
-
-                    Debug.Log($"Spawning {enemyCombatant}");
-                }
-                else
+                if (spawnTile == null)
                 {
                     Debug.LogWarning("No unblocked tiles available for spawning enemies.");
                 }
+
+                SpawnEnemy(spawnTile, enemyPrefab, (i + 1));
             }
+        }
+
+        private void SpawnEnemies(List<GameObject> prefabs)
+        {
+            for (int i = 0; i < prefabs.Count; i++)
+            {
+                OverlayTile spawnTile = MapManager.MGR.GetRandomUnblockedTile();
+
+                if (spawnTile == null)
+                {
+                    Debug.LogWarning("No unblocked tiles available for spawning enemies.");
+                }
+
+                SpawnEnemy(spawnTile, prefabs[i], (i + 1));
+            }
+        }
+
+        private void SpawnEnemy(OverlayTile spawnTile, GameObject prefab, int id)
+        {
+            // Instantiate enemy
+            GameObject enemyGO = Instantiate(prefab);
+            Combatant enemyCombatant = enemyGO.GetComponent<Combatant>();
+            if (enemyCombatant == null)
+            {
+                enemyCombatant = enemyGO.AddComponent<Combatant>();
+            }
+
+            // Set enemy ID
+            enemyCombatant.ID = id;
+
+            // Set enemy name
+            string newName = enemyCombatant.name;
+            newName = newName.Replace("(Clone)", "");
+            newName += $" {enemyCombatant.ID}";
+            enemyCombatant.name = newName;
+
+            // Position enemy on the tile
+            spawnTile.PlaceCombatant(enemyCombatant);
+
+            // Add to enemy list
+            enemyCharacters.Add(enemyCombatant);
+
+            Debug.Log($"Spawning {enemyCombatant}");
         }
         //===============================
         #endregion // ^Spawning^

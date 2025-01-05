@@ -6,8 +6,8 @@ namespace SystemMiami
 {
     public enum DifficultyLevel { EASY, MEDIUM, HARD }
 
-    [CreateAssetMenu(fileName = "New Dungeon Entrance Preset", menuName = "Eviron/Dungeon Entrance Preset")]
-    public class DungeonEntrancePreset : ScriptableObject
+    [CreateAssetMenu(fileName = "New Dungeon Preset", menuName = "Eviron/Dungeon Preset")]
+    public class DungeonPreset : ScriptableObject
     {
         [SerializeField] private DifficultyLevel _difficulty;
         
@@ -34,9 +34,7 @@ namespace SystemMiami
         [SerializeField] private List<GameObject> hardDungeonPrefabs;
         
         [Header("Settings")]
-        [Range(0, 100)] public int EnemyCount;
-        //public int maxEnemyCount;
-        public GameObject[] enemyPrefabs;
+        [SerializeField] private EnemyPool _enemyPool;
 
         [Range(0, 100)] public float xpAmount;
         //[Range(0, 100)] public float maxExpAmount;
@@ -50,6 +48,9 @@ namespace SystemMiami
         public Ability abilityReward;
         public Item itemReward;
 
-      
+        public EnemyPool GetEnemyPool()
+        {
+            return new EnemyPool(_enemyPool);
+        }
     }
 }

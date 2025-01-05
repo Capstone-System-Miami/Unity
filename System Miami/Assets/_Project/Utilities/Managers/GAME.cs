@@ -2,6 +2,8 @@ using System;
 using SystemMiami.CombatSystem;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -14,6 +16,8 @@ namespace SystemMiami.Management
 
         [SerializeField] string _dungeonSceneName;
         [SerializeField] string _neighborhoodSceneName;
+
+        private DungeonPreset _dungeonPreset;
 
         protected override void Awake()
         {
@@ -29,6 +33,9 @@ namespace SystemMiami.Management
             SceneManager.LoadScene(buildName);
         }
 
+        /// <summary>
+        /// Doesn't take DungeonEntrances/Difficulty/DungeonPresets into account.
+        /// </summary>
         public void GoToDungeon()
         {
             // If we're in a Neighborhood and are entering combat,
@@ -43,11 +50,33 @@ namespace SystemMiami.Management
                 PlayerManager.MGR.StoreNeighborhoodPosition();
             }
 
+            Debug.Log($"Going to {_dungeonSceneName}");
             switchScene(_dungeonSceneName);
+        }
+
+        public void GoToDungeon(DungeonPreset preset)
+        {
+            _dungeonPreset = preset;
+
+            GoToDungeon();
+        }
+
+        public bool TryGetEnemies(out List<GameObject> enemies)
+        {
+            if (_dungeonPreset == null)
+            {
+                enemies = null;
+                return false;
+            }
+
+            enemies = _dungeonPreset.GetEnemyPool().GetPrefabsToSpawn();
+            return true;
         }
 
         public void GoToNeighborhood()
         {
+            _dungeonPreset = null;
+
             // If we're exiting combat and entering into a Neighborhood,
             // it will need to be the one we were in when we entered combat,
             // so we need to turn the IntersectionManager back on
@@ -59,6 +88,7 @@ namespace SystemMiami.Management
                 IntersectionManager.MGR.gameObject.SetActive(true);            
             }
 
+            Debug.Log($"Going to {_neighborhoodSceneName}");
             switchScene(_neighborhoodSceneName);
         }
 

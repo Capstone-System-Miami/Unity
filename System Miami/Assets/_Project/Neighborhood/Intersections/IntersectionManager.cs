@@ -23,7 +23,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
     // List to pull from when assigning difficulty to entrances.
     // These will be passed to DungeonEntrances, which will
     // construct themselves based on the information in the presets.
-    [SerializeField] private List<DungeonEntrancePreset> dungeonEntrancePresets = new();
+    [SerializeField] private List<DungeonPreset> dungeonEntrancePresets = new();
 
     [Header("Player Settings")]
     [SerializeField] private GameObject playerPrefab; // The player prefab to instantiate in the scene.
@@ -384,7 +384,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
                 continue;
             }
 
-            DungeonEntrancePreset preset = GetRandomPreset();
+            DungeonPreset preset = GetRandomPreset();
 
             if (i < streetData.dungeonEntranceDifficulties.Count)
             {
@@ -401,7 +401,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
         }
     }
 
-    private DungeonEntrancePreset GetRandomPreset()
+    private DungeonPreset GetRandomPreset()
     {
         float randomValue = Random.value;
 
