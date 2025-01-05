@@ -1,8 +1,9 @@
+using SystemMiami;
 using SystemMiami.CombatSystem;
 using UnityEngine;
 using UnityEngine.UI;
 
-    public class QuickslotButtonUI : MonoBehaviour
+public class QuickslotButtonUI : MonoBehaviour
     {
         public Item item;
         public int index;
@@ -20,9 +21,9 @@ using UnityEngine.UI;
         public void UpdateQuickslotInventory()
         {
             if (locked) return;
-            if (Inventory.instance.quickslot[index].itemData != null)
+            if (Inventory.MGR.quickslot[index].itemData != null)
             {
-                item = Inventory.instance.quickslot[index];
+                item = Inventory.MGR.quickslot[index];
                 Icon.sprite = item.itemData.icon;
                 item.itemData.Init(player);
             }

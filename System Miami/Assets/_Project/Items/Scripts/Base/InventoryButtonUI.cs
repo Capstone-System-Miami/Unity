@@ -1,3 +1,4 @@
+using SystemMiami;
 using SystemMiami.CombatSystem;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,9 +18,9 @@ public class InventoryButtonUI : MonoBehaviour
 
     public void UpdateInventory()
     {
-        if (Inventory.instance.quickslot[index].itemData != null)
+        if (Inventory.MGR.quickslot[index].itemData != null)
         {
-            item = Inventory.instance.quickslot[index];
+            item = Inventory.MGR.quickslot[index];
             Icon.sprite = item.itemData.icon;
             item.itemData.Init(player);
         }
