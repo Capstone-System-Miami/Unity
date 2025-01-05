@@ -1,19 +1,18 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace SystemMiami
 {
     [System.Serializable]
-    public class EnemyPool
+    public class Pool<T> where T : Object
     {
-        [SerializeField] private int _minEnemyCount;
-        [SerializeField] private int _maxEnemyCount;
-        [SerializeField] private List<EnemyPoolElement> _elements = new();
+        [SerializeField] private int _minCount;
+        [SerializeField] private int _maxCount;
+        [SerializeField] private List<PoolElement<T>> _elements = new();
 
-        private int _enemyCount;
-        private List<GameObject> _enemiesToSpawn = new();
-        private GameObject _defaultEnemy;
+        private int _count;
+        private List<T> _generatedList = new();
+        private T _defaultElement;
 
         private bool _initialized = false;
 
@@ -23,25 +22,30 @@ namespace SystemMiami
         /// but will generate a new enemy list with a newly randomized count.
         /// </summary>
         /// <param name="toCopy"></param>
-        public EnemyPool(EnemyPool toCopy)
+        public Pool(Pool<T> toCopy)
         {
-            _minEnemyCount = toCopy._minEnemyCount;
-            _maxEnemyCount = toCopy._maxEnemyCount;
-            _elements = toCopy._elements;
+            _minCount = toCopy._minCount;
+            _maxCount = toCopy._maxCount;
+            
+            for (int i = 0; i < toCopy._elements.Count; i++)
+            {
+                // Creating a copy of each element will reset the _count
+                _elements.Add(new PoolElement<T>(toCopy._elements[i]));
+            }
 
-            _defaultEnemy = toCopy.getDefault();
+            _defaultElement = toCopy.getDefault();
 
             initialize();
         }
 
-        public List<GameObject> GetPrefabsToSpawn()
+        public List<T> GetPrefabsToSpawn()
         {
             if (!_initialized)
             {
                 initialize();
             }
 
-            return _enemiesToSpawn;
+            return _generatedList;
         }
 
         /// <summary>
@@ -51,28 +55,28 @@ namespace SystemMiami
         /// </summary>
         private void initialize()
         {
-            _enemyCount = Random.Range(_minEnemyCount, _maxEnemyCount);
+            _count = Random.Range(_minCount, _maxCount + 1);
 
-            _defaultEnemy = getDefault();
+            _defaultElement = getDefault();
 
-            _enemiesToSpawn = generateList();
+            _generatedList = generateList();
 
             _initialized = true;
         }
 
-        private List<GameObject> generateList()
+        private List<T> generateList()
         {
             // So we don't modify the original list
-            List<EnemyPoolElement> elementsCopy = new(_elements);
+            List<PoolElement<T>> elementsCopy = new(_elements);
 
-            List<GameObject> result = new();
+            List<T> result = new();
 
             int minIndex = 0;
             int maxIndex = elementsCopy.Count;
             int randomIndex;
 
             // For each prefab we want to spawn
-            for (int i = 0; i < _enemyCount; i++)
+            for (int i = 0; i < _count; i++)
             {
                 // Update max
                 maxIndex = elementsCopy.Count;
@@ -88,7 +92,7 @@ namespace SystemMiami
                 randomIndex = Random.Range(minIndex, maxIndex);
 
                 // If the element at the index is valid
-                if (elementsCopy[randomIndex].TryGet(out GameObject prefab))
+                if (elementsCopy[randomIndex].TryGet(out T prefab))
                 {
                     // Add a prefab of it to the result list
                     result.Add(prefab);
@@ -106,19 +110,19 @@ namespace SystemMiami
             return result;
         }
 
-        private GameObject getDefault()
+        private T getDefault()
         {
-            if (_defaultEnemy != null)
+            if (_defaultElement != null)
             {
-                return _defaultEnemy;
+                return _defaultElement;
             }
 
             for (int i = 0; i < _elements.Count; i++)
             {
-                if (_elements[i].IsDefault(out GameObject prefab))
+                if (_elements[i].IsDefault(out T prefab))
                 {
-                    _defaultEnemy = prefab;
-                    return _defaultEnemy;
+                    _defaultElement = prefab;
+                    return _defaultElement;
                 }
             }
 

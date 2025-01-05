@@ -34,7 +34,7 @@ namespace SystemMiami
         [SerializeField] private List<GameObject> hardDungeonPrefabs;
         
         [Header("Settings")]
-        [SerializeField] private EnemyPool _enemyPool;
+        [SerializeField] private Pool<GameObject> _enemyPool;
 
         [Range(0, 100)] public float xpAmount;
         //[Range(0, 100)] public float maxExpAmount;
@@ -48,9 +48,9 @@ namespace SystemMiami
         public Ability abilityReward;
         public Item itemReward;
 
-        public EnemyPool GetEnemyPool()
+        public Pool<GameObject> GetEnemyPool()
         {
-            return new EnemyPool(_enemyPool);
+            return new Pool<GameObject>(_enemyPool);
         }
     }
 }

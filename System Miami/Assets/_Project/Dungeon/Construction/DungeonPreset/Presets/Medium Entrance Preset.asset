@@ -20,14 +20,14 @@ MonoBehaviour:
   mediumDungeonPrefabs: []
   hardDungeonPrefabs: []
   _enemyPool:
-    _minEnemyCount: 2
-    _maxEnemyCount: 5
+    _minCount: 2
+    _maxCount: 5
     _elements:
-    - _isDefualt: 1
-      _prefab: {fileID: 5985083666047915755, guid: eae0eae8fe396f84493cde92e333db05, type: 3}
-      _maxCount: 5
     - _isDefualt: 0
-      _prefab: {fileID: 5985083666047915755, guid: c7ea620002f534d47b93c0d5fe44f53b, type: 3}
+      _elementPrefab: {fileID: 5985083666047915755, guid: eae0eae8fe396f84493cde92e333db05, type: 3}
+      _maxCount: 5
+    - _isDefualt: 1
+      _elementPrefab: {fileID: 5985083666047915755, guid: c7ea620002f534d47b93c0d5fe44f53b, type: 3}
       _maxCount: 3
   xpAmount: 0
   SkillPoints: 0
