@@ -17,7 +17,7 @@ public class ItemData : ScriptableObject
         [Header("Actions"), Space(5)]
 
         [SerializeField, Tooltip("An array of combat actions. The order of the array determines the execution order, as well as the order that the actions find and gather targets.")]
-        private CombatAction[] _actions;
+        private CombatSubaction[] _actions;
 
         [Header("Animation"), Space(5)]
 
@@ -26,13 +26,13 @@ public class ItemData : ScriptableObject
 
         [HideInInspector] public Combatant User;
 
-        public CombatAction[] Actions { get { return _actions; } }
+        public CombatSubaction[] Actions { get { return _actions; } }
 
         public bool PlayerFoundInTargets
         {
             get
             {
-                foreach (CombatAction action in _actions)
+                foreach (CombatSubaction action in _actions)
                 {
                     List<Combatant> targets = action.TargetingPattern.StoredTargets.Combatants;
 
@@ -59,7 +59,7 @@ public class ItemData : ScriptableObject
 
         public void BeginTargeting()
         {
-            foreach (CombatAction action in _actions)
+            foreach (CombatSubaction action in _actions)
             {
                 action.TargetingPattern.ClearTargets();
                 action.TargetingPattern.UnlockTargets();
@@ -70,7 +70,7 @@ public class ItemData : ScriptableObject
 
         public void CancelTargeting()
         {
-            foreach (CombatAction action in _actions)
+            foreach (CombatSubaction action in _actions)
             {
                 action.TargetingPattern.HideTargets();
                 action.TargetingPattern.UnlockTargets();
@@ -84,7 +84,7 @@ public class ItemData : ScriptableObject
         /// </summary>
         public void LockTargets()
         {
-            foreach (CombatAction action in _actions)
+            foreach (CombatSubaction action in _actions)
             {
                 action.TargetingPattern.LockTargets();
                 action.TargetingPattern.UnsubscribeToDirectionUpdates(User);

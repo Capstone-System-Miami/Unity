@@ -6,7 +6,7 @@ namespace SystemMiami.CombatSystem
 {
     [System.Serializable]
     [CreateAssetMenu(fileName = "New Heal Action", menuName = "Abilities/CombatActions/Heal")]
-    public class Heal : CombatAction
+    public class Heal : CombatSubaction
     {
         [SerializeField] private float _amount;
 

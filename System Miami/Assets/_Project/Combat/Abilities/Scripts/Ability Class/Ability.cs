@@ -32,7 +32,7 @@ namespace SystemMiami.AbilitySystem
         [Header("Actions"), Space(5)]
 
         [SerializeField, Tooltip("An array of combat actions. The order of the array determines the execution order, as well as the order that the actions find and gather targets.")]
-        private CombatAction[] _actions;
+        private CombatSubaction[] _actions;
 
 
         [Header("Animation"), Space(5)]
@@ -49,7 +49,7 @@ namespace SystemMiami.AbilitySystem
 
         [HideInInspector] public Combatant User;
         public AbilityType Type { get { return _type; } }
-        public CombatAction[] Actions { get { return _actions; } }
+        public CombatSubaction[] Actions { get { return _actions; } }
         public bool IsBusy { get; private set; }
 
        // [SerializeField] AbilityDirections animDirs;
@@ -60,7 +60,7 @@ namespace SystemMiami.AbilitySystem
         {
             get
             {
-                foreach (CombatAction action in _actions)
+                foreach (CombatSubaction action in _actions)
                 {
                     List<Combatant> targets = action.TargetingPattern.StoredTargets.Combatants;
 
@@ -87,7 +87,7 @@ namespace SystemMiami.AbilitySystem
 
         public void BeginTargeting()
         {
-            foreach (CombatAction action in _actions)
+            foreach (CombatSubaction action in _actions)
             {
                 action.TargetingPattern.ClearTargets();
                 action.TargetingPattern.UnlockTargets();
@@ -98,7 +98,7 @@ namespace SystemMiami.AbilitySystem
 
         public void CancelTargeting()
         {
-            foreach (CombatAction action in _actions)
+            foreach (CombatSubaction action in _actions)
             {
                 action.TargetingPattern.HideTargets();
                 action.TargetingPattern.UnlockTargets();
@@ -112,7 +112,7 @@ namespace SystemMiami.AbilitySystem
         /// </summary>
         public void LockTargets()
         {
-            foreach (CombatAction action in _actions)
+            foreach (CombatSubaction action in _actions)
             {
                 action.TargetingPattern.LockTargets();
                 action.TargetingPattern.UnsubscribeToDirectionUpdates(User);

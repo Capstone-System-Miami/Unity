@@ -7,7 +7,7 @@ namespace SystemMiami
 {
     [System.Serializable]
     [CreateAssetMenu(fileName = "New restore Action", menuName = "Abilities/CombatActions/RestoreResource")]
-    public class RestoreResource : CombatAction
+    public class RestoreResource : CombatSubaction
     {
 
         [SerializeField] private float _amount;
