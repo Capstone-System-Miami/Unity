@@ -8,7 +8,7 @@ using UnityEngine;
 public class ItemData : ScriptableObject
     {
         [Header("Basic Info")]
-        public string name;
+        public string itemName;
         public Sprite icon;
         public String description;
         [Tooltip("The type of item it is")]
