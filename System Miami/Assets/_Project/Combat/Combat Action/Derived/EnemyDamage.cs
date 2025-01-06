@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace SystemMiami
 {
-    public class EnemyDamage : CombatAction
+    public class EnemyDamage : CombatSubaction
     {
         public override void Perform()
         {

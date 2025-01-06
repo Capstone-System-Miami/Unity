@@ -5,13 +5,44 @@ using SystemMiami.Management;
 namespace SystemMiami
 {
     public class DungeonEntrance : MonoBehaviour
-    {      
-        private DungeonEntrancePreset _currentPreset;
+    {
+        #region SERIALIZED
+        // ======================================
+
+        //=======================================
+        #endregion // SERIALIZED
+
+
+        #region PRIVATE VARS
+        // ======================================
+
+        private DungeonPreset _currentPreset;
         private Material _material;
 
-        public DungeonEntrancePreset CurrentPreset { get { return _currentPreset; } }
+        //=======================================
+        #endregion // PRIVATE VARS
 
-        public void ApplyPreset(DungeonEntrancePreset preset)
+
+        #region PROPERTIES
+        // ======================================
+
+        public DungeonPreset CurrentPreset { get { return _currentPreset; } }
+
+        //=======================================
+        #endregion // PROPERTIES
+
+
+        #region UNITY METHODS
+        // ======================================
+
+        //=======================================
+        #endregion // UNITY METHODS
+
+
+        #region PUBLIC METHODS
+        // ======================================
+
+        public void ApplyPreset(DungeonPreset preset)
         {
             if (preset == null)
             {
@@ -56,6 +87,13 @@ namespace SystemMiami
             Debug.Log($"Turned on dungeon color for {gameObject.name}.");
         }
 
+        //=======================================
+        #endregion // PUBLIC METHODS
+
+
+        #region PRIVATE METHODS
+        // ======================================
+
         private void applyStoredPreset()
         {
             if (CurrentPreset == null)
@@ -82,7 +120,12 @@ namespace SystemMiami
 
         private void onInteract()
         {
-            GAME.MGR.GoToDungeon();
-        }              
+            GAME.MGR.GoToDungeon(_currentPreset);
+        }
+        
+        //=======================================
+        #endregion // PRIVATE METHODS
+
+
     }
 }

@@ -2,11 +2,8 @@ using System.Collections.Generic;
 using SystemMiami;
 using SystemMiami.Management;
 using UnityEngine;
-using UnityEngine.Events;
-using SystemMiami.Utilities;
-using TreeEditor;
 
-//Made By Antony
+//Made By Antony (Layla edited)
 
 // The main class responsible for generating and managing streets in the game.
 public class IntersectionManager : Singleton<IntersectionManager>
@@ -26,7 +23,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
     // List to pull from when assigning difficulty to entrances.
     // These will be passed to DungeonEntrances, which will
     // construct themselves based on the information in the presets.
-    [SerializeField] private List<DungeonEntrancePreset> dungeonEntrancePresets = new();
+    [SerializeField] private List<DungeonPreset> dungeonEntrancePresets = new();
 
     [Header("Player Settings")]
     [SerializeField] private GameObject playerPrefab; // The player prefab to instantiate in the scene.
@@ -115,6 +112,11 @@ public class IntersectionManager : Singleton<IntersectionManager>
             CleanupExits(); // Adjust exits to ensure consistency between connected streets.
             LogGenerationResults(); // Output generation statistics to the console.
         }
+
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            Debug.LogWarning(getGridReport());
+        }
     }
 
     // Initialize the dictionary that maps StreetTypes to their corresponding StreetPools.
@@ -140,6 +142,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
     private void InitializeStreetGrid()
     {
         streetGrid = new StreetData[gridSizeX, gridSizeY];
+
         for (int x = 0; x < gridSizeX; x++)
         {
             for (int y = 0; y < gridSizeY; y++)
@@ -179,6 +182,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
         if (x < 0 || x >= gridSizeX || y < 0 || y >= gridSizeY) return;
     
         StreetData currentStreet = streetGrid[x, y];
+
         if (currentStreet.hasStreet) return; // If a street already exists at this index, do nothing.
     
         // Mark this grid cell as having a street.
@@ -250,10 +254,13 @@ public class IntersectionManager : Singleton<IntersectionManager>
         }
 
         // Instantiate the street GameObject in the scene.
-        InstantiateStreet(currentStreet, streetIndex); // Instantiate the street
+        GenerateStreet(currentStreet, streetIndex);
+
         streetCount++; // Increment the total street count.
+
         // If this is the first street generated, record it.
         if (firstStreetGenerated == null) firstStreetGenerated = currentStreet;
+
         // Update the last street generated.
         lastStreetGenerated = currentStreet;
     }
@@ -271,55 +278,130 @@ public class IntersectionManager : Singleton<IntersectionManager>
     }
 
     // Instantiate a street GameObject at the specified grid index.
-    private void InstantiateStreet(StreetData currentStreet, Vector2Int streetIndex)
+    private void GenerateStreet(StreetData currentStreet, Vector2Int streetIndex)
     {
         // Determine the IntersectionType based on the exits of the current street.
         IntersectionType streetType = GetStreetTypeFromExits(currentStreet.exits);
-        if (streetPoolDictionary.TryGetValue(streetType, out IntersectionPool pool))
+
+        if (!streetPoolDictionary.TryGetValue(streetType, out IntersectionPool pool))
         {
-            // Randomly select a prefab from the pool of the determined IntersectionType.
-            GameObject prefabToInstantiate = pool.streetPrefabs[Random.Range(0, pool.streetPrefabs.Length)];
-            // Calculate the world position for this grid index.
-            Vector3 position = GetPositionFromGridIndex(streetIndex);
-            // Instantiate the street prefab at the calculated position with no rotation and under this manager's transform.
-            GameObject streetInstance = Instantiate(prefabToInstantiate, position, Quaternion.identity, transform);
-            
-            
-            // Name the street instance based on its index in the grid for easier identification.
-            streetInstance.name = $"Street [{streetIndex.x}, {streetIndex.y}]";
-            // Add the instantiated street to the list of street objects.
-            streetObjects.Add(streetInstance);
-            // Keep a reference to the street instance in the StreetData.
-            currentStreet.streetInstance = streetInstance;
-
-            
-            
-            DungeonEntrance[] dungeonEntrances = streetInstance.GetComponentsInChildren<DungeonEntrance>();
-
-            foreach (DungeonEntrance dungeonEntrance in dungeonEntrances)
-            {
-                if (dungeonEntrance == null)
-                {
-                    Debug.LogError($"DungeonEntrance component not found in {streetInstance.name}");
-                    continue;
-                }
-                
-                DungeonEntrancePreset preset = GetRandomPreset();
-
-                dungeonEntrance.ApplyPreset(preset);
-
-                Debug.Log($"Set difficulty of {streetIndex} to {preset.Difficulty}");
-                currentStreet.dungeonEntranceDifficulties.Add(preset.Difficulty);
-            }
+            // Log a warning if no IntersectionPool is found for the new IntersectionType.
+            Debug.LogWarning(
+                $"No IntersectionPool found for IntersectionType: {streetType}.\n" +
+                $"An object will not be instantiated at {currentStreet.gridIndex}.");
+            return;
         }
-        else
+
+        InstantiateFromPool(currentStreet, pool);
+    }
+
+    // Update the street GameObject to match the updated exits after cleanup.
+    private void ReplaceStreet(StreetData streetData)
+    {
+        if (streetData.streetInstance == null)
         {
-            // Log a warning if no IntersectionPool is found for the determined IntersectionType.
-            Debug.LogWarning($"No IntersectionPool found for IntersectionType: {streetType}");
+            Debug.LogWarning(
+                $"The cell at {streetData.gridIndex} is trying to replace itself," +
+                $"but no instance was found to replace.\n" +
+                $"Returning without instantiating.");
+            return;
+        }
+
+        // Determine the new IntersectionType based on the updated exits.
+        IntersectionType streetType = GetStreetTypeFromExits(streetData.exits);
+
+        // Remove the old street instance from the objects list.
+        if (streetObjects.Contains(streetData.streetInstance))
+        {
+            streetObjects.Remove(streetData.streetInstance);
+        }
+
+        // Destroy the old street instance.
+        Destroy(streetData.streetInstance);
+
+        // Try to get a new prefab from the IntersectionPool corresponding to the new IntersectionType.
+        if (!streetPoolDictionary.TryGetValue(streetType, out IntersectionPool pool))
+        {
+            // Log a warning if no IntersectionPool is found for the new IntersectionType.
+            Debug.LogWarning(
+                $"No IntersectionPool found for IntersectionType: {streetType}.\n" +
+                $"The object at {streetData.gridIndex} has been destroyed" +
+                $"and will not be reinstantiated.");
+            return;
+        }
+
+        InstantiateFromPool(streetData, pool);     
+    }
+
+    private void InstantiateFromPool(StreetData streetData, IntersectionPool pool)
+    {
+        // Randomly select a prefab from the pool.
+        GameObject prefabToInstantiate = pool.streetPrefabs[Random.Range(0, pool.streetPrefabs.Length)];
+
+        // Calculate the position in the world for this grid index.
+        Vector3 position = GetPositionFromGridIndex(streetData.gridIndex);
+
+        // Instantiate the new street prefab.
+        GameObject streetInstance = Instantiate(prefabToInstantiate, position, Quaternion.identity, transform);
+
+        // Name the street instance based on its index in the grid.
+        streetInstance.name = $"Street [{streetData.gridIndex.x}, {streetData.gridIndex.y}]";
+
+        // Update the street instance reference in the StreetData.
+        streetData.streetInstance = streetInstance;
+
+        // Add the instantiated street to the list of street objects.
+        streetObjects.Add(streetInstance);
+
+        InitializeDungeonPresets(streetData);
+    }
+
+    /// <summary>
+    /// Finds all dungeon entrances in an intersection,
+    /// and applies a Preset to each.
+    /// </summary>
+    private void InitializeDungeonPresets(StreetData streetData)
+    {
+        GameObject instance = streetData.streetInstance;
+
+        DungeonEntrance[] dungeonEntrances = instance.GetComponentsInChildren<DungeonEntrance>();
+
+        if (dungeonEntrances.Length != streetData.dungeonEntranceDifficulties.Count)
+        {
+            Debug.LogWarning($"{instance.name}'s number of DungeonEntrances has changed");
+        }
+
+        for (int i = 0; i < dungeonEntrances.Length; i++)
+        {
+            DungeonEntrance dungeonEntrance = dungeonEntrances[i];
+
+            if (dungeonEntrance == null)
+            {
+                Debug.LogError(
+                    $"A DungeonEntrance component was removed while" +
+                    $"iterating through the entrances in {instance.name}.\n" +
+                    $"Error occured at iteration {i}.");
+                continue;
+            }
+
+            DungeonPreset preset = GetRandomPreset();
+
+            if (i < streetData.dungeonEntranceDifficulties.Count)
+            {
+                DifficultyLevel existingDifficulty = streetData.dungeonEntranceDifficulties[i];
+
+                preset = dungeonEntrancePresets[(int)existingDifficulty];
+            }
+            else
+            {
+                streetData.dungeonEntranceDifficulties.Add(preset.Difficulty);
+            }
+
+            dungeonEntrance.ApplyPreset(preset);
         }
     }
-    
-    private DungeonEntrancePreset GetRandomPreset()
+
+    private DungeonPreset GetRandomPreset()
     {
         float randomValue = Random.value;
 
@@ -342,108 +424,35 @@ public class IntersectionManager : Singleton<IntersectionManager>
     {
         foreach (var streetData in streetGrid)
         {
-            if (streetData.hasStreet)
+            if (!streetData.hasStreet) { continue; }
+
+            // Create a new set to hold exits that are valid (i.e., actually connected to neighboring streets).
+            HashSet<ExitDirection> validExits = new HashSet<ExitDirection>();
+            int x = streetData.gridIndex.x;
+            int y = streetData.gridIndex.y;
+
+            // Check each exit moveDirection to see if it connects to a valid street.
+            foreach (ExitDirection exit in streetData.exits)
             {
-                // Create a new set to hold exits that are valid (i.e., actually connected to neighboring streets).
-                HashSet<ExitDirection> validExits = new HashSet<ExitDirection>();
-                int x = streetData.gridIndex.x;
-                int y = streetData.gridIndex.y;
-    
-                // Check each exit moveDirection to see if it connects to a valid street.
-                foreach (ExitDirection exit in streetData.exits)
+                Vector2Int dir = exitToDir[exit];
+                int nx = x + dir.x;
+                int ny = y + dir.y;
+                // Skip if neighbor index is out of bounds.
+                if (nx < 0 || nx >= gridSizeX || ny < 0 || ny >= gridSizeY) continue;
+
+                StreetData neighborStreet = streetGrid[nx, ny];
+                // If the neighbor has a street and its exits include the opposite moveDirection, the connection is valid.
+                if (neighborStreet.hasStreet && neighborStreet.exits.Contains(dirToOppositeExit[dir]))
                 {
-                    Vector2Int dir = exitToDir[exit];
-                    int nx = x + dir.x;
-                    int ny = y + dir.y;
-                    // Skip if neighbor index is out of bounds.
-                    if (nx < 0 || nx >= gridSizeX || ny < 0 || ny >= gridSizeY) continue;
-    
-                    StreetData neighborStreet = streetGrid[nx, ny];
-                    // If the neighbor has a street and its exits include the opposite moveDirection, the connection is valid.
-                    if (neighborStreet.hasStreet && neighborStreet.exits.Contains(dirToOppositeExit[dir]))
-                    {
-                        validExits.Add(exit);
-                    }
+                    validExits.Add(exit);
                 }
-    
-                // Update the exits of the street to include only valid exits.
-                streetData.exits = validExits;
-                UpdateStreetPrefab(streetData); // Update the street prefab to reflect valid exits
-            }
-        }
-    }
-
-    // Update the street GameObject to match the updated exits after cleanup.
-    private void UpdateStreetPrefab(StreetData streetData)
-    {
-        // Determine the new IntersectionType based on the updated exits.
-        IntersectionType streetType = GetStreetTypeFromExits(streetData.exits);
-
-        if (streetData.streetInstance != null)
-        {
-            // Destroy the old street instance.
-            Destroy(streetData.streetInstance);
-
-            // Try to get a new prefab from the IntersectionPool corresponding to the new IntersectionType.
-            if (!streetPoolDictionary.TryGetValue(streetType, out IntersectionPool pool))
-            {
-                // Log a warning if no IntersectionPool is found for the new IntersectionType.
-                Debug.LogWarning($"No IntersectionPool found for IntersectionType: {streetType}");
-                return;
             }
 
-            InstantiateFromPool(streetData, pool);
-        }
-    }
+            // Update the exits of the street to include only valid exits.
+            streetData.exits = validExits;
 
-    private void InstantiateFromPool(StreetData streetData, IntersectionPool pool)
-    {
-        // Randomly select a prefab from the pool.
-        GameObject prefabToInstantiate = pool.streetPrefabs[Random.Range(0, pool.streetPrefabs.Length)];
-
-        // Calculate the position in the world for this grid index.
-        Vector3 position = GetPositionFromGridIndex(streetData.gridIndex);
-
-        // Instantiate the new street prefab.
-        GameObject streetInstance = Instantiate(prefabToInstantiate, position, Quaternion.identity, transform);
-
-        // Name the street instance based on its index in the grid.
-        streetInstance.name = $"Street [{streetData.gridIndex.x}, {streetData.gridIndex.y}]";
-
-        // Update the street instance reference in the StreetData.
-        streetData.streetInstance = streetInstance;
-
-        DungeonEntrance[] dungeonEntrances = streetInstance.GetComponentsInChildren<DungeonEntrance>();
-
-        if (dungeonEntrances.Length != streetData.dungeonEntranceDifficulties.Count)
-        {
-            Debug.LogWarning("Number of DungeonEntrances has changed");
-        }
-
-        for (int i = 0; i < dungeonEntrances.Length; i++)
-        {
-            DungeonEntrance dungeonEntrance = dungeonEntrances[i];
-
-            if (dungeonEntrance == null)
-            {
-                Debug.LogError($"DungeonEntrance component not found in {streetInstance.name}");
-                continue;
-            }
-
-            DungeonEntrancePreset preset = GetRandomPreset();
-
-            if (i < streetData.dungeonEntranceDifficulties.Count)
-            {
-                DifficultyLevel existingDifficulty = streetData.dungeonEntranceDifficulties[i];
-
-                preset = dungeonEntrancePresets[(int)existingDifficulty];
-            }
-            else
-            {
-                streetData.dungeonEntranceDifficulties.Add(preset.Difficulty);
-            }
-
-            dungeonEntrance.ApplyPreset(preset);
+            ReplaceStreet(streetData); // Update the street prefab to reflect valid exits
+            
         }
     }
 
@@ -451,24 +460,19 @@ public class IntersectionManager : Singleton<IntersectionManager>
     private void RegenerateStreets()
     {
         // Destroy all instantiated street GameObjects.
-        foreach (var obj in streetObjects)
+        foreach (GameObject obj in streetObjects)
         {
             Destroy(obj);
         }
+
         streetObjects.Clear(); // Clear the list of street objects.
-    
-        // SetDefault the street grid by creating new StreetData instances.
-        for (int x = 0; x < gridSizeX; x++)
-        {
-            for (int y = 0; y < gridSizeY; y++)
-            {
-                streetGrid[x, y] = new StreetData { gridIndex = new Vector2Int(x, y) };
-            }
-        }
-    
+
         streetQueue.Clear(); // Clear the street generation queue.
-        streetCount = 0; // SetDefault the street count.
-        generationComplete = false; // SetAll generation as not complete.
+        streetCount = 0; // Set the street count.
+        generationComplete = false; // Set generation as not complete.
+
+        // Reset grid
+        InitializeStreetGrid();
     
         // Restart street generation from the center of the grid.
         StartStreetGenerationFromStreet(new Vector2Int(gridSizeX / 2, gridSizeY / 2));
@@ -546,6 +550,29 @@ public class IntersectionManager : Singleton<IntersectionManager>
         {
             Debug.Log($"Last Street Generated: Index {lastStreetGenerated.gridIndex}");
         }
+    }
+
+    private string getGridReport()
+    {
+        string report = "GRID REPORT\n";
+
+        foreach (StreetData street in streetGrid)
+        {
+            report += $"Street Instance at {street.gridIndex}: ";
+
+            if (street.streetInstance == null)
+            {
+                report += $"NULL";
+            }
+            else
+            {
+                report += $"{street.streetInstance.name}";
+            }
+
+            report += "\n";
+        }
+
+        return report;
     }
 
     // Class to hold data about each street in the grid

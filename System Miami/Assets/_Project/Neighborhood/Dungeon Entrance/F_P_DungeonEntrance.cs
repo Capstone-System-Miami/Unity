@@ -8,10 +8,10 @@ namespace SystemMiami
     public class F_P_DungeonEntrance : MonoBehaviour
     {
         
-        [SerializeField] private DungeonEntrancePreset[] _presets;
+        [SerializeField] private DungeonPreset[] _presets;
         [SerializeField] private Material _material;
 
-        private DungeonEntrancePreset _currentPreset;
+        private DungeonPreset _currentPreset;
 
         private void Awake()
         {
@@ -23,7 +23,7 @@ namespace SystemMiami
 
             DifficultyLevel _difficulty = GetRandomDifficulty();
 
-            foreach (DungeonEntrancePreset preset in _presets)
+            foreach (DungeonPreset preset in _presets)
             {
                 if (preset.Difficulty == _difficulty)
                 {
@@ -52,7 +52,7 @@ namespace SystemMiami
             }
         }
 
-        public void LoadPreset(DungeonEntrancePreset preset)
+        public void LoadPreset(DungeonPreset preset)
         {
             _currentPreset = preset;
             ApplyPreset();

@@ -9,7 +9,7 @@ namespace SystemMiami.CombatSystem
     /// (Meaning an Object can't be ONLY a CombatAction.
     /// If an Object is of the class CombatAction,
     /// it has to be an Object of a class that inherits from CombatAction)
-    public abstract class CombatAction : ScriptableObject
+    public abstract class CombatSubaction : ScriptableObject
     {
         [Tooltip("Directions and distance this action will check for targets")]
         [SerializeField] private TargetingPattern _targetingPattern;

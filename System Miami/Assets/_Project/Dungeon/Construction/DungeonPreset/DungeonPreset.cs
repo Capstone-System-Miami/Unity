@@ -6,8 +6,8 @@ namespace SystemMiami
 {
     public enum DifficultyLevel { EASY, MEDIUM, HARD }
 
-    [CreateAssetMenu(fileName = "New Dungeon Entrance Preset", menuName = "Eviron/Dungeon Entrance Preset")]
-    public class DungeonEntrancePreset : ScriptableObject
+    [CreateAssetMenu(fileName = "New Dungeon Preset", menuName = "Eviron/Dungeon Preset")]
+    public class DungeonPreset : ScriptableObject
     {
         [SerializeField] private DifficultyLevel _difficulty;
         
@@ -34,22 +34,32 @@ namespace SystemMiami
         [SerializeField] private List<GameObject> hardDungeonPrefabs;
         
         [Header("Settings")]
-        [Range(0, 100)] public int EnemyCount;
-        //public int maxEnemyCount;
-        public GameObject[] enemyPrefabs;
+        [Space(5), SerializeField] private Pool<GameObject> _enemyPool;
 
-        [Range(0, 100)] public float xpAmount;
-        //[Range(0, 100)] public float maxExpAmount;
+        [Header("Rewards")]
+        [Space(5), SerializeField] private Pool<Ability> _abilityRewards;
+        [Space(5), SerializeField] private Pool<ItemData> _itemRewards;
 
-        [Range(0, 100)] public int SkillPoints;
-        //[Range(0, 100)] public int maxSkillPoints;
+        [Space(5)]
+        [SerializeField] private int _minXP;
+        [SerializeField] private int _maxXP;
 
-        [Range(0,100)]public float itemDropChance;
-        [Range(0,100)]public float abilityDropChance;
+        [SerializeField] private int _minSkillPoints;
+        [SerializeField] private int _maxSkillPoints;
 
-        public Ability abilityReward;
-        public Item itemReward;
+        public Pool<GameObject> GetEnemyPool()
+        {
+            return new Pool<GameObject>(_enemyPool);
+        }
 
-      
+        public Pool<Ability> GetAbilityRewards()
+        {
+            return new Pool<Ability>(_abilityRewards);
+        }
+
+        public Pool<ItemData> GetItemRewards()
+        {
+            return new Pool<ItemData>(_itemRewards);
+        }
     }
 }

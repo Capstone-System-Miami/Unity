@@ -2,14 +2,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using SystemMiami;
 using SystemMiami.CombatSystem;
 using UnityEngine;
 
 
-    /// <summary>
-    /// Manages the QuickslotInventory of a combatant, handling selection, targeting, and execution.
-    /// </summary>
-    public class QuickslotInventory : MonoBehaviour
+/// <summary>
+/// Manages the QuickslotInventory of a combatant, handling selection, targeting, and execution.
+/// </summary>
+public class QuickslotInventory : MonoBehaviour
     {
         #region EVENTS
         // ======================================
@@ -385,7 +386,7 @@ using UnityEngine;
         /// </summary>
         private Item getItem(int index)
         {
-            List<Item> quickslotItems = Inventory.instance.quickslot;
+            List<Item> quickslotItems = Inventory.MGR.quickslot;
             
 
             return quickslotItems[index];
