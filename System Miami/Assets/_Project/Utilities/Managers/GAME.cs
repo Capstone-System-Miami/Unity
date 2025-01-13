@@ -17,7 +17,7 @@ namespace SystemMiami.Management
         [SerializeField] string _dungeonSceneName;
         [SerializeField] string _neighborhoodSceneName;
 
-        private DungeonPreset _dungeonPreset;
+        private DungeonData _dungeonData;
 
         protected override void Awake()
         {
@@ -54,28 +54,28 @@ namespace SystemMiami.Management
             switchScene(_dungeonSceneName);
         }
 
-        public void GoToDungeon(DungeonPreset preset)
+        public void GoToDungeon(DungeonData data)
         {
-            _dungeonPreset = preset;
+            _dungeonData = data;
 
             GoToDungeon();
         }
 
         public bool TryGetEnemies(out List<GameObject> enemies)
         {
-            if (_dungeonPreset == null)
+            if (_dungeonData == null)
             {
-                enemies = null;
+                enemies = new();
                 return false;
             }
 
-            enemies = _dungeonPreset.GetEnemyPool().GetPrefabsToSpawn();
+            enemies = _dungeonData.Enemies;
             return true;
         }
 
         public void GoToNeighborhood()
         {
-            _dungeonPreset = null;
+            _dungeonData = null;
 
             // If we're exiting combat and entering into a Neighborhood,
             // it will need to be the one we were in when we entered combat,

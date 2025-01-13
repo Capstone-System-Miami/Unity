@@ -1,5 +1,8 @@
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using SystemMiami.AbilitySystem;
+using SystemMiami.Dungeons;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace SystemMiami
@@ -29,9 +32,7 @@ namespace SystemMiami
         public Color DoorOnColor { get { return _doorOnColor; } }
 
         [Header("Environment Prefabs")]
-        [SerializeField] private List<GameObject> easyDungeonPrefabs;
-        [SerializeField] private List<GameObject> mediumDungeonPrefabs;
-        [SerializeField] private List<GameObject> hardDungeonPrefabs;
+        [SerializeField] private Pool<GameObject> _prefabPool;
         
         [Header("Settings")]
         [Space(5), SerializeField] private Pool<GameObject> _enemyPool;
@@ -47,17 +48,89 @@ namespace SystemMiami
         [SerializeField] private int _minSkillPoints;
         [SerializeField] private int _maxSkillPoints;
 
-        public Pool<GameObject> GetEnemyPool()
+        public DungeonData GetData(List<Dungeons.Style> excludedStyles)
+        {
+            GameObject prefab = getPrefab(excludedStyles);
+            List<GameObject> enemies = getEnemyPool().GetFinalizedList();
+            List<Ability> abilities = getAbilityRewards().GetFinalizedList();
+            List<ItemData> items = getItemRewards().GetFinalizedList();
+
+            return new DungeonData(prefab, enemies, abilities, items);
+        }
+
+        /// <summary>
+        /// Re-constructs the enemy pool to ensure that
+        /// we have a fresh random List in there.
+        /// </summary>
+        private GameObject getPrefab(List<Dungeons.Style> excludedStyles)
+        {            
+            List<GameObject> golist = new();
+            dungeondummy dungeon;
+
+            // TODO this is probably unsafe.
+            // Put a iteration limiter on it.
+            bool success = false;
+            do {
+                golist = _prefabPool.GetFinalizedList();
+
+                if (golist.Count < 1)
+                {
+                    // throw an error
+                }
+
+                if (!golist[0].TryGetComponent(out dungeon))
+                {
+                    // throw an error
+                }
+
+                foreach (Dungeons.Style style in excludedStyles)
+                {
+                    if (dungeon.Style == style)
+                    {
+                        success = false;
+                        break;
+                    }
+                }
+            } while (!success);
+
+            if (golist.Count > 0)
+            {
+                return golist[0];
+            }
+
+            return null;
+        }
+
+        // ==========================
+        private class dungeondummy
+        {
+            public Dungeons.Style Style;
+        }
+        // ============================
+
+        /// <summary>
+        /// Re-constructs the enemy pool to ensure that
+        /// we have a fresh random List in there.
+        /// </summary>
+        private Pool<GameObject> getEnemyPool()
         {
             return new Pool<GameObject>(_enemyPool);
         }
 
-        public Pool<Ability> GetAbilityRewards()
+        /// <summary>
+        /// Re-constructs the ability reward pool to ensure that
+        /// we have a fresh random list in there.
+        /// </summary>
+        private Pool<Ability> getAbilityRewards()
         {
             return new Pool<Ability>(_abilityRewards);
         }
 
-        public Pool<ItemData> GetItemRewards()
+        /// <summary>
+        /// Re-constructs the item reward pool to ensure that
+        /// we have fresh random list in there.
+        /// </summary>
+        private Pool<ItemData> getItemRewards()
         {
             return new Pool<ItemData>(_itemRewards);
         }

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using SystemMiami.Management;
+using System.Collections.Generic;
 
 namespace SystemMiami
 {
@@ -8,6 +9,8 @@ namespace SystemMiami
     {
         #region SERIALIZED
         // ======================================
+
+        [SerializeField] private List<Dungeons.Style> _excludedStyles;
 
         //=======================================
         #endregion // SERIALIZED
@@ -120,7 +123,7 @@ namespace SystemMiami
 
         private void onInteract()
         {
-            GAME.MGR.GoToDungeon(_currentPreset);
+            GAME.MGR.GoToDungeon(_currentPreset.GetData(_excludedStyles));
         }
         
         //=======================================

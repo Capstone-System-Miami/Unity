@@ -38,7 +38,7 @@ namespace SystemMiami
             initialize();
         }
 
-        public List<T> GetPrefabsToSpawn()
+        public List<T> GetFinalizedList()
         {
             if (!_initialized)
             {
