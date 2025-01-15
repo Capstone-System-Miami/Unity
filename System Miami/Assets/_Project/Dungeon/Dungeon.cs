@@ -26,6 +26,10 @@ namespace SystemMiami.Dungeons
 
         [SerializeField] private BlockHeight _boardTilesHeight;
 
+        [SerializeField] private GameObject _gameBoard;
+
+        [SerializeField] private GameObject _obstacles;
+
         [SerializeField] private GameObject _overlayTileContainer;
 
         /// <summary>
@@ -39,6 +43,10 @@ namespace SystemMiami.Dungeons
         public Style Style { get { return _style; } }
 
         public BlockHeight BoardTilesHeight { get { return _boardTilesHeight; } }
+
+        public GameObject GameBoard { get { return _gameBoard; } }
+
+        public GameObject Obstacles { get { return _obstacles; } }
 
         public GameObject OverlayTileContainer { get { return _overlayTileContainer; } }
     }
