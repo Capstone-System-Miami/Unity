@@ -23,7 +23,7 @@ namespace SystemMiami
         // UnityEvent will be called.
         public virtual void PlayerEnter()
         {
-            OnEnter.Invoke();
+            OnEnter?.Invoke();
         }
 
         // When this is called, everything that has
@@ -31,7 +31,7 @@ namespace SystemMiami
         // UnityEvent will be called.
         public virtual void Interact()
         {
-            OnInteract.Invoke();
+            OnInteract?.Invoke();
         }
 
         // When this is called, everything that has
@@ -39,7 +39,7 @@ namespace SystemMiami
         // UnityEvent will be called.
         public virtual void PlayerExit()
         {
-            OnExit.Invoke();
+            OnExit?.Invoke();
         }
 
         /// <summary>

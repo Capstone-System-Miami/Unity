@@ -1,11 +1,9 @@
+/// Layla
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using SystemMiami.AbilitySystem;
-using SystemMiami.Dungeons;
-using Unity.VisualScripting;
 using UnityEngine;
 
-namespace SystemMiami
+namespace SystemMiami.Dungeons
 {
     public enum DifficultyLevel { EASY, MEDIUM, HARD }
 
@@ -48,91 +46,93 @@ namespace SystemMiami
         [SerializeField] private int _minSkillPoints;
         [SerializeField] private int _maxSkillPoints;
 
-        public DungeonData GetData(List<Dungeons.Style> excludedStyles)
+        public DungeonData GetData(List<Style> excludedStyles)
         {
             GameObject prefab = getPrefab(excludedStyles);
-            List<GameObject> enemies = getEnemyPool().GetFinalizedList();
-            List<Ability> abilities = getAbilityRewards().GetFinalizedList();
-            List<ItemData> items = getItemRewards().GetFinalizedList();
+
+            List<GameObject> enemies = _enemyPool.GetNewList();
+
+            List<Ability> abilities = _abilityRewards.GetNewList();
+
+            List<ItemData> items = _itemRewards.GetNewList();
 
             return new DungeonData(prefab, enemies, abilities, items);
         }
 
         /// <summary>
-        /// Re-constructs the enemy pool to ensure that
-        /// we have a fresh random List in there.
+        /// Gets a list from the prefab pool, and pulls the first one 
         /// </summary>
         private GameObject getPrefab(List<Dungeons.Style> excludedStyles)
-        {            
+        {
             List<GameObject> golist = new();
-            dungeondummy dungeon;
+            Dungeon dungeon;
 
-            // TODO this is probably unsafe.
-            // Put a iteration limiter on it.
             bool success = false;
+            int iterationsRemaining = 100;
             do {
-                golist = _prefabPool.GetFinalizedList();
+                iterationsRemaining--;
 
-                if (golist.Count < 1)
+                golist = _prefabPool.GetNewList();
+
+                if (golist == null)
                 {
-                    // throw an error
+                    Debug.LogError(
+                        $"{this} {name} {_prefabPool} " +
+                        $"returned null instead of a list"
+                        );
+                    return null;
+                }
+
+                if (golist.Count == 0)
+                {
+                    Debug.LogError(
+                        $"{this} {name} {_prefabPool} " +
+                        $"returned an empty list."
+                        );
+                    return null;
+                }
+
+                if (golist[0] == null)
+                {
+                    Debug.LogError(
+                        $"{this} {name} {_prefabPool} " +
+                        $"returned a list with a null " +
+                        $"GameObject at [0]."
+                        );    
                 }
 
                 if (!golist[0].TryGetComponent(out dungeon))
                 {
-                    // throw an error
+                    Debug.LogError(
+                        $"{this} {name} {_prefabPool} " +
+                        $"returned {golist[0]}, " +
+                        $"which is missing a Dungeon script."
+                        );
+                    return null;
                 }
 
-                foreach (Dungeons.Style style in excludedStyles)
+                bool isExcludedStyle = false;
+                foreach (Style style in excludedStyles)
                 {
                     if (dungeon.Style == style)
                     {
-                        success = false;
+                        isExcludedStyle = true;
                         break;
                     }
                 }
-            } while (!success);
 
-            if (golist.Count > 0)
+                success = !isExcludedStyle;
+
+            } while (!success && iterationsRemaining > 0);
+
+            if (iterationsRemaining == 0)
             {
-                return golist[0];
+                Debug.LogError(
+                    $"Dungeon Preset ({this})'s search " +
+                    $"for a prefab timed out!!");
             }
 
-            return null;
-        }
-
-        // ==========================
-        private class dungeondummy
-        {
-            public Dungeons.Style Style;
-        }
-        // ============================
-
-        /// <summary>
-        /// Re-constructs the enemy pool to ensure that
-        /// we have a fresh random List in there.
-        /// </summary>
-        private Pool<GameObject> getEnemyPool()
-        {
-            return new Pool<GameObject>(_enemyPool);
-        }
-
-        /// <summary>
-        /// Re-constructs the ability reward pool to ensure that
-        /// we have a fresh random list in there.
-        /// </summary>
-        private Pool<Ability> getAbilityRewards()
-        {
-            return new Pool<Ability>(_abilityRewards);
-        }
-
-        /// <summary>
-        /// Re-constructs the item reward pool to ensure that
-        /// we have fresh random list in there.
-        /// </summary>
-        private Pool<ItemData> getItemRewards()
-        {
-            return new Pool<ItemData>(_itemRewards);
+            return golist[0];
         }
     }
 }

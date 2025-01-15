@@ -1,4 +1,8 @@
+/// Layla
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using SystemMiami.Dungeons;
 using UnityEngine;
 
 namespace SystemMiami
@@ -8,126 +12,205 @@ namespace SystemMiami
     {
         [SerializeField] private int _minCount;
         [SerializeField] private int _maxCount;
-        [SerializeField] private List<PoolElement<T>> _elements = new();
+        [SerializeField] private List<PoolElement<T>> _elements;
 
-        private int _count;
-        private List<T> _generatedList = new();
-        private T _defaultElement;
-
-        private bool _initialized = false;
+        private T _defaultPrefab;
 
         /// <summary>
-        /// Will create a new copy of the EnemyPool arg
-        /// with the same min and max enemies,
-        /// but will generate a new enemy list with a newly randomized count.
+        /// Resets the counts of all Pool elements
+        /// Finds and stores the default element
+        /// Returns a newly generated list of elements.
         /// </summary>
-        /// <param name="toCopy"></param>
-        public Pool(Pool<T> toCopy)
+        public List<T> GetNewList()
         {
-            _minCount = toCopy._minCount;
-            _maxCount = toCopy._maxCount;
+            resetElementCounts();
+
+            if (!tryGetDefault(out _defaultPrefab))
+            {
+                Debug.LogWarning($"No Default Element Fount in pool ( {this} )");
+            }
             
-            for (int i = 0; i < toCopy._elements.Count; i++)
-            {
-                // Creating a copy of each element will reset the _count
-                _elements.Add(new PoolElement<T>(toCopy._elements[i]));
-            }
+            int count = Random.Range(_minCount, _maxCount + 1);
 
-            _defaultElement = toCopy.getDefault();
-
-            initialize();
+            return getListOfSize(count);
         }
 
-        public List<T> GetFinalizedList()
+        private void resetElementCounts()
         {
-            if (!_initialized)
+            /// Creating a copy of each element will reset their available counts
+            for (int i = 0; i < _elements.Count; i++)
             {
-                initialize();
+                _elements[i] = new PoolElement<T>(_elements[i]);
             }
-
-            return _generatedList;
         }
 
         /// <summary>
-        /// Calculates a random number of enemies in the range,
-        /// finds and stores the default enemy,
-        /// and generates a list with size of _count
+        /// If no default prefab was found, this returns false,
+        /// and outputs a null object of type `T`.
+        /// If a default prefab WAS found, this returns true,
+        /// and outputs the prefab.
         /// </summary>
-        private void initialize()
+        private bool tryGetDefault(out T defaultPrefab)
         {
-            _count = Random.Range(_minCount, _maxCount + 1);
+            if (_defaultPrefab != null)
+            {
+                defaultPrefab = _defaultPrefab;
+                return true;
+            }
 
-            _defaultElement = getDefault();
+            for (int i = 0; i < _elements.Count; i++)
+            {
+                if (_elements[i].IsDefault(out T element))
+                {
+                    defaultPrefab = element;
+                    return true;
+                }
+            }
 
-            _generatedList = generateList();
-
-            _initialized = true;
+            defaultPrefab = null;
+            return false;
         }
 
-        private List<T> generateList()
+        private List<T> getListOfSize(int size)
         {
-            // So we don't modify the original list
-            List<PoolElement<T>> elementsCopy = new(_elements);
-
+            /// The list of actual raw objects we're constructing.
             List<T> result = new();
 
-            int minIndex = 0;
-            int maxIndex = elementsCopy.Count;
-            int randomIndex;
+            /// A local copy of the PoolElements list, so we can leave
+            /// the member variable _elements alone.
+            /// Elements will be checked to see if they still have
+            /// any _count remaining, and removed from
+            /// this local copy of the list if they've been depleted.
+            List<PoolElement<T>> validElements = new(_elements);
 
-            // For each prefab we want to spawn
-            for (int i = 0; i < _count; i++)
+            Debug.Log("Elements before loop:\n" +
+                string.Join("\n", validElements.Select(e => db.GetInfo(e, BindingFlags.NonPublic | BindingFlags.Instance))));
+
+            /// Smallest index that contains a PoolElement.
+            int validElementsMinIndex = 0;
+
+            /// Largest index that contains a PoolElement.
+            int validElementsMaxIndex = validElements.Count - 1;
+
+            /// The random index we will be reassigning each iteration
+            /// to index out validPoolElements list.
+            int randomIndex = 0;
+
+            /// For each iteration in our result list target size.
+            for (int i = 0; i < size; i++)
             {
-                // Update max
-                maxIndex = elementsCopy.Count;
+                /// Update max index, in case we removed
+                /// any PoolElements last iteration.
+                validElementsMaxIndex = validElements.Count - 1;
 
-                // If max is 0, use the default element for the remainder of the loop.
-                if (maxIndex == 0)
+                /// If the largest PoolElement we can access is at position 0,
+                if (validElementsMaxIndex == 0)
                 {
-                    result.Add(getDefault());
+                    /// We don't have anything left to add. But we still
+                    /// want to leave with a list of the given size, so
+                    /// we'll use the remainder of the loop to
+                    /// fill the list with the default element.
+                    result.Add(_defaultPrefab);
                     continue;
                 }
 
-                // Get a random index for accessing the elements list
-                randomIndex = Random.Range(minIndex, maxIndex);
+                /// Get a random index for accessing the PoolElements list
+                randomIndex = Random.Range(validElementsMinIndex, validElementsMaxIndex + 1);
 
-                // If the element at the index is valid
-                if (elementsCopy[randomIndex].TryGet(out T prefab))
+                /// If TryGet() returns true for the PoolElement at
+                /// the random index, `prefab` will contain a copy of
+                /// whatever actual object is stored in the PoolElement.
+                /// If the PoolElement's TryGet() returns false,
+                /// the new variable `prefab` will contain null.
+                if (!_elements[randomIndex].TryGet(out T prefab))
                 {
-                    // Add a prefab of it to the result list
-                    result.Add(prefab);
+                    /// it's cashed, so remove it from validPoolElements
+                    validElements.RemoveAt(randomIndex);
+
+                    /// Add a default prefab instead
+                    result.Add(_defaultPrefab);
+
+                    Debug.Log(
+                        $"{this} Added a default prefab ({_defaultPrefab.name})\n" +
+                        getLoopInfo(validElementsMinIndex, validElementsMaxIndex, randomIndex, i) +
+                        $"Updated Elements:\n" +
+                        string.Join( "\n", validElements.Select( e => db.GetInfo(e, BindingFlags.NonPublic | BindingFlags.Instance) ) )
+                        );
+
+                    continue;
                 }
-                else
-                {
-                    // It's cashed
-                    elementsCopy.RemoveAt(randomIndex);
-                    
-                    // Add a default prefab
-                    result.Add(getDefault());
-                }
+
+                /// Add a prefab of it to the result list
+                result.Add(prefab);
+
+                Debug.Log(
+                    $"{this} Added a prefab ({prefab.name})\n" +
+                    getLoopInfo(validElementsMinIndex, validElementsMaxIndex, randomIndex, i) +
+                    $"Updated Elements:\n" +
+                    string.Join("\n", validElements.Select(e => db.GetInfo(e, BindingFlags.NonPublic | BindingFlags.Instance)))
+                    );
             }
 
             return result;
         }
 
-        private T getDefault()
+        //private List<T> getListOfSize(int size)
+        //{
+        //    List<T> result = new();
+        //    List<PoolElement<T>> validElements = new(_elements);
+
+        //    Debug.LogError("Elements: " + string.Join("\n", validElements.Select(e => e.GetInfo())));
+
+        //    if (validElements.Count <= 0)
+        //    {
+        //        Debug.LogError($"No valid elements found on {this}");
+        //    }
+
+        //    int validElementsMinIndex = 0;
+        //    int validElementsMaxIndex = validElements.Count - 1;
+        //    int randomIndex = 0;
+
+        //    for (int i = 0; i < size; i++)
+        //    {
+        //        validElementsMaxIndex = validElements.Count - 1;
+        //        if (validElementsMaxIndex == 0)
+        //        {
+        //            result.Add(_defaultPrefab);
+        //            continue;
+        //        }
+
+        //        randomIndex = Random.Range(validElementsMinIndex, validElementsMaxIndex + 1);
+
+        //        /// Enhance Debugging
+        //        if (i == 0) // Log state at the first iteration
+        //        {
+        //            Debug.LogError("At first iteration:" + getLoopInfo(validElementsMinIndex, validElementsMaxIndex, randomIndex, i));
+        //        }
+
+        //        if (!validElements[randomIndex].TryGet(out T prefab))
+        //        {
+        //            validElements.RemoveAt(randomIndex);
+        //            result.Add(_defaultPrefab);
+        //            continue;
+        //        }
+
+        //        result.Add(prefab);
+        //        Debug.LogError(getLoopInfo(validElementsMinIndex, validElementsMaxIndex, randomIndex, i));
+        //    }
+
+        //    /// Log the final results
+        //    Debug.LogError("Result list: " + string.Join(", ", result.Select(e => e.name)));
+
+        //    return result;
+        //}
+
+
+        private string getLoopInfo(int minIndex, int maxIndex, int randomIndex, int iteration)
         {
-            if (_defaultElement != null)
-            {
-                return _defaultElement;
-            }
-
-            for (int i = 0; i < _elements.Count; i++)
-            {
-                if (_elements[i].IsDefault(out T prefab))
-                {
-                    _defaultElement = prefab;
-                    return _defaultElement;
-                }
-            }
-
-            Debug.LogWarning($"EnemyPool({this}) could not find a default element.");
-            return null;
+            return $"LoopInfo\n" +
+                $"| Iteration: {iteration}\n" +
+                $"| minIndex: {minIndex} | maxIndex: {maxIndex}\n" +
+                $"| randIndex: {randomIndex}\n";
         }
     }
 }

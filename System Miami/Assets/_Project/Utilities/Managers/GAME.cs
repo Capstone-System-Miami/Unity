@@ -1,3 +1,4 @@
+/// Layla
 using System;
 using SystemMiami.CombatSystem;
 using UnityEngine;
@@ -17,7 +18,16 @@ namespace SystemMiami.Management
         [SerializeField] string _dungeonSceneName;
         [SerializeField] string _neighborhoodSceneName;
 
+        [Tooltip(
+            "This should really only be checked on while " +
+            "debugging / demoing. In game, we want each entrance " +
+            "to generate its rewards and enemies when the level loads, " +
+            "in case we want to preview rewards, enemies, etc."
+            )]
+        [SerializeField] private bool _regenerateDungeonDataOnInteract;
         private DungeonData _dungeonData;
+
+        public bool RegenerateDungeonDataOnInteract { get { return _regenerateDungeonDataOnInteract; } }
 
         protected override void Awake()
         {
