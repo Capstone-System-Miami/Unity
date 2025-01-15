@@ -1,3 +1,5 @@
+/// Layla
+using System.Reflection;
 using UnityEngine;
 
 namespace SystemMiami
@@ -11,7 +13,7 @@ namespace SystemMiami
             "the first element in the pool with this box checked will be " +
             "set as the pool's Default, and will ignore " +
             "this box on remaining elements.")]
-        [SerializeField] private bool _isDefualt;
+        [SerializeField] private bool _isDefault;
         [SerializeField] private T _elementPrefab;
         [SerializeField] private int _maxCount;
 
@@ -24,11 +26,11 @@ namespace SystemMiami
         /// </summary>
         public PoolElement(PoolElement<T> toCopy)
         {
-            _isDefualt = toCopy._isDefualt;
+            _isDefault = toCopy._isDefault;
             _elementPrefab = toCopy._elementPrefab;
             _maxCount = toCopy._maxCount;
 
-            _count = _maxCount;
+            initialize();
         }
 
         public bool TryGet(out T prefab)
@@ -46,7 +48,7 @@ namespace SystemMiami
 
         public bool IsDefault(out T prefab)
         {
-            if (!_isDefualt)
+            if (!_isDefault)
             {
                 prefab = null;
                 return false;

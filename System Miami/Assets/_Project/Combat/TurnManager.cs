@@ -78,7 +78,16 @@ namespace SystemMiami
             if (playerCharacter != null)
             {
                 Vector3Int charTilePos = Coordinates.ScreenToIso(playerCharacter.transform.position, 0);
-                MapManager.MGR.map.TryGetValue((Vector2Int)charTilePos, out OverlayTile charTile);
+                
+                if (!MapManager.MGR.map.TryGetValue((Vector2Int)charTilePos, out OverlayTile charTile))
+                {
+                    if (!MapManager.MGR.map.TryGetValue((Vector2Int.zero), out charTile))
+                    {
+                        Debug.LogError("Player Placement failed.");
+                        return;
+                    }
+                }
+
                 charTile.PlaceCombatant(playerCharacter);
             }
 

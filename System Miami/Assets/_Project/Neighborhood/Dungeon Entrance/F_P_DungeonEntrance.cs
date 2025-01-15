@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine.Tilemaps;
 using UnityEngine;
+using UnityEngine.Tilemaps;
+using SystemMiami.Dungeons;
 
-namespace SystemMiami
+namespace SystemMiami.Outdated
 {
     public class F_P_DungeonEntrance : MonoBehaviour
     {

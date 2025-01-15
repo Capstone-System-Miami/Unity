@@ -16,24 +16,41 @@ MonoBehaviour:
   _material: {fileID: 2100000, guid: b673bd577411dc242a027f4797dcd53c, type: 2}
   _doorOffColor: {r: 0, g: 0, b: 0, a: 1}
   _doorOnColor: {r: 1.7207953, g: 0.85143507, b: 0, a: 1}
-  easyDungeonPrefabs: []
-  mediumDungeonPrefabs: []
-  hardDungeonPrefabs: []
+  _prefabPool:
+    _minCount: 1
+    _maxCount: 1
+    _elements:
+    - _isDefault: 1
+      _elementPrefab: {fileID: 1334785682855372644, guid: 4a1c621d5a6d50d4180980db21227599, type: 3}
+      _maxCount: 1
+    - _isDefault: 1
+      _elementPrefab: {fileID: 1334785682855372644, guid: b7c47d7a4bf88b746912eabb5e73b862, type: 3}
+      _maxCount: 1
   _enemyPool:
     _minCount: 2
     _maxCount: 5
     _elements:
-    - _isDefualt: 0
+    - _isDefault: 1
       _elementPrefab: {fileID: 5985083666047915755, guid: eae0eae8fe396f84493cde92e333db05, type: 3}
       _maxCount: 5
-    - _isDefualt: 1
+    - _isDefault: 0
       _elementPrefab: {fileID: 5985083666047915755, guid: c7ea620002f534d47b93c0d5fe44f53b, type: 3}
       _maxCount: 3
-  xpAmount: 0
-  SkillPoints: 0
-  itemDropChance: 0
-  abilityDropChance: 0
-  abilityReward: {fileID: 0}
-  itemReward:
-    itemData: {fileID: 0}
-    stackSize: 0
+  _abilityRewards:
+    _minCount: 0
+    _maxCount: 1
+    _elements:
+    - _isDefault: 1
+      _elementPrefab: {fileID: 11400000, guid: cfc9ccad38ef16c41bd2eda7877e8a30, type: 2}
+      _maxCount: 1
+  _itemRewards:
+    _minCount: 0
+    _maxCount: 1
+    _elements:
+    - _isDefault: 1
+      _elementPrefab: {fileID: 11400000, guid: 5350b8ff3471e9d418fddb750e4f8be4, type: 2}
+      _maxCount: 1
+  _minXP: 0
+  _maxXP: 0
+  _minSkillPoints: 0
+  _maxSkillPoints: 0

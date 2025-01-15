@@ -1,8 +1,9 @@
+/// Layla
 using System.Collections.Generic;
 using SystemMiami.AbilitySystem;
 using UnityEngine;
 
-namespace SystemMiami
+namespace SystemMiami.Dungeons
 {
     public enum DifficultyLevel { EASY, MEDIUM, HARD }
 
@@ -29,9 +30,7 @@ namespace SystemMiami
         public Color DoorOnColor { get { return _doorOnColor; } }
 
         [Header("Environment Prefabs")]
-        [SerializeField] private List<GameObject> easyDungeonPrefabs;
-        [SerializeField] private List<GameObject> mediumDungeonPrefabs;
-        [SerializeField] private List<GameObject> hardDungeonPrefabs;
+        [SerializeField] private Pool<GameObject> _prefabPool;
         
         [Header("Settings")]
         [Space(5), SerializeField] private Pool<GameObject> _enemyPool;
@@ -47,19 +46,93 @@ namespace SystemMiami
         [SerializeField] private int _minSkillPoints;
         [SerializeField] private int _maxSkillPoints;
 
-        public Pool<GameObject> GetEnemyPool()
+        public DungeonData GetData(List<Style> excludedStyles)
         {
-            return new Pool<GameObject>(_enemyPool);
+            GameObject prefab = getPrefab(excludedStyles);
+
+            List<GameObject> enemies = _enemyPool.GetNewList();
+
+            List<Ability> abilities = _abilityRewards.GetNewList();
+
+            List<ItemData> items = _itemRewards.GetNewList();
+
+            return new DungeonData(prefab, enemies, abilities, items);
         }
 
-        public Pool<Ability> GetAbilityRewards()
+        /// <summary>
+        /// Gets a list from the prefab pool, and pulls the first one 
+        /// </summary>
+        private GameObject getPrefab(List<Dungeons.Style> excludedStyles)
         {
-            return new Pool<Ability>(_abilityRewards);
-        }
+            List<GameObject> golist = new();
+            Dungeon dungeon;
 
-        public Pool<ItemData> GetItemRewards()
-        {
-            return new Pool<ItemData>(_itemRewards);
+            bool success = false;
+            int iterationsRemaining = 100;
+            do {
+                iterationsRemaining--;
+
+                golist = _prefabPool.GetNewList();
+
+                if (golist == null)
+                {
+                    Debug.LogError(
+                        $"{this} {name} {_prefabPool} " +
+                        $"returned null instead of a list"
+                        );
+                    return null;
+                }
+
+                if (golist.Count == 0)
+                {
+                    Debug.LogError(
+                        $"{this} {name} {_prefabPool} " +
+                        $"returned an empty list."
+                        );
+                    return null;
+                }
+
+                if (golist[0] == null)
+                {
+                    Debug.LogError(
+                        $"{this} {name} {_prefabPool} " +
+                        $"returned a list with a null " +
+                        $"GameObject at [0]."
+                        );    
+                }
+
+                if (!golist[0].TryGetComponent(out dungeon))
+                {
+                    Debug.LogError(
+                        $"{this} {name} {_prefabPool} " +
+                        $"returned {golist[0]}, " +
+                        $"which is missing a Dungeon script."
+                        );
+                    return null;
+                }
+
+                bool isExcludedStyle = false;
+                foreach (Style style in excludedStyles)
+                {
+                    if (dungeon.Style == style)
+                    {
+                        isExcludedStyle = true;
+                        break;
+                    }
+                }
+
+                success = !isExcludedStyle;
+
+            } while (!success && iterationsRemaining > 0);
+
+            if (iterationsRemaining == 0)
+            {
+                Debug.LogError(
+                    $"Dungeon Preset ({this})'s search " +
+                    $"for a prefab timed out!!");
+            }
+
+            return golist[0];
         }
     }
 }

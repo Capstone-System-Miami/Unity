@@ -1,6 +1,9 @@
+/// Layla, Antony
+using System.Collections.Generic;
+using SystemMiami.Dungeons;
+using SystemMiami.Management;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using SystemMiami.Management;
 
 namespace SystemMiami
 {
@@ -8,6 +11,8 @@ namespace SystemMiami
     {
         #region SERIALIZED
         // ======================================
+
+        [SerializeField] private List<Dungeons.Style> _excludedStyles = new();
 
         //=======================================
         #endregion // SERIALIZED
@@ -17,6 +22,7 @@ namespace SystemMiami
         // ======================================
 
         private DungeonPreset _currentPreset;
+        private DungeonData _dungeonData;
         private Material _material;
 
         //=======================================
@@ -32,17 +38,10 @@ namespace SystemMiami
         #endregion // PROPERTIES
 
 
-        #region UNITY METHODS
-        // ======================================
-
-        //=======================================
-        #endregion // UNITY METHODS
-
-
         #region PUBLIC METHODS
         // ======================================
 
-        public void ApplyPreset(DungeonPreset preset)
+        public void ApplyNewPreset(DungeonPreset preset)
         {
             if (preset == null)
             {
@@ -98,34 +97,70 @@ namespace SystemMiami
         {
             if (CurrentPreset == null)
             {
-                Debug.LogError($"{gameObject.name}'s {name} script" +
-                    $"is trying to apply a null CurrentPreset.");
+                Debug.LogError(
+                    $"{gameObject.name}'s {name} script" +
+                    $"is trying to apply a null CurrentPreset."
+                    );
                 return;
             }
 
-            if (CurrentPreset.EmmissiveMaterial == null)
+            // Create a little data packet to send to the GAME.MGR
+            _dungeonData = CurrentPreset.GetData(_excludedStyles);
+
+            Debug.LogWarning($"DungeonData being stored:\n {_dungeonData}");
+
+            if (!tryApplyMaterial(out string materialError))
             {
-                return;
+                Debug.LogWarning(materialError);
             }
-
-            // Instantiate a copy of the emmissive material
-            // so we can change it without affecting the others
-            _material = new Material(CurrentPreset.EmmissiveMaterial);
-
-            // Set the renderer's material to this temporary copy.
-            GetComponent<TilemapRenderer>().material = _material;
 
             TurnOffDungeonColor();
         }
 
+        private bool tryApplyMaterial(out string msg)
+        {
+            msg = "";
+
+            if (CurrentPreset.EmmissiveMaterial == null)
+            {
+                msg = $"{gameObject.name}'s {name} script " +
+                    $"is applying {CurrentPreset}, but it " +
+                    $"is missing an EmmisiveMaterial reference.";
+
+                return false;
+            }
+
+            // Find the tilemap renderer of the DungeonEntrance
+            if (!TryGetComponent(out TilemapRenderer renderer))
+            {
+                msg = $"{gameObject.name}'s {name} script " +
+                    $"is trying to apply {CurrentPreset.EmmissiveMaterial} " +
+                    $"but {gameObject.name} is missing a TilemapRenderer.";
+
+                return false;
+            }
+
+            // Instantiate a copy of the preset's emmissive material
+            // so we can change it without affecting the others
+            _material = new Material(CurrentPreset.EmmissiveMaterial);
+            
+            // Set the renderer's material to this temporary copy.
+            renderer.material = _material;
+            return true;
+        }
+
         private void onInteract()
         {
-            GAME.MGR.GoToDungeon(_currentPreset);
+            if (GAME.MGR.RegenerateDungeonDataOnInteract)
+            {
+                Debug.LogWarning($"DungeonData being re-generated:\n {_dungeonData}");
+                _dungeonData = CurrentPreset.GetData(_excludedStyles);
+            }
+
+            GAME.MGR.GoToDungeon(_dungeonData);
         }
         
         //=======================================
         #endregion // PRIVATE METHODS
-
-
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using SystemMiami;
 using SystemMiami.Management;
+using SystemMiami.Dungeons;
 using UnityEngine;
 
 //Made By Antony (Layla edited)
@@ -397,7 +398,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
                 streetData.dungeonEntranceDifficulties.Add(preset.Difficulty);
             }
 
-            dungeonEntrance.ApplyPreset(preset);
+            dungeonEntrance.ApplyNewPreset(preset);
         }
     }
 

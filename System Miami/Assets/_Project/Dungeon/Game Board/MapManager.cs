@@ -1,8 +1,9 @@
-// Author: Alec, Lee
+// Author: Alec, Lee, Layla
 using System.Collections.Generic;
 using SystemMiami.Management;
 using SystemMiami.Utilities;
 using SystemMiami.CombatSystem;
+using SystemMiami.Dungeons;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -18,13 +19,17 @@ namespace SystemMiami
         public BlockHeight gridTilesHeight;
 
         public OverlayTile overlayTilePrefab;
-        public GameObject overlayContainer;
 
         //dictionary containing all tiles on map by their x, y coordinates
         public Dictionary<Vector2Int, OverlayTile> map;
 
-        private Tilemap tileMap;
+        [SerializeField] private GameObject environment;
+
+        private Dungeon dungeon;
+        private Tilemap gameBoardTilemap;
+        private Tilemap obstaclesTilemap; // This will change, possibly to Obstacle[]
         private BoundsInt bounds;
+        private GameObject overlayContainer;
 
         public BoundsInt Bounds { get { return bounds; } }
 
@@ -35,15 +40,79 @@ namespace SystemMiami
 
         void Start()
         {
-            tileMap = gameObject.GetComponentInChildren<Tilemap>();
+            // Validation
+            if (GAME.MGR.TryGetDungeonPrefab(out GameObject prefab))
+            {
+                if (environment != null)
+                {
+                    Destroy(environment);
+                }
+
+                environment = Instantiate(prefab);
+            }
+
+            if (environment == null)
+            {
+                Debug.LogError($"{name}'s {this} didn't find " +
+                    $"an environment to use");
+                return;
+            }
+
+            if (!environment.TryGetComponent(out dungeon))
+            {
+                Debug.LogError($"{name}'s {this} didn't find " +
+                    $"a Dungeon on the environment object");
+                return;
+            }
+
+            if (dungeon.OverlayTileContainer == null)
+            {
+                Debug.LogError($"{name}'s {this} didn't find " +
+                    $"an Overlay Container in {environment}'s {dungeon}");
+                return;
+            }
+
+            if (dungeon.GameBoard == null)
+            {
+                Debug.LogError($"{name}'s {this} didn't find " +
+                    $"a GameBoard object in {environment}'s {dungeon}");
+                return;
+            }
+            else if (!dungeon.GameBoard.TryGetComponent(out gameBoardTilemap))
+            {
+                Debug.LogError($"{name}'s {this} didn't find " +
+                    $"a tilemap component on {dungeon}'s {dungeon.GameBoard}");
+                return;
+            }
+
+            if (dungeon.Obstacles == null)
+            {
+                Debug.LogError($"{name}'s {this} didn't find " +
+                    $"a GameBoard object in {environment}'s {dungeon}");
+                return;
+            }
+            else if (!dungeon.Obstacles.TryGetComponent(out obstaclesTilemap))
+            {
+                Debug.LogError($"{name}'s {this} didn't find " +
+                    $"a tilemap component on {dungeon}'s {dungeon.GameBoard}");
+                return;
+            }
+
+
+
+            // Construction
+            gridTilesHeight = dungeon.BoardTilesHeight;
+            overlayContainer = dungeon.OverlayTileContainer;
             map = new Dictionary<Vector2Int, OverlayTile> ();
 
-            //get the bounds of tile map in grid coordinates
-            bounds = tileMap.cellBounds;
+            // Get the bounds of tile map in BounsInt
+            bounds = gameBoardTilemap.cellBounds;
 
-            print ($"Bounds xmin {bounds.min.x} | xmax {bounds.max.x}\n" +
+            Debug.Log(
+                $"Bounds xmin {bounds.min.x} | xmax {bounds.max.x}\n" +
                 $"ymin {bounds.min.y} | ymax { bounds.max.y}\n" +
-                $"zmin { bounds.min.z} | zmax {bounds.max.z}");
+                $"zmin { bounds.min.z} | zmax {bounds.max.z}"
+                );
 
 
             // Looping through all of our tiles.
@@ -59,7 +128,7 @@ namespace SystemMiami
                         Vector3Int tileLocation = new Vector3Int(x, y, z);
                         Vector2Int tileKey = new Vector2Int(x, y);
 
-                        if (tileMap.HasTile(tileLocation) && !map.ContainsKey(tileKey))
+                        if (gameBoardTilemap.HasTile(tileLocation) && !map.ContainsKey(tileKey))
                         {
                             OverlayTile overlayTile = Instantiate(overlayTilePrefab, overlayContainer.transform);
                             overlayTile.name = $"OT { tileKey }";
@@ -68,7 +137,7 @@ namespace SystemMiami
                             Vector3 cellWorldPosition = Coordinates.IsoToScreen(tileLocation, gridTilesHeight);
 
                             overlayTile.transform.position = new Vector3(cellWorldPosition.x, cellWorldPosition.y, cellWorldPosition.z);
-                            //overlayTile.GetComponent<SpriteRenderer>().sortingOrder = tileMap.GetComponent<TilemapRenderer>().sortingOrder;
+                            //overlayTile.GetComponent<SpriteRenderer>().sortingOrder = gameBoardTilemap.GetComponent<TilemapRenderer>().sortingOrder;
                             overlayTile.GridLocation = tileLocation;
                             map.Add(tileKey, overlayTile);
                         }
