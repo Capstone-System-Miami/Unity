@@ -1,8 +1,9 @@
-// Author: Alec, Lee
+// Author: Alec, Lee, Layla
 using System.Collections.Generic;
 using SystemMiami.Management;
 using SystemMiami.Utilities;
 using SystemMiami.CombatSystem;
+using SystemMiami.Dungeons;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -18,13 +19,16 @@ namespace SystemMiami
         public BlockHeight gridTilesHeight;
 
         public OverlayTile overlayTilePrefab;
-        public GameObject overlayContainer;
 
         //dictionary containing all tiles on map by their x, y coordinates
         public Dictionary<Vector2Int, OverlayTile> map;
 
+        [SerializeField] private GameObject environment;
+
+        private Dungeon dungeon;
         private Tilemap tileMap;
         private BoundsInt bounds;
+        private GameObject overlayContainer;
 
         public BoundsInt Bounds { get { return bounds; } }
 
@@ -35,15 +39,52 @@ namespace SystemMiami
 
         void Start()
         {
-            tileMap = gameObject.GetComponentInChildren<Tilemap>();
+            // Validation
+            if (GAME.MGR.TryGetDungeonPrefab(out GameObject prefab))
+            {
+                if (environment != null)
+                {
+                    Destroy(environment);
+                }
+
+                environment = Instantiate(prefab);
+            }
+
+            if (environment == null)
+            {
+                Debug.LogError($"{name}'s {this} didn't find " +
+                    $"an environment to use");
+                return;
+            }
+
+            if (!environment.TryGetComponent(out dungeon))
+            {
+                Debug.LogError($"{name}'s {this} didn't find " +
+                    $"a Dungeon on the environment object");
+                return;
+            }
+
+            if (dungeon.OverlayTileContainer == null)
+            {
+                Debug.LogError($"{name}'s {this} didn't find " +
+                    $"an Overlay Container in {environment}'s {dungeon}");
+                return;
+            }
+
+            // Construction
+            gridTilesHeight = dungeon.BoardTilesHeight;
+            tileMap = environment.GetComponentInChildren<Tilemap>();
+            overlayContainer = dungeon.OverlayTileContainer;
             map = new Dictionary<Vector2Int, OverlayTile> ();
 
-            //get the bounds of tile map in grid coordinates
+            // Get the bounds of tile map in BounsInt
             bounds = tileMap.cellBounds;
 
-            print ($"Bounds xmin {bounds.min.x} | xmax {bounds.max.x}\n" +
+            Debug.Log(
+                $"Bounds xmin {bounds.min.x} | xmax {bounds.max.x}\n" +
                 $"ymin {bounds.min.y} | ymax { bounds.max.y}\n" +
-                $"zmin { bounds.min.z} | zmax {bounds.max.z}");
+                $"zmin { bounds.min.z} | zmax {bounds.max.z}"
+                );
 
 
             // Looping through all of our tiles.

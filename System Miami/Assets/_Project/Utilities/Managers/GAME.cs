@@ -83,6 +83,24 @@ namespace SystemMiami.Management
             return true;
         }
 
+        public bool TryGetDungeonPrefab(out GameObject prefab)
+        {
+            if (_dungeonData == null)
+            {
+                prefab = null;
+                return false;
+            }
+
+            if (_dungeonData.Prefab == null)
+            {
+                prefab = null;
+                return false;
+            }
+
+            prefab = _dungeonData.Prefab;
+            return true;
+        }
+
         public void GoToNeighborhood()
         {
             _dungeonData = null;

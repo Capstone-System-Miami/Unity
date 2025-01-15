@@ -1,7 +1,6 @@
 /// Layla
-using Unity.VisualScripting;
 using UnityEngine;
-using static FunkyCode.Rendering.LightMainBuffer;
+using SystemMiami.Utilities;
 
 namespace SystemMiami.Dungeons
 {
@@ -17,7 +16,6 @@ namespace SystemMiami.Dungeons
     /// that needs to be in here.
     public class Dungeon : MonoBehaviour
     {
-
         [Tooltip(
             "The general style / vibe of the Dungeon. " +
             "This will be used by DungeonEntrance when " +
@@ -25,6 +23,10 @@ namespace SystemMiami.Dungeons
             "allowed to / prohibited from " +
             "loading when the Neighborhood is generated." )]
         [SerializeField] private Style _style;
+
+        [SerializeField] private BlockHeight _boardTilesHeight;
+
+        [SerializeField] private GameObject _overlayTileContainer;
 
         /// <summary>
         /// The general style / vibe of the Dungeon.
@@ -35,5 +37,9 @@ namespace SystemMiami.Dungeons
         /// allowed to / prohibited from loading
         /// when the Neighborhood is generated.
         public Style Style { get { return _style; } }
+
+        public BlockHeight BoardTilesHeight { get { return _boardTilesHeight; } }
+
+        public GameObject OverlayTileContainer { get { return _overlayTileContainer; } }
     }
 }
