@@ -16,11 +16,16 @@ namespace SystemMiami.CustomEditor
         private EditorButton swapButton;
         private EditorButton resetButton;
 
-
         [MenuItem("Tools/Replace Tiles")]
         public static void ShowWindow()
         {
             GetWindow<ReplaceTiles>($"ReplaceTiles");
+
+        }
+
+        void OnEnable()
+        {
+
         }
 
         private void OnGUI()
@@ -39,7 +44,10 @@ namespace SystemMiami.CustomEditor
 
             /// Description
             /// ==========================
-            GUILayout.Box($"Replace all instances of a tile with another tile in the selected tilemaps");
+            GUIStyle boxStyle = new GUIStyle(GUI.skin.box);
+            boxStyle.normal.textColor = Color.white;
+            boxStyle.hover.textColor = Color.white;
+            GUILayout.Box($"Replace all instances of a tile with another tile in the selected tilemaps", boxStyle);
             GUILayout.Space(20);
 
             /// Target Tilemaps
