@@ -15,6 +15,7 @@ namespace SystemMiami.CustomEditor
         private EditorButton removeMapButton;
         private EditorButton swapButton;
         private EditorButton resetButton;
+        private EditorButton replaceButton;
 
         [MenuItem("Tools/Replace Tiles")]
         public static void ShowWindow()
@@ -82,7 +83,8 @@ namespace SystemMiami.CustomEditor
                 removeMapButton.IsEnabled = true;
                 if (removeMapButton.Pressed())
                 {
-                    Debug.Log($"Removing {targetTilemaps[targetTilemaps.Count - 1]} from targets.");
+                    //Debug.Log($"Removing {targetTilemaps[targetTilemaps.Count - 1]} from targets.");
+
                     targetTilemaps.RemoveAt(targetTilemaps.Count - 1);
                 }
             }
@@ -99,7 +101,7 @@ namespace SystemMiami.CustomEditor
             /// Swap Button
             /// ==========================
             swapButton = new("Swap");
-            swapButton.IsEnabled = (toReplace != null && replacement != null);
+            swapButton.IsEnabled = true;
             if (swapButton.Pressed())
             {
                 swap();
@@ -122,7 +124,9 @@ namespace SystemMiami.CustomEditor
 
             /// Replace Button
             /// ==========================
-            if (GUILayout.Button("Press To Replace", GUILayout.Height(50)))
+            replaceButton = new("Press To Replace", GUILayout.Height(50));
+            replaceButton.IsEnabled = (toReplace != null && replacement != null);
+            if (replaceButton.Pressed())
             {
                 replaceTiles(targetTilemaps, toReplace, replacement);
             }
@@ -148,7 +152,8 @@ namespace SystemMiami.CustomEditor
 
         private void replaceTiles(List<Tilemap> maps, Tile toReplace, Tile replacement)
         {
-            Debug.Log("Button Clicked");
+            Debug.LogWarning("Repainting Tiles");
+
             foreach (Tilemap map in maps)
             {
                 if (map == null)
