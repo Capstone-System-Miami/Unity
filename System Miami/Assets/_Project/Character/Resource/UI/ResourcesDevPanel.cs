@@ -1,5 +1,6 @@
 using SystemMiami.CombatSystem;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace SystemMiami
 {
@@ -13,7 +14,10 @@ namespace SystemMiami
         [SerializeField] private LabeledField _stamina;
         [SerializeField] private LabeledField _mana;
         [SerializeField] private LabeledField _speed;
-
+        [SerializeField] private Image _healthImage;
+        [SerializeField] private Image _staminaImage;
+        [SerializeField] private Image _manaImage;
+        [SerializeField] private Image _speedImage;
         private void Start()
         {
             if (_player == null) { return; }
@@ -55,6 +59,8 @@ namespace SystemMiami
             string result = $"{_player.Health.Get()} / {_player.Health.GetMax()}";
 
             _health.Value.SetForeground(result);
+
+            _healthImage.fillAmount = _player.Health.Get() / _player.Health.GetMax();
         }
 
         private void updateStamina()
@@ -64,6 +70,8 @@ namespace SystemMiami
             string result = $"{_player.Stamina.Get()} / {_player.Stamina.GetMax()}";
 
             _stamina.Value.SetForeground(result);
+
+            _staminaImage.fillAmount = _player.Stamina.Get() / _player.Stamina.GetMax();
         }
 
         private void updateMana()
@@ -73,6 +81,8 @@ namespace SystemMiami
             string result = $"{_player.Mana.Get()} / {_player.Mana.GetMax()}";
 
             _mana.Value.SetForeground(result);
+
+            _manaImage.fillAmount = _player.Mana.Get() / _player.Mana.GetMax();
         }
 
         private void updateSpeed()
@@ -82,6 +92,8 @@ namespace SystemMiami
             string result = $"{_player.Speed.Get()} / {_player.Speed.GetMax()}";
 
             _speed.Value.SetForeground(result);
+
+            _speedImage.fillAmount = _player.Speed.Get() / _player.Speed.GetMax();
         }
     }
 }
