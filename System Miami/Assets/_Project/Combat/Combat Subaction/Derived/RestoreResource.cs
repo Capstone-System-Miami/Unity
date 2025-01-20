@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using SystemMiami.CombatSystem;
 using UnityEngine;
 
@@ -9,7 +7,6 @@ namespace SystemMiami
     [CreateAssetMenu(fileName = "New restore Action", menuName = "Abilities/CombatActions/RestoreResource")]
     public class RestoreResource : CombatSubaction
     {
-
         [SerializeField] private float _amount;
         [SerializeField] private ResourceType resourceType;
         public override void Perform()

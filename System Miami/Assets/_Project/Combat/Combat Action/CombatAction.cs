@@ -6,13 +6,13 @@ namespace SystemMiami.CombatRefactor
 {
     public abstract class CombatAction
     {
-        #region PROPERTIES
+        #region PUBLIC VARS
         //==============================
         public readonly Sprite Icon;
         public readonly CombatSubaction[] Actions;
         public readonly AnimatorOverrideController OverrideController;
         public readonly Combatant User;
-        #endregion PROPERTIES
+        #endregion PUBLIC VARS
 
         #region PUBLIC METHODS
         //==============================
@@ -51,6 +51,7 @@ namespace SystemMiami.CombatRefactor
             }
         }
 
+        /// TODO: Implement this method
         public bool PlayerFoundInTargets()
         {
             return false;

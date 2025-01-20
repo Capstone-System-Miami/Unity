@@ -1,6 +1,5 @@
 using System.Collections;
 using SystemMiami.CombatSystem;
-using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
 {
@@ -9,6 +8,14 @@ namespace SystemMiami.CombatRefactor
         public readonly int MaxUses;
 
         private int usesRemaining;
+
+        public int UsesRemaining
+        {
+            get
+            {
+                return usesRemaining;
+            }
+        }
 
         public bool IsEmpty
         {

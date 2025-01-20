@@ -1,8 +1,5 @@
 using System.Collections;
-using SystemMiami.AbilitySystem;
 using SystemMiami.CombatSystem;
-using UnityEditor.Presets;
-using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
 {
@@ -56,6 +53,7 @@ namespace SystemMiami.CombatRefactor
                 cooldownRemaining--;
             }
         }
+
         private void startCooldown()
         {
             cooldownRemaining = CooldownTurns;
