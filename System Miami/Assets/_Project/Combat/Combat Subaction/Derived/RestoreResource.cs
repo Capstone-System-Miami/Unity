@@ -1,45 +1,53 @@
+// Author: Layla, Lee, Johnny
+using System.Collections;
+using System.Collections.Generic;
 using SystemMiami.CombatSystem;
 using UnityEngine;
 
 namespace SystemMiami
 {
     [System.Serializable]
-    [CreateAssetMenu(fileName = "New restore Action", menuName = "Abilities/CombatActions/RestoreResource")]
+    [CreateAssetMenu(fileName = "New Restore Action", menuName = "Abilities/CombatActions/RestoreResource")]
     public class RestoreResource : CombatSubaction
     {
-        [SerializeField] private float _amount;
+        [SerializeField] [Range(0, 1)] private float _percentage; // To change percentage to 50% or 75%, change the 0 to 0.5 or 0.75
         [SerializeField] private ResourceType resourceType;
+
         public override void Perform()
         {
             foreach (Combatant target in TargetingPattern.StoredTargets.Combatants)
             {
                 if (target == null) { continue; }
 
-                switch (resourceType) 
+                switch (resourceType)
                 {
                     case ResourceType.Health:
-                        target.RestoreResource(target.Health, _amount);
+                        RestorePercentage(target.Health, _percentage); // Calculates Health
                         break;
                     case ResourceType.Stamina:
-                        target.RestoreResource(target.Stamina, _amount);
+                        RestorePercentage(target.Stamina, _percentage); // Calculates Stamina
                         break;
                     case ResourceType.Mana:
-                        target.RestoreResource(target.Mana, _amount);
+                        RestorePercentage(target.Mana, _percentage); // Calculates Mana
                         break;
                     case ResourceType.Speed:
-                        target.RestoreResource(target.Speed, _amount);
+                        RestorePercentage(target.Speed, _percentage); // Calculates Speed
                         break;
                     default:
-                        Debug.Log("No ResourceType was selected");
+                        Debug.LogError("No valid ResourceType was selected.");
                         break;
                 }
-                    
-                 
-                
             }
+        }
+
+        private void RestorePercentage(Resource resource, float percentage)
+        {
+            float restoreAmount = resource.GetMax() * percentage; // Calculate the percentage of max value
+            resource.Gain(restoreAmount); // Restore the resource by 25% 
         }
     }
 }
+
 public enum ResourceType
 {
     Health,
