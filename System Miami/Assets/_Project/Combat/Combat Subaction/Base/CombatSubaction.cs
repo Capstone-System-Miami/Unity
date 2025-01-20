@@ -17,6 +17,5 @@ namespace SystemMiami.CombatSystem
         public TargetingPattern TargetingPattern { get { return _targetingPattern; } }
 
         public abstract void Perform();
-       
     }
 }
