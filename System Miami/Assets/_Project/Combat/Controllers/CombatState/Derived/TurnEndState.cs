@@ -5,17 +5,20 @@ namespace SystemMiami.CombatRefactor
 {
     public class TurnEndState : CombatState
     {
-        public TurnEndState(CombatantController controller)
-            : base(controller) { }
+        public TurnEndState(CombatStateMachine context)
+            : base(context, Phase.None) { }
 
         public override void OnEnter()
         {
-            throw new System.NotImplementedException();
+            Debug.Log($"{context.name}Calling end of turn");
+
+            context.FocusedTile?.UnHighlight();
+
+            context.Controller.ResetFlags();
         }
 
         public override void OnExit()
         {
-            throw new System.NotImplementedException();
         }
 
         public override void Update()

@@ -5,12 +5,13 @@ namespace SystemMiami.CombatRefactor
 {
     public class ActionConfirmationState : CombatState
     {
-        public ActionConfirmationState(CombatantController controller)
-            : base(controller) { }
+        public ActionConfirmationState(CombatStateMachine context)
+            : base(context, Phase.Action) { }
 
         public override void OnEnter()
         {
-            throw new System.NotImplementedException();
+            context.FocusedTile?.EndHover(context.Controller);
+            context.combatant.Abilities.TryLockTargets();
         }
 
         public override void OnExit()
@@ -20,7 +21,10 @@ namespace SystemMiami.CombatRefactor
 
         public override void Update()
         {
-            throw new System.NotImplementedException();
+            if (context.Controller.UseAbilityTriggered())
+            {
+                context.SwitchState(context.actionExecutingState);
+            }
         }
     }
 }

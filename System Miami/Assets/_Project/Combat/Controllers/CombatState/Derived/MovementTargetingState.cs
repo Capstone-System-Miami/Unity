@@ -3,24 +3,49 @@ using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
 {
+    // waits for input
     public class MovementTargetingState : CombatState
     {
-        public MovementTargetingState(CombatantController controller)
-            : base(controller) { }
+        public MovementTargetingState(CombatStateMachine context)
+            : base(context, Phase.Movement) { }
+
+        private bool CanMove
+        {
+            get
+            {
+                return context.combatant.Speed.Get() > 0;
+            }
+        }
 
         public override void OnEnter()
         {
-            throw new System.NotImplementedException();
+            ResetTileData();
         }
 
         public override void OnExit()
         {
-            throw new System.NotImplementedException();
+
         }
 
         public override void Update()
         {
-            throw new System.NotImplementedException();
+            UpdateFocusedTile();
+
+            if (context.Controller.EndTurnTriggered())
+            {
+                context.SwitchState(context.turnEndState);
+            }
+
+            if (context.Controller.NextPhaseTriggered())
+            {
+                context.SwitchState(context.actionUnequippedState);
+                context.Controller.ResetFlags();
+            }
+
+            if (context.Controller.BeginMovementTriggered() && CanMove)
+            {
+                context.SwitchState(context.movementActiveState);
+            }
         }
     }
 }

@@ -5,12 +5,12 @@ namespace SystemMiami.CombatRefactor
 {
     public class ActionUnequippedState : CombatState
     {
-        public ActionUnequippedState(CombatantController controller)
-            : base(controller) { }
+        public ActionUnequippedState(CombatStateMachine context)
+            : base(context, Phase.Action) { }
 
         public override void OnEnter()
         {
-            throw new System.NotImplementedException();
+            context.combatant.Abilities.TryUnequip();
         }
 
         public override void OnExit()
@@ -20,7 +20,17 @@ namespace SystemMiami.CombatRefactor
 
         public override void Update()
         {
-            throw new System.NotImplementedException();
+            UpdateFocusedTile();
+
+            if (context.Controller.EquipTriggered())
+            {
+                context.SwitchState(context.actionEquippedState);
+            }
+
+            if (context.Controller.LockTargetsTriggered())
+            {
+                context.SwitchState(context.actionConfirmationState);
+            }
         }
     }
 }

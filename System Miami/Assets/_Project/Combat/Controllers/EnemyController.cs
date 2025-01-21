@@ -36,19 +36,14 @@ namespace SystemMiami
             StartCoroutine(TurnBehavior());
         }
 
-        protected override void OnNextPhaseFailed()
-        {
-            base.OnNextPhaseFailed();
-            FLAG_EndTurn = true;
-        }
-
         private IEnumerator TurnBehavior()
         {
             yield return new WaitForSeconds(.5f);
 
             // Movement
             FLAG_BeginMovement = true;
-            yield return new WaitUntil(() => destinationReached());
+
+            yield return new WaitUntil(() => DestinationReached());
             yield return new WaitForSeconds(.5f);
 
             FLAG_NextPhase = true;
@@ -56,8 +51,8 @@ namespace SystemMiami
 
             // Equip Ability
             // TODO use selectAbility() once that logic is figured out.
-            typeToEquip = AbilityType.PHYSICAL;
-            indexToEquip = 0;
+            TypeToEquip = AbilityType.PHYSICAL;
+            IndexToEquip = 0;
             Debug.Log($"{name} starting equip cor.");
             yield return StartCoroutine(equipAbility());
             yield return null;
@@ -136,43 +131,42 @@ namespace SystemMiami
         #region Triggers
         // ======================================
 
-        protected override bool endTurnTriggered()
+        public override bool EndTurnTriggered()
         {
             return FLAG_EndTurn;
         }
 
-        protected override bool nextPhaseTriggered()
+        public override bool NextPhaseTriggered()
         {
             return FLAG_NextPhase;
         }
 
-        protected override bool beginMovementTriggered()
+        public override bool BeginMovementTriggered()
         {
             return FLAG_BeginMovement;
         }
 
-
-        protected override bool unequipTriggered()
+        public override bool UnequipTriggered()
         {
             return FLAG_Unequip;
         }
 
-        protected override bool equipTriggered()
+        public override bool EquipTriggered()
         {
             return FLAG_Equip;
         }
 
-        protected override bool lockTargetsTriggered()
+        public override bool LockTargetsTriggered()
         {
             return FLAG_LockTargets;
         }
 
-        protected override bool useAbilityTriggered()
+        public override bool UseAbilityTriggered()
         {
             return FLAG_UseAbility;
         }
 
-        protected override void resetFlags()
+        public override void ResetFlags()
         {
             FLAG_EndTurn = false;
             FLAG_NextPhase = false;
@@ -187,24 +181,12 @@ namespace SystemMiami
         #endregion // Triggers ==================
 
 
-        #region Phase Handling
-        #endregion
-
-
         #region Focused Tile
         // ======================================
 
-        protected override void updateFocusedTile()
+        public override OverlayTile GetFocusedTile()
         {
-            if (FocusedTile != null) { return; }
 
-            FocusedTile = getFocusedTile();
-
-            FocusedTileChanged?.Invoke(FocusedTile);
-        }
-
-        protected override OverlayTile getFocusedTile()
-        {
             Combatant targetPlayer = TurnManager.MGR.playerCharacter;
 
             if (IsInDetectionRange(targetPlayer))
@@ -226,51 +208,13 @@ namespace SystemMiami
         #region Movement
 
         /// <summary>
-        /// Coroutine for combatant random movement when not chasing the player.
-        /// </summary>
-        private IEnumerator RandomMove()
-        {
-            //while ((int)combatant.Speed.Get() > 0)
-            //{
-            //    // Get walkable neighbor tiles
-            //    List<OverlayTile> walkableTiles = GetWalkableNeighbourTiles();
-
-            //    if (walkableTiles.Count == 0)
-            //    {
-            //        // No walkable tiles available
-            //        break;
-            //    }
-
-            //    // Decrement speed
-            //    combatant.Speed.Lose(1);
-
-            //    // Choose a random tile
-            //    int index = UnityEngine.Random.Range(0, walkableTiles.Count);
-            //    OverlayTile tile = walkableTiles[index];
-
-            //    // Update tiles' currentCharacter
-            //    combatant.CurrentTile.currentCharacter = null;
-            //    combatant.CurrentTile = tile;
-            //    tile.currentCharacter = combatant;
-
-            //    // Move combatant's position
-            //    combatant.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y + 0.0001f, tile.transform.position.z);
-            //    //combatant.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
-
-            //    yield return new WaitForSeconds(0.2f); // Wait for movement simulation
-            //}
-
-            yield return null;
-        }
-
-        /// <summary>
         /// Gets walkable neighbor tiles for random movement.
         /// </summary>
         private List<OverlayTile> GetWalkableNeighbourTiles()
         {
             List<OverlayTile> walkableTiles = new List<OverlayTile>();
 
-            List<OverlayTile> neighbours = pathFinder.GetNeighbourTiles(combatant.CurrentTile);
+            List<OverlayTile> neighbours = PathFinder.GetNeighbourTiles(combatant.CurrentTile);
 
             foreach (OverlayTile tile in neighbours)
             {
@@ -316,63 +260,6 @@ namespace SystemMiami
             Debug.Log($"{name} waiting for complete");
             yield return new WaitUntil(() => combatant.Abilities.CurrentState == Abilities.State.COMPLETE);
         }
-
-        ///// <summary>
-        ///// Selects an ability for the enemy.
-        ///// </summary>
-        //private Ability selectAbility()
-        //{
-        //    // Select the first ability that can be used
-        //    foreach (Ability ability in combatant.Abilities.Physical)
-        //    {
-        //        if (!ability.isOnCooldown)
-        //        {
-        //            // Check if any target is in range
-        //            if (IsPlayerInAbilityRange(ability))
-        //            {
-        //                return ability;
-        //            }
-        //        }
-        //    }
-
-        //    foreach (Ability ability in combatant.Abilities.Magical)
-        //    {
-        //        if (!ability.isOnCooldown)
-        //        {
-        //            // Check if any target is in range
-        //            if (IsPlayerInAbilityRange(ability))
-        //            {
-        //                return ability;
-        //            }
-        //        }
-        //    }
-        //    return null; // No ability can be used
-        //}
-
-        ///// <summary>
-        ///// Currently only returns true
-        ///// TODO:
-        ///// Should check if any player is within the ability's range.
-        ///// </summary>
-        //private bool IsPlayerInAbilityRange(Ability ability)
-        //{
-        //    //int maxRange = 2; // You can adjust this or use ability.range if available
-
-        //    //Combatant player = TurnManager.MGR.playerCharacter;
-
-
-        //    //int distance = Mathf.Abs(combatant.CurrentTile.gridLocation.x - player.CurrentTile.gridLocation.x) +
-        //    //               Mathf.Abs(combatant.CurrentTile.gridLocation.y - player.CurrentTile.gridLocation.y);
-
-        //    //if (distance <= maxRange)
-        //    //{
-        //    //    return true;
-        //    //}
-
-        //    //return false;
-
-        //    return true;
-        //}
         #endregion
 
 
@@ -391,58 +278,6 @@ namespace SystemMiami
 
             return false;
         }
-
-        ///// <summary>
-        ///// Finds the nearest player character to the enemy.
-        ///// </summary>
-        //private Combatant FindNearestPlayer()
-        //{
-        //    Combatant nearestPlayer = null;
-        //    int shortestDistance = int.MaxValue;
-
-        //    foreach (Combatant player in TurnManager.MGR.playerCharacter)
-        //    {
-        //        int distance = Mathf.Abs(enemy.CurrentTile.gridLocation.x - player.CurrentTile.gridLocation.x) +
-        //                       Mathf.Abs(enemy.CurrentTile.gridLocation.y - player.CurrentTile.gridLocation.y);
-
-        //        if (distance < shortestDistance)
-        //        {
-        //            shortestDistance = distance;
-        //            nearestPlayer = player;
-        //        }
-        //    }
-
-        //    return nearestPlayer;
-        //}
-
-        ///// <summary>
-        ///// Finds the nearest player character within a given radius of the enemy.
-        ///// </summary>
-        //private Combatant FindNearestPlayerWithinRadius(int radius)
-        //{
-        //    Combatant nearestPlayer = null;
-        //    int shortestDistance = int.MaxValue;
-
-        //    foreach (Combatant player in TurnManager.MGR.playerCharacter)
-        //    {
-        //        int distance = Mathf.Abs(enemy.CurrentTile.gridLocation.x - player.CurrentTile.gridLocation.x) +
-        //                       Mathf.Abs(enemy.CurrentTile.gridLocation.y - player.CurrentTile.gridLocation.y);
-
-        //        if (distance <= radius && distance < shortestDistance)
-        //        {
-        //            shortestDistance = distance;
-        //            nearestPlayer = player;
-        //        }
-        //    }
-
-        //    return nearestPlayer;
-        //}
-
-        //private void OnDestroy()
-        //{
-        //    // Remove the enemy from the TurnManager's list when destroyed
-        //    TurnManager.MGR.enemyCharacters.Remove(enemy);
-        //}
         #endregion
     }
 }

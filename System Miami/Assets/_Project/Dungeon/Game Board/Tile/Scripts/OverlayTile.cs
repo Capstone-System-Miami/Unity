@@ -175,23 +175,23 @@ namespace SystemMiami
         #region MOUSEOVER
         // ==================================
 
-        public void BeginHover(PlayerController controller)
+        public void BeginHover(CombatantController controller)
         {
+            if (controller is not PlayerController) { return; }
+
             if (Occupied)
             {
                 Highlight();
                 CurrentCombatant.Highlight();
             }
 
-            if (!controller.IsMyTurn) { return; }
-
-            if (controller.HasActed) { return; }
-
             Highlight();
         }
 
-        public void EndHover(PlayerController controller)
+        public void EndHover(CombatantController controller)
         {
+            if (controller is not PlayerController) { return; }
+
             if (_customHighlight)
             {
                 _targetColor.Revert();

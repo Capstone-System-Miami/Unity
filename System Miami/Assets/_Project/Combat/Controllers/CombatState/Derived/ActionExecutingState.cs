@@ -1,23 +1,31 @@
 using SystemMiami.CombatSystem;
+using System.Collections;
 using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
 {
     public class ActionExecutingState : CombatState
     {
-        public ActionExecutingState(CombatantController controller)
-            : base(controller) { }
+        public ActionExecutingState(CombatStateMachine context)
+            : base(context, Phase.Action) { }
 
         public override void OnEnter()
         {
-            throw new System.NotImplementedException();
+            if (context.combatant.Abilities.AbilityExecutionIsValid
+                (out IEnumerator abilityProcess))
+            {
+                context.StartCoroutine(abilityProcess);
+            }
         }
 
         public override void OnExit()
         {
-            throw new System.NotImplementedException();
+            context.FocusedTile?.UnHighlight(); // on phase transit
         }
 
+        /// <summary>
+        /// TODO: EFFECTS
+        /// </summary>
         public override void Update()
         {
             throw new System.NotImplementedException();

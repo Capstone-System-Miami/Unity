@@ -50,13 +50,13 @@ namespace SystemMiami.CombatSystem
         {
             if (slot.State != SelectionState.SELECTED)
             {
-                typeToEquip = slot.Type;
-                indexToEquip = slot.Index;
+                TypeToEquip = slot.Type;
+                IndexToEquip = slot.Index;
                 FLAG_Equip = true;
             }
             else
             {
-                indexToEquip = -1;
+                IndexToEquip = -1;
                 FLAG_Unequip = true;
             }
         }
@@ -67,12 +67,12 @@ namespace SystemMiami.CombatSystem
         #region Triggers
         // ======================================
 
-        protected override bool endTurnTriggered()
+        public override bool EndTurnTriggered()
         {
             return Input.GetKeyDown(_endTurnKey);
         }
 
-        protected override bool nextPhaseTriggered()
+        public override bool NextPhaseTriggered()
         {
             if (IsMoving) { return false; }
             if (IsActing) { return false; }
@@ -80,7 +80,7 @@ namespace SystemMiami.CombatSystem
             return Input.GetKeyDown(_endPhaseKey);
         }
 
-        protected override bool beginMovementTriggered()
+        public override bool BeginMovementTriggered()
         {
             if (!CanMove)
                 { return false; }
@@ -97,23 +97,23 @@ namespace SystemMiami.CombatSystem
             return Input.GetMouseButtonDown(0);
         }
 
-        protected override bool unequipTriggered()
+        public override bool UnequipTriggered()
         {
             return Input.GetMouseButtonDown(1) || FLAG_Unequip;
         }
 
-        protected override bool equipTriggered()
+        public override bool EquipTriggered()
         {
             if (!CanAct)
                 { return false; }
 
-            if (indexToEquip == -1)
+            if (IndexToEquip == -1)
                 { return false; }
 
             return FLAG_Equip;
         }
 
-        protected override bool lockTargetsTriggered()
+        public override bool LockTargetsTriggered()
         {
             if (!CanAct)
                 { return false; }
@@ -121,7 +121,7 @@ namespace SystemMiami.CombatSystem
             return Input.GetMouseButtonDown(0) || FLAG_LockTargets;
         }
 
-        protected override bool useAbilityTriggered()
+        public override bool UseAbilityTriggered()
         {
             if (!CanAct)
                 { return false; }
@@ -129,7 +129,7 @@ namespace SystemMiami.CombatSystem
             return Input.GetKeyDown(KeyCode.Return) || FLAG_UseAbility;
         }
 
-        protected override void resetFlags()
+        public override void ResetFlags()
         {
             FLAG_Unequip = false;
             FLAG_Equip = false;
@@ -143,37 +143,11 @@ namespace SystemMiami.CombatSystem
 
         #region Focused Tile
         // ======================================
-
-        protected override void updateFocusedTile()
-        {
-            OverlayTile newFocus = getFocusedTile();
-
-            if (!isValidFocus(newFocus))
-            {
-                if (combatant.Abilities.CurrentState != Abilities.State.TARGETS_LOCKED)
-                {
-                    FocusedTile?.EndHover(this);
-                }
-
-                FocusedTile = null;
-                return;
-            }
-
-            if (newFocus == FocusedTile) { return; }
-
-            FocusedTile?.EndHover(this);
-            newFocus.BeginHover(this);
-            FocusedTile = newFocus;
-
-            // Raise event when mouse tile  changes            
-            FocusedTileChanged?.Invoke(newFocus);
-        }
-
         /// <summary>
         /// Checks for an overlay tile under the cursor.
         /// Returns null if no tile is found under the mouse.
         /// </summary>
-        protected override OverlayTile getFocusedTile()
+        public override OverlayTile GetFocusedTile()
         {
             RaycastHit2D? mouseHit = getMouseHitInfo();
             OverlayTile mouseTile = getTileFromRaycast(mouseHit);
@@ -210,25 +184,6 @@ namespace SystemMiami.CombatSystem
             if (!hit.HasValue) { return null; }
 
             return hit.Value.collider.gameObject.GetComponent<OverlayTile>();
-        }
-
-        private bool isValidFocus(OverlayTile tile)
-        {
-            if (tile == null) { return false; }
-
-            if (CurrentPhase == Phase.None) { return false; }
-
-            if (IsMoving) { return false; }
-
-            if (IsActing) { return false; }
-
-            if (combatant.Abilities.CurrentState != Abilities.State.UNEQUIPPED
-                && combatant.Abilities.CurrentState != Abilities.State.EQUIPPED)
-            {
-                return false;
-            }
-
-            return true;
         }
 
         // ======================================
