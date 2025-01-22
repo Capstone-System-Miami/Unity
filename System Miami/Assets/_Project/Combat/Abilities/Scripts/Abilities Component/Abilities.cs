@@ -158,7 +158,7 @@ namespace SystemMiami.AbilitySystem
         /// </summary>
         public bool TryEquip(AbilityType type, int index)
         {
-            if (!_combatant.Controller.IsMyTurn)
+            if (!_combatant.StateMachine.IsMyTurn)
             {
                 Debug.LogWarning($"{name} is trying to equip an ability, " +
                     $"but it is not their turn.");

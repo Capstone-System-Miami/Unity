@@ -157,7 +157,7 @@ namespace SystemMiami.LeeInventory
         /// </summary>
         public bool TryEquip(ItemType type, int index)
         {
-            if (!_combatant.Controller.IsMyTurn)
+            if (!_combatant.StateMachine.IsMyTurn)
             {
                 Debug.LogWarning($"{name} is trying to equip an Item, " +
                     $"but it is not their turn.");

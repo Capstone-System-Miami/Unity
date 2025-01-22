@@ -66,7 +66,7 @@ namespace SystemMiami.AbilitySystem
 
                     if (targets == null) { continue; }
 
-                    Combatant player = targets.Find(c => c.Controller is PlayerController);
+                    Combatant player = targets.Find(c => c.StateMachine is PlayerDecisions);
 
                     if (player != null)
                     {

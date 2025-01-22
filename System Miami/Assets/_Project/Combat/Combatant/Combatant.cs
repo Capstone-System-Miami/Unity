@@ -1,7 +1,7 @@
 // Authors: Layla Hoey, Lee St Louis
 using System;
 using SystemMiami.AbilitySystem;
-using SystemMiami.Enums;
+using SystemMiami.CombatRefactor;
 using SystemMiami.Management;
 using SystemMiami.Utilities;
 using UnityEngine;
@@ -16,7 +16,9 @@ namespace SystemMiami.CombatSystem
     {
         [SerializeField] private Color _colorTag = Color.white;
 
-        public OverlayTile CurrentTile;
+        [HideInInspector] public OverlayTile CurrentTile;
+        [HideInInspector] public OverlayTile FocusTile;
+        [HideInInspector] public OverlayTile DestinationTile;
 
         public Animator Animator;
 
@@ -24,7 +26,8 @@ namespace SystemMiami.CombatSystem
 
         public int ID { get; set; }
 
-        private CombatantController _controller;
+        private CombatantStateMachine stateMachine;
+
         private Stats _stats;
         private Abilities _abilities;
 
@@ -56,7 +59,7 @@ namespace SystemMiami.CombatSystem
         public Action<DirectionalInfo> OnSubjectChanged;
         public Action<DirectionalInfo> OnDirectionChanged;
 
-        public CombatantController Controller { get { return _controller; } }
+        public CombatantStateMachine StateMachine { get { return stateMachine; } }
 
         public Stats Stats { get { return _stats; } }
 
@@ -68,7 +71,7 @@ namespace SystemMiami.CombatSystem
         {
             _stats = GetComponent<Stats>();
             _abilities = GetComponent<Abilities>();
-            _controller = GetComponent<CombatantController>();
+            stateMachine = GetComponent<CombatantStateMachine>();
             _renderer = GetComponent<SpriteRenderer>();
             _defaultColor = _renderer.color;
             Animator = GetComponent<Animator>();
@@ -78,19 +81,11 @@ namespace SystemMiami.CombatSystem
         private void OnEnable()
         {
             GAME.MGR.CombatantDeath += onCombatantDeath;
-
-            if (_controller == null) { return; }
-            _controller.FocusedTileChanged += onFocusedTileChanged;
-            _controller.PathTileChanged += onPathTileChanged;
         }
 
         private void OnDisable()
         {
             GAME.MGR.CombatantDeath -= onCombatantDeath;
-
-            if (_controller == null) { return; }
-            _controller.FocusedTileChanged -= onFocusedTileChanged;
-            _controller.PathTileChanged -= onPathTileChanged;
         }
 
         protected virtual void Start()
@@ -133,19 +128,25 @@ namespace SystemMiami.CombatSystem
         private void initDirection()
         {
             Vector2Int currentPos = (Vector2Int)CurrentTile.GridLocation;
-            setDirection(new DirectionalInfo(currentPos,  currentPos + Vector2Int.one));
+            SetDirection(new DirectionalInfo(currentPos,  currentPos + Vector2Int.one));
         }
         #endregion Construction
 
-        #region Subscriptions
-        private void onFocusedTileChanged(OverlayTile newTile)
+        #region Subscriptions (not really anymore)
+        public void FocusTileChanged(OverlayTile newTile)
         {
-            setDirectionByTile(newTile);
+            FocusTile?.EndHover(this);
+
+            FocusTile = newTile;
+
+            FocusTile?.BeginHover(this);
+
+            SetDirectionByTile(FocusTile);
         }
 
-        private void onPathTileChanged(DirectionalInfo newDirection)
+        public void PathTileChanged(DirectionalInfo newDirection)
         {
-            setDirection(newDirection);
+            SetDirection(newDirection);
 
             // Decrement speed when combatant moves to a new tile.
             Speed.Lose(1);
@@ -176,11 +177,8 @@ namespace SystemMiami.CombatSystem
         /// For players, this is based on mouse position.
         /// For enemies, it's based on their target or movement.
         /// </summary>
-        private void setDirectionByTile(OverlayTile targetTile)
+        public void SetDirectionByTile(OverlayTile targetTile)
         {
-            if (_controller.IsMoving) { return; }
-            if (_abilities.CurrentState == Abilities.State.TARGETS_LOCKED) { return; }
-            if (_abilities.CurrentState == Abilities.State.EXECUTING) { return; }
             if (targetTile == null) { return; }
 
             Vector2Int currentPos = (Vector2Int)CurrentTile.GridLocation;
@@ -192,11 +190,8 @@ namespace SystemMiami.CombatSystem
 
             OnSubjectChanged?.Invoke(newDirection);
 
-            //if (newDirection.DirectionVec != DirectionInfo.DirectionVec)
-            //{
-            if ((int)newDirection.DirectionName == 0)
+            if (newDirection.DirectionName == 0)
             {
-
                 Animator.SetInteger("TileDir", 7);
             }
             else
@@ -205,22 +200,19 @@ namespace SystemMiami.CombatSystem
             }
 
             OnDirectionChanged?.Invoke(newDirection);
-            //}
-            Debug.Log(newDirection.DirectionName);
-
             DirectionInfo = newDirection;
+            Debug.Log(newDirection.DirectionName);
         }
 
         /// <summary>
         /// Allows setting directional info directly.
         /// </summary>
-        private void setDirection(DirectionalInfo newDirection)
+        public void SetDirection(DirectionalInfo newDirection)
         {
             DirectionInfo = newDirection;
-            if ((int)newDirection.DirectionName == 0)
+            if (newDirection.DirectionName == 0)
             {
-
-              Animator.SetInteger("TileDir", 7 );
+                Animator.SetInteger("TileDir", 7 );
             }
             else
             {

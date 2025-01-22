@@ -87,11 +87,11 @@ namespace SystemMiami.CombatSystem
 
 
         #region Protected
-        protected void onTargetChanged(DirectionalInfo dir)
+        protected void onTargetChanged(DirectionalInfo userInfo)
         {
             HideTargets();
             ClearTargets();
-            SetTargets(dir);
+            SetTargets(userInfo);
             ShowTargets();
         }
 

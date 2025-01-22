@@ -155,7 +155,7 @@ namespace SystemMiami
         {
             if (Occupied)
             {
-                if (CurrentCombatant.Controller.IsMyTurn)
+                if (CurrentCombatant.StateMachine.IsMyTurn)
                 {
                     return _activeCombatantColor;
                 }
@@ -175,9 +175,9 @@ namespace SystemMiami
         #region MOUSEOVER
         // ==================================
 
-        public void BeginHover(CombatantController controller)
+        public void BeginHover(Combatant combatant)
         {
-            if (controller is not PlayerController) { return; }
+            if (combatant.gameObject != PlayerManager.MGR.gameObject) { return; }
 
             if (Occupied)
             {
@@ -188,9 +188,9 @@ namespace SystemMiami
             Highlight();
         }
 
-        public void EndHover(CombatantController controller)
+        public void EndHover(Combatant combatant)
         {
-            if (controller is not PlayerController) { return; }
+            if (combatant.gameObject != PlayerManager.MGR.gameObject) { return; }
 
             if (_customHighlight)
             {

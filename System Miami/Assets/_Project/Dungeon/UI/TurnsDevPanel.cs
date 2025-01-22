@@ -104,7 +104,7 @@ namespace SystemMiami
 
         private void updatePhasePanel()
         {
-            Phase currentPhase = turnOwner.Controller.CurrentPhase;
+            Phase currentPhase = turnOwner.StateMachine.CurrentPhase;
 
             Color phaseColor = currentPhase switch
             {
@@ -114,7 +114,7 @@ namespace SystemMiami
                 _ => Color.black
             };
 
-            _phaseField.Value.SetForeground($"{turnOwner.Controller.CurrentPhase}");
+            _phaseField.Value.SetForeground($"{turnOwner.StateMachine.CurrentPhase}");
             _phaseField.Value.SetForeground(phaseColor);
         }
 
@@ -127,7 +127,7 @@ namespace SystemMiami
                 _actionText = getActionPrompt();
             }
 
-            string prompt = turnOwner.Controller.CurrentPhase switch
+            string prompt = turnOwner.StateMachine.CurrentPhase switch
             {
                 Phase.Movement  => _movementText,
                 Phase.Action    => _actionText,
@@ -143,7 +143,7 @@ namespace SystemMiami
         {
             string result = "";
 
-            if (turnOwner.Controller.CanMove)
+            if (turnOwner.StateMachine.CanMove)
             {
                 result += $"Click a tile to move,\n\n";
             }
@@ -166,7 +166,7 @@ namespace SystemMiami
         {
             string result = "";
 
-            if (turnOwner.Controller.CanAct)
+            if (turnOwner.StateMachine.CanAct)
             {
                 result += $"Click an Ability to Equip it,\n\n" +
                     $"Or ";

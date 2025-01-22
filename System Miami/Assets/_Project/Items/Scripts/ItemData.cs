@@ -63,10 +63,17 @@ namespace SystemMiami.LeeInventory
             {
                 foreach (CombatSubaction action in _actions)
                 {
-                    action.TargetingPattern.ClearTargets();
-                    action.TargetingPattern.UnlockTargets();
-                    action.TargetingPattern.ShowTargets();
-                    action.TargetingPattern.SubscribeToDirectionUpdates(User);
+                    List<Combatant> targets = action.TargetingPattern.StoredTargets.Combatants;
+
+                    if (targets == null) { continue; }
+
+                    Combatant player = targets.Find(c => c.StateMachine is PlayerDecisions);
+                    User = player;
+
+                    if (player != null)
+                    {
+                        return true;
+                    }
                 }
             }
     

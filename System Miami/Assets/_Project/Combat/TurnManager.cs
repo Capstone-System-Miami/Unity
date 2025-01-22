@@ -48,10 +48,10 @@ namespace SystemMiami
                 if (CurrentTurnOwner == null)
                     { return false; }
 
-                if (CurrentTurnOwner.Controller == null)
+                if (CurrentTurnOwner.StateMachine == null)
                     { return false; }
 
-                return CurrentTurnOwner.Controller is PlayerController;
+                return CurrentTurnOwner.StateMachine is PlayerDecisions;
             }
         }
 
@@ -133,17 +133,17 @@ namespace SystemMiami
                     if (combatant == null)
                     { continue; }
 
-                    if (combatant.Controller == null)
+                    if (combatant.StateMachine == null)
                     {
                         Debug.LogWarning($"CombatantController not found in {combatant} on {combatant.name}");
                         continue;
                     }
 
                     CurrentTurnOwner = combatant;
-                    combatant.Controller.StartTurn();
+                    combatant.StateMachine.StartTurn();
 
                     yield return new WaitForEndOfFrame();
-                    yield return new WaitUntil(() => !combatant.Controller.IsMyTurn);
+                    yield return new WaitUntil(() => !combatant.StateMachine.IsMyTurn);
                 }
 
                 yield return null;
