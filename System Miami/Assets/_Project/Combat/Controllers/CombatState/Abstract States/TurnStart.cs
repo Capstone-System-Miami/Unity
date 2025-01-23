@@ -12,7 +12,7 @@ namespace SystemMiami.CombatRefactor
             Debug.Log($"{machine.name} starting turn");
             machine.combatant.ResetTurn();
             
-            machine.combatant.ResetTileFlags();
+            machine.combatant.ResetTileContext();
         }
 
         public override void bUpdate()
@@ -24,5 +24,7 @@ namespace SystemMiami.CombatRefactor
         public override void eOnExit()
         {
         }
+
+        public abstract void GoToMovementTileSelect();
     }
 }

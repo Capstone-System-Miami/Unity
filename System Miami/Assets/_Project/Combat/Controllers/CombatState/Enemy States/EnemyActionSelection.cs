@@ -105,19 +105,4 @@ namespace SystemMiami.CombatRefactor
     //    yield return new WaitUntil(() => combatant.Abilities.CurrentState == Abilities.State.COMPLETE);
     //}
     //#endregion
-
-    //private bool IsInDetectionRange(Combatant target)
-    //{
-    //    //int distance = Mathf.Abs(combatant.CurrentTile.gridLocation.x - target.CurrentTile.gridLocation.x) +
-    //    //   Mathf.Abs(combatant.CurrentTile.gridLocation.y - target.CurrentTile.gridLocation.y);
-
-    //    List<OverlayTile> path = getPathTo(target.CurrentTile);
-
-    //    if (path.Count <= detectionRadius)
-    //    {
-    //        return true;
-    //    }
-
-    //    return false;
-    //}
 }

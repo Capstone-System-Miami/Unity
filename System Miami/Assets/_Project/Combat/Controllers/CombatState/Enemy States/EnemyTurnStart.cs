@@ -7,6 +7,11 @@ namespace SystemMiami.CombatRefactor
 
         public override void cMakeDecision()
         {
+            GoToMovementTileSelect();
+        }
+
+        public override void GoToMovementTileSelect()
+        {
             machine.SwitchState(new EnemyMovementTileSelection(machine));
         }
     }

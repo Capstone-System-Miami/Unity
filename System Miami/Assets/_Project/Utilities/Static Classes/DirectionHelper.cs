@@ -85,10 +85,10 @@ namespace SystemMiami.Utilities
             }
         }
 
-        public static void Print(DirectionalInfo dirInfo, string objectName)
+        public static void Print(DirectionContext dirInfo, string objectName)
         {
             Debug.LogWarning($"{objectName}|  MapOrigin {dirInfo.MapPositionA}, MapFWD {dirInfo.MapForwardA}, " +
-                $"MapDir{dirInfo.DirectionVec}, DirName {dirInfo.DirectionName}");
+                $"MapDir{dirInfo.DirectionVec}, DirName {dirInfo.BoardDirection}");
         }
 
         public static void Print(Dictionary<TileDir, Vector2Int> dirDict, string objectName)
@@ -113,41 +113,46 @@ namespace SystemMiami.Utilities
     /// On construction, it stores a difference Vector based
     /// on the mapPositionA and mapPositionB given.
     /// </summary>
-    public struct DirectionalInfo
+    public struct DirectionContext
     {
         // The unchanged mapPositionA coordinate
-        public Vector2Int MapPositionA { get; private set; }
+        public readonly Vector2Int MapPositionA;
 
         // The unchanged mapPositionB coordinate
-        public Vector2Int MapPositionB { get; private set; }
+        public readonly Vector2Int MapPositionB;
 
         // The moveDirection the object is facing
-        public Vector2Int DirectionVec { get; private set; }
-        public TileDir DirectionName { get; private set; }
+        public readonly Vector2Int DirectionVec;
+        public readonly TileDir BoardDirection;
+        public readonly TileDir WorldDirection;
 
         /// <summary>
         /// Map (game board) coordinates one tile in
         /// whatever moveDirection we've determined to be "forward"
         /// from MapPositionA
         /// </summary>
-        public Vector2Int MapForwardA { get; private set; }
+        public readonly Vector2Int MapForwardA;
 
         /// <summary>
         /// Map (game board) coordinates one tile in
         /// whatever moveDirection we've determined to be "forward"
         /// from MapPositionB
         /// </summary>
-        public Vector2Int MapForwardB { get; private set; }
+        public readonly Vector2Int MapForwardB;
 
 
-        public DirectionalInfo(Vector2Int mapPositionA, Vector2Int mapPositionB)
+        public DirectionContext(Vector2Int mapPositionA, Vector2Int mapPositionB)
         {
             MapPositionA = mapPositionA;
             MapPositionB = mapPositionB;
 
             DirectionVec = DirectionHelper.GetDirectionVec(mapPositionA, mapPositionB);
 
-            DirectionName = DirectionHelper.GetTileDir(DirectionVec);
+            BoardDirection = DirectionHelper.GetTileDir(DirectionVec);
+
+            WorldDirection = (BoardDirection != 0)
+                ? (BoardDirection - 1)
+                : (TileDir)7;
 
             MapForwardA = MapPositionA + DirectionVec;
             MapForwardB = MapPositionB + DirectionVec;

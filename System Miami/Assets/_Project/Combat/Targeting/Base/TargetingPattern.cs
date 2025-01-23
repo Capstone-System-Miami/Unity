@@ -22,7 +22,7 @@ namespace SystemMiami.CombatSystem
         [HideInInspector] public bool _targetsLocked;
        
         #region Public
-        public abstract void SetTargets(DirectionalInfo userInfo);
+        public abstract void SetTargets(DirectionContext userInfo);
 
         public void ClearTargets()
         {
@@ -87,7 +87,7 @@ namespace SystemMiami.CombatSystem
 
 
         #region Protected
-        protected void onTargetChanged(DirectionalInfo userInfo)
+        protected void onTargetChanged(DirectionContext userInfo)
         {
             HideTargets();
             ClearTargets();
@@ -105,7 +105,7 @@ namespace SystemMiami.CombatSystem
         /// </summary>
         /// <param name="userInfo"></param>
         /// <returns></returns>
-        protected DirectionalInfo getPatternDirection(DirectionalInfo userInfo)
+        protected DirectionContext getPatternDirection(DirectionContext userInfo)
         {
             if (PatternOrigin == PatternOriginType.USER)
             {
@@ -120,7 +120,7 @@ namespace SystemMiami.CombatSystem
                 // as the 'A' point for the moveDirection of the pattern.
                 // If the user is the _player, userDirectionInfo.MapPositionB will be the
                 // mouse position.
-                return new DirectionalInfo(userInfo.MapPositionB, userInfo.MapForwardB);
+                return new DirectionContext(userInfo.MapPositionB, userInfo.MapForwardB);
             }
         }
 

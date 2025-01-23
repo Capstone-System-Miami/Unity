@@ -22,7 +22,7 @@ namespace SystemMiami.CombatSystem
         public bool IsReady { get; private set; }
 
         // Constructors
-        public AdjacentPositionSet(DirectionalInfo info)
+        public AdjacentPositionSet(DirectionContext info)
         {
             // Initialize local directions to default set of directions.
             _directionsRelativeToSelf = DirectionHelper.MapDirectionsByEnum;
@@ -30,7 +30,7 @@ namespace SystemMiami.CombatSystem
             // Find the map directions by rotating an amount of
             // ticks equivalent to the enumerated moveDirection
             // of the incoming object.
-            _directionsRelativeToMap = getRotatedVectors(_directionsRelativeToSelf, (int)info.DirectionName);
+            _directionsRelativeToMap = getRotatedVectors(_directionsRelativeToSelf, (int)info.BoardDirection);
             //DirectionHelper.Print(_directionsRelativeToMap, "Map directions");
             
             // Get adjacent map positions by adding the map position of the

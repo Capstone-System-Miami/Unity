@@ -13,7 +13,7 @@ namespace SystemMiami.CombatSystem
 
         public int MaxTargets { get { return _maxTargets; } }
 
-        public override void SetTargets(DirectionalInfo userInfo)
+        public override void SetTargets(DirectionContext userInfo)
         {
             List<Vector2Int> checkedPositions = new List<Vector2Int>();
             List<OverlayTile> foundTiles = new List<OverlayTile>();
@@ -21,7 +21,7 @@ namespace SystemMiami.CombatSystem
 
             // The map origin & moveDirection of
             // THIS PATTERN
-            DirectionalInfo patternDirectionInfo = getPatternDirection(userInfo);
+            DirectionContext patternDirectionInfo = getPatternDirection(userInfo);
 
             Vector2Int checkedPosition;
             OverlayTile checkedTile;

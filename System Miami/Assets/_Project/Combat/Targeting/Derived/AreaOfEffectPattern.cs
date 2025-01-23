@@ -39,7 +39,7 @@ namespace SystemMiami.CombatSystem
         private List<TileDir> _directionsToCheck;
 
 
-        public override void SetTargets(DirectionalInfo userInfo)
+        public override void SetTargets(DirectionContext userInfo)
         {
             List<Vector2Int> checkedPositions = new List<Vector2Int>();
             List<OverlayTile> foundTiles = new List<OverlayTile>();
@@ -47,7 +47,7 @@ namespace SystemMiami.CombatSystem
 
             // The map origin & moveDirection of
             // THIS PATTERN
-            DirectionalInfo patternDirectionInfo = getPatternDirection(userInfo);
+            DirectionContext patternDirectionInfo = getPatternDirection(userInfo);
 
             _directionsToCheck = getDirectionsToCheck();
 

@@ -6,8 +6,6 @@ namespace SystemMiami.CombatRefactor
 
         protected readonly CombatantStateMachine machine;
 
-
-
         protected CombatantState(
             CombatantStateMachine machine,
             Phase phase

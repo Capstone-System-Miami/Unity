@@ -1,5 +1,6 @@
 // Authors: Layla Hoey, Lee St Louis
 using System;
+using System.Collections.Generic;
 using SystemMiami.AbilitySystem;
 using SystemMiami.CombatRefactor;
 using SystemMiami.Management;
@@ -16,16 +17,20 @@ namespace SystemMiami.CombatSystem
     {
         [SerializeField] private Color _colorTag = Color.white;
 
+
+        public Animator Animator;
+        private int dirParam = Animator.StringToHash("TileDir");
+
+
         // Should never be null
         [HideInInspector] public OverlayTile CurrentTile;
-
         // Can be set to null as a reset.
         [HideInInspector] public OverlayTile FocusTile;
         [HideInInspector] public OverlayTile DestinationTile;
 
-        public Animator Animator;
+        public TileContext TileContext;
 
-        public DirectionalInfo DirectionInfo;
+        public DirectionContext DirectionInfo;
 
         public int ID { get; set; }
 
@@ -33,6 +38,12 @@ namespace SystemMiami.CombatSystem
 
         private Stats _stats;
         private Abilities _abilities;
+
+        // vvv refactored, testing vvv
+        public List<AbilityPhysical> Physical { get; private set; } = new();
+        public List<AbilityMagical> Magical { get; private set; } = new();
+        public List<Consumable> Consumables { get; private set; } = new();
+        // ^^^ refactored, testing ^^^
 
         private float _endOfTurnDamage;
 
@@ -59,8 +70,8 @@ namespace SystemMiami.CombatSystem
         // CombatActions when they are equipped and targeting.
         // Which one they subscribe to will depend on the origin
         // of the pattern.
-        public Action<DirectionalInfo> OnSubjectChanged;
-        public Action<DirectionalInfo> OnDirectionChanged;
+        public Action<DirectionContext> OnSubjectChanged;
+        public Action<DirectionContext> OnDirectionChanged;
 
         public CombatantStateMachine StateMachine { get { return stateMachine; } }
 
@@ -102,6 +113,13 @@ namespace SystemMiami.CombatSystem
         {
             checkDead();
             updateResources();
+
+            TileContext newTiles = new(CurrentTile, FocusTile, DestinationTile);
+
+            if (TileContext.Equals(newTiles))
+            {
+                TileContext = newTiles;
+            }
         }
 
         #endregion Unity
@@ -131,12 +149,12 @@ namespace SystemMiami.CombatSystem
         private void initDirection()
         {
             Vector2Int currentPos = (Vector2Int)CurrentTile.GridLocation;
-            SetDirection(new DirectionalInfo(currentPos,  currentPos + Vector2Int.one));
+            SetDirection(new DirectionContext(currentPos,  currentPos + Vector2Int.one));
         }
         #endregion Construction
 
         #region Subscriptions (not really anymore)
-        public void FocusTileChanged(OverlayTile newTile)
+        public void SetFocusTile(OverlayTile newTile)
         {
             FocusTile?.EndHover(this);
 
@@ -144,10 +162,15 @@ namespace SystemMiami.CombatSystem
 
             FocusTile?.BeginHover(this);
 
-            SetDirectionByTile(FocusTile);
+            // used to call SetDirectionByTile here
         }
 
-        public void PathTileChanged(DirectionalInfo newDirection)
+        public void SetCurrentTile(OverlayTile newTile)
+        {
+            CurrentTile.PlaceCombatant(this);
+        }
+
+        public void PathTileChanged(DirectionContext newDirection)
         {
             SetDirection(newDirection);
 
@@ -174,7 +197,7 @@ namespace SystemMiami.CombatSystem
         }
         #endregion Update
 
-        #region Directions (priv)
+        #region Directions
         /// <summary>
         /// Sets the combatant's directional info.
         /// For players, this is based on mouse position.
@@ -185,54 +208,33 @@ namespace SystemMiami.CombatSystem
             if (targetTile == null) { return; }
 
             Vector2Int currentPos = (Vector2Int)CurrentTile.GridLocation;
-            Vector2Int forwardPos;
+            Vector2Int forwardPos = (Vector2Int)targetTile.GridLocation;
 
-            forwardPos = (Vector2Int)targetTile.GridLocation;
+            DirectionContext newDirection = new DirectionContext(currentPos, forwardPos);
 
-            DirectionalInfo newDirection = new DirectionalInfo(currentPos, forwardPos);
-
-            OnSubjectChanged?.Invoke(newDirection);
-
-            if (newDirection.DirectionName == 0)
-            {
-                Animator.SetInteger("TileDir", 7);
-            }
-            else
-            {
-                Animator.SetInteger("TileDir", (int)newDirection.DirectionName - 1);
-            }
-
-            OnDirectionChanged?.Invoke(newDirection);
-            DirectionInfo = newDirection;
-            Debug.Log(newDirection.DirectionName);
+            SetDirection(newDirection);
         }
 
         /// <summary>
         /// Allows setting directional info directly.
         /// </summary>
-        public void SetDirection(DirectionalInfo newDirection)
+        public void SetDirection(DirectionContext newDirection)
         {
             DirectionInfo = newDirection;
-            if (newDirection.DirectionName == 0)
-            {
-                Animator.SetInteger("TileDir", 7 );
-            }
-            else
-            {
-                Animator.SetInteger("TileDir", (int)newDirection.DirectionName - 1);
-            }
+
+            Animator.SetInteger(dirParam, (int)DirectionInfo.WorldDirection);
 
             OnSubjectChanged?.Invoke(newDirection);
             OnDirectionChanged?.Invoke(newDirection);
-            Debug.Log(newDirection.DirectionName);
+            Debug.Log(newDirection.BoardDirection);
             
         }
-        #endregion Directions (priv)
+        #endregion Directions
 
-        public void ResetTileFlags()
+        public void ResetTileContext()
         {
-            CurrentTile = null;
             FocusTile = null;
+            DestinationTile = null;
         }
 
         private void onCombatantDeath(Combatant deadCombatant)
@@ -242,17 +244,6 @@ namespace SystemMiami.CombatSystem
                 Die();
             }
         }
-
-        //public void SwapSprite(Vector2Int direction)
-        //{
-        //    if (PlayerDirSprites == null || PlayerDirSprites.Length == 0) { return; }
-
-        //    TileDir dir = DirectionHelper.GetTileDir(direction);
-
-        //    currentSprite = PlayerDirSprites[(int)dir];
-
-        //    GetComponent<SpriteRenderer>().sprite = currentSprite;
-        //}
 
         #region IHighlightable
 

@@ -12,10 +12,7 @@ namespace SystemMiami.CombatRefactor
 
         [HideInInspector] public Combatant combatant;
 
-        // Pathing
-        public PathFinder PathFinder = new PathFinder();
-        public List<OverlayTile> CurrentPath = new List<OverlayTile>();
-        public int CurrentPathCost;
+
 
         // Abilities
         public AbilityType TypeToEquip;

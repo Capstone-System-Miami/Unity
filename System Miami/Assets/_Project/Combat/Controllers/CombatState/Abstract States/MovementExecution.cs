@@ -92,7 +92,7 @@ namespace SystemMiami.CombatRefactor
         {
             // Directional info based on the current tile
             // and the one we're moving to.
-            DirectionalInfo newDir = new DirectionalInfo(
+            DirectionContext newDir = new DirectionContext(
                 (Vector2Int)machine.combatant.CurrentTile.GridLocation,
                 (Vector2Int)newTile.GridLocation
                 );
