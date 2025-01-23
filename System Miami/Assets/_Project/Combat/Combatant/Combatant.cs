@@ -16,7 +16,10 @@ namespace SystemMiami.CombatSystem
     {
         [SerializeField] private Color _colorTag = Color.white;
 
+        // Should never be null
         [HideInInspector] public OverlayTile CurrentTile;
+
+        // Can be set to null as a reset.
         [HideInInspector] public OverlayTile FocusTile;
         [HideInInspector] public OverlayTile DestinationTile;
 
@@ -226,6 +229,11 @@ namespace SystemMiami.CombatSystem
         }
         #endregion Directions (priv)
 
+        public void ResetTileFlags()
+        {
+            CurrentTile = null;
+            FocusTile = null;
+        }
 
         private void onCombatantDeath(Combatant deadCombatant)
         {

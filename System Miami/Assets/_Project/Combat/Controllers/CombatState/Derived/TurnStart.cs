@@ -11,9 +11,8 @@ namespace SystemMiami.CombatRefactor
         {
             Debug.Log($"{machine.name} starting turn");
             machine.combatant.ResetTurn();
-
-            // TODO:
-            //ResetTileData();           
+            
+            machine.combatant.ResetTileFlags();
         }
 
         public override void bUpdate()
@@ -24,7 +23,6 @@ namespace SystemMiami.CombatRefactor
 
         public override void eOnExit()
         {
-            throw new System.NotImplementedException();
         }
     }
 }

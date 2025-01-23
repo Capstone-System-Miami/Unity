@@ -10,7 +10,8 @@ namespace SystemMiami.CombatRefactor
         public override void cMakeDecision()
         {
             if (SelectTile())
-            {                
+            {
+                // validate tile
                 machine.SwitchState(
                     new PlayerMovementTileConfirmation(
                         machine,

@@ -16,8 +16,8 @@ namespace SystemMiami.CombatRefactor
 
         public override void aOnEnter()
         {
-            // TODO:
-            //ResetTileData();
+            machine.combatant.ResetTileFlags();
+
             speed = (int)machine.combatant.Speed.Get();
         }
 

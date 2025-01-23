@@ -14,12 +14,9 @@ namespace SystemMiami.CombatRefactor
         protected MovementExecution(CombatantStateMachine context)
             : base(context, Phase.Movement) { }
 
-        /// Sets the destination tile.
-        /// Validates a path to the destination.
         public override void aOnEnter()
         {
         }
-
 
         public override void bUpdate()
         {
@@ -100,7 +97,7 @@ namespace SystemMiami.CombatRefactor
                 (Vector2Int)newTile.GridLocation
                 );
 
-            // Let any subscribers know that we are moving along path
+            // Let the combatant know that we are moving along path
             machine.combatant.PathTileChanged(newDir);
 
             newTile.PlaceCombatant(machine.combatant);

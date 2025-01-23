@@ -26,7 +26,6 @@ namespace SystemMiami.CombatRefactor
 
         public override void bUpdate()
         {
-
         }
 
         public override abstract void cMakeDecision();
