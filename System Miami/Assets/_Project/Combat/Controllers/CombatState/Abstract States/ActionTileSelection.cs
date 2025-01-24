@@ -6,8 +6,8 @@ namespace SystemMiami.CombatRefactor
 {
     public abstract class ActionTileSelection : CombatantState
     {
-        public ActionTileSelection(CombatantStateMachine context)
-            : base(context, Phase.Action) { }
+        public ActionTileSelection(Combatant combatant)
+            : base(combatant, Phase.Action) { }
 
         public override void aOnEnter()
         {
@@ -28,6 +28,11 @@ namespace SystemMiami.CombatRefactor
             {
                 machine.SwitchState(machine.actionTileConfirmation);
             }
+
+
+            /// if direction is not same as prev frame, update combatant
+            /// vs
+            /// if tile changes update combatant
         }
 
         public override abstract void cMakeDecision();

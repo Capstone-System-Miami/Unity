@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using SystemMiami.CombatSystem;
 using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
@@ -6,28 +7,25 @@ namespace SystemMiami.CombatRefactor
     public class PlayerMovementTileConfirmation : MovementTileConfirmation
     {
         public PlayerMovementTileConfirmation(
-            CombatantStateMachine machine,
-            List<OverlayTile> currentPath,
-            List<OverlayTile> arrowPath
-            )
+            Combatant combatant,
+            MovementPath limitedPath)
                 : base(
-                      machine,
-                      currentPath,
-                      arrowPath
-                      )
-            { }
+                    combatant,
+                    limitedPath
+                )
+        { }
 
         public override void cMakeDecision()
         {
             if (CancelSelection())
             {
-                machine.SwitchState(new PlayerMovementTileSelection(machine));
+                machine.SetState(new PlayerMovementTileSelection(combatant));
                 return;
             }
 
             if (ConfirmSelection())
             {
-                machine.SwitchState(new PlayerMovementExecution(machine));
+                machine.SetState(new PlayerMovementExecution(combatant));
                 return;
             }
         }

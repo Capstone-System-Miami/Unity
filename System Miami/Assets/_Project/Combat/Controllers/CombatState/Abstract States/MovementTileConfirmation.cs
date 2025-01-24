@@ -1,38 +1,36 @@
 using System.Collections.Generic;
+using SystemMiami.CombatSystem;
 
 namespace SystemMiami.CombatRefactor
 {
     public abstract class MovementTileConfirmation : CombatantState
     {
-        List<OverlayTile> currentPath;
-        List<OverlayTile> arrowPath;
+        MovementPath path;
 
         protected MovementTileConfirmation(
-            CombatantStateMachine machine,
-            List<OverlayTile> currentPath,
-            List<OverlayTile> arrowPath)
-            : base(machine, Phase.Movement)
+            Combatant combatant,
+            MovementPath path)
+                : base(
+                    combatant,
+                    Phase.Movement
+                )
         {
-            this.currentPath = currentPath;
-            this.arrowPath = arrowPath;
+            this.path = path;
         }
 
         public override void aOnEnter()
         {
-            machine.combatant.DestinationTile = machine.combatant.FocusTile;
-            DrawArrows.MGR.DrawPath(arrowPath);
         }
-
 
         public override void bUpdate()
         {
+            path.Draw();
         }
 
         public override abstract void cMakeDecision();
 
         public override void eOnExit()
         {
-            machine.CurrentPath = currentPath;
         }
 
         protected abstract bool ConfirmSelection();

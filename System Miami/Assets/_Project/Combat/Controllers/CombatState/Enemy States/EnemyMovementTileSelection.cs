@@ -29,7 +29,7 @@ namespace SystemMiami.CombatRefactor
         // Decision outcomes
         protected override void GoToActionSelection()
         {
-            machine.SwitchState(
+            machine.SetState(
                 new EnemyActionSelection(
                     machine
                     )
@@ -39,7 +39,7 @@ namespace SystemMiami.CombatRefactor
 
         protected override void GoToTileConfirmation()
         {
-            machine.SwitchState(
+            machine.SetState(
                 new EnemyMovementTileConfirmation(
                     machine,
                     newPath,
@@ -69,7 +69,7 @@ namespace SystemMiami.CombatRefactor
 
         private bool IsInDetectionRange(Combatant target)
         {
-            List<OverlayTile> path = getPathTo(target.CurrentTile);
+            List<OverlayTile> path = getPath(target.CurrentTile);
 
             if (path.Count <= detectionRadius)
             {

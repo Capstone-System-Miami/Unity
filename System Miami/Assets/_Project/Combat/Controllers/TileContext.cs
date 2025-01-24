@@ -4,11 +4,11 @@ namespace SystemMiami
 {
     public struct TileContext
     {
-        readonly OverlayTile Current;
-        readonly OverlayTile Focus;
-        readonly OverlayTile Destination;
+        public readonly OverlayTile Current;
+        public readonly OverlayTile Focus;
+        public readonly OverlayTile Destination;
 
-        bool DestinationReached
+        public bool DestinationReached
         {
             get
             {
@@ -25,6 +25,33 @@ namespace SystemMiami
             Current = current;
             Focus = focus;
             Destination = destination;
+        }
+
+        // Equality operations overloading / overriding
+        public static bool operator ==(TileContext a, TileContext b)
+        {
+            return a.Current == b.Current
+                && a.Focus == b.Focus
+                && a.Destination == b.Destination;
+        }
+
+        public static bool operator !=(TileContext a, TileContext b)
+        {
+            return !(a == b);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is TileContext))
+                return false;
+
+            TileContext other = (TileContext)obj;
+            return this == other;
+        }
+
+        public override int GetHashCode()
+        {
+            return (Current, Focus, Destination).GetHashCode();
         }
     }
 }

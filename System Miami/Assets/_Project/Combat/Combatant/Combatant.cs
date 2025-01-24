@@ -5,6 +5,7 @@ using SystemMiami.AbilitySystem;
 using SystemMiami.CombatRefactor;
 using SystemMiami.Management;
 using SystemMiami.Utilities;
+using SystemMiami.Enums;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem
@@ -15,26 +16,40 @@ namespace SystemMiami.CombatSystem
         /*typeof(CombatantController)*/)]
     public class Combatant : MonoBehaviour, IHighlightable, IDamageable, IHealable, IMovable
     {
+        protected const float PLACEMENT_RANGE = 0.0001f;
+
+        [SerializeField] private float _movementSpeed;
+
         [SerializeField] private Color _colorTag = Color.white;
 
 
-        public Animator Animator;
+        private Animator _animator;
         private int dirParam = Animator.StringToHash("TileDir");
 
 
-        // Should never be null
-        [HideInInspector] public OverlayTile CurrentTile;
-        // Can be set to null as a reset.
-        [HideInInspector] public OverlayTile FocusTile;
-        [HideInInspector] public OverlayTile DestinationTile;
+        // Should only be null if dead.
+        public OverlayTile CurrentTile { get; private set; }
 
-        public TileContext TileContext;
+        //public OverlayTile FocusTile { private get; set; }
+        //public OverlayTile DestinationTile { private get; set; }
 
-        public DirectionContext DirectionInfo;
+        //public TileContext Tiles
+        //{
+        //    get
+        //    {
+        //        return new TileContext(
+        //            currentTile,
+        //            FocusTile,
+        //            DestinationTile
+        //        );
+        //    }
+        //}
+
+        public DirectionContext CurrentDirectionContext;
 
         public int ID { get; set; }
 
-        private CombatantStateMachine stateMachine;
+        [HideInInspector] public CombatantStateMachine StateMachine;
 
         private Stats _stats;
         private Abilities _abilities;
@@ -73,11 +88,11 @@ namespace SystemMiami.CombatSystem
         public Action<DirectionContext> OnSubjectChanged;
         public Action<DirectionContext> OnDirectionChanged;
 
-        public CombatantStateMachine StateMachine { get { return stateMachine; } }
-
         public Stats Stats { get { return _stats; } }
 
         public Abilities Abilities { get { return _abilities; } }
+
+        public Animator Animator { get { return _animator; } }
 
 
         #region Unity
@@ -85,10 +100,10 @@ namespace SystemMiami.CombatSystem
         {
             _stats = GetComponent<Stats>();
             _abilities = GetComponent<Abilities>();
-            stateMachine = GetComponent<CombatantStateMachine>();
+            StateMachine = GetComponent<CombatantStateMachine>();
             _renderer = GetComponent<SpriteRenderer>();
             _defaultColor = _renderer.color;
-            Animator = GetComponent<Animator>();
+            _animator = GetComponent<Animator>();
             currentSprite = GetComponent<SpriteRenderer>().sprite;
         }
 
@@ -111,15 +126,10 @@ namespace SystemMiami.CombatSystem
 
         private void Update()
         {
-            checkDead();
-            updateResources();
-
-            TileContext newTiles = new(CurrentTile, FocusTile, DestinationTile);
-
-            if (TileContext.Equals(newTiles))
-            {
-                TileContext = newTiles;
-            }
+            CheckDead();
+            UpdateResources();
+            //UpdateDirectionContext();
+            //UpdateAnimator();
         }
 
         #endregion Unity
@@ -148,39 +158,48 @@ namespace SystemMiami.CombatSystem
 
         private void initDirection()
         {
-            Vector2Int currentPos = (Vector2Int)CurrentTile.GridLocation;
-            SetDirection(new DirectionContext(currentPos,  currentPos + Vector2Int.one));
+            Vector2Int currentPos
+                = (Vector2Int)CurrentTile.GridLocation;
+
+            UpdateAnimDirection(TileDir.FORWARD_R);
         }
         #endregion Construction
 
-        #region Subscriptions (not really anymore)
-        public void SetFocusTile(OverlayTile newTile)
+        public void SwitchState(CombatantState newState)
         {
-            FocusTile?.EndHover(this);
-
-            FocusTile = newTile;
-
-            FocusTile?.BeginHover(this);
-
-            // used to call SetDirectionByTile here
+            StateMachine.SetState(newState);
         }
 
-        public void SetCurrentTile(OverlayTile newTile)
+        public void StepTowards(OverlayTile target)
         {
-            CurrentTile.PlaceCombatant(this);
+            float stepDistance = _movementSpeed * Time.deltaTime;
+
+            Vector2 positionAfterStep = Vector2.MoveTowards(
+                transform.position,
+                target.transform.position,
+                stepDistance
+            );
+
+            transform.position = positionAfterStep;
         }
 
-        public void PathTileChanged(DirectionContext newDirection)
+        public bool InPlacementRangeOf(OverlayTile targetTile)
         {
-            SetDirection(newDirection);
-
-            // Decrement speed when combatant moves to a new tile.
-            Speed.Lose(1);
+            float distanceToTarget = Vector2.Distance(
+                transform.position,
+                targetTile.transform.position
+                );
+            return distanceToTarget < PLACEMENT_RANGE;
         }
-        #endregion Subscriptions
 
-        #region Update
-        private void checkDead()
+        public void SnapTo(OverlayTile target)
+        {
+            target.PlaceCombatant(this);
+            CurrentTile = target;
+        }
+
+        #region Updates
+        private void CheckDead()
         {
             if (Health.Get() == 0)
             {
@@ -188,54 +207,40 @@ namespace SystemMiami.CombatSystem
             }
         }
 
-        private void updateResources()
+        private void UpdateResources()
         {
             Health = new Resource(_stats.GetStat(StatType.MAX_HEALTH), Health.Get());
             Stamina = new Resource(_stats.GetStat(StatType.STAMINA), Stamina.Get());
             Mana = new Resource(_stats.GetStat(StatType.MANA), Mana.Get());
             Speed = new Resource(_stats.GetStat(StatType.SPEED), Speed.Get());
         }
-        #endregion Update
 
-        #region Directions
-        /// <summary>
-        /// Sets the combatant's directional info.
-        /// For players, this is based on mouse position.
-        /// For enemies, it's based on their target or movement.
-        /// </summary>
-        public void SetDirectionByTile(OverlayTile targetTile)
+        public void UpdateAnimDirection(TileDir screenDirection)
         {
-            if (targetTile == null) { return; }
-
-            Vector2Int currentPos = (Vector2Int)CurrentTile.GridLocation;
-            Vector2Int forwardPos = (Vector2Int)targetTile.GridLocation;
-
-            DirectionContext newDirection = new DirectionContext(currentPos, forwardPos);
-
-            SetDirection(newDirection);
+            Animator.SetInteger(
+                dirParam,
+                (int)screenDirection
+                );
         }
 
         /// <summary>
-        /// Allows setting directional info directly.
+        /// TODO:
+        /// These are being subscribed to by
+        /// Ability's TargetingPatterns.
+        /// 
+        /// <para>
+        /// Now that DirectionContext is being updated each frame,
+        /// these "subscriptions" should just be converted to
+        /// public functions on TargetingPatterns that can
+        /// be called by CombatantStates when necessary.</para>
         /// </summary>
-        public void SetDirection(DirectionContext newDirection)
+        public void NotifyTargetingPatterns(DirectionContext directionContext)
         {
-            DirectionInfo = newDirection;
-
-            Animator.SetInteger(dirParam, (int)DirectionInfo.WorldDirection);
-
-            OnSubjectChanged?.Invoke(newDirection);
-            OnDirectionChanged?.Invoke(newDirection);
-            Debug.Log(newDirection.BoardDirection);
-            
+            OnSubjectChanged?.Invoke(directionContext);
+            OnDirectionChanged?.Invoke(directionContext);
         }
-        #endregion Directions
 
-        public void ResetTileContext()
-        {
-            FocusTile = null;
-            DestinationTile = null;
-        }
+        #endregion Updates
 
         private void onCombatantDeath(Combatant deadCombatant)
         {

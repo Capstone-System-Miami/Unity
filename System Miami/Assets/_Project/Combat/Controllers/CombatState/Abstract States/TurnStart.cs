@@ -1,11 +1,12 @@
+using SystemMiami.CombatSystem;
 using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
 {
     public abstract class TurnStart : CombatantState
     {
-        protected TurnStart(CombatantStateMachine context)
-            : base(context, Phase.None) { }
+        protected TurnStart(Combatant combatant)
+            : base(combatant, Phase.None) { }
 
         public override void aOnEnter()
         {

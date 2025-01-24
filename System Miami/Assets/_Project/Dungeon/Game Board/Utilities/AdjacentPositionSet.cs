@@ -25,7 +25,7 @@ namespace SystemMiami.CombatSystem
         public AdjacentPositionSet(DirectionContext info)
         {
             // Initialize local directions to default set of directions.
-            _directionsRelativeToSelf = DirectionHelper.MapDirectionsByEnum;
+            _directionsRelativeToSelf = DirectionHelper.BoardDirectionVecByEnum;
 
             // Find the map directions by rotating an amount of
             // ticks equivalent to the enumerated moveDirection
@@ -38,7 +38,7 @@ namespace SystemMiami.CombatSystem
             _positionsRelativeToMap = new Dictionary<TileDir, Vector2Int>();
             foreach(TileDir direction in _directionsRelativeToMap.Keys)
             {
-                _positionsRelativeToMap[direction] = _directionsRelativeToMap[direction] + info.MapPositionA;
+                _positionsRelativeToMap[direction] = _directionsRelativeToMap[direction] + info.BoardPositionA;
             }
 
             AdjacentPositions = _positionsRelativeToMap;

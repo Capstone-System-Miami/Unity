@@ -63,7 +63,7 @@ namespace SystemMiami.CombatSystem
                     Combatant checkedEnemy;
 
                     // Check the pattern's origin
-                    checkedPosition = patternDirectionInfo.MapPositionA;
+                    checkedPosition = patternDirectionInfo.BoardPositionA;
 
                     checkedPositions.Add(checkedPosition);
 

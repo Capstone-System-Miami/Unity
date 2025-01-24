@@ -20,13 +20,13 @@ namespace SystemMiami.CombatRefactor
         {
             if (CancelSelection())
             {
-                machine.SwitchState(new EnemyMovementTileSelection(machine));
+                machine.SetState(new EnemyMovementTileSelection(machine));
                 return;
             }
 
             if (ConfirmSelection())
             {
-                machine.SwitchState(new EnemyMovementExecution(machine));
+                machine.SetState(new EnemyMovementExecution(machine));
                 return;
             }
         }

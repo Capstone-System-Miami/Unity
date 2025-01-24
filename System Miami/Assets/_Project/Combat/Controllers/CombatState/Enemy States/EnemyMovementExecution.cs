@@ -13,12 +13,12 @@ namespace SystemMiami.CombatRefactor
             if (machine.combatant.Speed.Get() > 0)
             {
                 // Go back to tile selection for movement
-                machine.SwitchState(new PlayerMovementTileSelection(machine));
+                machine.SetState(new PlayerMovementTileSelection(machine));
             }
             else
             {
                 // Proceed to CombatAction selection
-                machine.SwitchState(new PlayerActionSelection(machine));
+                machine.SetState(new PlayerActionSelection(machine));
             }
         }
     }

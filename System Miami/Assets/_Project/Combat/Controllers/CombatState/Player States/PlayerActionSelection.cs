@@ -1,17 +1,18 @@
+using SystemMiami.CombatSystem;
 using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
 {
     public class PlayerActionSelection : ActionSelection
     {
-        public PlayerActionSelection(CombatantStateMachine machine)
-            : base(machine) { }
+        public PlayerActionSelection(Combatant combatant)
+            : base(combatant) { }
 
         public override void cMakeDecision()
         {
             if (ActionSelected())
             {
-                machine.SwitchState(new PlayerActionTileSelections(machine));
+                machine.SwitchState(new PlayerActionTileSelections(combatant));
             }
         }
 

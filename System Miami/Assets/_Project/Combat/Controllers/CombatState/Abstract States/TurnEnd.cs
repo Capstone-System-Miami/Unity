@@ -5,8 +5,8 @@ namespace SystemMiami.CombatRefactor
 {
     public abstract class TurnEnd : CombatantState
     {
-        public TurnEnd(CombatantStateMachine context)
-            : base(context, Phase.None) { }
+        public TurnEnd(Combatant combatant)
+            : base(combatant, Phase.None) { }
 
         public override void aOnEnter()
         {

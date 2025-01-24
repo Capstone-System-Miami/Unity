@@ -13,8 +13,6 @@ namespace SystemMiami
         public int G;
         public int H;
 
-        public OverlayTile PreviousTile;
-
         #endregion // PUBLIC VARS ===========
 
 
@@ -252,22 +250,23 @@ namespace SystemMiami
         /// </summary>
         public void PlaceCombatant(Combatant combatant)
         {
-            combatant.transform.position = new Vector3(transform.position.x, transform.position.y + 0.0001f, transform.position.z);
-
-            // Let the old tile know that we're gone
-            if (combatant.CurrentTile != null)
+            if (!ValidForPlacement)
             {
-                combatant.CurrentTile.RemoveCombatant();
+                Debug.LogError(
+                    $"Trying to place {combatant}" +
+                    $"on{gameObject}." +
+                    $"This placement is invalid."
+                    );
+                return;
             }
 
-            // Update new tile's current combatant
+            combatant.transform.position = new Vector3(transform.position.x, transform.position.y + 0.0001f, transform.position.z);
+
             _currentCombatant = combatant;
-            combatant.CurrentTile = this;
         }
 
         public void RemoveCombatant()
         {
-            _currentCombatant.CurrentTile = null;
             _currentCombatant = null;
         }
     }

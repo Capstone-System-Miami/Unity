@@ -5,8 +5,8 @@ namespace SystemMiami.CombatRefactor
 {
     public abstract class ActionSelection : CombatantState
     {
-        public ActionSelection(CombatantStateMachine context)
-            : base(context, Phase.Action) { }
+        public ActionSelection(Combatant combatant)
+            : base(combatant, Phase.Action) { }
 
         public override void aOnEnter()
         {

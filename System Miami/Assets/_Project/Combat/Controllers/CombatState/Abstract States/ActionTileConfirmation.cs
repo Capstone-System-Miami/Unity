@@ -5,8 +5,8 @@ namespace SystemMiami.CombatRefactor
 {
     public abstract class ActionTileConfirmation : CombatantState
     {
-        public ActionTileConfirmation(CombatantStateMachine machine)
-            : base(machine, Phase.Action) { }
+        public ActionTileConfirmation(Combatant combatant)
+            : base(combatant, Phase.Action) { }
 
         public override void aOnEnter()
         {

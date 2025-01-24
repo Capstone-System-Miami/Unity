@@ -1,76 +1,68 @@
-using System.Collections.Generic;
 using System.Linq;
+using SystemMiami.CombatSystem;
+using SystemMiami.Utilities;
+using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
 {
     // waits for input
     public abstract class MovementTileSelection : CombatantState
     {
-        int speed;
+        int currentSpeedStat;
 
-        TileContext tiles;
-
-        OverlayTile newFocus;
-        OverlayTile newDestination;
+        OverlayTile currentPlayerTile;
+        OverlayTile currentFocusTile;
+        OverlayTile currentDestinationTile;
 
         // Pathing
-        protected PathFinder pathFinder = new PathFinder();
-        protected List<OverlayTile> newPath = new();
-        protected List<OverlayTile> arrowPath = new();
+        protected MovementPath limitedPath;
 
-        protected bool validMove
-        {
-            get
-            {
-                return newPath.Any();
-            }
-        }
-
-        protected MovementTileSelection(CombatantStateMachine machine)
-            : base(machine, Phase.Movement) { }
+        protected MovementTileSelection(Combatant combatant)
+            : base(combatant, Phase.Movement) { }
 
         public override void aOnEnter()
         {
-            machine.combatant.ResetTileContext();
+            currentSpeedStat = (int)combatant.Speed.Get();
 
-            speed = (int)machine.combatant.Speed.Get();
+            currentPlayerTile = combatant.CurrentTile;
         }
 
 
         public override void bUpdate()
         {
-            tiles = new TileContext(
-                machine.combatant.CurrentTile,
-                machine.combatant.FocusTile,
-                machine.combatant.DestinationTile);
-
             // Find a new possible focus tile
             // by the means described
-            // by this method in the derived
-            // classes.
-            newFocus = GetNewFocus();
+            // by int the derived classes.
+            if (!TryGetNewFocus(out OverlayTile newFocus))
+            {
+                // Focus was not new.
+                return;
+            }
 
-            // Do not proceed if the possible
-            // new focus is already focused
-            if (newFocus == machine.combatant.FocusTile) { return; }
+            // Update currentTile & tile hover
+            currentFocusTile?.EndHover(combatant);
+            currentFocusTile = newFocus;
+            currentFocusTile?.BeginHover(combatant);
 
-            // Set the combatant's new focus tile
-            machine.combatant.SetFocusTile(newFocus);
+            if (!TryGetNewDirection(out DirectionContext newDir))
+            {
+                // Focus was null
+                return;
+            }
 
-            // Calculate a new possible path
-            newPath = getTruncatedPathTo(newFocus);
+            // Update animator based on direction.
+            combatant.UpdateAnimDirection(newDir.ScreenDirection);
 
-            // Return if the new path is empty.
-            if (!newPath.Any()) { return; }
+            // Generate a path
+            limitedPath = new(
+                currentPlayerTile,
+                currentFocusTile,
+                currentSpeedStat
+            );
 
-            // New possible destination is the
-            // last one in the truncated path.
-            newDestination = newPath.Last();
+            if (limitedPath.IsEmpty) { return; }
 
-            // Return if the newDestination is null.
-
-            // Redraw arrows to that every frame.
-            arrowPath = getArrowPathTo(newDestination);
+            limitedPath.Draw();
         }
 
         public override void cMakeDecision()
@@ -81,7 +73,7 @@ namespace SystemMiami.CombatRefactor
                 return;
             }
 
-            if (!validMove) { return; }
+            if (!limitedPath.ForMovement.Any()) { return; }
 
             if (SelectTile())
             {
@@ -104,8 +96,13 @@ namespace SystemMiami.CombatRefactor
         protected abstract void GoToActionSelection();
         protected abstract void GoToTileConfirmation();
 
+        // Focus
+        protected bool TryGetNewFocus(out OverlayTile newFocus)
+        {
+            newFocus = GetNewFocus();
+            return newFocus != currentFocusTile;
+        }
 
-        #region // Pathing
         /// <summary>
         /// Whatever tile the combatant
         /// is currently focusing on.
@@ -114,81 +111,20 @@ namespace SystemMiami.CombatRefactor
         /// </summary>
         protected abstract OverlayTile GetNewFocus();
 
-        /// <summary>
-        /// Returns a path to a tile using the pathfinder.
-        /// </summary>
-        protected List<OverlayTile> getPathTo(OverlayTile tile)
+        protected bool TryGetNewDirection(out DirectionContext newDir)
         {
-            return pathFinder.FindPath(machine.combatant.CurrentTile, tile);
-        }
-
-        /// <summary>
-        /// Calculate a path to the tile arg.
-        /// Path stops at either:
-        /// 
-        /// <para> a) the tile arg </para>
-        /// 
-        /// <para> b) the furthest tile in
-        ///         the path before the combatant's
-        ///         speed would prevent them
-        ///         from moving further.</para>
-        /// </summary>
-        /// 
-        /// <param name="tile">
-        /// The destination tile.
-        /// </param>
-        private List<OverlayTile> getTruncatedPathTo(OverlayTile tile)
-        {
-            // Generate a path to modify.
-            List<OverlayTile> path = getPathTo(tile);
-
-            // Farthest the combatant can move
-            // with their current speed points.
-            int truncatedLength = speed;
-
-            // Get the difference
-            int tilesToRemove = path.Count - truncatedLength;
-
-            // If there's a valid difference,
-            // remove the rest of the tiles
-            if (tilesToRemove > 0)
+            if (currentFocusTile == null)
             {
-                path.RemoveRange(truncatedLength, tilesToRemove);
+                newDir = new DirectionContext();
+                return false;
             }
 
-            // If the destination is blocked
-            // (e.g. bc theres a charac there),
-            // remove it from the end.
-            if (path.Count > 0 && !path[path.Count - 1].ValidForPlacement)
-            {
-                path.RemoveAt(path.Count - 1);
-            }
+            newDir = new DirectionContext(
+                (Vector2Int)currentPlayerTile.GridLocation,
+                (Vector2Int)currentFocusTile.GridLocation
+            );
 
-            // return an empty list if null
-            return path ?? new();
+            return true;
         }
-
-        /// <summary>
-        /// Get a path that includes the combatant's
-        /// current tile. We can then use this
-        /// to draw arrows.
-        /// </summary>
-        /// 
-        /// <param name="tile">
-        /// The destination tile.
-        /// </param>
-        private List<OverlayTile> getArrowPathTo(OverlayTile tile)
-        {
-            // Create a copy of our truncated path that contains the
-            // starting position. We can use this modified list
-            // To draw the arrows.
-            List<OverlayTile> arrowPath = new(newPath);
-
-            arrowPath.Insert(0, machine.combatant.CurrentTile);
-
-            // return an empty list if null
-            return arrowPath ?? new();
-        }
-        #endregion // ^^^ Pathing ^^^
     }
 }

@@ -1,17 +1,21 @@
+using SystemMiami.CombatSystem;
+
 namespace SystemMiami.CombatRefactor
 {
     public abstract class CombatantState
     {
         public readonly Phase Phase;
 
+        protected readonly Combatant combatant;
         protected readonly CombatantStateMachine machine;
 
         protected CombatantState(
-            CombatantStateMachine machine,
+            Combatant combatant,
             Phase phase
             )
         {
-            this.machine = machine;
+            this.combatant = combatant;
+            this.machine = combatant.StateMachine;
             Phase = phase;
         }
 

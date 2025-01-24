@@ -63,7 +63,7 @@ public class TopDownMovement : MonoBehaviour
 
     private void setAnim()
     {
-        TileDir dir = DirectionHelper.GetTileDir(roundedDirection);
+        TileDir dir = DirectionHelper.GetBoardTileDir(roundedDirection);
         animator.SetInteger("TileDir", (int)dir);
     }
 

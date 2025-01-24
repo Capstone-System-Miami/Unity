@@ -20,21 +20,6 @@ namespace SystemMiami
             previousPath = new List<OverlayTile>();
         }
 
-        private void OnEnable()
-        {
-            TurnManager.MGR.NewTurnPhase += onNewTurnPhase;
-        }
-
-        private void OnDisable()
-        {
-            TurnManager.MGR.NewTurnPhase -= onNewTurnPhase;
-        }
-
-        private void onNewTurnPhase(Phase newPhase)
-        {
-            RemoveArrows();
-        }
-
         public void DrawPath(List<OverlayTile> path)
         {
             if(path == null) return;
@@ -68,7 +53,7 @@ namespace SystemMiami
             
         }
 
-        private void RemoveArrows()
+        public void RemoveArrows()
         {
             foreach (GameObject arrow in arrows)
             {

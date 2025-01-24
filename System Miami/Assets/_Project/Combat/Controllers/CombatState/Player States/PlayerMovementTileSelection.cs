@@ -1,12 +1,13 @@
 using System.Linq;
+using SystemMiami.CombatSystem;
 using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
 {
     public class PlayerMovementTileSelection : MovementTileSelection
     {
-        public PlayerMovementTileSelection(CombatantStateMachine machine)
-                : base(machine) { }
+        public PlayerMovementTileSelection(Combatant combatant)
+                : base(combatant) { }
 
         // Decision
         protected override bool SkipPhase()
@@ -22,23 +23,22 @@ namespace SystemMiami.CombatRefactor
         // Decision outcomes
         protected override void GoToActionSelection()
         {
-            machine.SwitchState(
+            machine.SetState(
                 new PlayerActionSelection(
-                    machine
-                    )
-                );
+                    combatant
+                )
+            );
             return;
         }
 
         protected override void GoToTileConfirmation()
         {
-            machine.SwitchState(
+            machine.SetState(
                 new PlayerMovementTileConfirmation(
-                    machine,
-                    newPath,
-                    arrowPath
-                    )
-                );
+                    combatant,
+                    limitedPath
+                )
+            );
             return;
         }
 

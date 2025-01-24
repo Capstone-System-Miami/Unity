@@ -12,7 +12,7 @@ namespace SystemMiami.CombatRefactor
 
         public override void GoToMovementTileSelect()
         {
-            machine.SwitchState(new PlayerMovementTileSelection(machine));
+            machine.SetState(new PlayerMovementTileSelection(machine));
         }
     }
 }
