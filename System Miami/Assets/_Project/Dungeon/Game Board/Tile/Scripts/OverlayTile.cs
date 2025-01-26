@@ -250,7 +250,8 @@ namespace SystemMiami
         /// </summary>
         public void PlaceCombatant(Combatant combatant)
         {
-            if (!ValidForPlacement)
+            if (!ValidForPlacement
+                && CurrentCombatant != combatant)
             {
                 Debug.LogError(
                     $"Trying to place {combatant}" +

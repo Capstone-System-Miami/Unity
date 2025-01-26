@@ -7,9 +7,9 @@ namespace SystemMiami.CombatRefactor
         public EnemyTurnStart(Combatant combatant)
             : base(combatant) { }
 
-        public override void MakeDecision()
+        protected override bool Proceed()
         {
-            GoToMovementTileSelect();
+            return true;
         }
 
         public override void GoToMovementTileSelect()

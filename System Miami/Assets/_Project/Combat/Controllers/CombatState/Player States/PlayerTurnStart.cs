@@ -1,4 +1,5 @@
 using SystemMiami.CombatSystem;
+using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
 {
@@ -7,9 +8,9 @@ namespace SystemMiami.CombatRefactor
         public PlayerTurnStart(Combatant combatant)
             : base(combatant) { }
 
-        public override void MakeDecision()
+        protected override bool Proceed()
         {
-            GoToMovementTileSelect();
+            return Input.GetKeyDown(KeyCode.Return);
         }
 
         public override void GoToMovementTileSelect()

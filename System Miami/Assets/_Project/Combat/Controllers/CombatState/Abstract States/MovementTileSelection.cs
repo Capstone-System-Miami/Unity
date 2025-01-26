@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using SystemMiami.CombatSystem;
 using SystemMiami.Utilities;
@@ -30,6 +31,7 @@ namespace SystemMiami.CombatRefactor
 
         public override void Update()
         {
+            occupiedTile = combatant.CurrentTile;
             // Find a new possible focus tile
             // by the means described
             // by int the derived classes.
@@ -39,6 +41,7 @@ namespace SystemMiami.CombatRefactor
                 // Nothing to update.
                 return;
             }
+            Debug.Log("what the ass");
 
             // Update currentTile & tile hover
             currentFocusTile?.EndHover(combatant);
@@ -46,10 +49,13 @@ namespace SystemMiami.CombatRefactor
             currentFocusTile?.BeginHover(combatant);
 
             DirectionContext newDirection = GetNewDirection();
+            combatant.CurrentDirectionContext = newDirection;
 
             // Update animator based on direction.
             combatant.UpdateAnimDirection(newDirection.ScreenDirection);
 
+
+            movementPath?.Unhighlight();
             // Generate a path
             movementPath = new(
                 occupiedTile,
@@ -59,7 +65,10 @@ namespace SystemMiami.CombatRefactor
 
             if (movementPath.IsEmpty) { return; }
 
-            movementPath.Draw();
+            movementPath.DrawArrows();
+
+            movementPath.DrawValidMoves(Color.yellow);
+            movementPath.DrawInvalidMoves(Color.red);
         }
 
         public override void MakeDecision()
@@ -70,6 +79,7 @@ namespace SystemMiami.CombatRefactor
                 return;
             }
 
+            if (movementPath == null) { return; }
             if (movementPath.IsEmpty) { return; }
 
             if (SelectTile())
@@ -92,7 +102,7 @@ namespace SystemMiami.CombatRefactor
         // Focus
         protected bool TryGetNewFocus(out OverlayTile newFocus)
         {
-            newFocus = GetNewFocus();
+            newFocus = GetNewFocus() ?? GetDefaultFocus();
 
             return newFocus != currentFocusTile;
         }
@@ -105,9 +115,27 @@ namespace SystemMiami.CombatRefactor
         /// </summary>
         protected abstract OverlayTile GetNewFocus();
 
+        protected OverlayTile GetDefaultFocus()
+        {
+            OverlayTile result;
+
+            Vector2Int forwardPos
+                = combatant.CurrentDirectionContext.ForwardA;
+
+            if (!MapManager.MGR.map.TryGetValue(forwardPos, out result))
+            {
+                Debug.LogError(
+                    $"FATAL | {combatant.name}'s {this}" +
+                    $"FOUND NO TILE TO FOCUS ON."
+                    );
+            }
+
+            return result;
+        }
+
         protected DirectionContext GetNewDirection()
         {
-            Vector2Int occupiedPos = (Vector2Int)occupiedTile.GridLocation;
+            Vector2Int occupiedPos = (Vector2Int)combatant.CurrentTile.GridLocation;
 
             // If the character isn't focusing on anything,
             // Then use the position 1 tile in "front" of them,

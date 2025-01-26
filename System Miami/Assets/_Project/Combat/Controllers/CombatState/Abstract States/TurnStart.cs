@@ -10,14 +10,20 @@ namespace SystemMiami.CombatRefactor
 
         public override void OnEnter()
         {
-            Debug.Log($"{combatant.name} starting turn");
+            base.OnEnter();
+            Debug.Log($"{combatant.name} is my name");
             combatant.IsMyTurn = true;         
         }
 
         public override void MakeDecision()
         {
-            GoToMovementTileSelect();
+            if (Proceed())
+            {
+                GoToMovementTileSelect();
+            }
         }
+
+        protected abstract bool Proceed();
 
         public abstract void GoToMovementTileSelect();        
     }

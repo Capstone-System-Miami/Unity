@@ -6,8 +6,6 @@ namespace SystemMiami.CombatRefactor
 {
     public class CombatantStateMachine : MonoBehaviour
     {
-        [HideInInspector] public bool IsPlayer { get; private set; }
-
         private Combatant combatant;
 
         public Phase CurrentPhase
@@ -15,6 +13,14 @@ namespace SystemMiami.CombatRefactor
             get
             {
                 return currentState.Phase;
+            }
+        }
+
+        public bool ReadyToStart
+        {
+            get
+            {
+                return currentState is Idle;
             }
         }
 
@@ -34,10 +40,7 @@ namespace SystemMiami.CombatRefactor
 
         private void Start()
         {
-            IsPlayer =
-                (combatant.gameObject == PlayerManager.MGR.gameObject);
-
-            CombatantState startState = IsPlayer ?
+            CombatantState startState = combatant.IsPlayer ?
                 new PlayerIdle(combatant)
                 : new EnemyIdle(combatant);
 
@@ -69,6 +72,15 @@ namespace SystemMiami.CombatRefactor
         /// </summary>
         public void SetState(CombatantState newState)
         {
+            if (newState == null)
+            {
+                Debug.Log(
+                    $"{name}'s {this}'s SetState() was" +
+                    $"passed a null state."
+                    );
+                return;
+            }
+
             /// Call OnExit on
             /// the current state object
             /// before setting a new one

@@ -126,8 +126,57 @@ namespace SystemMiami.Utilities
 
         public static void Print(DirectionContext dirInfo, string objectName)
         {
-            Debug.LogWarning($"{objectName}|  MapOrigin {dirInfo.TilePositionA}, MapFWD {dirInfo.ForwardA}, " +
-                $"MapDir{dirInfo.DirectionVec}, DirName {dirInfo.BoardDirection}");
+            Debug.LogWarning(
+                $"{objectName}\n" +
+                $"| A           {dirInfo.TilePositionA}\n" +
+                $"| B           {dirInfo.TilePositionB}\n" +
+                $"| MapDir      {dirInfo.DirectionVec}\n" +
+                $"| DirName     {dirInfo.BoardDirection}\n" +
+                $"| ScreenDir   {dirInfo.ScreenDirection}\n" +
+                $"| Fwd_A       {dirInfo.ForwardA}\n" +
+                $"| Fwd_B       {dirInfo.ForwardB}\n");
+        }
+
+        public static void PrintAndHighlight(DirectionContext dirInfo, string objectName)
+        {
+            Print(dirInfo, objectName);
+
+            Vector2Int[] poss = dirInfo.getlist();
+            OverlayTile[] tiles = getlist(poss);
+
+            Color[] colors =
+            {
+                Color.blue,
+                Color.red,
+                Color.cyan,
+                Color.magenta
+            };
+
+            for (int i = 0; i < tiles.Length; i++)
+            {
+                tiles[i]?.Highlight(colors[i]);
+            }
+        }
+
+        public static void Unhighlight(OverlayTile[] tiles)
+        {
+            for(int i = 0; i < tiles.Length; i++)
+            {
+                tiles[i]?.UnHighlight();
+            }
+        }
+
+        public static OverlayTile[] getlist(Vector2Int[] posits)
+        {
+            OverlayTile[] result = new OverlayTile[4];
+
+            for (int i = 0; i < 4; i++)
+            {
+                MapManager.MGR.map.TryGetValue(posits[i], out OverlayTile newBoi);
+                result[i] = newBoi;
+            }
+
+            return result;
         }
 
         public static void Print(Dictionary<TileDir, Vector2Int> dirDict, string objectName)

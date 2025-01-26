@@ -6,33 +6,21 @@ namespace SystemMiami
     {
         public readonly OverlayTile Current;
         public readonly OverlayTile Focus;
-        public readonly OverlayTile Destination;
-
-        public bool DestinationReached
-        {
-            get
-            {
-                return Current == Destination;
-            }
-        }
 
         public TileContext(
             OverlayTile current,
-            OverlayTile focus,
-            OverlayTile destination
+            OverlayTile focus
             )
         {
             Current = current;
             Focus = focus;
-            Destination = destination;
         }
 
         // Equality operations overloading / overriding
         public static bool operator ==(TileContext a, TileContext b)
         {
             return a.Current == b.Current
-                && a.Focus == b.Focus
-                && a.Destination == b.Destination;
+                && a.Focus == b.Focus;
         }
 
         public static bool operator !=(TileContext a, TileContext b)
@@ -51,7 +39,7 @@ namespace SystemMiami
 
         public override int GetHashCode()
         {
-            return (Current, Focus, Destination).GetHashCode();
+            return (Current, Focus).GetHashCode();
         }
     }
 }

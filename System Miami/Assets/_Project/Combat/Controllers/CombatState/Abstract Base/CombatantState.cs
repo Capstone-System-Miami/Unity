@@ -1,5 +1,6 @@
 using SystemMiami.AbilitySystem;
 using SystemMiami.CombatSystem;
+using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
 {
@@ -24,7 +25,10 @@ namespace SystemMiami.CombatRefactor
         /// To be called ONCE,
         /// as soon as the state becomes active
         /// </summary>
-        public virtual void OnEnter() { }
+        public virtual void OnEnter()
+        {
+            Debug.Log($"{this} is entering!  typeof~ {this.GetType()}");
+        }
 
         /// <summary>
         /// To be called EVERY FRAME while the state is active

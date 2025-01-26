@@ -11,7 +11,7 @@ namespace SystemMiami
         // Gets a path using the TileContext struct
         public List<OverlayTile> FindPath(TileContext context)
         {
-            return FindPath(context.Current, context.Destination);
+            return FindPath(context.Current, context.Focus);
         }
 
         // Finds shortest path between two overlay tiles
@@ -163,23 +163,22 @@ namespace SystemMiami
         private TileContext tileContext;
 
         private PathFinder pathFinder;
+
         private int maxTiles;
         private List<OverlayTile> path;
         private List<OverlayTile> startExclusive;
         private List<OverlayTile> startInclusive;
+
+        private int toRemove;
+        private List<OverlayTile> removed;
 
         public List<OverlayTile> RawPath => new(path);
 
         public List<OverlayTile> ForMovement
         {
             get
-            {
-                if (startExclusive == null)
-                {
-                    startExclusive = GetTruncated(false);
-                }
-
-                return startExclusive;
+            { 
+                return startExclusive ?? GetTruncated(false);
             }
         }
 
@@ -187,12 +186,15 @@ namespace SystemMiami
         {
             get
             {
-                if (startInclusive == null)
-                {
-                    startInclusive = GetTruncated(true);
-                }
+                return startInclusive ?? GetTruncated(true);
+            }
+        }
 
-                return startInclusive;
+        public List<OverlayTile> Removed
+        {
+            get
+            {
+                return removed ?? GetRemoved();
             }
         }
 
@@ -203,7 +205,7 @@ namespace SystemMiami
             OverlayTile end,
             int maxTiles)
                 : this(
-                    new TileContext(start, null, end),
+                    new TileContext(start, end),
                     maxTiles
                 )
         { }
@@ -211,23 +213,66 @@ namespace SystemMiami
         public MovementPath(
             OverlayTile start,
             OverlayTile end)
-                : this(
-                    new TileContext(start, null, end),
-                    -1
-                )
+                : this( new TileContext(start, end), -1)
         { }
 
         public MovementPath(TileContext tileContext, int maxTiles)
         {
             this.tileContext = tileContext;
-            pathFinder = new();
+            this.pathFinder = new();
             this.maxTiles = maxTiles;
-            path = pathFinder.FindPath(this.tileContext);
+            this.path = pathFinder.FindPath(this.tileContext);
+
+            toRemove = path.Count - maxTiles;
         }
 
-        public void Draw()
+        public void DrawArrows()
         {
-            DrawArrows.MGR.DrawPath(ForDrawing);
+            SystemMiami.DrawArrows.MGR.DrawPath(ForDrawing);
+        }
+
+        public void DrawValidMoves(Color color)
+        {
+            foreach(OverlayTile tile in ForDrawing)
+            {
+                tile.Highlight(color);
+            }
+        }
+
+        public void DrawInvalidMoves(Color color)
+        {
+            foreach(OverlayTile tile in Removed)
+            {
+                tile.Highlight(color);
+            }
+        }
+
+        public void DebugHighlight(List<OverlayTile> tiles)
+        {
+            Color[] colors =
+            {
+                Color.blue,
+                Color.cyan,
+                Color.magenta,
+                Color.red,
+                Color.yellow,
+            };
+            int i = 0;
+
+
+            foreach(OverlayTile tile in tiles)
+            {
+                i++;
+                tile?.Highlight(colors[i % 5]);
+            }
+        }
+
+        public void Unhighlight()
+        {
+            foreach(OverlayTile tile in RawPath)
+            {
+                tile.UnHighlight();
+            }
         }
 
         /// <summary>
@@ -256,22 +301,17 @@ namespace SystemMiami
 
             List<OverlayTile> result = new(path);
 
-            // Get the difference
-            int tilesToRemove = path.Count - maxTiles;
-
-            // If there's a valid difference,
-            // remove the rest of the tiles
-            if (tilesToRemove > 0)
+            if (toRemove > 0)
             {
-                path.RemoveRange(maxTiles, tilesToRemove);
+                result.RemoveRange(maxTiles, toRemove);
             }
 
             // If the Destination tile is blocked
             // (e.g. bc theres a charac there),
             // remove it from the end.
-            if (path.Count > 0 && !path[path.Count - 1].ValidForPlacement)
+            if (result.Count > 0 && !result[result.Count - 1].ValidForPlacement)
             {
-                path.RemoveAt(path.Count - 1);
+                result.RemoveAt(path.Count - 1);
             }
 
             // Add tileContext.Current
@@ -280,6 +320,16 @@ namespace SystemMiami
 
             // return an empty list if null
             return result ?? new();
+        }
+
+        private List<OverlayTile> GetRemoved()
+        {
+            if (maxTiles < 0) { return new(); }
+            if (toRemove <= 0) { return new(); }
+
+            List<OverlayTile> result = new(path);
+
+            return result.GetRange(maxTiles, toRemove);
         }
 
 

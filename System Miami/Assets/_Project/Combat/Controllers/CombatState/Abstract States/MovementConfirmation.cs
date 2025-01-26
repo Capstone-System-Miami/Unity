@@ -19,7 +19,7 @@ namespace SystemMiami.CombatRefactor
 
         public override void OnEnter()
         {
-            path.Draw();
+            path.DrawArrows();
         }
 
         public override void MakeDecision()

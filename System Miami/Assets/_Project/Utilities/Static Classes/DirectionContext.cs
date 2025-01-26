@@ -89,6 +89,17 @@ namespace SystemMiami.Utilities
             ForwardB = TilePositionB + DirectionVec;
         }
 
+        public Vector2Int[] getlist()
+        {
+            return new Vector2Int[]
+            {
+                TilePositionA,
+                TilePositionB,
+                ForwardA,
+                ForwardB,
+            };
+        }
+
 
         // Equality operations overloading / overriding
         //

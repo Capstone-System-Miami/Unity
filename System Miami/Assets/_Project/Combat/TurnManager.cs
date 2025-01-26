@@ -86,7 +86,7 @@ namespace SystemMiami
                     }
                 }
 
-                charTile.PlaceCombatant(playerCharacter);
+                playerCharacter.SnapTo(charTile);
             }
 
             if (GAME.MGR.TryGetEnemies(out enemyPrefabs))
@@ -124,6 +124,25 @@ namespace SystemMiami
         /// </summary>
         private IEnumerator TurnSequence()
         {
+            bool combatantsReady = true;
+
+            do
+            {
+                combatantsReady = true;
+                foreach (Combatant combatant in combatants)
+                {
+                    if (!combatant.StateMachine.ReadyToStart)
+                    {
+                        combatantsReady = false;
+                        break;
+                    }
+                }
+                Debug.Log("IN");
+                yield return null;
+            } while (!combatantsReady);
+
+            Debug.Log("OUT");
+
             while (!IsGameOver)
             {
                 foreach (Combatant combatant in combatants)
@@ -211,7 +230,7 @@ namespace SystemMiami
             enemyCombatant.name = newName;
 
             // Position enemy on the tile
-            spawnTile.PlaceCombatant(enemyCombatant);
+            enemyCombatant.SnapTo(spawnTile);
 
             // Add to enemy list
             enemyCharacters.Add(enemyCombatant);

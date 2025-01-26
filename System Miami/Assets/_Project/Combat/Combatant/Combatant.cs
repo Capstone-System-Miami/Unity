@@ -41,21 +41,6 @@ namespace SystemMiami.CombatSystem
         // Should only be null if dead.
         public OverlayTile CurrentTile { get; private set; }
 
-        //public OverlayTile FocusTile { private get; set; }
-        //public OverlayTile DestinationTile { private get; set; }
-
-        //public TileContext Tiles
-        //{
-        //    get
-        //    {
-        //        return new TileContext(
-        //            currentTile,
-        //            FocusTile,
-        //            DestinationTile
-        //        );
-        //    }
-        //}
-
         public DirectionContext CurrentDirectionContext;
 
         public int ID { get; set; }
@@ -131,7 +116,6 @@ namespace SystemMiami.CombatSystem
         protected virtual void Start()
         {
             initResources();
-            initCurrentTile();
             initDirection();
         }
 
@@ -139,8 +123,6 @@ namespace SystemMiami.CombatSystem
         {
             CheckDead();
             UpdateResources();
-            //UpdateDirectionContext();
-            //UpdateAnimator();
         }
 
         #endregion Unity
@@ -154,26 +136,12 @@ namespace SystemMiami.CombatSystem
             Speed = new Resource(_stats.GetStat(StatType.SPEED));
         }
 
-        private void initCurrentTile()
-        {
-            if (CurrentTile == null)
-            {
-                Vector2Int gridPos = (Vector2Int)Coordinates.ScreenToIso(transform.position, 0);
-
-                if (MapManager.MGR.map.ContainsKey(gridPos))
-                {
-                    CurrentTile = MapManager.MGR.map[gridPos];
-                }
-            }
-        }
-
         private void initDirection()
         {
             Vector2Int currentPos
                 = (Vector2Int)CurrentTile.GridLocation;
 
-            Vector2Int forwardPos
-                = DirectionHelper.BoardDirectionVecByEnum[TileDir.FORWARD_C];
+            Vector2Int forwardPos = MapManager.MGR.CenterPos;
 
             CurrentDirectionContext = new(currentPos, forwardPos);
 
@@ -210,8 +178,8 @@ namespace SystemMiami.CombatSystem
 
         public void SnapTo(OverlayTile target)
         {
-            target.PlaceCombatant(this);
             CurrentTile = target;
+            target.PlaceCombatant(this);
         }
 
         #region Updates

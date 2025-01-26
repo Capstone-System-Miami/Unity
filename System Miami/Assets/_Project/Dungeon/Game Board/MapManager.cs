@@ -23,6 +23,8 @@ namespace SystemMiami
         //dictionary containing all tiles on map by their x, y coordinates
         public Dictionary<Vector2Int, OverlayTile> map;
 
+        public Vector2Int CenterPos { get; private set; }
+
         [SerializeField] private GameObject environment;
 
         private Dungeon dungeon;
@@ -109,11 +111,16 @@ namespace SystemMiami
             bounds = gameBoardTilemap.cellBounds;
 
             Debug.Log(
-                $"Bounds xmin {bounds.min.x} | xmax {bounds.max.x}\n" +
-                $"ymin {bounds.min.y} | ymax { bounds.max.y}\n" +
-                $"zmin { bounds.min.z} | zmax {bounds.max.z}"
+                $"Bounds\n" +
+                $"| xmin {bounds.min.x}\n" +
+                $"| xmax {bounds.max.x}\n" +
+                $"| ymin {bounds.min.y}\n" +
+                $"| ymax { bounds.max.y}\n" +
+                $"|zmin { bounds.min.z}\n" +
+                $"| zmax {bounds.max.z}"
                 );
 
+            CenterPos = GetCenter(bounds);
 
             // Looping through all of our tiles.
             // For each tile found in the tilemap, it instantiates an overlay tile
@@ -172,6 +179,14 @@ namespace SystemMiami
             }
 
             return null;
+        }
+
+        private Vector2Int GetCenter(BoundsInt bounds)
+        {
+            return new(
+                Mathf.RoundToInt(bounds.center.x),
+                Mathf.RoundToInt(bounds.center.y)
+                );
         }
 
         public Vector3 IsoToScreen(Vector3Int tileLocation)
