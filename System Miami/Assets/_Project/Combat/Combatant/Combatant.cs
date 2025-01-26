@@ -178,6 +178,7 @@ namespace SystemMiami.CombatSystem
 
         public void SnapTo(OverlayTile target)
         {
+            CurrentTile?.RemoveCombatant();
             CurrentTile = target;
             target.PlaceCombatant(this);
         }

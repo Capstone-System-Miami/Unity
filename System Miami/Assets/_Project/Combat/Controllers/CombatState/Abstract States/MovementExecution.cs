@@ -1,15 +1,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using SystemMiami.CombatSystem;
+using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
 {
     public abstract class MovementExecution : CombatantState
     {
         protected MovementPath path;
-        protected List<OverlayTile> movementPath = new();
-        protected OverlayTile currentCombatantTile;
-        protected OverlayTile currentFocusTile;
+        protected List<OverlayTile> pathToConsume = new();
+        protected OverlayTile occupiedTile;
+        protected OverlayTile focusTile;
         protected OverlayTile destinationTile;
 
         protected float distanceToTarget;
@@ -27,31 +28,43 @@ namespace SystemMiami.CombatRefactor
 
         public override void OnEnter()
         {
-            movementPath = path.ForMovement;
+            base.OnEnter();
+            pathToConsume = new(path.ForMovement);
         }
 
         public override void Update()
         {
-            if (!movementPath.Any()) { return; }
+            if (!pathToConsume.Any())
+                { Debug.Log($"{combatant.name} no path"); return; }
 
-            currentCombatantTile = combatant.CurrentTile;
-            currentFocusTile = movementPath[0];
+            occupiedTile = combatant.CurrentTile;
+            focusTile = pathToConsume[0];
 
-            combatant.StepTowards(currentFocusTile);
+            combatant.CurrentDirectionContext = new(
+                (Vector2Int)occupiedTile.GridLocation,
+                (Vector2Int)focusTile.GridLocation
+                );
 
-            if (combatant.InPlacementRangeOf(currentFocusTile))
+            combatant.StepTowards(focusTile);
+
+            if (combatant.InPlacementRangeOf(focusTile))
             {
-                combatant.SnapTo(currentFocusTile);
-                currentFocusTile.PlaceCombatant(combatant);
-                movementPath.RemoveAt(0);
+                combatant.SnapTo(focusTile);
+                focusTile.PlaceCombatant(combatant);
+
+                pathToConsume.RemoveAt(0);
+
+                combatant.Speed.Lose(1);
+                Debug.Log(
+                    $"{combatant} new tile snap," +
+                    $"new speed: {combatant.Speed.Get()}"
+                    );
             }
         }
 
         public override void MakeDecision()
         {
-            if (movementPath.Any()) { return; }
-
-            GoToActionSelection();
+            if (pathToConsume.Any()) { return; }
 
             if (MoveAgain())
             {
@@ -67,7 +80,7 @@ namespace SystemMiami.CombatRefactor
 
         public override void OnExit()
         {
-            DrawArrows.MGR.RemoveArrows();
+            path.UnDrawAll();
         }
 
         // Decision

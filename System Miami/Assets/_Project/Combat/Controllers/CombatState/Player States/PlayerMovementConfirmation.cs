@@ -17,11 +17,13 @@ namespace SystemMiami.CombatRefactor
 
         protected override bool CancelSelection()
         {
+            Debug.Log("Cancel");
             return Input.GetMouseButtonDown(1);
         }
 
         protected override bool ConfirmSelection()
         {
+            Debug.Log("Confirm");
             return Input.GetKeyDown(KeyCode.Return);
         }
 

@@ -13,10 +13,10 @@ namespace SystemMiami.CombatRefactor
             // Event from UI?
             return false;
         }
+
         protected override bool SkipPhase()
         {
-            // Press Q??
-            return true;
+            return Input.GetKeyDown(KeyCode.Q);
         }
 
         protected override void GoToActionEquipped()
@@ -28,6 +28,5 @@ namespace SystemMiami.CombatRefactor
         {
             machine.SetState(new PlayerTurnEnd(combatant));
         }
-
     }
 }

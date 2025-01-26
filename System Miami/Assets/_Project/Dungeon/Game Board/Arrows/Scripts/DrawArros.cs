@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace SystemMiami
 {
-    public class DrawArrows : Singleton<DrawArrows>
+    public class ArrowDrawer : Singleton<ArrowDrawer>
     {
         public GameObject arrowPrefab;
         public List<GameObject> arrows;

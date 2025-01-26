@@ -1,4 +1,5 @@
 using SystemMiami.CombatSystem;
+using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
 {
@@ -19,7 +20,9 @@ namespace SystemMiami.CombatRefactor
 
         public override void OnEnter()
         {
+            base.OnEnter();
             path.DrawArrows();
+            path.HighlightValidMoves(Color.cyan);
         }
 
         public override void MakeDecision()

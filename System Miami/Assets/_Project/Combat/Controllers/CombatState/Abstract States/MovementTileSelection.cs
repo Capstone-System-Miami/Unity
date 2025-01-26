@@ -16,13 +16,14 @@ namespace SystemMiami.CombatRefactor
         OverlayTile currentDestinationTile;
 
         // Pathing
-        protected MovementPath movementPath;
+        protected MovementPath path;
 
         protected MovementTileSelection(Combatant combatant)
             : base(combatant, Phase.Movement) { }
 
         public override void OnEnter()
         {
+            base.OnEnter();
             currentSpeedStat = (int)combatant.Speed.Get();
 
             occupiedTile = combatant.CurrentTile;
@@ -41,7 +42,6 @@ namespace SystemMiami.CombatRefactor
                 // Nothing to update.
                 return;
             }
-            Debug.Log("what the ass");
 
             // Update currentTile & tile hover
             currentFocusTile?.EndHover(combatant);
@@ -55,20 +55,20 @@ namespace SystemMiami.CombatRefactor
             combatant.UpdateAnimDirection(newDirection.ScreenDirection);
 
 
-            movementPath?.Unhighlight();
+            path?.Unhighlight();
             // Generate a path
-            movementPath = new(
+            path = new(
                 occupiedTile,
                 currentFocusTile,
                 currentSpeedStat
                 );
 
-            if (movementPath.IsEmpty) { return; }
+            if (path.IsEmpty) { return; }
 
-            movementPath.DrawArrows();
+            path.DrawArrows();
 
-            movementPath.DrawValidMoves(Color.yellow);
-            movementPath.DrawInvalidMoves(Color.red);
+            path.HighlightValidMoves(Color.yellow);
+            path.HighlightInvalidMoves(Color.red);
         }
 
         public override void MakeDecision()
@@ -79,14 +79,20 @@ namespace SystemMiami.CombatRefactor
                 return;
             }
 
-            if (movementPath == null) { return; }
-            if (movementPath.IsEmpty) { return; }
+            if (path == null) { return; }
+            if (path.IsEmpty) { return; }
 
             if (SelectTile())
             {
                 GoToTileConfirmation();
                 return;
             }
+        }
+
+        public override void OnExit()
+        {
+            base.OnExit();
+            path.UnDrawAll();
         }
 
 

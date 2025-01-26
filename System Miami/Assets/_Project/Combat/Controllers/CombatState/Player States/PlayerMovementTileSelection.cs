@@ -36,7 +36,7 @@ namespace SystemMiami.CombatRefactor
             machine.SetState(
                 new PlayerMovementConfirmation(
                     combatant,
-                    movementPath
+                    path
                 )
             );
             return;
