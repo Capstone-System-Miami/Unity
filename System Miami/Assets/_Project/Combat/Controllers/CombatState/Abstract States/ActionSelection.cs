@@ -1,5 +1,4 @@
 using SystemMiami.CombatSystem;
-using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
 {
@@ -8,26 +7,33 @@ namespace SystemMiami.CombatRefactor
         public ActionSelection(Combatant combatant)
             : base(combatant, Phase.Action) { }
 
-        public override void aOnEnter()
-        {
-            machine.combatant.Abilities.TryUnequip();
-        }
-
-
-        public override void bUpdate()
+        public override void Update()
         {
             // TODO
             //UpdateFocusedTile();
         }
 
-        public override abstract void cMakeDecision();
-
-        public override void eOnExit()
+        public override void MakeDecision()
         {
-            throw new System.NotImplementedException();
+            if (ActionSelected())
+            {
+                GoToActionEquipped();
+                return;
+            }
+
+            if (SkipPhase())
+            {
+                GoToEndTurn();
+                return;
+            }
         }
 
+        // Decision
         protected abstract bool ActionSelected();
+        protected abstract bool SkipPhase();
 
+        // Outcomes
+        protected abstract void GoToActionEquipped();
+        protected abstract void GoToEndTurn();
     }
 }

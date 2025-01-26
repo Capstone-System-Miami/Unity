@@ -1,35 +1,15 @@
 using System.Collections.Generic;
+using SystemMiami.CombatSystem;
 using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
 {
-    public class EnemyMovementTileConfirmation : MovementTileConfirmation
+    public class EnemyMovementConfirmation : MovementConfirmation
     {
-        public EnemyMovementTileConfirmation(
-            CombatantStateMachine machine,
-            List<OverlayTile> currentPath,
-            List<OverlayTile> arrowPath
-            )
-                : base (
-                      machine,
-                      currentPath,
-                      arrowPath)
-            { }
-
-        public override void cMakeDecision()
-        {
-            if (CancelSelection())
-            {
-                machine.SetState(new EnemyMovementTileSelection(machine));
-                return;
-            }
-
-            if (ConfirmSelection())
-            {
-                machine.SetState(new EnemyMovementExecution(machine));
-                return;
-            }
-        }
+        public EnemyMovementConfirmation(
+            Combatant combatant,
+            MovementPath path)
+                : base(combatant, path) { }
 
         /// <summary>
         /// Will return FALSE every time
@@ -57,6 +37,16 @@ namespace SystemMiami.CombatRefactor
         protected override bool ConfirmSelection()
         {
             return true;
+        }
+
+        protected override void GoToMovementExecution()
+        {
+            machine.SetState(new EnemyMovementExecution(combatant, path));
+        }
+
+        protected override void GoToMovementTileSelection()
+        {
+            machine.SetState(new EnemyMovementTileSelection(combatant));
         }
     }
 }

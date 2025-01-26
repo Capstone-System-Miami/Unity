@@ -35,53 +35,54 @@ namespace SystemMiami.Utilities
                 { new Vector2Int(-1,  1),   TileDir.FORWARD_L   }
             };
 
-        // An unchanging dict of TileDirs representing
-        // screen directions, accessable by
-        // TileDir for board directions
-        public static readonly Dictionary<TileDir, TileDir>
+        // An unchanging dict of screen-relative
+        // directions, accessible by isometric TileDir
+        public static readonly Dictionary<TileDir, ScreenDir>
             BoardToScreenEnumConversion = new()
             {
-                { TileDir.FORWARD_C,   TileDir.FORWARD_L  },
-                { TileDir.FORWARD_R,   TileDir.FORWARD_C  },
-                { TileDir.MIDDLE_R,    TileDir.FORWARD_R  },
-                { TileDir.BACKWARD_R,  TileDir.MIDDLE_R   },
-                { TileDir.BACKWARD_C,  TileDir.BACKWARD_R },
-                { TileDir.BACKWARD_L,  TileDir.BACKWARD_C },
-                { TileDir.MIDDLE_L,    TileDir.BACKWARD_L },
-                { TileDir.FORWARD_L,   TileDir.MIDDLE_L   }
+                { TileDir.FORWARD_C,   ScreenDir.UP_L   },
+                { TileDir.FORWARD_R,   ScreenDir.UP     },
+                { TileDir.MIDDLE_R,    ScreenDir.UP_R   },
+                { TileDir.BACKWARD_R,  ScreenDir.R      },
+                { TileDir.BACKWARD_C,  ScreenDir.DOWN_R },
+                { TileDir.BACKWARD_L,  ScreenDir.DOWN_C },
+                { TileDir.MIDDLE_L,    ScreenDir.DOWN_L },
+                { TileDir.FORWARD_L,   ScreenDir.L      }
             };
 
         /// <summary>
-        /// Takes two positions, origin and mapPositionB, 
+        /// Takes two positions, tilePosA and tilePosB, 
         /// and returns a difference vector (only 0s or signed 1s).
         /// </summary>
-        public static Vector2Int GetDirectionVec(Vector2Int origin, Vector2Int forward)
+        public static Vector2Int GetDirectionVec(Vector2Int tilePosA, Vector2Int tilePosB)
         {
             int x = 0;
             int y = 0;
 
-            // In these examples, the origin object is
-            // "Looking at" the same mapPositionA at (-8, 2)
-            // ex1. origin = (0, 0), mapPositionB = (-8, 2)
-            // ex2. origin = (-4, 5), mapPositionB = (-8, 2)
+            // In these examples,
+            // the origin object at tilePosA is
+            // "looking at" the same tilePosB at (-8, 2)
+            //
+            // ex1. | tilePosA = ( 0, 0) | tilePosB = (-8, 2)
+            // ex2. | tilePosA = (-4, 5) | tilePosB = (-8, 2)
 
             // Convert ints to floats and get the difference.
-            // ex1. difference = (-8.0, 2.0)
-            // ex2. difference = (-4.0, -3.0)
-            Vector2 difference = forward - origin;
+            // ex1. | difference = (-8.0,  2.0)
+            // ex2. | difference = (-4.0, -3.0)
+            Vector2 difference = tilePosB - tilePosA;
 
             // Force a magnitude of 1.
-            // ex1. difference = (-1.0, 0.25)
-            // ex2. difference = (-1.0, -0.75)
+            // ex1. | difference = (-1.0,  0.25)
+            // ex2. | difference = (-1.0, -0.75)
             difference.Normalize();
 
             // Round both values to int
-            // ex1. x = -1, y = 0
-            // ex2. x = -1, y = -1
+            // ex1. | x = -1, y = 0
+            // ex2. | x = -1, y = -1
             x = Mathf.RoundToInt(difference.x);
             y = Mathf.RoundToInt(difference.y);
 
-            // Return the moveDirection vector.
+            // Return the direction vector.
             // ex1. Returns (-1, 0), a vector
             // equivalent to MapDirectionsByEnum[MIDDLE_L]
             // ex2. Returns (-1, -1), a vector
@@ -89,33 +90,43 @@ namespace SystemMiami.Utilities
             return new Vector2Int(x, y);
         }
 
-        public static TileDir GetBoardTileDir(Vector2Int directionVec)
+        public static TileDir GetTileDir(Vector2Int directionVec)
         {
-            if (BoardDirectionEnumByVector.TryGetValue(directionVec, out TileDir screenDir))
+            if (BoardDirectionEnumByVector.TryGetValue(
+                directionVec,
+                out TileDir dir)
+                )
             {
-                return screenDir;
+                return dir;
             }
-            else
+            else // default
             {
                 return TileDir.FORWARD_C;
             }
         }
 
-        public static TileDir GetScreenTileDir(TileDir directionVec)
+        public static TileDir GetTileDir(ScreenDir screenDir)
         {
-            if (BoardToScreenEnumConversion.TryGetValue(directionVec, out TileDir dirEnum))
+            foreach(TileDir key in BoardToScreenEnumConversion.Keys)
             {
-                return dirEnum;
+                if (BoardToScreenEnumConversion[key] == screenDir)
+                {
+                    return key;
+                }
             }
-            else
-            {
-                return TileDir.FORWARD_C;
-            }
+
+            // Default
+            return TileDir.FORWARD_C;
+        }
+
+        public static ScreenDir GetScreenDir(TileDir tileDir)
+        {
+            return BoardToScreenEnumConversion[tileDir];
         }
 
         public static void Print(DirectionContext dirInfo, string objectName)
         {
-            Debug.LogWarning($"{objectName}|  MapOrigin {dirInfo.BoardPositionA}, MapFWD {dirInfo.ForwardA}, " +
+            Debug.LogWarning($"{objectName}|  MapOrigin {dirInfo.TilePositionA}, MapFWD {dirInfo.ForwardA}, " +
                 $"MapDir{dirInfo.DirectionVec}, DirName {dirInfo.BoardDirection}");
         }
 

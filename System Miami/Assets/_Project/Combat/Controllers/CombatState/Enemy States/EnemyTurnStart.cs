@@ -1,18 +1,20 @@
+using SystemMiami.CombatSystem;
+
 namespace SystemMiami.CombatRefactor
 {
     public class EnemyTurnStart : TurnStart
     {
-        public EnemyTurnStart(CombatantStateMachine machine)
-            : base(machine) { }
+        public EnemyTurnStart(Combatant combatant)
+            : base(combatant) { }
 
-        public override void cMakeDecision()
+        public override void MakeDecision()
         {
             GoToMovementTileSelect();
         }
 
         public override void GoToMovementTileSelect()
         {
-            machine.SetState(new EnemyMovementTileSelection(machine));
+            machine.SetState(new EnemyMovementTileSelection(combatant));
         }
     }
 }

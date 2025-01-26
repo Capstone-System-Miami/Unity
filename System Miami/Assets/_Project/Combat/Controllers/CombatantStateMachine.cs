@@ -6,8 +6,6 @@ namespace SystemMiami.CombatRefactor
 {
     public class CombatantStateMachine : MonoBehaviour
     {
-        public float movementSpeed;
-
         [HideInInspector] public bool IsPlayer { get; private set; }
 
         private Combatant combatant;
@@ -39,13 +37,9 @@ namespace SystemMiami.CombatRefactor
             IsPlayer =
                 (combatant.gameObject == PlayerManager.MGR.gameObject);
 
-            // TODO:
-            // This should get set to the
-            // appropriate idle state,
-            // rather than the startTurn state
             CombatantState startState = IsPlayer ?
-                new PlayerTurnStart(this)
-                : new EnemyTurnStart(this);
+                new PlayerIdle(combatant)
+                : new EnemyIdle(combatant);
 
             SetState(startState);
         }
@@ -61,13 +55,13 @@ namespace SystemMiami.CombatRefactor
             }
 
             // state manage
-            currentState.bUpdate();
-            currentState.cMakeDecision();
+            currentState.Update();
+            currentState.MakeDecision();
         }
 
         public void LateUpdate()
         {
-            currentState.dLateUpdate();
+            currentState.LateUpdate();
         }
 
         /// <summary>
@@ -80,14 +74,14 @@ namespace SystemMiami.CombatRefactor
             /// before setting a new one
             /// (The '?' means only call this
             /// if the object is not "null".
-            currentState?.eOnExit();
+            currentState?.OnExit();
 
             /// Set the current state to the new state.
             /// passed into this function as an arg.
             currentState = newState;
 
             /// Call OnEnter on the new state object
-            currentState.aOnEnter();
+            currentState.OnEnter();
         }
 
         /// <summary>
@@ -124,12 +118,12 @@ namespace SystemMiami.CombatRefactor
         /// </returns>
         private IEnumerator switchStateWithDelay(CombatantState newState, float delay)
         {
-            currentState.eOnExit();
+            currentState.OnExit();
 
             yield return new WaitForSeconds(delay);
 
             currentState = newState;
-            currentState.aOnEnter();
+            currentState.OnEnter();
         }
     }
 }

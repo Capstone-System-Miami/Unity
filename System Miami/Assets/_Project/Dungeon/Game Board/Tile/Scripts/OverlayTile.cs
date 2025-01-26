@@ -153,7 +153,7 @@ namespace SystemMiami
         {
             if (Occupied)
             {
-                if (CurrentCombatant.StateMachine.IsMyTurn)
+                if (CurrentCombatant.IsMyTurn)
                 {
                     return _activeCombatantColor;
                 }

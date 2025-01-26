@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using SystemMiami.CombatSystem;
-using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
 {
@@ -17,21 +16,21 @@ namespace SystemMiami.CombatRefactor
 
         protected MovementExecution(
             Combatant combatant,
-            MovementPath limitedPath)
+            MovementPath movementPath)
                 : base(
                     combatant,
                     Phase.Movement
                 )
         {
-            this.path = limitedPath;
+            this.path = movementPath;
         }
 
-        public override void aOnEnter()
+        public override void OnEnter()
         {
             movementPath = path.ForMovement;
         }
 
-        public override void bUpdate()
+        public override void Update()
         {
             if (!movementPath.Any()) { return; }
 
@@ -48,11 +47,35 @@ namespace SystemMiami.CombatRefactor
             }
         }
 
-        public override abstract void cMakeDecision();
+        public override void MakeDecision()
+        {
+            if (movementPath.Any()) { return; }
 
-        public override void eOnExit()
+            GoToActionSelection();
+
+            if (MoveAgain())
+            {
+                GoToMovementTileSelection();
+                return;
+            }
+            else
+            {
+                GoToActionSelection();
+                return;
+            }
+        }
+
+        public override void OnExit()
         {
             DrawArrows.MGR.RemoveArrows();
         }
+
+        // Decision
+        protected abstract bool MoveAgain();
+
+        // Outcomes
+        protected abstract void GoToMovementTileSelection();
+        protected abstract void GoToActionSelection();
+        protected abstract void GoToTurnEnd();
     }
 }

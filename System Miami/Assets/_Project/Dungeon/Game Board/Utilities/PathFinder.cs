@@ -208,6 +208,15 @@ namespace SystemMiami
                 )
         { }
 
+        public MovementPath(
+            OverlayTile start,
+            OverlayTile end)
+                : this(
+                    new TileContext(start, null, end),
+                    -1
+                )
+        { }
+
         public MovementPath(TileContext tileContext, int maxTiles)
         {
             this.tileContext = tileContext;
@@ -243,6 +252,8 @@ namespace SystemMiami
         /// </param>
         private List<OverlayTile> GetTruncated(bool includeStart)
         {
+            if (maxTiles < 0) { return new(path); }
+
             List<OverlayTile> result = new(path);
 
             // Get the difference

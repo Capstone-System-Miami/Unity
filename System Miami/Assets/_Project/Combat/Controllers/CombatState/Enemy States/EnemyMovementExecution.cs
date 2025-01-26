@@ -1,25 +1,33 @@
+using SystemMiami.CombatSystem;
+
 namespace SystemMiami.CombatRefactor
 {
     public class EnemyMovementExecution : MovementExecution
     {
-        public EnemyMovementExecution(CombatantStateMachine machine)
-            : base (machine) { }
+        public EnemyMovementExecution(
+            Combatant combatant,
+            MovementPath path)
+                : base (combatant, path) { }
 
-        public override void cMakeDecision()
+        protected override bool MoveAgain()
         {
-            if (!destinationReached()) { return; }
+            // never, right?
+            return false;
+        }
 
-            // If they have speed left
-            if (machine.combatant.Speed.Get() > 0)
-            {
-                // Go back to tile selection for movement
-                machine.SetState(new PlayerMovementTileSelection(machine));
-            }
-            else
-            {
-                // Proceed to CombatAction selection
-                machine.SetState(new PlayerActionSelection(machine));
-            }
+        protected override void GoToActionSelection()
+        {
+            machine.SetState(new EnemyActionSelection(combatant));
+        }
+
+        protected override void GoToMovementTileSelection()
+        {
+            machine.SetState(new EnemyMovementTileSelection(combatant));
+        }
+
+        protected override void GoToTurnEnd()
+        {
+            machine.SetState(new EnemyTurnEnd(combatant));
         }
     }
 }

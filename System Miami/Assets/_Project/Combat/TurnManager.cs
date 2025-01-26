@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using SystemMiami.CombatSystem;
+using SystemMiami.CombatRefactor;
 using SystemMiami.Management;
 using SystemMiami.Utilities;
 using UnityEngine;
@@ -48,10 +49,7 @@ namespace SystemMiami
                 if (CurrentTurnOwner == null)
                     { return false; }
 
-                if (CurrentTurnOwner.StateMachine == null)
-                    { return false; }
-
-                return CurrentTurnOwner.StateMachine is PlayerDecisions;
+                return CurrentTurnOwner.IsPlayer;
             }
         }
 
@@ -139,11 +137,17 @@ namespace SystemMiami
                         continue;
                     }
 
-                    CurrentTurnOwner = combatant;
-                    combatant.StateMachine.StartTurn();
 
+                    CombatantState startTurnState
+                        = combatant.IsPlayer
+                        ? new PlayerTurnStart(combatant)
+                        : new EnemyTurnStart(combatant);
+
+                    combatant.SwitchState(startTurnState);
+
+                    CurrentTurnOwner = combatant;
                     yield return new WaitForEndOfFrame();
-                    yield return new WaitUntil(() => !combatant.StateMachine.IsMyTurn);
+                    yield return new WaitUntil(() => !combatant.IsMyTurn);
                 }
 
                 yield return null;

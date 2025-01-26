@@ -8,24 +8,17 @@ namespace SystemMiami.CombatRefactor
         protected TurnStart(Combatant combatant)
             : base(combatant, Phase.None) { }
 
-        public override void aOnEnter()
+        public override void OnEnter()
         {
-            Debug.Log($"{machine.name} starting turn");
-            machine.combatant.ResetTurn();
-            
-            machine.combatant.ResetTileContext();
+            Debug.Log($"{combatant.name} starting turn");
+            combatant.IsMyTurn = true;         
         }
 
-        public override void bUpdate()
+        public override void MakeDecision()
         {
+            GoToMovementTileSelect();
         }
 
-        public override abstract void cMakeDecision();
-
-        public override void eOnExit()
-        {
-        }
-
-        public abstract void GoToMovementTileSelect();
+        public abstract void GoToMovementTileSelect();        
     }
 }

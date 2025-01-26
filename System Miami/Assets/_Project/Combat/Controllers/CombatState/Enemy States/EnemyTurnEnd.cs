@@ -1,12 +1,22 @@
+using SystemMiami.CombatSystem;
 using UnityEngine;
 
-namespace SystemMiami
+namespace SystemMiami.CombatRefactor
 {
-    public class EnemyTurnEnd : MonoBehaviour
+    public class EnemyTurnEnd : TurnEnd
     {
-        void Awake()
-        {
+        public EnemyTurnEnd(Combatant combatant)
+            : base (combatant) { }
 
+        protected override bool Proceed()
+        {
+            // Don't wait for anything
+            return true;
+        }
+
+        protected override void GoToIdle()
+        {
+            machine.SetState(new EnemyIdle(combatant));
         }
     }
 }

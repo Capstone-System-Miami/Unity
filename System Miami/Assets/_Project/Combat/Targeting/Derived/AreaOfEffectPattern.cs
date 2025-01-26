@@ -63,7 +63,7 @@ namespace SystemMiami.CombatSystem
                     Combatant checkedEnemy;
 
                     // Check the pattern's origin
-                    checkedPosition = patternDirectionInfo.BoardPositionA;
+                    checkedPosition = patternDirectionInfo.TilePositionA;
 
                     checkedPositions.Add(checkedPosition);
 
@@ -80,8 +80,8 @@ namespace SystemMiami.CombatSystem
                     OverlayTile checkedTile;
                     Combatant checkedEnemy;
 
-                    checkedPosition = _adjacent.AdjacentPositions[direction] +
-                        _adjacent.AdjacentDirectionVecs[direction] * (radial);
+                    checkedPosition = _adjacent.AdjacentBoardPositions[direction] +
+                        _adjacent.BoardDirectionVectors[direction] * (radial);
 
                     checkedPositions.Add(checkedPosition);
 

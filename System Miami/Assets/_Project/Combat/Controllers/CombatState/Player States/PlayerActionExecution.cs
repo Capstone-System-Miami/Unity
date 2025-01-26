@@ -1,12 +1,16 @@
+using SystemMiami.CombatSystem;
 using UnityEngine;
 
-namespace SystemMiami
+namespace SystemMiami.CombatRefactor
 {
-    public class PlayerActionExecution : MonoBehaviour
+    public class PlayerActionExecution : ActionExecution
     {
-        void Awake()
-        {
+        public PlayerActionExecution(Combatant combatant)
+            : base(combatant) { }
 
+        protected override void GoToEndTurn()
+        {
+            machine.SetState(new PlayerTurnEnd(combatant));
         }
     }
 }

@@ -8,8 +8,8 @@ namespace SystemMiami.CombatRefactor
     {
         int detectionRadius= 3;
 
-        public EnemyMovementTileSelection(CombatantStateMachine machine)
-            : base(machine) { }
+        public EnemyMovementTileSelection(Combatant combatant)
+            : base(combatant) { }
 
         // Decision
         protected override bool SelectTile()
@@ -29,24 +29,12 @@ namespace SystemMiami.CombatRefactor
         // Decision outcomes
         protected override void GoToActionSelection()
         {
-            machine.SetState(
-                new EnemyActionSelection(
-                    machine
-                    )
-                );
-            return;
+            machine.SetState(new EnemyActionSelection(combatant));
         }
 
         protected override void GoToTileConfirmation()
         {
-            machine.SetState(
-                new EnemyMovementTileConfirmation(
-                    machine,
-                    newPath,
-                    arrowPath
-                    )
-                );
-            return;
+            machine.SetState(new EnemyActionConfimation(combatant));
         }
 
 
@@ -56,12 +44,12 @@ namespace SystemMiami.CombatRefactor
 
             if (IsInDetectionRange(targetPlayer))
             {
-                Debug.Log($"Player found in {name}'s range");
+                Debug.Log($"Player found in {combatant.name}'s range");
                 return targetPlayer.CurrentTile;
             }
             else
             {
-                Debug.Log($"Player not found in {name}'s range." +
+                Debug.Log($"Player not found in {combatant.name}'s range." +
                     $"Getting random tile");
                 return MapManager.MGR.GetRandomUnblockedTile();
             }
@@ -69,9 +57,12 @@ namespace SystemMiami.CombatRefactor
 
         private bool IsInDetectionRange(Combatant target)
         {
-            List<OverlayTile> path = getPath(target.CurrentTile);
+            MovementPath fullPathToPlayer = new(
+                combatant.CurrentTile,
+                target.CurrentTile
+                );
 
-            if (path.Count <= detectionRadius)
+            if (fullPathToPlayer.ForMovement.Count <= detectionRadius)
             {
                 return true;
             }

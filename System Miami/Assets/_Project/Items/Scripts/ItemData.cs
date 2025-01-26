@@ -67,7 +67,8 @@ namespace SystemMiami.LeeInventory
 
                     if (targets == null) { continue; }
 
-                    Combatant player = targets.Find(c => c.StateMachine is PlayerDecisions);
+                    Combatant player = targets.Find(c => c.StateMachine.IsPlayer);
+
                     User = player;
 
                     if (player != null)

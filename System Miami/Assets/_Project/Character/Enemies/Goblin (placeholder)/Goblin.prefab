@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 2947330204336433884}
   - component: {fileID: 1287585385212656630}
   - component: {fileID: 5547647659155334040}
-  - component: {fileID: 7446190617965984580}
+  - component: {fileID: 5786967365865618389}
   m_Layer: 0
   m_Name: Goblin
   m_TagString: Untagged
@@ -212,9 +212,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5dad0a304e458cf459016a52e1ee441a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _movementSpeed: 0
+  IsMyTurn: 0
   _colorTag: {r: 0.77254903, g: 0.18431373, b: 0.18431373, a: 1}
-  CurrentTile: {fileID: 0}
-  Animator: {fileID: 0}
+  StateMachine: {fileID: 0}
   PlayerDirSprites:
   - {fileID: -1891642137, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
   - {fileID: 504766812, guid: 82236648256b77d4588c22a84d4da636, type: 3}
@@ -246,7 +247,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 70ebd8bea6e07d94faaad738e975bd9f, type: 2}
   _magical: []
   animController: {fileID: 0}
---- !u!114 &7446190617965984580
+--- !u!114 &5786967365865618389
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -255,8 +256,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 5985083666047915755}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc327bd1376e93a4fa560c433370cb50, type: 3}
+  m_Script: {fileID: 11500000, guid: f1a3c0c08ff71d64ca7ef4f6f3b7ab53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 2
-  detectionRadius: 4

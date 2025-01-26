@@ -120,7 +120,7 @@ namespace SystemMiami.CombatSystem
                 // as the 'A' point for the moveDirection of the pattern.
                 // If the user is the _player, userDirectionInfo.MapPositionB will be the
                 // mouse position.
-                return new DirectionContext(userInfo.BoardPositionB, userInfo.ForwardB);
+                return new DirectionContext(userInfo.TilePositionB, userInfo.ForwardB);
             }
         }
 

@@ -7,18 +7,30 @@ namespace SystemMiami.CombatRefactor
 {
     public class EnemyActionSelection : ActionSelection
     {
-        public EnemyActionSelection(CombatantStateMachine machine)
-            : base (machine) { }
-
-        public override void cMakeDecision()
-        {
-            // go immediately to targeting?
-        }
+        public EnemyActionSelection(Combatant combatant)
+            : base (combatant) { }
 
         protected override bool ActionSelected()
         {
+            // immediately to equipped?
             return true;
         }
+        protected override bool SkipPhase()
+        {
+            // if they have to?
+            return false;
+        }
+
+        protected override void GoToActionEquipped()
+        {
+            machine.SetState(new EnemyActionEquipped(combatant));
+        }
+
+        protected override void GoToEndTurn()
+        {
+            machine.SetState(new EnemyTurnEnd(combatant));
+        }
+
     }
 
 

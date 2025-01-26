@@ -8,24 +8,29 @@ namespace SystemMiami.CombatRefactor
         public TurnEnd(Combatant combatant)
             : base(combatant, Phase.None) { }
 
-        public override void aOnEnter()
+        public override void OnEnter()
         {
             Debug.Log($"{machine.name}Calling end of turn");
         }
 
-        public override void bUpdate()
+        public override void MakeDecision()
         {
-            throw new System.NotImplementedException();
+            if (Proceed())
+            {
+                GoToIdle();
+                return;
+            }
         }
 
-        public override void cMakeDecision()
+        public override void OnExit()
         {
-            throw new System.NotImplementedException();
+            combatant.IsMyTurn = false;
         }
 
-        public override void eOnExit()
-        {
-            throw new System.NotImplementedException();
-        }
+        // Decision
+        protected abstract bool Proceed();
+
+        // Outcome
+        protected abstract void GoToIdle();
     }
 }

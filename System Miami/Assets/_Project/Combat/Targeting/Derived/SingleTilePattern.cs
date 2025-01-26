@@ -28,7 +28,7 @@ namespace SystemMiami.CombatSystem
             Combatant checkedEnemy;
 
             // Check the pattern's origin
-            checkedPosition = patternDirectionInfo.BoardPositionA;
+            checkedPosition = patternDirectionInfo.TilePositionA;
 
             checkedPositions.Add(checkedPosition);
 

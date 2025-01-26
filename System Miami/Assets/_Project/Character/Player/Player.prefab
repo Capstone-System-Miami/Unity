@@ -431,7 +431,7 @@ GameObject:
   - component: {fileID: 6386089713510983124}
   - component: {fileID: 4261404639173623324}
   - component: {fileID: -487834630417795382}
-  - component: {fileID: -6597365728956606799}
+  - component: {fileID: 2497366142004837811}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -485,7 +485,7 @@ MonoBehaviour:
   interactionUI: {fileID: 650297918678062704}
   dungeonComponents:
   - {fileID: -487834630417795382}
-  - {fileID: -6597365728956606799}
+  - {fileID: 2497366142004837811}
   neighborhoodSceneName: NEIGHBORHOOD
   dungeonSceneName: Dungeon
 --- !u!114 &2859284793658147475
@@ -775,9 +775,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5dad0a304e458cf459016a52e1ee441a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _movementSpeed: 0
+  IsMyTurn: 0
   _colorTag: {r: 0.21688704, g: 0.6603774, b: 0.20870416, a: 1}
-  CurrentTile: {fileID: 0}
-  Animator: {fileID: 2662097473964725133, guid: bdbca1efcf89fd647b60b443969df89f, type: 3}
+  StateMachine: {fileID: 0}
   PlayerDirSprites:
   - {fileID: -1891642137, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
   - {fileID: 504766812, guid: 82236648256b77d4588c22a84d4da636, type: 3}
@@ -793,7 +794,7 @@ MonoBehaviour:
   IsMovable: 1
   IsStunned: 0
   IsInvisible: 0
---- !u!114 &-6597365728956606799
+--- !u!114 &2497366142004837811
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -802,9 +803,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 6453553769002132252}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0cd1c907f5a30504195dad71d0b41e5a, type: 3}
+  m_Script: {fileID: 11500000, guid: f1a3c0c08ff71d64ca7ef4f6f3b7ab53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 2
-  _endTurnKey: 113
-  _endPhaseKey: 101

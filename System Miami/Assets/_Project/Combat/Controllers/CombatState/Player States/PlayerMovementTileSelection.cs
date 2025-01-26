@@ -34,9 +34,9 @@ namespace SystemMiami.CombatRefactor
         protected override void GoToTileConfirmation()
         {
             machine.SetState(
-                new PlayerMovementTileConfirmation(
+                new PlayerMovementConfirmation(
                     combatant,
-                    limitedPath
+                    movementPath
                 )
             );
             return;

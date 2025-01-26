@@ -12,13 +12,24 @@ namespace SystemMiami.CombatSystem
 {
     [RequireComponent(
         typeof(Stats),
-        typeof(Abilities)
-        /*typeof(CombatantController)*/)]
+        typeof(Abilities),
+        typeof(CombatantStateMachine))]
     public class Combatant : MonoBehaviour, IHighlightable, IDamageable, IHealable, IMovable
     {
         protected const float PLACEMENT_RANGE = 0.0001f;
 
         [SerializeField] private float _movementSpeed;
+
+        public bool IsPlayer
+        {
+            get
+            {
+                return gameObject == PlayerManager.MGR.gameObject;
+            }
+        }
+
+        [HideInInspector] public bool IsMyTurn;
+
 
         [SerializeField] private Color _colorTag = Color.white;
 
@@ -161,7 +172,12 @@ namespace SystemMiami.CombatSystem
             Vector2Int currentPos
                 = (Vector2Int)CurrentTile.GridLocation;
 
-            UpdateAnimDirection(TileDir.FORWARD_R);
+            Vector2Int forwardPos
+                = DirectionHelper.BoardDirectionVecByEnum[TileDir.FORWARD_C];
+
+            CurrentDirectionContext = new(currentPos, forwardPos);
+
+            UpdateAnimDirection(CurrentDirectionContext.ScreenDirection);
         }
         #endregion Construction
 
@@ -215,7 +231,7 @@ namespace SystemMiami.CombatSystem
             Speed = new Resource(_stats.GetStat(StatType.SPEED), Speed.Get());
         }
 
-        public void UpdateAnimDirection(TileDir screenDirection)
+        public void UpdateAnimDirection(ScreenDir screenDirection)
         {
             Animator.SetInteger(
                 dirParam,

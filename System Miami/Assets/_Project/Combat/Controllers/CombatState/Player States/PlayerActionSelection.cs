@@ -8,17 +8,26 @@ namespace SystemMiami.CombatRefactor
         public PlayerActionSelection(Combatant combatant)
             : base(combatant) { }
 
-        public override void cMakeDecision()
-        {
-            if (ActionSelected())
-            {
-                machine.SwitchState(new PlayerActionTileSelections(combatant));
-            }
-        }
-
         protected override bool ActionSelected()
         {
-            throw new System.NotImplementedException();
+            // Event from UI?
+            return false;
         }
+        protected override bool SkipPhase()
+        {
+            // Press Q??
+            return true;
+        }
+
+        protected override void GoToActionEquipped()
+        {
+            machine.SetState(new PlayerActionEquipped(combatant));
+        }
+
+        protected override void GoToEndTurn()
+        {
+            machine.SetState(new PlayerTurnEnd(combatant));
+        }
+
     }
 }

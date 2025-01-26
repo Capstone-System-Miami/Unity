@@ -1,6 +1,5 @@
-using SystemMiami.CombatSystem;
 using System.Collections;
-using UnityEngine;
+using SystemMiami.CombatSystem;
 
 namespace SystemMiami.CombatRefactor
 {
@@ -9,26 +8,22 @@ namespace SystemMiami.CombatRefactor
         public ActionExecution(Combatant combatant)
             : base(combatant, Phase.Action) { }
 
-        public override void aOnEnter()
+        public override void OnEnter()
         {
-            if (machine.combatant.Abilities.AbilityExecutionIsValid
+            if (combatant.Abilities.AbilityExecutionIsValid
                 (out IEnumerator abilityProcess))
             {
                 machine.StartCoroutine(abilityProcess);
             }
         }
 
-        public override void eOnExit()
+        public override void MakeDecision()
         {
-            machine.FocusedTile?.UnHighlight(); // on phase transit
+            GoToEndTurn();
+            return;
         }
 
-        /// <summary>
-        /// TODO: EFFECTS
-        /// </summary>
-        public override void bUpdate()
-        {
-            throw new System.NotImplementedException();
-        }
+        // Only outcome
+        protected abstract void GoToEndTurn();
     }
 }

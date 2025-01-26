@@ -1,30 +1,30 @@
+using SystemMiami.CombatSystem;
 using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
 {
-    public class Dying : CombatantState
+    public abstract class Dying : CombatantState
     {
-        protected Dying(CombatantStateMachine machine)
-            : base(machine, Phase.None) { }
+        protected Dying(Combatant combatant)
+            : base(combatant, Phase.None) { }
 
-        public override void aOnEnter()
+        public override void OnEnter()
         {
-            throw new System.NotImplementedException();
+            base.OnEnter();
+
+            // start animation?
         }
 
-        public override void bUpdate()
+        public override void MakeDecision()
         {
-            throw new System.NotImplementedException();
+            if (Proceed())
+            {
+                GoToDead();
+            }
         }
 
-        public override void cMakeDecision()
-        {
-            throw new System.NotImplementedException();
-        }
+        protected abstract bool Proceed();
 
-        public override void eOnExit()
-        {
-            throw new System.NotImplementedException();
-        }
+        protected abstract void GoToDead();
     }
 }

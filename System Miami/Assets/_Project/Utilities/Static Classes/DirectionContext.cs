@@ -5,27 +5,59 @@ using UnityEngine;
 namespace SystemMiami.Utilities
 {
     /// <summary>
-    /// A struct containing 3 Vector2Ints.
-    /// On construction, it stores a difference Vector based
-    /// on the mapPositionA and mapPositionB given.
+    /// A struct containing helpful directional
+    /// information regarding an origin coordinate and
+    /// a given second coordinate.
+    /// 
+    /// <para>
+    /// Stores:</para>
+    /// <para>-Both incoming positions,</para>
+    /// 
+    /// <para>-The direction from PositionA to PositionB
+    /// (in Vector form and enum form)</para>
+    /// 
+    /// <para>-Positions that are one position forward
+    /// from each input tile, in the direction
+    /// we've calculated.</para>
+    /// 
     /// </summary>
     public struct DirectionContext
     {
-        // The incoming a coordinate
-        public readonly Vector2Int BoardPositionA;
+        /// <summary>
+        /// A board / map / grid position
+        /// that we want to use as the 'origin'
+        /// for this directional information.
+        /// </summary>
+        public readonly Vector2Int TilePositionA;
 
-        // The incoming b coordinate
-        public readonly Vector2Int BoardPositionB;
+        /// <summary>
+        /// A board / map / grid position
+        /// that we would consider to be "forward"
+        /// from TilePositionA.
+        /// </summary>
+        public readonly Vector2Int TilePositionB;
 
-        // The Direction the object is facing
+        /// <summary>
+        /// The direction vector in TilePosition units
+        /// from TilePositionA to TilePositionB.
+        /// 
+        /// <para>
+        /// *Note that this has nothing to do with
+        /// distance</para>
+        /// </summary>
         public readonly Vector2Int DirectionVec;
+
+        /// <summary>
+        /// An enumerated direction that we can use
+        /// for various tile-related operations.
+        /// </summary>
         public readonly TileDir BoardDirection;
 
         /// <summary>
         /// An adjusted direction corresponding
         /// to a direction on the screen.
         /// </summary>
-        public readonly TileDir ScreenDirection;
+        public readonly ScreenDir ScreenDirection;
 
         /// <summary>
         /// Game board (map) coordinates one tile "forward"
@@ -44,25 +76,32 @@ namespace SystemMiami.Utilities
 
         public DirectionContext(Vector2Int boardPositionA, Vector2Int boardPositionB)
         {
-            BoardPositionA = boardPositionA;
-            BoardPositionB = boardPositionB;
+            TilePositionA = boardPositionA;
+            TilePositionB = boardPositionB;
 
             DirectionVec = DirectionHelper.GetDirectionVec(boardPositionA, boardPositionB);
 
-            BoardDirection = DirectionHelper.GetBoardTileDir(DirectionVec);
+            BoardDirection = DirectionHelper.GetTileDir(DirectionVec);
 
-            ScreenDirection = DirectionHelper.GetScreenTileDir(BoardDirection);
+            ScreenDirection = DirectionHelper.GetScreenDir(BoardDirection);
 
-            ForwardA = BoardPositionA + DirectionVec;
-            ForwardB = BoardPositionB + DirectionVec;
+            ForwardA = TilePositionA + DirectionVec;
+            ForwardB = TilePositionB + DirectionVec;
         }
 
 
         // Equality operations overloading / overriding
+        //
+        // We're doing this so that it doesn't check
+        // Every part of the struct when we check if
+        // they are the same. If the TilePosition Vector2Ints
+        // are the same between the two DirectionContexts we're
+        // comparing, then everything else will necessarily be the same.
+
         public static bool operator ==(DirectionContext a, DirectionContext b)
         {
-            return a.BoardPositionA == b.BoardPositionA
-                && a.BoardPositionB == b.BoardPositionB;
+            return a.TilePositionA == b.TilePositionA
+                && a.TilePositionB == b.TilePositionB;
         }
 
         public static bool operator !=(DirectionContext a, DirectionContext b)
@@ -81,7 +120,7 @@ namespace SystemMiami.Utilities
 
         public override int GetHashCode()
         {
-            return (BoardPositionA, BoardPositionB).GetHashCode();
+            return (TilePositionA, TilePositionB).GetHashCode();
         }
     }
 }

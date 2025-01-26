@@ -10,25 +10,25 @@ namespace SystemMiami.CombatRefactor
     {
         int currentSpeedStat;
 
-        OverlayTile currentPlayerTile;
+        OverlayTile occupiedTile;
         OverlayTile currentFocusTile;
         OverlayTile currentDestinationTile;
 
         // Pathing
-        protected MovementPath limitedPath;
+        protected MovementPath movementPath;
 
         protected MovementTileSelection(Combatant combatant)
             : base(combatant, Phase.Movement) { }
 
-        public override void aOnEnter()
+        public override void OnEnter()
         {
             currentSpeedStat = (int)combatant.Speed.Get();
 
-            currentPlayerTile = combatant.CurrentTile;
+            occupiedTile = combatant.CurrentTile;
         }
 
 
-        public override void bUpdate()
+        public override void Update()
         {
             // Find a new possible focus tile
             // by the means described
@@ -36,6 +36,7 @@ namespace SystemMiami.CombatRefactor
             if (!TryGetNewFocus(out OverlayTile newFocus))
             {
                 // Focus was not new.
+                // Nothing to update.
                 return;
             }
 
@@ -44,28 +45,24 @@ namespace SystemMiami.CombatRefactor
             currentFocusTile = newFocus;
             currentFocusTile?.BeginHover(combatant);
 
-            if (!TryGetNewDirection(out DirectionContext newDir))
-            {
-                // Focus was null
-                return;
-            }
+            DirectionContext newDirection = GetNewDirection();
 
             // Update animator based on direction.
-            combatant.UpdateAnimDirection(newDir.ScreenDirection);
+            combatant.UpdateAnimDirection(newDirection.ScreenDirection);
 
             // Generate a path
-            limitedPath = new(
-                currentPlayerTile,
+            movementPath = new(
+                occupiedTile,
                 currentFocusTile,
                 currentSpeedStat
-            );
+                );
 
-            if (limitedPath.IsEmpty) { return; }
+            if (movementPath.IsEmpty) { return; }
 
-            limitedPath.Draw();
+            movementPath.Draw();
         }
 
-        public override void cMakeDecision()
+        public override void MakeDecision()
         {
             if (SkipPhase())
             {
@@ -73,17 +70,13 @@ namespace SystemMiami.CombatRefactor
                 return;
             }
 
-            if (!limitedPath.ForMovement.Any()) { return; }
+            if (movementPath.IsEmpty) { return; }
 
             if (SelectTile())
             {
                 GoToTileConfirmation();
                 return;
             }
-        }
-
-        public override void eOnExit()
-        {
         }
 
 
@@ -100,6 +93,7 @@ namespace SystemMiami.CombatRefactor
         protected bool TryGetNewFocus(out OverlayTile newFocus)
         {
             newFocus = GetNewFocus();
+
             return newFocus != currentFocusTile;
         }
 
@@ -111,20 +105,19 @@ namespace SystemMiami.CombatRefactor
         /// </summary>
         protected abstract OverlayTile GetNewFocus();
 
-        protected bool TryGetNewDirection(out DirectionContext newDir)
+        protected DirectionContext GetNewDirection()
         {
-            if (currentFocusTile == null)
-            {
-                newDir = new DirectionContext();
-                return false;
-            }
+            Vector2Int occupiedPos = (Vector2Int)occupiedTile.GridLocation;
 
-            newDir = new DirectionContext(
-                (Vector2Int)currentPlayerTile.GridLocation,
+            // If the character isn't focusing on anything,
+            // Then use the position 1 tile in "front" of them,
+            // **relative to where the already are**,
+            // not forward relative to the board.
+            Vector2Int focusPos = (currentFocusTile != null) ?
                 (Vector2Int)currentFocusTile.GridLocation
-            );
+                : combatant.CurrentDirectionContext.ForwardA;
 
-            return true;
+            return new DirectionContext(occupiedPos, focusPos);
         }
     }
 }
