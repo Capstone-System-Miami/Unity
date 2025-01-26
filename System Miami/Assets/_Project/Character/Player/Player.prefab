@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4515390487307748906
 RectTransform:
   m_ObjectHideFlags: 0
@@ -209,7 +209,7 @@ Transform:
   m_GameObject: {fileID: 2773007214259317843}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalPosition: {x: 1.43, y: -10.33, z: -10}
   m_LocalScale: {x: 2.1291547, y: 2.1291547, z: 2.1291547}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -246,11 +246,11 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0
+  near clip plane: 0.01
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 6
+  orthographic size: 14.762837
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -469,6 +469,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _preserveBetweenScenes: 1
+  showDebug: 0
   sharedComponents:
   - {fileID: 4476760992286927676}
   - {fileID: 3666472161562640362}
