@@ -4739,13 +4739,13 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 791803162}
-          m_TargetAssemblyTypeName: SystemMiami.ui.AbilitySlot, Assembly-CSharp
-          m_MethodName: OnClick
-          m_Mode: 1
+        - m_Target: {fileID: 7803342958832123495}
+          m_TargetAssemblyTypeName: SystemMiami.CombatSystem.Combatant, Assembly-CSharp
+          m_MethodName: SelectPhysicalAbility
+          m_Mode: 2
           m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_ObjectArgument: {fileID: 791803162}
+            m_ObjectArgumentAssemblyTypeName: SystemMiami.ui.AbilitySlot, Assembly-CSharp
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
@@ -14245,6 +14245,10 @@ PrefabInstance:
       propertyPath: _movementSpeed
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 137947715004459473, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
+      propertyPath: test
+      value: 
+      objectReference: {fileID: 11400000, guid: 325584827e537574f87e9c204cceb703, type: 2}
     - target: {fileID: 2705490712565707672, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
       propertyPath: m_Enabled
       value: 0

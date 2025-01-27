@@ -8,6 +8,7 @@ using SystemMiami.Utilities;
 using SystemMiami.Enums;
 using UnityEngine;
 using System.Collections;
+using SystemMiami.ui;
 
 namespace SystemMiami.CombatSystem
 {
@@ -93,6 +94,8 @@ namespace SystemMiami.CombatSystem
         public List<AbilityPhysical> Physical { get; private set; } = new();
         public List<AbilityMagical> Magical { get; private set; } = new();
         public List<Consumable> Consumables { get; private set; } = new();
+
+        public CombatAction selectedAbility { get; set; }
         // ^^^ refactored, testing ^^^
 
         public Animator Animator { get { return _animator; } }
@@ -406,6 +409,29 @@ namespace SystemMiami.CombatSystem
             _abilities.ReduceCooldowns();
             _stats.UpdateStatusEffects();
             Health?.Lose(_endOfTurnDamage);
+        }
+
+        public void SelectPhysicalAbility(AbilitySlot slot)
+        {
+            int ind = slot.Index;
+
+            if (Physical.Count <= ind)
+            {
+                Debug.Log($"{name} Phys count less than {ind}");
+
+                return;
+            }
+
+            if (Physical[ind] == null)
+            {
+                Debug.Log($"{name} Phys count nothing found at {ind}");
+
+                return;
+            }
+
+            selectedAbility = Physical[ind];
+
+            Debug.Log($"{name} selected {selectedAbility}");
         }
     }
 }
