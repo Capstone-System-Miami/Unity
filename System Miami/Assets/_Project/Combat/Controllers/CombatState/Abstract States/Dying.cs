@@ -17,14 +17,12 @@ namespace SystemMiami.CombatRefactor
 
         public override void MakeDecision()
         {
-            if (Proceed())
+            if (DeadRequested())
             {
-                GoToDead();
+                SwitchState(factory.Dead());
             }
         }
 
-        protected abstract bool Proceed();
-
-        protected abstract void GoToDead();
+        protected abstract bool DeadRequested();
     }
 }

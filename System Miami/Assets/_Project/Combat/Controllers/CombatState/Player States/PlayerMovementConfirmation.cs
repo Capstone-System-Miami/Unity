@@ -26,15 +26,5 @@ namespace SystemMiami.CombatRefactor
             Debug.Log("Confirm");
             return Input.GetKeyDown(KeyCode.Return);
         }
-
-        protected override void GoToMovementExecution()
-        {
-            machine.SetState(new PlayerMovementExecution(combatant, path));
-        }
-
-        protected override void GoToMovementTileSelection()
-        {
-            machine.SetState(new PlayerMovementTileSelection(combatant));
-        }
     }
 }

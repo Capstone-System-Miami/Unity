@@ -5,26 +5,39 @@ namespace SystemMiami.CombatRefactor
 {
     public abstract class TurnStart : CombatantState
     {
+        Conditions movementTileSelectionConditions = new();
+        Conditions actionSelectionConditions = new();
+
         protected TurnStart(Combatant combatant)
             : base(combatant, Phase.None) { }
 
         public override void OnEnter()
         {
             base.OnEnter();
-            Debug.Log($"{combatant.name} is my name");
-            combatant.IsMyTurn = true;         
+            combatant.IsMyTurn = true;
+            combatant.ResetTurn();
         }
 
         public override void MakeDecision()
         {
-            if (Proceed())
+            if (ProceedRequested())
             {
-                GoToMovementTileSelect();
+                if (movementTileSelectionConditions.Met())
+                {
+                    SwitchState(factory.MovementTileSelection());
+                    return;
+                }
+                
+                if (actionSelectionConditions.Met())
+                {
+                    SwitchState(factory.ActionSelection());
+                    return;
+                }
+
+                SwitchState(factory.TurnEnd());
             }
         }
 
-        protected abstract bool Proceed();
-
-        public abstract void GoToMovementTileSelect();        
+        protected abstract bool ProceedRequested();
     }
 }

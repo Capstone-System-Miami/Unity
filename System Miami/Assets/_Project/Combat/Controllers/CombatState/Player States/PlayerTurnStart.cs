@@ -8,14 +8,17 @@ namespace SystemMiami.CombatRefactor
         public PlayerTurnStart(Combatant combatant)
             : base(combatant) { }
 
-        protected override bool Proceed()
+        public override void OnEnter()
         {
-            return Input.GetKeyDown(KeyCode.Return);
+            base.OnEnter();
+            UI_Prompts =
+                $"{combatant.name} Turn Start!\n" +
+                $"Press {KeyCode.Return} to begin.";
         }
 
-        public override void GoToMovementTileSelect()
+        protected override bool ProceedRequested()
         {
-            machine.SetState(new PlayerMovementTileSelection(combatant));
+            return Input.GetKeyDown(KeyCode.Return);
         }
     }
 }

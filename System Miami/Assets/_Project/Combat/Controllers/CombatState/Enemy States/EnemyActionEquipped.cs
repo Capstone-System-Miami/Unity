@@ -21,15 +21,5 @@ namespace SystemMiami.CombatRefactor
             // weapons to check if any have hit the player?
             return false;
         }
-
-        protected override void GoToActionTileConfirmation()
-        {
-            machine.SetState(new EnemyActionConfimation(combatant));
-        }
-
-        protected override void GoToActionSelection()
-        {
-            machine.SetState(new EnemyActionSelection(combatant));
-        }
     }
 }

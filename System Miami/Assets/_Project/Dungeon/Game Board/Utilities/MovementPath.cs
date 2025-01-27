@@ -24,8 +24,12 @@ namespace SystemMiami
         public List<OverlayTile> ForMovement
         {
             get
-            { 
-                return startExclusive ?? GetTruncated(false);
+            {
+                if (startExclusive == null)
+                {
+                    startExclusive = GetTruncated(false);
+                }
+                return startExclusive;
             }
         }
 
@@ -33,7 +37,11 @@ namespace SystemMiami
         {
             get
             {
-                return startInclusive ?? GetTruncated(true);
+                if (startInclusive == null)
+                {
+                    startInclusive = GetTruncated(true);
+                }
+                return startInclusive;
             }
         }
 
@@ -41,7 +49,11 @@ namespace SystemMiami
         {
             get
             {
-                return removed ?? GetRemoved();
+                if (removed == null)
+                {
+                    removed = GetRemoved();
+                }
+                return removed;
             }
         }
 

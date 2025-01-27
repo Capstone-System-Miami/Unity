@@ -83,7 +83,7 @@ namespace SystemMiami
 
         private void updatePhasePanel()
         {
-            Phase currentPhase = turnOwner.StateMachine.CurrentPhase;
+            Phase currentPhase = turnOwner.CurrentPhase;
 
             Color phaseColor = currentPhase switch
             {
@@ -93,7 +93,7 @@ namespace SystemMiami
                 _ => Color.black
             };
 
-            _phaseField.Value.SetForeground($"{turnOwner.StateMachine.CurrentPhase}");
+            _phaseField.Value.SetForeground($"{turnOwner.CurrentPhase}");
             _phaseField.Value.SetForeground(phaseColor);
         }
 

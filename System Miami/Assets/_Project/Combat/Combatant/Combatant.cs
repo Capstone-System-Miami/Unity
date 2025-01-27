@@ -7,6 +7,7 @@ using SystemMiami.Management;
 using SystemMiami.Utilities;
 using SystemMiami.Enums;
 using UnityEngine;
+using System.Collections;
 
 namespace SystemMiami.CombatSystem
 {
@@ -18,6 +19,10 @@ namespace SystemMiami.CombatSystem
     {
         protected const float PLACEMENT_RANGE = 0.0001f;
 
+
+        [SerializeField] private bool _printUItoConsole;
+        public bool PrintUItoConsole { get { return _printUItoConsole; } }
+
         [SerializeField] private float _movementSpeed;
 
         public bool IsPlayer
@@ -28,7 +33,51 @@ namespace SystemMiami.CombatSystem
             }
         }
 
-        [HideInInspector] public bool IsMyTurn;
+        public Phase CurrentPhase
+        {
+            get
+            {
+                return currentState.phase;
+            }
+        }
+
+        public bool ReadyToStart
+        {
+            get
+            {
+                return currentState is Idle;
+            }
+        }
+
+        private CombatantStateFactory stateFactory;
+        public CombatantStateFactory Factory
+            { get { return stateFactory; } }
+
+        private CombatantState currentState;
+        public CombatantState CurrentState
+        {
+            get
+            {
+                return currentState;
+            }
+            set
+            {
+                if (value.combatant != this)
+                {
+                    Debug.LogError(
+                        $"{name} is trying to transition" +
+                        $"to a state belonging to" +
+                        $"{value.combatant.name}"
+                        );
+                    return;
+                }
+
+                currentState = value;
+            }
+        }
+
+
+        public bool IsMyTurn { get; set; }
 
 
         [SerializeField] private Color _colorTag = Color.white;
@@ -103,26 +152,19 @@ namespace SystemMiami.CombatSystem
             currentSprite = GetComponent<SpriteRenderer>().sprite;
         }
 
-        private void OnEnable()
-        {
-            GAME.MGR.CombatantDeath += onCombatantDeath;
-        }
-
-        private void OnDisable()
-        {
-            GAME.MGR.CombatantDeath -= onCombatantDeath;
-        }
-
         protected virtual void Start()
         {
             initResources();
             initDirection();
+            initStateMachine();
         }
 
         private void Update()
         {
-            CheckDead();
             UpdateResources();
+
+            CurrentState.Update();
+            CurrentState.MakeDecision();
         }
 
         #endregion Unity
@@ -147,13 +189,16 @@ namespace SystemMiami.CombatSystem
 
             UpdateAnimDirection(CurrentDirectionContext.ScreenDirection);
         }
+
+        private void initStateMachine()
+        {
+            stateFactory = new(this);
+            currentState = stateFactory.Idle();
+            currentState.OnEnter();
+        }
         #endregion Construction
 
-        public void SwitchState(CombatantState newState)
-        {
-            StateMachine.SetState(newState);
-        }
-
+        #region Movement
         public void StepTowards(OverlayTile target)
         {
             float stepDistance = _movementSpeed * Time.deltaTime;
@@ -182,16 +227,29 @@ namespace SystemMiami.CombatSystem
             CurrentTile = target;
             target.PlaceCombatant(this);
         }
+        #endregion Movement
+
+        #region Focus
+        public OverlayTile GetDefaultFocus()
+        {
+            OverlayTile result;
+
+            Vector2Int forwardPos
+                = CurrentDirectionContext.ForwardA;
+
+            if (!MapManager.MGR.map.TryGetValue(forwardPos, out result))
+            {
+                Debug.LogError(
+                    $"FATAL | {name}'s {this}" +
+                    $"FOUND NO TILE TO FOCUS ON."
+                    );
+            }
+
+            return result;
+        }
+        #endregion Focus
 
         #region Updates
-        private void CheckDead()
-        {
-            if (Health.Get() == 0)
-            {
-                GAME.MGR.CombatantDeath.Invoke(this);
-            }
-        }
-
         private void UpdateResources()
         {
             Health = new Resource(_stats.GetStat(StatType.MAX_HEALTH), Health.Get());
@@ -214,8 +272,7 @@ namespace SystemMiami.CombatSystem
         /// Ability's TargetingPatterns.
         /// 
         /// <para>
-        /// Now that DirectionContext is being updated each frame,
-        /// these "subscriptions" should just be converted to
+        /// These "subscriptions" should just be converted to
         /// public functions on TargetingPatterns that can
         /// be called by CombatantStates when necessary.</para>
         /// </summary>
@@ -226,14 +283,6 @@ namespace SystemMiami.CombatSystem
         }
 
         #endregion Updates
-
-        private void onCombatantDeath(Combatant deadCombatant)
-        {
-            if (deadCombatant == this)
-            {
-                Die();
-            }
-        }
 
         #region IHighlightable
 
@@ -374,13 +423,6 @@ namespace SystemMiami.CombatSystem
             _abilities.ReduceCooldowns();
             _stats.UpdateStatusEffects();
             Health?.Lose(_endOfTurnDamage);
-        }
-
-        public virtual void Die()
-        {
-            // Player died
-            Debug.Log($"{name} has died.");
-            Destroy(gameObject);
         }
     }
 }

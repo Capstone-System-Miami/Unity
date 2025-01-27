@@ -10,36 +10,19 @@ namespace SystemMiami.CombatRefactor
                 : base(combatant) { }
 
         // Decision
-        protected override bool SkipPhase()
+        protected override bool TurnEndRequested()
+        {
+            return Input.GetKeyDown(KeyCode.Q);
+        }
+
+        protected override bool SkipMovementRequested()
         {
             return Input.GetKeyDown(KeyCode.Tab);
         }
-        protected override bool SelectTile()
+        protected override bool ConfirmPathRequested()
         {
 
             return Input.GetMouseButtonDown(0);
-        }
-
-        // Decision outcomes
-        protected override void GoToActionSelection()
-        {
-            machine.SetState(
-                new PlayerActionSelection(
-                    combatant
-                )
-            );
-            return;
-        }
-
-        protected override void GoToTileConfirmation()
-        {
-            machine.SetState(
-                new PlayerMovementConfirmation(
-                    combatant,
-                    path
-                )
-            );
-            return;
         }
 
 
@@ -85,5 +68,6 @@ namespace SystemMiami.CombatRefactor
 
             return hit.Value.collider.gameObject.GetComponent<OverlayTile>();
         }
+
     }
 }

@@ -7,5 +7,14 @@ namespace SystemMiami.CombatRefactor
     {
         protected Dead(Combatant combatant)
             : base(combatant, Phase.None) { }
+
+        public override void OnEnter()
+        {
+            base.OnEnter();
+
+            // Player died
+            Debug.Log($"{combatant.name} has died.");
+            MonoBehaviour.Destroy(combatant.gameObject);
+        }
     }
 }

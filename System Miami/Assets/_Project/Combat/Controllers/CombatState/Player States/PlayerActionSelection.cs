@@ -8,25 +8,15 @@ namespace SystemMiami.CombatRefactor
         public PlayerActionSelection(Combatant combatant)
             : base(combatant) { }
 
-        protected override bool ActionSelected()
+        protected override bool EquipRequested()
         {
             // Event from UI?
             return false;
         }
 
-        protected override bool SkipPhase()
+        protected override bool SkipPhaseRequested()
         {
             return Input.GetKeyDown(KeyCode.Q);
-        }
-
-        protected override void GoToActionEquipped()
-        {
-            machine.SetState(new PlayerActionEquipped(combatant));
-        }
-
-        protected override void GoToEndTurn()
-        {
-            machine.SetState(new PlayerTurnEnd(combatant));
         }
     }
 }

@@ -1,4 +1,5 @@
 using SystemMiami.CombatSystem;
+using SystemMiami.Management;
 
 namespace SystemMiami.CombatRefactor
 {
@@ -6,5 +7,21 @@ namespace SystemMiami.CombatRefactor
     {
         public Idle(Combatant combatant)
             : base(combatant, Phase.None) { }
+
+
+        public override void MakeDecision()
+        {
+            base.MakeDecision();
+            
+            if (DyingRequested())
+            {
+                SwitchState(factory.Dying());
+            }
+        }
+
+        protected bool DyingRequested()
+        {
+            return combatant.Health.Get() == 0;
+        }
     }
 }

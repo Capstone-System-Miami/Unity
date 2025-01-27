@@ -1,15 +1,34 @@
 using SystemMiami.AbilitySystem;
 using SystemMiami.CombatSystem;
+using System.Collections;
 using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
 {
     public abstract class CombatantState
     {
-        public readonly Phase Phase;
+        public readonly Phase phase;
 
-        protected readonly Combatant combatant;
+        public readonly Combatant combatant;
+        protected readonly CombatantStateFactory factory;
         protected readonly CombatantStateMachine machine;
+
+        private string uiMsg = "";
+        public string UI_Prompts
+        {
+            get
+            {
+                return uiMsg;
+            }
+            protected set
+            {
+                uiMsg = value;
+                if (combatant.PrintUItoConsole)
+                {
+                    Debug.Log($"{combatant.name} UI message: {uiMsg}");
+                }
+            }
+        }
 
         protected CombatantState(
             Combatant combatant,
@@ -17,8 +36,9 @@ namespace SystemMiami.CombatRefactor
             )
         {
             this.combatant = combatant;
+            this.factory = combatant.Factory;
             this.machine = combatant.StateMachine;
-            Phase = phase;
+            this.phase = phase;
         }
 
         /// <summary>
@@ -57,9 +77,64 @@ namespace SystemMiami.CombatRefactor
         /// </summary>
         public virtual void OnExit() { }
 
-        public virtual string rGetTurnPrompts()
+        /// <summary>
+        /// The main method by which state transitions happen.
+        /// </summary>
+        public void SwitchState(CombatantState newState)
         {
-            return "";
+            /// Call OnExit on
+            /// the current state object
+            /// before setting a new one
+            OnExit();
+
+            /// Call OnEnter on the new state object
+            newState.OnEnter();
+
+            /// Set the current state to the new state.
+            /// passed into this function as an arg.
+            combatant.CurrentState = newState;
+        }
+
+        /// <summary>
+        /// An overload of SwitchState that takes a float.
+        /// This function will run a Coroutine that
+        ///  then
+        /// waits `float delay` seconds before assigning
+        /// a new state and calling OnEnter() on it.
+        /// </summary>
+        /// 
+        /// <param name="newState">
+        /// The state to transition to.
+        /// </param>
+        /// 
+        /// <param name="delay">
+        /// Amount of time in seconds for
+        /// the state machine to wait between: 
+        /// (a) calling OnExit() on the previous state, and
+        /// (b) calling OnEnter() on the new current state.
+        /// </param>
+        public void SwitchState(CombatantState newState, float delay)
+        {
+            combatant.StartCoroutine(SwitchStateWithDelay(newState, delay));
+        }
+
+        /// <summary>
+        /// The IEnumerator by which the
+        /// state machine can perform state changes
+        /// with a delay.
+        /// </summary>
+        /// 
+        /// <returns>
+        /// The enumerated process
+        /// </returns>
+        private IEnumerator SwitchStateWithDelay(CombatantState newState, float delay)
+        {
+            OnExit();
+
+            yield return new WaitForSeconds(delay);
+
+            combatant.CurrentState = newState;
+            newState.OnEnter();
         }
 
         // VVVVV KEEP FOR REFERENCE PLEASE  VVVVV

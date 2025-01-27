@@ -19,15 +19,5 @@ namespace SystemMiami.CombatRefactor
             // Player presses enter?
             return false;
         }
-
-        protected override void GoToActionEquipped()
-        {
-            machine.SetState(new PlayerActionEquipped(combatant));
-        }
-
-        protected override void GoToActionExecution()
-        {
-            machine.SetState(new PlayerActionExecution(combatant));
-        }
     }
 }

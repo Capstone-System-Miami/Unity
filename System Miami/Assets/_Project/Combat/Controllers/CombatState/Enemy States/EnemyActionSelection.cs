@@ -10,27 +10,16 @@ namespace SystemMiami.CombatRefactor
         public EnemyActionSelection(Combatant combatant)
             : base (combatant) { }
 
-        protected override bool ActionSelected()
+        protected override bool EquipRequested()
         {
             // immediately to equipped?
             return true;
         }
-        protected override bool SkipPhase()
+        protected override bool SkipPhaseRequested()
         {
             // if they have to?
             return false;
         }
-
-        protected override void GoToActionEquipped()
-        {
-            machine.SetState(new EnemyActionEquipped(combatant));
-        }
-
-        protected override void GoToEndTurn()
-        {
-            machine.SetState(new EnemyTurnEnd(combatant));
-        }
-
     }
 
 

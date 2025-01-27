@@ -38,15 +38,5 @@ namespace SystemMiami.CombatRefactor
         {
             return true;
         }
-
-        protected override void GoToMovementExecution()
-        {
-            machine.SetState(new EnemyMovementExecution(combatant, path));
-        }
-
-        protected override void GoToMovementTileSelection()
-        {
-            machine.SetState(new EnemyMovementTileSelection(combatant));
-        }
     }
 }

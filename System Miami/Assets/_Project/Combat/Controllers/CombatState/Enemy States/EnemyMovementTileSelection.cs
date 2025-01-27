@@ -12,31 +12,20 @@ namespace SystemMiami.CombatRefactor
             : base(combatant) { }
 
         // Decision
-        protected override bool SelectTile()
+        protected override bool TurnEndRequested()
         {
-            return true;
-        }
-
-        protected override bool SkipPhase()
-        {
-            // TODO:
-            // If the phase has to be skipped
-            // because of some status effect,
-            // this is where that would happen.
             return false;
         }
 
-        // Decision outcomes
-        protected override void GoToActionSelection()
+        protected override bool SkipMovementRequested()
         {
-            machine.SetState(new EnemyActionSelection(combatant));
+            return false;
         }
 
-        protected override void GoToTileConfirmation()
+        protected override bool ConfirmPathRequested()
         {
-            machine.SetState(new EnemyActionConfimation(combatant));
+            return true;
         }
-
 
         protected override OverlayTile GetNewFocus()
         {

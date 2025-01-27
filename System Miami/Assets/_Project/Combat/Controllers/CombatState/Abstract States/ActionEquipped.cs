@@ -18,22 +18,18 @@ namespace SystemMiami.CombatRefactor
         {
             if (Unequip())
             {
-                GoToActionSelection();
+                SwitchState(factory.ActionSelection());
                 return;
             }
 
             if (SelectTile())
             {
-                GoToActionTileConfirmation();
+                SwitchState(factory.ActionConfirmation());
                 return;
             }
         }
 
         protected abstract bool SelectTile();
         protected abstract bool Unequip();
-
-
-        protected abstract void GoToActionTileConfirmation();
-        protected abstract void GoToActionSelection();
     }
 }

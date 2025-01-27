@@ -19,16 +19,5 @@ namespace SystemMiami
             // Player right clicks?
             return false;
         }
-
-        protected override void GoToActionSelection()
-        {
-            machine.SetState(new PlayerActionSelection(combatant));
-        }
-
-        protected override void GoToActionTileConfirmation()
-        {
-            machine.SetState(new PlayerActionConfirmation(combatant));
-        }
-
     }
 }

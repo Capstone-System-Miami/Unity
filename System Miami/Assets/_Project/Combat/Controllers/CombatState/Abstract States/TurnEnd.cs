@@ -17,7 +17,7 @@ namespace SystemMiami.CombatRefactor
         {
             if (Proceed())
             {
-                GoToIdle();
+                SwitchState(factory.Idle());
                 return;
             }
         }
@@ -29,8 +29,5 @@ namespace SystemMiami.CombatRefactor
 
         // Decision
         protected abstract bool Proceed();
-
-        // Outcome
-        protected abstract void GoToIdle();
     }
 }

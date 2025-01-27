@@ -29,13 +29,13 @@ namespace SystemMiami.CombatRefactor
         {
             if (ConfirmSelection())
             {
-                GoToMovementExecution();
+                SwitchState(factory.MovementExecution(path));
                 return;
             }
 
             if (CancelSelection())
             {
-                GoToMovementTileSelection();
+                SwitchState(factory.MovementTileSelection());
                 return;
             }
         }
@@ -43,9 +43,5 @@ namespace SystemMiami.CombatRefactor
         // Decision
         protected abstract bool ConfirmSelection();
         protected abstract bool CancelSelection();
-
-        // Outcomes
-        protected abstract void GoToMovementExecution();
-        protected abstract void GoToMovementTileSelection();
     }
 }

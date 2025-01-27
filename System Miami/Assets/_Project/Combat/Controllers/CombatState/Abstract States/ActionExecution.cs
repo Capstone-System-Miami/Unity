@@ -19,11 +19,9 @@ namespace SystemMiami.CombatRefactor
 
         public override void MakeDecision()
         {
-            GoToEndTurn();
+            SwitchState(factory.TurnEnd());
             return;
         }
 
-        // Only outcome
-        protected abstract void GoToEndTurn();
     }
 }

@@ -131,7 +131,7 @@ namespace SystemMiami
                 combatantsReady = true;
                 foreach (Combatant combatant in combatants)
                 {
-                    if (!combatant.StateMachine.ReadyToStart)
+                    if (!combatant.ReadyToStart)
                     {
                         combatantsReady = false;
                         break;
@@ -145,24 +145,21 @@ namespace SystemMiami
 
             while (!IsGameOver)
             {
+                // Remove null items.
+                // These nulls can occur when
+                // combatants die.
+                combatants.RemoveAll(combatant => combatant == null);
+
                 foreach (Combatant combatant in combatants)
                 {
-                    if (combatant == null)
-                    { continue; }
+                    if (combatant == null) { continue; }
 
-                    if (combatant.StateMachine == null)
-                    {
-                        Debug.LogWarning($"CombatantController not found in {combatant} on {combatant.name}");
-                        continue;
-                    }
-
-
-                    CombatantState startTurnState
-                        = combatant.IsPlayer
-                        ? new PlayerTurnStart(combatant)
-                        : new EnemyTurnStart(combatant);
-
-                    combatant.SwitchState(startTurnState);
+                    // TODO this is a werid way of
+                    // 'forcing' a state switch, as
+                    // states should control their own
+                    // transitions. Consider converting
+                    // this to a request or something.
+                    combatant.CurrentState.SwitchState(combatant.Factory.TurnStart());
 
                     CurrentTurnOwner = combatant;
                     yield return new WaitForEndOfFrame();

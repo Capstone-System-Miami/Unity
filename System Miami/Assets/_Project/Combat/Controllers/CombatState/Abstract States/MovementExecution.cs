@@ -7,6 +7,9 @@ namespace SystemMiami.CombatRefactor
 {
     public abstract class MovementExecution : CombatantState
     {
+        protected Conditions moveAgainConditions = new();
+        protected Conditions actionSelectionConditions = new();
+
         protected MovementPath path;
         protected List<OverlayTile> pathToConsume = new();
         protected OverlayTile occupiedTile;
@@ -30,6 +33,9 @@ namespace SystemMiami.CombatRefactor
         {
             base.OnEnter();
             pathToConsume = new(path.ForMovement);
+
+            moveAgainConditions.Add( () => !pathToConsume.Any() );
+            moveAgainConditions.Add( () => combatant.Speed.Get() > 0 );
         }
 
         public override void Update()
@@ -66,15 +72,19 @@ namespace SystemMiami.CombatRefactor
         {
             if (pathToConsume.Any()) { return; }
 
-            if (MoveAgain())
+            if (moveAgainConditions.Met())
             {
-                GoToMovementTileSelection();
+                SwitchState(factory.MovementTileSelection());
+                return;
+            }
+            else if (actionSelectionConditions.Met())
+            {
+                SwitchState(factory.ActionSelection());
                 return;
             }
             else
             {
-                GoToActionSelection();
-                return;
+                SwitchState(factory.TurnEnd());
             }
         }
 
@@ -82,13 +92,5 @@ namespace SystemMiami.CombatRefactor
         {
             path.UnDrawAll();
         }
-
-        // Decision
-        protected abstract bool MoveAgain();
-
-        // Outcomes
-        protected abstract void GoToMovementTileSelection();
-        protected abstract void GoToActionSelection();
-        protected abstract void GoToTurnEnd();
     }
 }

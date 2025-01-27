@@ -7,10 +7,5 @@ namespace SystemMiami.CombatRefactor
     {
         public PlayerActionExecution(Combatant combatant)
             : base(combatant) { }
-
-        protected override void GoToEndTurn()
-        {
-            machine.SetState(new PlayerTurnEnd(combatant));
-        }
     }
 }

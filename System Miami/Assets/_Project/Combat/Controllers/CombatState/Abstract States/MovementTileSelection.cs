@@ -11,12 +11,17 @@ namespace SystemMiami.CombatRefactor
     {
         int currentSpeedStat;
 
+        // Tiles
         OverlayTile occupiedTile;
-        OverlayTile currentFocusTile;
-        OverlayTile currentDestinationTile;
+        OverlayTile focusTile;
 
         // Pathing
         protected MovementPath path;
+
+        // Transitioning
+        protected Conditions turnEndConditions = new();
+        protected Conditions skipMovementConditions = new();
+        protected Conditions confirmPathConditions = new();
 
         protected MovementTileSelection(Combatant combatant)
             : base(combatant, Phase.Movement) { }
@@ -27,12 +32,16 @@ namespace SystemMiami.CombatRefactor
             currentSpeedStat = (int)combatant.Speed.Get();
 
             occupiedTile = combatant.CurrentTile;
+
+            confirmPathConditions.Add(() => path != null);
+            confirmPathConditions.Add(() => !path.IsEmpty);
         }
 
 
         public override void Update()
         {
             occupiedTile = combatant.CurrentTile;
+
             // Find a new possible focus tile
             // by the means described
             // by int the derived classes.
@@ -44,22 +53,24 @@ namespace SystemMiami.CombatRefactor
             }
 
             // Update currentTile & tile hover
-            currentFocusTile?.EndHover(combatant);
-            currentFocusTile = newFocus;
-            currentFocusTile?.BeginHover(combatant);
+            focusTile?.EndHover(combatant);
+            focusTile = newFocus;
+            focusTile?.BeginHover(combatant);
 
-            DirectionContext newDirection = GetNewDirection();
-            combatant.CurrentDirectionContext = newDirection;
+            combatant.CurrentDirectionContext = GetNewDirection();
 
             // Update animator based on direction.
-            combatant.UpdateAnimDirection(newDirection.ScreenDirection);
+            combatant.UpdateAnimDirection(
+                combatant.CurrentDirectionContext.ScreenDirection);
 
-
+            // If there is already a
+            // path set, unhighlight it.
             path?.Unhighlight();
-            // Generate a path
+
+            // Generate a path based on 
             path = new(
                 occupiedTile,
-                currentFocusTile,
+                focusTile,
                 currentSpeedStat
                 );
 
@@ -73,18 +84,27 @@ namespace SystemMiami.CombatRefactor
 
         public override void MakeDecision()
         {
-            if (SkipPhase())
+            if (TurnEndRequested())
             {
-                GoToActionSelection();
+                if (!turnEndConditions.Met()) { return; }
+
+                SwitchState(factory.TurnEnd());
                 return;
             }
 
-            if (path == null) { return; }
-            if (path.IsEmpty) { return; }
-
-            if (SelectTile())
+            if (SkipMovementRequested())
             {
-                GoToTileConfirmation();
+                if (!skipMovementConditions.Met()) { return; }
+
+                SwitchState(factory.ActionSelection());
+                return;
+            }
+
+            if (ConfirmPathRequested())
+            {
+                if (!confirmPathConditions.Met()) { return; }
+
+                SwitchState(factory.MovementConfirmation(path));
                 return;
             }
         }
@@ -97,20 +117,17 @@ namespace SystemMiami.CombatRefactor
 
 
         // Decision
-        protected abstract bool SkipPhase();
-        protected abstract bool SelectTile();
+        protected abstract bool TurnEndRequested();
+        protected abstract bool SkipMovementRequested();
+        protected abstract bool ConfirmPathRequested();
 
-
-        // Decision outcomes
-        protected abstract void GoToActionSelection();
-        protected abstract void GoToTileConfirmation();
 
         // Focus
         protected bool TryGetNewFocus(out OverlayTile newFocus)
         {
-            newFocus = GetNewFocus() ?? GetDefaultFocus();
+            newFocus = GetNewFocus() ?? combatant.GetDefaultFocus();
 
-            return newFocus != currentFocusTile;
+            return newFocus != focusTile;
         }
 
         /// <summary>
@@ -121,24 +138,6 @@ namespace SystemMiami.CombatRefactor
         /// </summary>
         protected abstract OverlayTile GetNewFocus();
 
-        protected OverlayTile GetDefaultFocus()
-        {
-            OverlayTile result;
-
-            Vector2Int forwardPos
-                = combatant.CurrentDirectionContext.ForwardA;
-
-            if (!MapManager.MGR.map.TryGetValue(forwardPos, out result))
-            {
-                Debug.LogError(
-                    $"FATAL | {combatant.name}'s {this}" +
-                    $"FOUND NO TILE TO FOCUS ON."
-                    );
-            }
-
-            return result;
-        }
-
         protected DirectionContext GetNewDirection()
         {
             Vector2Int occupiedPos = (Vector2Int)combatant.CurrentTile.GridLocation;
@@ -147,8 +146,8 @@ namespace SystemMiami.CombatRefactor
             // Then use the position 1 tile in "front" of them,
             // **relative to where the already are**,
             // not forward relative to the board.
-            Vector2Int focusPos = (currentFocusTile != null) ?
-                (Vector2Int)currentFocusTile.GridLocation
+            Vector2Int focusPos = (focusTile != null) ?
+                (Vector2Int)focusTile.GridLocation
                 : combatant.CurrentDirectionContext.ForwardA;
 
             return new DirectionContext(occupiedPos, focusPos);

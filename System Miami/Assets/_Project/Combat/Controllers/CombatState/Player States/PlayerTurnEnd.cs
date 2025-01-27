@@ -13,10 +13,5 @@ namespace SystemMiami.CombatRefactor
             // Wait for input?
             return true;
         }
-
-        protected override void GoToIdle()
-        {
-            machine.SetState(new PlayerIdle(combatant));
-        }
     }
 }

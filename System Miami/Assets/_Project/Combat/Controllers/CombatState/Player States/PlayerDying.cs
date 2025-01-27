@@ -9,15 +9,10 @@ namespace SystemMiami.CombatRefactor
             : base (combatant) { }
 
 
-        protected override bool Proceed()
+        protected override bool DeadRequested()
         {
             // Check animation flag?
             return true;
-        }
-
-        protected override void GoToDead()
-        {
-            machine.SetState(new PlayerDead(combatant));
         }
     }
 }

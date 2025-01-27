@@ -38,53 +38,31 @@ namespace SystemMiami.CombatRefactor
 
         public override void MakeDecision()
         {
-            if (ActionSelected())
+            if (EquipRequested())
             {
-                GoToActionEquipped();
+                SwitchState(factory.ActionEquipped());
                 return;
             }
 
-            if (SkipPhase())
+            if (SkipPhaseRequested())
             {
-                GoToEndTurn();
+                SwitchState(factory.TurnEnd());
                 return;
             }
         }
 
         // Decision
-        protected abstract bool ActionSelected();
-        protected abstract bool SkipPhase();
-
-        // Outcomes
-        protected abstract void GoToActionEquipped();
-        protected abstract void GoToEndTurn();
+        protected abstract bool EquipRequested();
+        protected abstract bool SkipPhaseRequested();
 
 
 
         // Focus
         protected bool TryGetNewFocus(out OverlayTile newFocus)
         {
-            newFocus = GetNewFocus() ?? GetDefaultFocus();
+            newFocus = GetNewFocus() ?? combatant.GetDefaultFocus();
 
             return newFocus != highlightOnlyFocusTile;
-        }
-
-        protected OverlayTile GetDefaultFocus()
-        {
-            OverlayTile result;
-
-            Vector2Int forwardPos
-                = combatant.CurrentDirectionContext.ForwardA;
-
-            if (!MapManager.MGR.map.TryGetValue(forwardPos, out result))
-            {
-                Debug.LogError(
-                    $"FATAL | {combatant.name}'s {this}" +
-                    $"FOUND NO TILE TO FOCUS ON."
-                    );
-            }
-
-            return result;
         }
 
         /// <summary>
