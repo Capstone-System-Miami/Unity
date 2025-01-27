@@ -61,7 +61,7 @@ namespace SystemMiami
             updateCombatantPanel();
             updatePhasePanel();
 
-            if (turnOwner.IsPlayer)
+            if (turnOwner is PlayerCombatant)
             {
                 enablePrompts();
                 updatePromptsPanel();

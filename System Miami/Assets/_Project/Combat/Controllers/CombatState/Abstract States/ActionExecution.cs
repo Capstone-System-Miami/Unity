@@ -13,7 +13,7 @@ namespace SystemMiami.CombatRefactor
             if (combatant.Abilities.AbilityExecutionIsValid
                 (out IEnumerator abilityProcess))
             {
-                machine.StartCoroutine(abilityProcess);
+                combatant.StartCoroutine(abilityProcess);
             }
         }
 

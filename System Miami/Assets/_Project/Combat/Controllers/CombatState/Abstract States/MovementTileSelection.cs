@@ -125,18 +125,12 @@ namespace SystemMiami.CombatRefactor
         // Focus
         protected bool TryGetNewFocus(out OverlayTile newFocus)
         {
-            newFocus = GetNewFocus() ?? combatant.GetDefaultFocus();
+            newFocus = combatant.GetNewFocus() ?? combatant.GetDefaultFocus();
 
             return newFocus != focusTile;
         }
 
-        /// <summary>
-        /// Whatever tile the combatant
-        /// is currently focusing on.
-        /// The methods for determining this
-        /// must be defined in derived classes.
-        /// </summary>
-        protected abstract OverlayTile GetNewFocus();
+
 
         protected DirectionContext GetNewDirection()
         {

@@ -10,7 +10,7 @@ namespace SystemMiami.CombatRefactor
 
         public override void OnEnter()
         {
-            Debug.Log($"{machine.name}Calling end of turn");
+            Debug.Log($"{combatant.name}Calling end of turn");
         }
 
         public override void MakeDecision()

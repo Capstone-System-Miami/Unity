@@ -11,7 +11,6 @@ namespace SystemMiami.CombatRefactor
 
         public readonly Combatant combatant;
         protected readonly CombatantStateFactory factory;
-        protected readonly CombatantStateMachine machine;
 
         private string uiMsg = "";
         public string UI_Prompts
@@ -37,7 +36,6 @@ namespace SystemMiami.CombatRefactor
         {
             this.combatant = combatant;
             this.factory = combatant.Factory;
-            this.machine = combatant.StateMachine;
             this.phase = phase;
         }
 

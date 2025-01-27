@@ -11,7 +11,7 @@ namespace SystemMiami.CombatRefactor
         public CombatantStateFactory(Combatant combatant)
         {
             this.combatant = combatant;
-            this.isPlayer = combatant.IsPlayer;
+            this.isPlayer = combatant is PlayerCombatant;
         }
 
         public CombatantState Idle()

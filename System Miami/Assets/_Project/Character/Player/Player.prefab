@@ -430,8 +430,7 @@ GameObject:
   - component: {fileID: 8219263611542528465}
   - component: {fileID: 6386089713510983124}
   - component: {fileID: 4261404639173623324}
-  - component: {fileID: -487834630417795382}
-  - component: {fileID: 2497366142004837811}
+  - component: {fileID: 137947715004459473}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -484,8 +483,7 @@ MonoBehaviour:
   playerCamera: {fileID: 2773007214259317843}
   interactionUI: {fileID: 650297918678062704}
   dungeonComponents:
-  - {fileID: -487834630417795382}
-  - {fileID: 2497366142004837811}
+  - {fileID: 137947715004459473}
   neighborhoodSceneName: NEIGHBORHOOD
   dungeonSceneName: Dungeon
 --- !u!114 &2859284793658147475
@@ -763,7 +761,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.4988736, y: 0.16016328}
   m_EdgeRadius: 0
---- !u!114 &-487834630417795382
+--- !u!114 &137947715004459473
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -772,37 +770,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 6453553769002132252}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5dad0a304e458cf459016a52e1ee441a, type: 3}
+  m_Script: {fileID: 11500000, guid: e496e3e20fe77e6439ec6809d0c51888, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _movementSpeed: 0
-  IsMyTurn: 0
-  _colorTag: {r: 0.21688704, g: 0.6603774, b: 0.20870416, a: 1}
-  StateMachine: {fileID: 0}
-  PlayerDirSprites:
-  - {fileID: -1891642137, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
-  - {fileID: 504766812, guid: 82236648256b77d4588c22a84d4da636, type: 3}
-  - {fileID: 1549921822, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
-  - {fileID: 1181817085, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
-  - {fileID: -1962472897, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
-  - {fileID: -663491783, guid: 82236648256b77d4588c22a84d4da636, type: 3}
-  - {fileID: -1403138823, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
-  - {fileID: 820659288, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
-  currentSprite: {fileID: 0}
+  _colorTag: {r: 0.6948949, g: 1, b: 0.5896226, a: 1}
+  _printUItoConsole: 1
+  _movementSpeed: 2
   IsDamageable: 1
   IsHealable: 1
   IsMovable: 1
   IsStunned: 0
   IsInvisible: 0
---- !u!114 &2497366142004837811
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6453553769002132252}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f1a3c0c08ff71d64ca7ef4f6f3b7ab53, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

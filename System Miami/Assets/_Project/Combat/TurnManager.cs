@@ -46,10 +46,9 @@ namespace SystemMiami
         {
             get
             {
-                if (CurrentTurnOwner == null)
-                    { return false; }
+                if (CurrentTurnOwner == null) { return false; }
 
-                return CurrentTurnOwner.IsPlayer;
+                return CurrentTurnOwner is PlayerCombatant;
             }
         }
 

@@ -13,47 +13,53 @@ namespace SystemMiami.CombatSystem
 {
     [RequireComponent(
         typeof(Stats),
-        typeof(Abilities),
-        typeof(CombatantStateMachine))]
-    public class Combatant : MonoBehaviour, IHighlightable, IDamageable, IHealable, IMovable
+        typeof(Abilities)
+        )]
+    public abstract class Combatant : MonoBehaviour, IHighlightable, IDamageable, IHealable, IMovable
     {
         protected const float PLACEMENT_RANGE = 0.0001f;
 
+        // These Actions will be subscribed to by each ability's
+        // CombatActions when they are equipped and targeting.
+        // Which one they subscribe to will depend on the origin
+        // of the pattern.
+        public Action<DirectionContext> OnSubjectChanged;
+        public Action<DirectionContext> OnDirectionChanged;
 
+        [SerializeField] private Color _colorTag = Color.white;
         [SerializeField] private bool _printUItoConsole;
-        public bool PrintUItoConsole { get { return _printUItoConsole; } }
-
         [SerializeField] private float _movementSpeed;
 
-        public bool IsPlayer
-        {
-            get
-            {
-                return gameObject == PlayerManager.MGR.gameObject;
-            }
-        }
-
-        public Phase CurrentPhase
-        {
-            get
-            {
-                return currentState.phase;
-            }
-        }
-
-        public bool ReadyToStart
-        {
-            get
-            {
-                return currentState is Idle;
-            }
-        }
-
         private CombatantStateFactory stateFactory;
-        public CombatantStateFactory Factory
-            { get { return stateFactory; } }
-
         private CombatantState currentState;
+
+        private Stats _stats;
+        private float _endOfTurnDamage;
+
+        private Abilities _abilities;
+
+        private SpriteRenderer _renderer;
+        private Color _defaultColor;
+
+        private Animator _animator;
+        private int dirParam = Animator.StringToHash("TileDir");
+
+
+        public bool IsDamageable = true;
+        public bool IsHealable = true;
+        public bool IsMovable = true;
+        public bool IsStunned = false;
+        public bool IsInvisible = false;
+
+        public int ID { get; set; }
+        public Color ColorTag { get { return _colorTag; } }
+        public bool PrintUItoConsole { get { return _printUItoConsole; } }
+
+        public bool IsMyTurn { get; set; }
+        public bool ReadyToStart { get { return currentState is Idle; } }
+        public Phase CurrentPhase { get { return currentState.phase; } }
+
+        public CombatantStateFactory Factory { get { return stateFactory; } }
         public CombatantState CurrentState
         {
             get
@@ -76,80 +82,40 @@ namespace SystemMiami.CombatSystem
             }
         }
 
+        public Stats Stats { get { return _stats; } }
+        [HideInInspector] public Resource Health;
+        [HideInInspector] public Resource Stamina;
+        [HideInInspector] public Resource Mana;
+        [HideInInspector] public Resource Speed;
 
-        public bool IsMyTurn { get; set; }
-
-
-        [SerializeField] private Color _colorTag = Color.white;
-
-
-        private Animator _animator;
-        private int dirParam = Animator.StringToHash("TileDir");
-
-
-        // Should only be null if dead.
-        public OverlayTile CurrentTile { get; private set; }
-
-        public DirectionContext CurrentDirectionContext;
-
-        public int ID { get; set; }
-
-        [HideInInspector] public CombatantStateMachine StateMachine;
-
-        private Stats _stats;
-        private Abilities _abilities;
-
+        public Abilities Abilities { get { return _abilities; } }
         // vvv refactored, testing vvv
         public List<AbilityPhysical> Physical { get; private set; } = new();
         public List<AbilityMagical> Magical { get; private set; } = new();
         public List<Consumable> Consumables { get; private set; } = new();
         // ^^^ refactored, testing ^^^
 
-        private float _endOfTurnDamage;
-
-        private SpriteRenderer _renderer;
-        private Color _defaultColor;
-
-        public Sprite[] PlayerDirSprites;
-        public Sprite currentSprite;
-
-        [HideInInspector] public Resource Health;
-        [HideInInspector] public Resource Stamina;
-        [HideInInspector] public Resource Mana;
-        [HideInInspector] public Resource Speed;
-
-        public bool IsDamageable = true;
-        public bool IsHealable = true;
-        public bool IsMovable = true;
-        public bool IsStunned = false;
-        public bool IsInvisible = false;
-
-        public Color ColorTag { get { return _colorTag; } }
-
-        // These Actions will be subscribed to by each ability's
-        // CombatActions when they are equipped and targeting.
-        // Which one they subscribe to will depend on the origin
-        // of the pattern.
-        public Action<DirectionContext> OnSubjectChanged;
-        public Action<DirectionContext> OnDirectionChanged;
-
-        public Stats Stats { get { return _stats; } }
-
-        public Abilities Abilities { get { return _abilities; } }
-
         public Animator Animator { get { return _animator; } }
+
+
+        // Should only be null if dead.
+        public OverlayTile CurrentTile { get; private set; }
+        public DirectionContext CurrentDirectionContext;
+
 
 
         #region Unity
         private void Awake()
         {
             _stats = GetComponent<Stats>();
+
             _abilities = GetComponent<Abilities>();
-            StateMachine = GetComponent<CombatantStateMachine>();
+
             _renderer = GetComponent<SpriteRenderer>();
             _defaultColor = _renderer.color;
+
             _animator = GetComponent<Animator>();
-            currentSprite = GetComponent<SpriteRenderer>().sprite;
+
         }
 
         protected virtual void Start()
@@ -230,6 +196,13 @@ namespace SystemMiami.CombatSystem
         #endregion Movement
 
         #region Focus
+        /// <summary>
+        /// Whatever tile the combatant
+        /// is currently focusing on.
+        /// The methods for determining this
+        /// must be defined in derived classes.
+        /// </summary>
+        public abstract OverlayTile GetNewFocus();
         public OverlayTile GetDefaultFocus()
         {
             OverlayTile result;
@@ -272,9 +245,19 @@ namespace SystemMiami.CombatSystem
         /// Ability's TargetingPatterns.
         /// 
         /// <para>
-        /// These "subscriptions" should just be converted to
-        /// public functions on TargetingPatterns that can
-        /// be called by CombatantStates when necessary.</para>
+        /// These "subscription" response fns in
+        /// TargettingPattern should just be called
+        /// in ActionEquipped states when necessary.</para>
+        /// 
+        /// <para>
+        /// Patterns that subscribe to OnSubjectChanged
+        /// should have their funcitons called when
+        /// DirectionContext.TilePositionB changes.</para>
+        /// 
+        /// <para>
+        /// OnDirectionChanged subscribers
+        /// should have their functions called when
+        /// DirectionContext.BoardDirection changes.</para>
         /// </summary>
         public void NotifyTargetingPatterns(DirectionContext directionContext)
         {

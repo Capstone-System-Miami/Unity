@@ -15,9 +15,8 @@ GameObject:
   - component: {fileID: 4869729533987529571}
   - component: {fileID: 88358522417391319}
   - component: {fileID: 2947330204336433884}
-  - component: {fileID: 1287585385212656630}
-  - component: {fileID: 4627449982729415577}
   - component: {fileID: 5547647659155334040}
+  - component: {fileID: 4434390765391053569}
   m_Layer: 0
   m_Name: Purple Goblin
   m_TagString: Untagged
@@ -200,49 +199,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &1287585385212656630
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5985083666047915755}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5dad0a304e458cf459016a52e1ee441a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _movementSpeed: 0
-  IsMyTurn: 0
-  _colorTag: {r: 0.77254903, g: 0.18431373, b: 0.18431373, a: 1}
-  StateMachine: {fileID: 0}
-  PlayerDirSprites:
-  - {fileID: -1891642137, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
-  - {fileID: 504766812, guid: 82236648256b77d4588c22a84d4da636, type: 3}
-  - {fileID: 1549921822, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
-  - {fileID: 1181817085, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
-  - {fileID: -1962472897, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
-  - {fileID: -663491783, guid: 82236648256b77d4588c22a84d4da636, type: 3}
-  - {fileID: -1403138823, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
-  - {fileID: 820659288, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
-  currentSprite: {fileID: 0}
-  IsDamageable: 1
-  IsHealable: 1
-  IsMovable: 1
-  IsStunned: 0
-  IsInvisible: 0
---- !u!114 &4627449982729415577
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5985083666047915755}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f1a3c0c08ff71d64ca7ef4f6f3b7ab53, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &5547647659155334040
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -259,3 +215,24 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 70ebd8bea6e07d94faaad738e975bd9f, type: 2}
   _magical: []
   animController: {fileID: 0}
+--- !u!114 &4434390765391053569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5985083666047915755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7981544af7126244a88c7413ccc581c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _colorTag: {r: 1, g: 0.28759372, b: 0.25943398, a: 1}
+  _printUItoConsole: 1
+  _movementSpeed: 2
+  IsDamageable: 1
+  IsHealable: 1
+  IsMovable: 1
+  IsStunned: 0
+  IsInvisible: 0
+  detectionRadius: 3
