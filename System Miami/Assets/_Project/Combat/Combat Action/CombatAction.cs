@@ -9,7 +9,7 @@ namespace SystemMiami.CombatRefactor
         #region PUBLIC VARS
         //==============================
         public readonly Sprite Icon;
-        public readonly CombatSubaction[] Actions;
+        public readonly CombatSubaction[] SubActions;
         public readonly AnimatorOverrideController OverrideController;
         public readonly Combatant User;
         #endregion PUBLIC VARS
@@ -24,14 +24,14 @@ namespace SystemMiami.CombatRefactor
             Combatant user)
         {
             Icon = icon;
-            Actions = actions;
+            SubActions = actions;
             OverrideController = overrideController;
             User = user;
         }
 
         public void BeginTargeting()
         {
-            foreach (CombatSubaction action in Actions)
+            foreach (CombatSubaction action in SubActions)
             {
                 action.TargetingPattern.ClearTargets();
                 action.TargetingPattern.UnlockTargets();
@@ -42,7 +42,7 @@ namespace SystemMiami.CombatRefactor
 
         public void CancelTargeting()
         {
-            foreach (CombatSubaction action in Actions)
+            foreach (CombatSubaction action in SubActions)
             {
                 action.TargetingPattern.HideTargets();
                 action.TargetingPattern.UnlockTargets();
@@ -59,7 +59,7 @@ namespace SystemMiami.CombatRefactor
 
         public void LockTargets()
         {
-            foreach (CombatSubaction action in Actions)
+            foreach (CombatSubaction action in SubActions)
             {
                 action.TargetingPattern.LockTargets();
                 action.TargetingPattern.UnsubscribeToDirectionUpdates(User);
@@ -73,12 +73,12 @@ namespace SystemMiami.CombatRefactor
         //==============================
         protected void performActions()
         {
-            for (int i = 0; i < Actions.Length; i++)
+            for (int i = 0; i < SubActions.Length; i++)
             {
-                Actions[i].Perform();
+                SubActions[i].Perform();
 
-                Actions[i].TargetingPattern.UnlockTargets();
-                Actions[i].TargetingPattern.HideTargets();
+                SubActions[i].TargetingPattern.UnlockTargets();
+                SubActions[i].TargetingPattern.HideTargets();
                 //Debug.Log($"{this} is performing a subaction, {Actions[i]}.");
             }
         }

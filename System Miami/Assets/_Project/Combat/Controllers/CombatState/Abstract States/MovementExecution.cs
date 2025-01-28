@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using SystemMiami.CombatSystem;
+using SystemMiami.Utilities;
 using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
 {
-    public abstract class MovementExecution : CombatantState
+    public class MovementExecution : CombatantState
     {
         protected Conditions moveAgainConditions = new();
         protected Conditions actionSelectionConditions = new();
@@ -18,7 +19,7 @@ namespace SystemMiami.CombatRefactor
 
         protected float distanceToTarget;
 
-        protected MovementExecution(
+        public MovementExecution(
             Combatant combatant,
             MovementPath movementPath)
                 : base(

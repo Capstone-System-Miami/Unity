@@ -3,88 +3,91 @@ using SystemMiami.CombatSystem;
 
 namespace SystemMiami.CombatRefactor
 {
+    #nullable enable
     public class CombatantStateFactory
     {
         private Combatant combatant;
+        private PlayerCombatant? playerCombatant;
+        private EnemyCombatant? enemyCombatant;
         private bool isPlayer;
 
         public CombatantStateFactory(Combatant combatant)
         {
             this.combatant = combatant;
             this.isPlayer = combatant is PlayerCombatant;
+
+            playerCombatant = isPlayer ? combatant as PlayerCombatant : null;
+            enemyCombatant = !isPlayer ? combatant as EnemyCombatant : null;
         }
 
         public CombatantState Idle()
         {
             return isPlayer ?
-                new PlayerIdle(combatant)
-                : new EnemyIdle(combatant);
+                new PlayerIdle(playerCombatant)
+                : new EnemyIdle(enemyCombatant);
         }
         public CombatantState TurnStart()
         {
             return isPlayer ?
-                new PlayerTurnStart(combatant)
-                : new EnemyTurnStart(combatant);
+                new PlayerTurnStart(playerCombatant)
+                : new EnemyTurnStart(enemyCombatant);
         }
         public CombatantState MovementTileSelection()
         {
             return isPlayer ?
-                new PlayerMovementTileSelection(combatant)
-                : new EnemyMovementTileSelection(combatant);
+                new PlayerMovementTileSelection(playerCombatant)
+                : new EnemyMovementTileSelection(enemyCombatant);
         }
         public CombatantState MovementConfirmation(MovementPath path)
         {
             return isPlayer ?
-                new PlayerMovementConfirmation(combatant, path)
-                : new EnemyMovementConfirmation(combatant, path);
+                new PlayerMovementConfirmation(playerCombatant, path)
+                : new EnemyMovementConfirmation(enemyCombatant, path);
         }
         public CombatantState MovementExecution(MovementPath path)
         {
-            return isPlayer ?
-                new PlayerMovementExecution(combatant, path)
-                : new EnemyMovementExecution(combatant, path);
+            return new MovementExecution(combatant, path);
         }
         public CombatantState ActionSelection()
         {
             return isPlayer ?
-                new PlayerActionSelection(combatant)
-                : new EnemyActionSelection(combatant);
+                new PlayerActionSelection(playerCombatant)
+                : new EnemyActionSelection(enemyCombatant);
         }
-        public CombatantState ActionEquipped()
+        public CombatantState ActionEquipped(CombatAction combatAction)
         {
             return isPlayer ?
-                new PlayerActionEquipped(combatant)
-                : new EnemyActionEquipped(combatant);
+                new PlayerActionEquipped(playerCombatant, combatAction)
+                : new EnemyActionEquipped(enemyCombatant, combatAction);
         }
-        public CombatantState ActionConfirmation()
+        public CombatantState ActionConfirmation(CombatAction combatAction)
         {
             return isPlayer ?
-                new PlayerActionConfirmation(combatant)
-                : new EnemyActionConfirmation(combatant);
+                new PlayerActionConfirmation(playerCombatant, combatAction)
+                : new EnemyActionConfirmation(enemyCombatant, combatAction);
         }
-        public CombatantState ActionExecution()
+        public CombatantState ActionExecution(CombatAction combatAction)
         {
-            return isPlayer ?
-                new PlayerActionExecution(combatant)
-                : new EnemyActionExecution(combatant);
+            return new ActionExecution(combatant, combatAction);
         }
         public CombatantState TurnEnd()
         {
             return isPlayer ?
-                new PlayerTurnEnd(combatant)
-                : new EnemyTurnEnd(combatant);
+                new PlayerTurnEnd(playerCombatant)
+                : new EnemyTurnEnd(enemyCombatant);
         }
         public CombatantState Dying()
         {
             return isPlayer ?
-                new PlayerDying(combatant)
-                : new EnemyDying(combatant);
+                new PlayerDying(playerCombatant)
+                : new EnemyDying(enemyCombatant);
         }
         public CombatantState Dead()
         {
             return isPlayer ?
-                new PlayerDead(combatant)
-                : new EnemyDead(combatant);
+                new PlayerDead(playerCombatant)
+                : new EnemyDead(enemyCombatant);
         }
     }
+    #nullable disable
 }

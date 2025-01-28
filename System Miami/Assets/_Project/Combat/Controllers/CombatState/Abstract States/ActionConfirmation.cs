@@ -4,20 +4,25 @@ namespace SystemMiami.CombatRefactor
 {
     public abstract class ActionConfirmation : CombatantState
     {
-        public ActionConfirmation(Combatant combatant)
-            : base(combatant, Phase.Action) { }
+        protected CombatAction combatAction;
+
+        public ActionConfirmation(Combatant combatant, CombatAction combatAction)
+            : base(combatant, Phase.Action)
+        {
+            this.combatAction = combatAction;
+        }
 
         public override void MakeDecision()
         {
             if (ConfirmSelection())
             {
-                SwitchState(factory.ActionExecution());
+                SwitchState(factory.ActionExecution(combatAction));
                 return;
             }
 
-            if (CancelSelection())
+            if (CancelConfirmation())
             {
-                SwitchState(factory.ActionEquipped());
+                SwitchState(factory.ActionEquipped(combatAction));
                 return;
             }
 
@@ -33,6 +38,6 @@ namespace SystemMiami.CombatRefactor
 
         // Decision
         protected abstract bool ConfirmSelection();
-        protected abstract bool CancelSelection();
+        protected abstract bool CancelConfirmation();
     }
 }

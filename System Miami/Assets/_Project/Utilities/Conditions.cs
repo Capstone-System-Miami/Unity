@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SystemMiami.CombatRefactor
+namespace SystemMiami.Utilities
 {
     public class Conditions
     {
@@ -10,7 +10,7 @@ namespace SystemMiami.CombatRefactor
 
         public Conditions()
         {
-            this.conditions = new();
+            conditions = new();
         }
 
         public Conditions(List<Func<bool>> conditions)

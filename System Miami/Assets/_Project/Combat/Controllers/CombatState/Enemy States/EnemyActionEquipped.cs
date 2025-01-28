@@ -5,8 +5,8 @@ namespace SystemMiami.CombatRefactor
 {
     public class EnemyActionEquipped : ActionEquipped
     {
-        public EnemyActionEquipped(Combatant combatant)
-            : base (combatant) { }
+        public EnemyActionEquipped(Combatant combatant, CombatAction combatAction)
+            : base (combatant, combatAction) { }
 
         protected override bool SelectTile()
         {

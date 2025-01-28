@@ -4,8 +4,13 @@ namespace SystemMiami.CombatRefactor
 {
     public abstract class ActionEquipped : CombatantState
     {
-        public ActionEquipped(Combatant combatant)
-            : base(combatant, Phase.Action) { }
+        protected CombatAction combatAction;
+
+        public ActionEquipped(Combatant combatant, CombatAction combatAction)
+            : base(combatant, Phase.Action)
+        {
+            this.combatAction = combatAction;
+        }
 
         public override void Update()
         {
@@ -24,7 +29,7 @@ namespace SystemMiami.CombatRefactor
 
             if (SelectTile())
             {
-                SwitchState(factory.ActionConfirmation());
+                SwitchState(factory.ActionConfirmation(combatAction));
                 return;
             }
         }

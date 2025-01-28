@@ -1,12 +1,13 @@
 using SystemMiami.CombatSystem;
+using SystemMiami.Utilities;
 using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
 {
     public abstract class TurnStart : CombatantState
     {
-        Conditions movementTileSelectionConditions = new();
-        Conditions actionSelectionConditions = new();
+        protected Conditions movementTileSelectionConditions = new();
+        protected Conditions actionSelectionConditions = new();
 
         protected TurnStart(Combatant combatant)
             : base(combatant, Phase.None) { }
@@ -22,22 +23,27 @@ namespace SystemMiami.CombatRefactor
         {
             if (ProceedRequested())
             {
-                if (movementTileSelectionConditions.Met())
-                {
-                    SwitchState(factory.MovementTileSelection());
-                    return;
-                }
-                
-                if (actionSelectionConditions.Met())
-                {
-                    SwitchState(factory.ActionSelection());
-                    return;
-                }
 
-                SwitchState(factory.TurnEnd());
             }
         }
 
         protected abstract bool ProceedRequested();
+
+        protected void HandleProceedRequest()
+        {
+            if (movementTileSelectionConditions.Met())
+            {
+                SwitchState(factory.MovementTileSelection());
+                return;
+            }
+
+            if (actionSelectionConditions.Met())
+            {
+                SwitchState(factory.ActionSelection());
+                return;
+            }
+
+            SwitchState(factory.TurnEnd());
+        }
     }
 }

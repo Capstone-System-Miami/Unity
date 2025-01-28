@@ -5,10 +5,10 @@ namespace SystemMiami.CombatRefactor
 {
     public class PlayerActionConfirmation : ActionConfirmation
     {
-        public PlayerActionConfirmation(Combatant combatant)
-            : base(combatant) { }
+        public PlayerActionConfirmation(Combatant combatant, CombatAction combatAction)
+            : base(combatant, combatAction) { }
 
-        protected override bool CancelSelection()
+        protected override bool CancelConfirmation()
         {
             // Player right clicks?
             return false;

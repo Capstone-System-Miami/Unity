@@ -6,7 +6,8 @@ namespace SystemMiami
 {
     public class PlayerActionEquipped : ActionEquipped
     {
-        public PlayerActionEquipped(Combatant combatant) : base(combatant) { }
+        public PlayerActionEquipped(Combatant combatant, CombatAction combatAction)
+            : base(combatant, combatAction) { }
 
         protected override bool SelectTile()
         {

@@ -7,6 +7,8 @@ namespace SystemMiami.Management
     public class UI : Singleton<UI>
     {
         public Action<AbilitySlot> SlotClicked;
+        public Action<CombatRefactor.AbilitySlot> RefactorSlotClicked;
+
 
         protected override void Awake()
         {

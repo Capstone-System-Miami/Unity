@@ -3,10 +3,15 @@ using SystemMiami.CombatSystem;
 
 namespace SystemMiami.CombatRefactor
 {
-    public abstract class ActionExecution : CombatantState
+    public class ActionExecution : CombatantState
     {
-        public ActionExecution(Combatant combatant)
-            : base(combatant, Phase.Action) { }
+        CombatAction combatAction;
+
+        public ActionExecution(Combatant combatant, CombatAction combatAction)
+            : base(combatant, Phase.Action)
+        {
+            this.combatAction = combatAction;
+        }
 
         public override void OnEnter()
         {

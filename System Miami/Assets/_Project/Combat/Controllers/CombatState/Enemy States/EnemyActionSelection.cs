@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using SystemMiami.AbilitySystem;
 using SystemMiami.CombatSystem;
+using UnityEditor;
 using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
@@ -9,6 +10,9 @@ namespace SystemMiami.CombatRefactor
     {
         public EnemyActionSelection(Combatant combatant)
             : base (combatant) { }
+
+        // TODO
+        // Actually set their selected ability somewhere
 
         protected override bool EquipRequested()
         {

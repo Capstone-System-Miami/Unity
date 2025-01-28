@@ -106,7 +106,6 @@ namespace SystemMiami.CombatSystem
         public DirectionContext CurrentDirectionContext;
 
 
-
         #region Unity
         private void Awake()
         {
@@ -164,6 +163,11 @@ namespace SystemMiami.CombatSystem
             stateFactory = new(this);
             currentState = stateFactory.Idle();
             currentState.OnEnter();
+        }
+
+        private void initAbilities()
+        {
+
         }
         #endregion Construction
 
@@ -411,7 +415,7 @@ namespace SystemMiami.CombatSystem
             Health?.Lose(_endOfTurnDamage);
         }
 
-        public void SelectPhysicalAbility(AbilitySlot slot)
+        public void SelectPhysicalAbility(ui.AbilitySlot slot)
         {
             int ind = slot.Index;
 

@@ -5,8 +5,8 @@ namespace SystemMiami.CombatRefactor
 {
     public class EnemyActionConfirmation : ActionConfirmation
     {
-        public EnemyActionConfirmation(Combatant combatant)
-            : base(combatant) { }
+        public EnemyActionConfirmation(Combatant combatant, CombatAction combatAction)
+            : base(combatant, combatAction) { }
 
         protected override bool ConfirmSelection()
         {
@@ -14,7 +14,7 @@ namespace SystemMiami.CombatRefactor
             return true;
         }
 
-        protected override bool CancelSelection()
+        protected override bool CancelConfirmation()
         {
             return false;
         }
