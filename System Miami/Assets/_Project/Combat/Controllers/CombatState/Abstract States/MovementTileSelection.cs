@@ -20,6 +20,8 @@ namespace SystemMiami.CombatRefactor
 
         // Transitioning
         protected Conditions turnEndConditions = new();
+        protected Conditions turnEndRequested = new();
+
         protected Conditions skipMovementConditions = new();
         protected Conditions confirmPathConditions = new();
 

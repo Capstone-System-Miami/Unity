@@ -11,18 +11,45 @@ namespace SystemMiami.CombatRefactor
         public EnemyActionSelection(Combatant combatant)
             : base (combatant) { }
 
-        // TODO
-        // Actually set their selected ability somewhere
 
+
+        /// <summary>
+        /// This method always returns true,
+        /// and sets the selected combataction
+        /// that will be sent to the equipped state.
+        /// <para>
+        /// NOTE that random selection means a
+        /// different combatAction will be set every time
+        /// this method runs.
+        /// </para>
+        /// <para>
+        /// TODO consider a better solution later.
+        /// </para>
+        /// </summary>
+        /// <returns></returns>
         protected override bool EquipRequested()
         {
-            // immediately to equipped?
+            selectedCombatAction = SelectRandomCombatAction();
             return true;
         }
+
         protected override bool SkipPhaseRequested()
         {
-            // if they have to?
             return false;
+        }
+
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <returns></returns>
+        protected CombatAction SelectRandomCombatAction()
+        {
+            List<NewAbility> allAbilities = new(combatant.loadout.PhysicalAbilities);
+            allAbilities.AddRange(combatant.loadout.MagicalAbilities);
+            
+            int randomIndex = Random.Range(0, allAbilities.Count);
+
+            return allAbilities[randomIndex];
         }
     }
 

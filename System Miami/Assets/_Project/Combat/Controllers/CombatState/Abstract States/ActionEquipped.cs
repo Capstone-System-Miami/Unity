@@ -47,7 +47,7 @@ namespace SystemMiami.CombatRefactor
 
             combatant.CurrentDirectionContext = currentDirection;
 
-            combatAction.UpdateDirection(currentDirection, directionChanged);
+            combatAction.UpdateTargets(currentDirection, directionChanged);
         }
 
         public override void MakeDecision()

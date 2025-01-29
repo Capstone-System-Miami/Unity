@@ -300,5 +300,20 @@ namespace SystemMiami
             moveInterface = null;
             return false;
         }
+
+        public bool TryGetDamageable(out IDamageable damageInterface)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public bool TryGetHealable(out IHealable healInterface)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public bool TryGetMovable(out IMovable moveInterface)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

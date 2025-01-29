@@ -6,8 +6,8 @@ namespace SystemMiami.CombatRefactor
     {
         void HandleBeginTargeting(Color preferredColor);
         void HandleEndTargeting(Color preferredColor);
-        bool TryGetDamageable(IDamageable damageInterface);
-        bool TryGetHealable(IHealable healInterface);
-        bool TryGetMovable(IMovable moveInterface);
+        bool TryGetDamageable(out IDamageable damageInterface);
+        bool TryGetHealable(out IHealable healInterface);
+        bool TryGetMovable(out IMovable moveInterface);
     }
 }

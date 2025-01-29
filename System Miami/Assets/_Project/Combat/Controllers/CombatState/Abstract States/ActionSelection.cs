@@ -1,5 +1,6 @@
 using System.Linq;
 using SystemMiami.CombatSystem;
+using SystemMiami.Utilities;
 using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
@@ -10,12 +11,17 @@ namespace SystemMiami.CombatRefactor
 
         protected CombatAction selectedCombatAction;
 
+        protected Conditions canEquip = new();
+        protected Conditions canSkipPhase = new();
+
+
         public ActionSelection(Combatant combatant)
             : base(combatant, Phase.Action) { }
 
         public override void OnEnter()
         {
             base.OnEnter();
+            canEquip.Add(() => selectedCombatAction != null);
         }
 
         public override void Update()
@@ -40,16 +46,23 @@ namespace SystemMiami.CombatRefactor
 
         public override void MakeDecision()
         {
-            if (EquipRequested())
+            if (canEquip.Met())
             {
+                if (!EquipRequested()) { return; }
+
                 SwitchState(factory.ActionEquipped(selectedCombatAction));
                 return;
             }
-
-            if (SkipPhaseRequested())
+            else if (canSkipPhase.Met())
             {
+                if (!SkipPhaseRequested()) {  return; }
+
                 SwitchState(factory.TurnEnd());
                 return;
+            }
+            else
+            {
+                SwitchState(factory.TurnEnd());
             }
         }
 

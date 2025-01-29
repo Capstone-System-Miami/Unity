@@ -6,8 +6,16 @@ namespace SystemMiami.CombatRefactor
 {
     public class EnemyMovementTileSelection : MovementTileSelection
     {
-        public EnemyMovementTileSelection(Combatant combatant)
+        public EnemyMovementTileSelection(EnemyCombatant combatant)
             : base(combatant) { }
+
+        public override void OnEnter()
+        {
+            base.OnEnter();
+
+
+            //turnEndRequested.Add(() => combatant.)
+        }
 
         // Decision
         protected override bool TurnEndRequested()

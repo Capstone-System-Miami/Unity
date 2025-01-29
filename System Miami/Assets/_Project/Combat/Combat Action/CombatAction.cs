@@ -31,7 +31,7 @@ namespace SystemMiami.CombatRefactor
             User = user;
         }
 
-        public void UpdateDirection(
+        public void UpdateTargets(
             DirectionContext newDirection,
             bool directionChanged)
         {
