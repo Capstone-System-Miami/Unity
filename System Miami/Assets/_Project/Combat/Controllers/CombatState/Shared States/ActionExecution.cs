@@ -15,11 +15,7 @@ namespace SystemMiami.CombatRefactor
 
         public override void OnEnter()
         {
-            if (combatant.Abilities.AbilityExecutionIsValid
-                (out IEnumerator abilityProcess))
-            {
-                combatant.StartCoroutine(abilityProcess);
-            }
+            combatant.StartCoroutine(combatAction.Execute());
         }
 
         public override void MakeDecision()

@@ -15,29 +15,29 @@ namespace SystemMiami
 
         public override void Perform()
         {
-            foreach (Combatant target in TargetingPattern.StoredTargets.Combatants)
-            {
-                if (target == null) { continue; }
+            //foreach (Combatant target in TargetingPattern.StoredTargets.combatants)
+            //{
+            //    if (target == null) { continue; }
 
-                switch (resourceType)
-                {
-                    case ResourceType.Health:
-                        RestorePercentage(target.Health, _percentage); // Calculates Health
-                        break;
-                    case ResourceType.Stamina:
-                        RestorePercentage(target.Stamina, _percentage); // Calculates Stamina
-                        break;
-                    case ResourceType.Mana:
-                        RestorePercentage(target.Mana, _percentage); // Calculates Mana
-                        break;
-                    case ResourceType.Speed:
-                        RestorePercentage(target.Speed, _percentage); // Calculates Speed
-                        break;
-                    default:
-                        Debug.LogError("No valid ResourceType was selected.");
-                        break;
-                }
-            }
+            //    switch (resourceType)
+            //    {
+            //        case ResourceType.Health:
+            //            RestorePercentage(target.Health, _percentage); // Calculates Health
+            //            break;
+            //        case ResourceType.Stamina:
+            //            RestorePercentage(target.Stamina, _percentage); // Calculates Stamina
+            //            break;
+            //        case ResourceType.Mana:
+            //            RestorePercentage(target.Mana, _percentage); // Calculates Mana
+            //            break;
+            //        case ResourceType.Speed:
+            //            RestorePercentage(target.Speed, _percentage); // Calculates Speed
+            //            break;
+            //        default:
+            //            Debug.LogError("No valid ResourceType was selected.");
+            //            break;
+            //    }
+            //}
         }
 
         private void RestorePercentage(Resource resource, float percentage)
@@ -45,13 +45,13 @@ namespace SystemMiami
             float restoreAmount = resource.GetMax() * percentage; // Calculate the percentage of max value
             resource.Gain(restoreAmount); // Restore the resource by 25% 
         }
-    }
-}
 
-public enum ResourceType
-{
-    Health,
-    Stamina,
-    Mana,
-    Speed
+        private enum ResourceType
+        {
+            Health,
+            Stamina,
+            Mana,
+            Speed
+        }
+    }
 }

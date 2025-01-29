@@ -8,13 +8,13 @@ namespace SystemMiami.CombatRefactor
         public EnemyActionEquipped(Combatant combatant, CombatAction combatAction)
             : base (combatant, combatAction) { }
 
-        protected override bool SelectTile()
+        protected override bool SelectTileRequested()
         {
             // Once enemy has checked enough tiles?
             return false;
         }
 
-        protected override bool Unequip()
+        protected override bool UnequipRequested()
         {
             // Never happens?
             // Maybe they cycle through their

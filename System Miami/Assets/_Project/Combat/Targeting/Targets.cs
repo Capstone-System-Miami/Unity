@@ -1,35 +1,64 @@
 using System.Collections.Generic;
+using SystemMiami.CombatRefactor;
 using SystemMiami.CombatSystem;
 using UnityEngine;
 
 namespace SystemMiami
 {
-    public struct Targets
+    public class Targets
     {
-        private List<Vector2Int> _positions;
-        private List<OverlayTile> _tiles;
-        private List<Combatant> _combatants;
+        public readonly List<OverlayTile> tiles = new();
+        public readonly List<ITargetable> all = new();
 
-        public List<Vector2Int> Positions { get { return _positions; } }
-        public List<OverlayTile> Tiles { get { return _tiles; } }
-        public List<Combatant> Combatants {  get { return _combatants; } }
+        public static readonly Targets empty = new Targets(new());
 
-        public static readonly Targets empty = new Targets(new List<Vector2Int>(), new List<OverlayTile>(), new List<Combatant>());
-
-        public Targets(List<Vector2Int> positions, List<OverlayTile> tiles, List<Combatant> combatants)
+        public Targets(List<OverlayTile> tiles)
         {
-            _positions = positions;
-            _tiles = tiles;
-            _combatants = combatants;
+            this.tiles = tiles;
+
+            foreach (OverlayTile tile in tiles)
+            {
+                if (tile is ITargetable)
+                {
+                    all.Add(tile);
+                }
+
+                if (!tile.Occupied) { continue; }
+
+                if (tile.Occupier is ITargetable target)
+                {
+                    all.Add(target);
+                }
+            }
+        }
+
+        public List<TInterface> GetTargetsWith<TInterface>()
+        {
+            return ParseListForImplementations<TInterface, ITargetable>(all);
+        }
+
+        private List<TInterface> ParseListForImplementations<TInterface, KInterface>(List<KInterface> list)
+        {
+            List<TInterface> result = new();
+
+            foreach (KInterface item in list)
+            {
+                if (item is TInterface implementer)
+                {
+                    result.Add(implementer);
+                }
+            }
+
+            return result;
         }
 
         public static Targets operator +(Targets a, Targets b)
         {
-            a._positions.AddRange(b._positions);
-            a._tiles.AddRange(b._tiles);
-            a._combatants.AddRange(b._combatants);
+            List<OverlayTile> newTiles = new(a.tiles);
 
-            return a;
+            newTiles.AddRange(b.tiles);
+
+            return new(newTiles);
         }
     }
 }

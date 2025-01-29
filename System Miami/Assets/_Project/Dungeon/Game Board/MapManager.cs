@@ -153,6 +153,18 @@ namespace SystemMiami
             }
         }
 
+        public bool TryGetTile(Vector2Int coordinates, out OverlayTile tile)
+        {
+            if (!map.ContainsKey(coordinates))
+            {
+                tile = null;
+                return false;
+            }
+
+            tile = map[coordinates];
+            return true;
+        }
+
         /// <summary>
         /// (Lee)
         /// Finds a random unblocked tile on the map.
@@ -181,17 +193,17 @@ namespace SystemMiami
             return null;
         }
 
+        public Vector3 IsoToScreen(Vector3Int tileLocation)
+        {
+            return Coordinates.IsoToScreen(tileLocation, gridTilesHeight);
+        }
+
         private Vector2Int GetCenter(BoundsInt bounds)
         {
             return new(
                 Mathf.RoundToInt(bounds.center.x),
                 Mathf.RoundToInt(bounds.center.y)
                 );
-        }
-
-        public Vector3 IsoToScreen(Vector3Int tileLocation)
-        {
-            return Coordinates.IsoToScreen(tileLocation, gridTilesHeight);
         }
     }
 }

@@ -56,8 +56,7 @@ namespace SystemMiami.CombatRefactor
 
             if (combatant.InPlacementRangeOf(focusTile))
             {
-                combatant.SnapTo(focusTile);
-                focusTile.PlaceCombatant(combatant);
+                combatant.AddTo(focusTile);
 
                 pathToConsume.RemoveAt(0);
 

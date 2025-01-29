@@ -9,16 +9,16 @@ namespace SystemMiami
         public PlayerActionEquipped(Combatant combatant, CombatAction combatAction)
             : base(combatant, combatAction) { }
 
-        protected override bool SelectTile()
+        protected override bool SelectTileRequested()
         {
             // Player clicks? Event from UI buttons?
             return false;
         }
 
-        protected override bool Unequip()
+        protected override bool UnequipRequested()
         {
             // Player right clicks?
-            return false;
+            return Input.GetMouseButtonDown(1);
         }
     }
 }

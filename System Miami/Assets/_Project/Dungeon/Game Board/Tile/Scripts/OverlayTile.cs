@@ -1,10 +1,12 @@
 // Author: Alec
+using SystemMiami.CombatRefactor;
 using SystemMiami.CombatSystem;
+using SystemMiami.Interfaces;
 using UnityEngine;
 
 namespace SystemMiami
 {
-    public class OverlayTile : MonoBehaviour, IHighlightable
+    public class OverlayTile : MonoBehaviour, IHighlightable, ITargetable
     {
         #region PUBLIC VARS
         // ==================================
@@ -35,7 +37,7 @@ namespace SystemMiami
 
         private bool _hasObstacle;
 
-        private Combatant _currentCombatant;
+        private ITileOccupier occupier;
 
         private bool _isHovering;
 
@@ -59,19 +61,9 @@ namespace SystemMiami
 
         /// <summary>
         /// Reference to the combatant currently occupying this tile
+        /// This is a getter property, and casts the ITileOccupier
         /// </summary>
-        public Combatant CurrentCombatant { get { return _currentCombatant; } }
-
-        /// <summary>
-        /// Whether or not the tile has an obstacle on it.
-        /// </summary>
-        public bool HasObstacle
-        {
-            get
-            {
-                return _hasObstacle;
-            }
-        }
+        public Combatant CurrentCombatant { get { return occupier as Combatant; } }
 
         /// <summary>
         /// Whether or not the tile is occupied by a combatant.
@@ -80,7 +72,15 @@ namespace SystemMiami
         {
             get
             {
-                return _currentCombatant != null;
+                return occupier != null;
+            }
+        }
+
+        public ITileOccupier Occupier
+        {
+            get
+            {
+                return occupier;
             }
         }
 
@@ -91,7 +91,7 @@ namespace SystemMiami
         {
             get
             {
-                return !HasObstacle && !Occupied;
+                return !Occupied;
             }
         }
 
@@ -248,27 +248,57 @@ namespace SystemMiami
         /// combatant's CurrentTile before setting it to
         /// this tile.
         /// </summary>
-        public void PlaceCombatant(Combatant combatant)
+        public void AddOccupier(ITileOccupier occupier)
         {
             if (!ValidForPlacement
-                && CurrentCombatant != combatant)
+                && this.occupier != occupier)
             {
                 Debug.LogError(
-                    $"Trying to place {combatant}" +
+                    $"Trying to place {occupier}" +
                     $"on{gameObject}." +
                     $"This placement is invalid."
                     );
                 return;
             }
 
-            combatant.transform.position = new Vector3(transform.position.x, transform.position.y + 0.0001f, transform.position.z);
+            if (occupier is not Transform) { return; }
 
-            _currentCombatant = combatant;
+            (occupier as Transform).position = new Vector3(transform.position.x, transform.position.y + 0.0001f, transform.position.z);
+
+            this.occupier = occupier;
         }
 
-        public void RemoveCombatant()
+        public void RemoveOccupier(ITileOccupier occupier)
         {
-            _currentCombatant = null;
+            if (this.occupier != occupier) { return; }
+        }
+
+        public void HandleBeginTargeting(Color preferredColor)
+        {
+            Highlight(preferredColor);
+        }
+
+        public void HandleEndTargeting(Color preferredColor)
+        {
+            UnHighlight();
+        }
+
+        public bool TryGetDamageable(IDamageable damageInterface)
+        {
+            damageInterface = null;
+            return false;
+        }
+
+        public bool TryGetHealable(IHealable healInterface)
+        {
+            healInterface = null;
+            return false;
+        }
+
+        public bool TryGetMovable(IMovable moveInterface)
+        {
+            moveInterface = null;
+            return false;
         }
     }
 }

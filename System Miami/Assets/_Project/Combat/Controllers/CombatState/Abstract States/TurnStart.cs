@@ -1,3 +1,4 @@
+using SystemMiami.AbilitySystem;
 using SystemMiami.CombatSystem;
 using SystemMiami.Utilities;
 using UnityEngine;
@@ -23,7 +24,7 @@ namespace SystemMiami.CombatRefactor
         {
             if (ProceedRequested())
             {
-
+                HandleProceedRequest();
             }
         }
 
@@ -45,5 +46,14 @@ namespace SystemMiami.CombatRefactor
 
             SwitchState(factory.TurnEnd());
         }
+
+        public void ResetTurn()
+        {
+            combatant.Stats.UpdateStatusEffects();
+
+            combatant.loadout.ReduceCooldowns();
+        }
     }
 }
+            //combatant.Speed = new Resource(combatant.Stats.GetStat(StatType.SPEED));
+            //combatant.Health?.Lose(combatant.Stats.GetNetDamagePerTurn());

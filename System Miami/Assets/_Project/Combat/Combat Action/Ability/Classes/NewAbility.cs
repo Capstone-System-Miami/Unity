@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using SystemMiami.CombatSystem;
 
 namespace SystemMiami.CombatRefactor
@@ -22,7 +23,7 @@ namespace SystemMiami.CombatRefactor
         protected NewAbility(NewAbilitySO preset, Combatant user, Resource targetResource)
             : base(
                   preset.Icon,
-                  preset.Actions,
+                  preset.Actions.ToList(),
                   preset.OverrideController,
                   user)
         {
@@ -36,7 +37,7 @@ namespace SystemMiami.CombatRefactor
         // Does this need to be an IEnumerator?
         // It feels like it could just be a System.Action
         // or other delegate type
-        public override IEnumerator Use()
+        public override IEnumerator Execute()
         {
             targetResource.Lose(ResourceCost);
             yield return null;

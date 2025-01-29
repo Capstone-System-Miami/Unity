@@ -1,10 +1,19 @@
 using SystemMiami.CombatSystem;
+using SystemMiami.Utilities;
+using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
 {
+    // input delegates class?
     public abstract class ActionEquipped : CombatantState
     {
         protected CombatAction combatAction;
+
+        OverlayTile positionTile;
+        OverlayTile focusTile;
+
+        DirectionContext previousDirection;
+        DirectionContext currentDirection;
 
         public ActionEquipped(Combatant combatant, CombatAction combatAction)
             : base(combatant, Phase.Action)
@@ -12,29 +21,64 @@ namespace SystemMiami.CombatRefactor
             this.combatAction = combatAction;
         }
 
+        public override void OnEnter()
+        {
+            base.OnEnter();
+            previousDirection = combatant.CurrentDirectionContext;
+            currentDirection = combatant.CurrentDirectionContext;
+        }
+
         public override void Update()
         {
-            /// if direction is not same as prev frame, update combatant
-            /// vs
-            /// if tile changes update combatant
+            positionTile = combatant.CurrentTile;
+            if (TryGetFocus(out focusTile))
+            {
+                if (focusTile == null) { return; }
+            }
+
+            previousDirection = currentDirection;
+            currentDirection = new(
+                (Vector2Int)positionTile.GridLocation,
+                (Vector2Int)focusTile.GridLocation);
+
+            bool directionChanged
+                = previousDirection.BoardDirection
+                != currentDirection.BoardDirection;
+
+            combatant.CurrentDirectionContext = currentDirection;
+
+            combatAction.UpdateDirection(currentDirection, directionChanged);
         }
 
         public override void MakeDecision()
         {
-            if (Unequip())
+            if (UnequipRequested())
             {
                 SwitchState(factory.ActionSelection());
                 return;
             }
 
-            if (SelectTile())
+            if (SelectTileRequested())
             {
                 SwitchState(factory.ActionConfirmation(combatAction));
                 return;
             }
         }
 
-        protected abstract bool SelectTile();
-        protected abstract bool Unequip();
+        public override void OnExit()
+        {
+            base.OnExit();
+            combatAction.Unequip();
+        }
+
+        protected abstract bool SelectTileRequested();
+        protected abstract bool UnequipRequested();
+
+        private bool TryGetFocus(out OverlayTile newFocus)
+        {
+            newFocus = combatant.GetNewFocus() ?? combatant.GetDefaultFocus();
+
+            return focusTile != newFocus;
+        }
     }
 }

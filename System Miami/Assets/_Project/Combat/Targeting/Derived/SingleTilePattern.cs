@@ -13,30 +13,25 @@ namespace SystemMiami.CombatSystem
 
         public int MaxTargets { get { return _maxTargets; } }
 
-        public override void SetTargets(DirectionContext userInfo)
+        public override Targets GetTargets(DirectionContext userDirection)
         {
-            List<Vector2Int> checkedPositions = new List<Vector2Int>();
-            List<OverlayTile> foundTiles = new List<OverlayTile>();
-            List<Combatant> foundCombatants = new List<Combatant>();
+            List<OverlayTile> foundTiles = new();
 
             // The map origin & moveDirection of
             // THIS PATTERN
-            DirectionContext patternDirectionInfo = getPatternDirection(userInfo);
-
-            Vector2Int checkedPosition;
-            OverlayTile checkedTile;
-            Combatant checkedEnemy;
+            DirectionContext patternDirectionInfo = getPatternDirection(userDirection);
 
             // Check the pattern's origin
-            checkedPosition = patternDirectionInfo.TilePositionA;
+            Vector2Int checkedPosition = checkedPosition = patternDirectionInfo.TilePositionA;
+            OverlayTile checkedTile;
 
-            checkedPositions.Add(checkedPosition);
+            if (!MapManager.MGR.TryGetTile(checkedPosition, out checkedTile))
+            {
+                return new(foundTiles);
+            }
 
-            tryGetTile(checkedPosition, out checkedTile, out checkedEnemy);
-            if (checkedTile != null) { foundTiles.Add(checkedTile); }
-            if (checkedEnemy != null) { foundCombatants.Add(checkedEnemy); }
-
-            StoredTargets = new Targets(checkedPositions, foundTiles, foundCombatants);
+            foundTiles.Add(checkedTile);
+            return new(foundTiles);
         }
     }
 }

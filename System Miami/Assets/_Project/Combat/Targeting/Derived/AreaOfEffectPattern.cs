@@ -25,33 +25,25 @@ namespace SystemMiami.CombatSystem
         [SerializeField] private bool _left;
         [SerializeField] private bool _frontLeft;
 
-        /// <summary>
-        /// The set of adjacent positions
-        /// RELATIVE TO THE PATTERN ORIGIN
-        /// </summary>
-        private AdjacentPositionSet _adjacent;
-
-        /// <summary>
-        /// A list of TileDirs corresponding
-        /// to the values marked as true for this
-        /// pattern in the inspector.
-        /// </summary>
-        private List<TileDir> _directionsToCheck;
 
 
-        public override void SetTargets(DirectionContext userInfo)
+        public override Targets GetTargets(DirectionContext userDirection)
         {
-            List<Vector2Int> checkedPositions = new List<Vector2Int>();
-            List<OverlayTile> foundTiles = new List<OverlayTile>();
-            List<Combatant> foundCombatants = new List<Combatant>();
+            List<OverlayTile> foundTiles = new();
+
+            Targets result = new(foundTiles);
+
+            List<TileDir> directionsToCheck = getDirectionsToCheck();
 
             // The map origin & moveDirection of
             // THIS PATTERN
-            DirectionContext patternDirectionInfo = getPatternDirection(userInfo);
+            DirectionContext patternDirectionInfo = getPatternDirection(userDirection);
 
-            _directionsToCheck = getDirectionsToCheck();
-
-            _adjacent = new AdjacentPositionSet(patternDirectionInfo);
+            /// <summary>
+            /// The set of adjacent positions
+            /// RELATIVE TO THE PATTERN ORIGIN
+            /// </summary>
+            AdjacentPositionSet adjacent = new(patternDirectionInfo);
 
             // For each radial in the radius
             for (int radial = 0; radial < _tileRadius; radial++)
@@ -60,38 +52,33 @@ namespace SystemMiami.CombatSystem
                 {
                     Vector2Int checkedPosition;
                     OverlayTile checkedTile;
-                    Combatant checkedEnemy;
 
-                    // Check the pattern's origin
+                    /// Check the pattern's origin
                     checkedPosition = patternDirectionInfo.TilePositionA;
 
-                    checkedPositions.Add(checkedPosition);
-
-                    tryGetTile(checkedPosition, out checkedTile, out checkedEnemy);
-                    if (checkedTile != null) { foundTiles.Add(checkedTile); }
-                    if (checkedEnemy != null) { foundCombatants.Add(checkedEnemy); }
+                    if (MapManager.MGR.TryGetTile(checkedPosition, out checkedTile))
+                    {
+                        foundTiles.Add(checkedTile);
+                    }
                 }
 
-                // Check the position at each moveDirection in the pattern.
-                foreach (TileDir direction in _directionsToCheck)
+                /// Check the position at each direction in the pattern.
+                foreach (TileDir direction in directionsToCheck)
                 {
-                    if (radial == 1) Debug.Log($"{direction}");
                     Vector2Int checkedPosition;
                     OverlayTile checkedTile;
-                    Combatant checkedEnemy;
 
-                    checkedPosition = _adjacent.AdjacentBoardPositions[direction] +
-                        _adjacent.BoardDirectionVectors[direction] * (radial);
+                    checkedPosition = adjacent.AdjacentBoardPositions[direction] +
+                        adjacent.BoardDirectionVectors[direction] * (radial);
 
-                    checkedPositions.Add(checkedPosition);
-
-                    tryGetTile(checkedPosition, out checkedTile, out checkedEnemy);
-                    if (checkedTile != null) { foundTiles.Add(checkedTile); }
-                    if (checkedEnemy != null) { foundCombatants.Add(checkedEnemy); }
+                    if (MapManager.MGR.TryGetTile(checkedPosition, out checkedTile))
+                    {
+                        foundTiles.Add(checkedTile);
+                    }
                 }
             }
-            
-            StoredTargets = new Targets(checkedPositions, foundTiles, foundCombatants);
+
+            return result;
         }
 
         /// <summary>
@@ -102,10 +89,10 @@ namespace SystemMiami.CombatSystem
         /// <returns></returns>
         private List<TileDir> getDirectionsToCheck()
         {
-            // A list of TileDirections
+            /// A list of TileDirections
             List<TileDir> result = new List<TileDir>();
 
-            // An array of the bools set in the inspector
+            /// An array of the bools set in the inspector
             bool[] checkDirections =
             {
                 _front,
@@ -118,7 +105,7 @@ namespace SystemMiami.CombatSystem
                 _frontLeft,
             };
 
-            // Add the moveDirection of every `true` to the result List
+            /// Add the moveDirection of every `true` to the result List
             for (int i = 0; i < checkDirections.Length; i++)
             {
                 if (checkDirections[i])

@@ -118,6 +118,18 @@ namespace SystemMiami
             return result;
         }
 
+        public float GetNetDamagePerTurn()
+        {
+            float result = 0;
+
+            foreach (StatusEffect statusEffect in _statusEffects)
+            {
+                result += statusEffect.Damage;
+            }
+
+            return result;
+        }
+
         public void UpdateStatusEffects()
         {
             for (int i = _statusEffects.Count - 1; i >= 0; i--)

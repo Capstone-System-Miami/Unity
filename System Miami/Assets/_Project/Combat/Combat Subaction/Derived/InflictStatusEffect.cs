@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using SystemMiami.CombatRefactor;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem
@@ -12,9 +14,17 @@ namespace SystemMiami.CombatSystem
 
         public override void Perform()
         {
+            List<Combatant> finalTargets = new();
+            foreach (ITargetable target in currentTargets.all)
+            {
+                if (target is Combatant c)
+                {
+                    finalTargets.Add(c);
+                }
+            }
             StatusEffect statusEffect = new StatusEffect(effectStats, damage, durationTurns);
 
-            foreach (Combatant target in TargetingPattern.StoredTargets.Combatants)
+            foreach (Combatant target in finalTargets)
             {
                 if (target != null)
                 {

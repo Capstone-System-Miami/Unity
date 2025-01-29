@@ -3,12 +3,14 @@ using System;
 using System.Collections.Generic;
 using SystemMiami.AbilitySystem;
 using SystemMiami.CombatRefactor;
+using SystemMiami.Interfaces;
 using SystemMiami.Management;
 using SystemMiami.Utilities;
 using SystemMiami.Enums;
 using UnityEngine;
 using System.Collections;
 using SystemMiami.ui;
+using static UnityEngine.GraphicsBuffer;
 
 namespace SystemMiami.CombatSystem
 {
@@ -16,7 +18,7 @@ namespace SystemMiami.CombatSystem
         typeof(Stats),
         typeof(Abilities)
         )]
-    public abstract class Combatant : MonoBehaviour, IHighlightable, IDamageable, IHealable, IMovable
+    public abstract class Combatant : MonoBehaviour, IHighlightable, ITileOccupier, IDamageable, IHealable, IMovable
     {
         protected const float PLACEMENT_RANGE = 0.0001f;
 
@@ -91,9 +93,10 @@ namespace SystemMiami.CombatSystem
 
         public Abilities Abilities { get { return _abilities; } }
         // vvv refactored, testing vvv
-        public List<AbilityPhysical> Physical { get; private set; } = new();
-        public List<AbilityMagical> Magical { get; private set; } = new();
-        public List<Consumable> Consumables { get; private set; } = new();
+        [SerializeField] private List<NewAbilitySO> physical;
+        [SerializeField] private List<NewAbilitySO> magical;
+        [SerializeField] private List<ConsumableSO> consumable;
+        public Loadout loadout;
 
         public CombatAction selectedAbility { get; set; }
         // ^^^ refactored, testing ^^^
@@ -123,6 +126,7 @@ namespace SystemMiami.CombatSystem
         protected virtual void Start()
         {
             initResources();
+            initLoadout();
             initDirection();
             initStateMachine();
         }
@@ -144,6 +148,11 @@ namespace SystemMiami.CombatSystem
             Stamina = new Resource(_stats.GetStat(StatType.STAMINA));
             Mana = new Resource(_stats.GetStat(StatType.MANA));
             Speed = new Resource(_stats.GetStat(StatType.SPEED));
+        }
+
+        private void initLoadout()
+        {
+            loadout = new(physical, magical, consumable, this);
         }
 
         private void initDirection()
@@ -194,11 +203,16 @@ namespace SystemMiami.CombatSystem
             return distanceToTarget < PLACEMENT_RANGE;
         }
 
-        public void SnapTo(OverlayTile target)
+        public void AddTo(OverlayTile tile)
         {
-            CurrentTile?.RemoveCombatant();
-            CurrentTile = target;
-            target.PlaceCombatant(this);
+            CurrentTile?.RemoveOccupier(this);
+            CurrentTile = tile;
+            tile.AddOccupier(this);
+        }
+
+        public void RemoveFrom(OverlayTile tile)
+        {
+            throw new NotImplementedException();
         }
         #endregion Movement
 
@@ -311,6 +325,11 @@ namespace SystemMiami.CombatSystem
         #endregion
 
         #region IDamageable
+        public bool IsCurrentlyDamageable()
+        {
+            return IsDamageable;
+        }
+
         public void Damage(float amount)
         {
             if (IsDamageable)
@@ -327,6 +346,11 @@ namespace SystemMiami.CombatSystem
         #endregion
 
         #region IHealable
+        public bool IsCurrentlyHealable()
+        {
+            return IsHealable;
+        }
+
         public void Heal()
         {
             if (IsHealable)
@@ -354,6 +378,11 @@ namespace SystemMiami.CombatSystem
                 print($"{name} is not healable");
             }
         }
+
+        public void HealPercent(float percent)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
 
         public void RestoreResource(Resource type, float amount)
@@ -363,6 +392,11 @@ namespace SystemMiami.CombatSystem
         }
 
         #region IMovable
+        public bool IsCurrentlyMovable()
+        {
+            throw new NotImplementedException();
+        }
+
         public Vector2Int GetTilePos()
         {
             return (Vector2Int)CurrentTile.GridLocation;
@@ -409,31 +443,31 @@ namespace SystemMiami.CombatSystem
 
         public void ResetTurn()
         {
-            Speed = new Resource(_stats.GetStat(StatType.SPEED));
-            _abilities.ReduceCooldowns();
-            _stats.UpdateStatusEffects();
-            Health?.Lose(_endOfTurnDamage);
+            //Speed = new Resource(_stats.GetStat(StatType.SPEED));
+            //_abilities.ReduceCooldowns();
+            //_stats.UpdateStatusEffects();
+            //Health?.Lose(_endOfTurnDamage);
         }
 
-        public void SelectPhysicalAbility(ui.AbilitySlot slot)
+        public void SelectPhysicalAbility(ActionQuickslot slot)
         {
             int ind = slot.Index;
 
-            if (Physical.Count <= ind)
+            if (loadout.PhysicalAbilities.Count <= ind)
             {
                 Debug.Log($"{name} Phys count less than {ind}");
 
                 return;
             }
 
-            if (Physical[ind] == null)
+            if (loadout.PhysicalAbilities[ind] == null)
             {
                 Debug.Log($"{name} Phys count nothing found at {ind}");
 
                 return;
             }
 
-            selectedAbility = Physical[ind];
+            selectedAbility = loadout.PhysicalAbilities[ind];
 
             Debug.Log($"{name} selected {selectedAbility}");
         }

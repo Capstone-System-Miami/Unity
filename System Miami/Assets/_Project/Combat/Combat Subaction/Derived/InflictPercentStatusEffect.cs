@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using SystemMiami.CombatRefactor;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem
@@ -11,7 +13,16 @@ namespace SystemMiami.CombatSystem
         [SerializeField] int durationTurns;
         public override void Perform()
         {
-            foreach (Combatant target in TargetingPattern.StoredTargets.Combatants)
+            List<Combatant> finalTargets = new();
+            foreach (ITargetable target in currentTargets.all)
+            {
+                if (target is Combatant c)
+                {
+                    finalTargets.Add(c);
+                }
+            }
+
+            foreach (Combatant target in finalTargets)
             {
                 StatusEffect statusEffect = new StatusEffect(effectStats, damage, durationTurns);
                 target.Stats.AddStatusEffect(statusEffect);

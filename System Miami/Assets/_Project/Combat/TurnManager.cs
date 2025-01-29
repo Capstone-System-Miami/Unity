@@ -85,7 +85,7 @@ namespace SystemMiami
                     }
                 }
 
-                playerCharacter.SnapTo(charTile);
+                playerCharacter.AddTo(charTile);
             }
 
             if (GAME.MGR.TryGetEnemies(out enemyPrefabs))
@@ -226,7 +226,7 @@ namespace SystemMiami
             enemyCombatant.name = newName;
 
             // Position enemy on the tile
-            enemyCombatant.SnapTo(spawnTile);
+            enemyCombatant.AddTo(spawnTile);
 
             // Add to enemy list
             enemyCharacters.Add(enemyCombatant);

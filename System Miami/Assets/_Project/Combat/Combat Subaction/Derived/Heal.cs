@@ -12,7 +12,8 @@ namespace SystemMiami.CombatSystem
 
         public override void Perform()
         {
-            foreach (Combatant target in TargetingPattern.StoredTargets.Combatants)
+            List<IHealable> targets = currentTargets.GetTargetsWith<IHealable>();
+            foreach (IHealable target in targets)
             {
                 if (target == null) { continue; }
 

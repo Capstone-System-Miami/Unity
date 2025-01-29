@@ -1,5 +1,7 @@
 using System.Collections;
+using System.Collections.Generic;
 using SystemMiami.CombatSystem;
+using SystemMiami.Utilities;
 using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
@@ -9,7 +11,7 @@ namespace SystemMiami.CombatRefactor
         #region PUBLIC VARS
         //==============================
         public readonly Sprite Icon;
-        public readonly CombatSubaction[] SubActions;
+        public readonly List<CombatSubaction> SubActions;
         public readonly AnimatorOverrideController OverrideController;
         public readonly Combatant User;
         #endregion PUBLIC VARS
@@ -19,36 +21,28 @@ namespace SystemMiami.CombatRefactor
 
         protected CombatAction(
             Sprite icon,
-            CombatSubaction[] actions,
+            List<CombatSubaction> subActions,
             AnimatorOverrideController overrideController,
             Combatant user)
         {
             Icon = icon;
-            SubActions = actions;
+            SubActions = subActions;
             OverrideController = overrideController;
             User = user;
         }
 
-        public void BeginTargeting()
+        public void UpdateDirection(
+            DirectionContext newDirection,
+            bool directionChanged)
         {
-            foreach (CombatSubaction action in SubActions)
-            {
-                action.TargetingPattern.ClearTargets();
-                action.TargetingPattern.UnlockTargets();
-                action.TargetingPattern.ShowTargets();
-                action.TargetingPattern.SubscribeToDirectionUpdates(User);
-            }
+            SubActions.ForEach(subaction
+                => subaction.UpdateTargets(newDirection, directionChanged));
         }
 
-        public void CancelTargeting()
+        public void Unequip()
         {
-            foreach (CombatSubaction action in SubActions)
-            {
-                action.TargetingPattern.HideTargets();
-                action.TargetingPattern.UnlockTargets();
-                action.TargetingPattern.ClearTargets();
-                action.TargetingPattern.UnsubscribeToDirectionUpdates(User);
-            }
+            SubActions.ForEach(subaction
+                => subaction.ClearTargets());
         }
 
         /// TODO: Implement this method
@@ -57,30 +51,14 @@ namespace SystemMiami.CombatRefactor
             return false;
         }
 
-        public void LockTargets()
-        {
-            foreach (CombatSubaction action in SubActions)
-            {
-                action.TargetingPattern.LockTargets();
-                action.TargetingPattern.UnsubscribeToDirectionUpdates(User);
-            }
-        }
-
-        public abstract IEnumerator Use();
+        public abstract IEnumerator Execute();
         #endregion PUBLIC METHODS
 
         #region PROTECTED METHODS
         //==============================
         protected void performActions()
         {
-            for (int i = 0; i < SubActions.Length; i++)
-            {
-                SubActions[i].Perform();
-
-                SubActions[i].TargetingPattern.UnlockTargets();
-                SubActions[i].TargetingPattern.HideTargets();
-                //Debug.Log($"{this} is performing a subaction, {Actions[i]}.");
-            }
+            SubActions.ForEach(subaction => subaction.Perform());
         }
         #endregion PROTECTED METHODS
     }

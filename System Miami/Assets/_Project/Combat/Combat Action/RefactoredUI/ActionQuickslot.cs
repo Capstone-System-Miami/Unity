@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
 {
-    public class AbilitySlot : MonoBehaviour
+    public class ActionQuickslot : MonoBehaviour
     {
         /* [Header("Background Panel")]
          [SerializeField] private SelectableSprite _background;

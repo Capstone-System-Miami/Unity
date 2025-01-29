@@ -1,4 +1,5 @@
 // Authors: Layla Hoey
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem
@@ -11,12 +12,19 @@ namespace SystemMiami.CombatSystem
 
         public override void Perform()
         {
+            List<IDamageable> finalTargets = currentTargets.GetTargetsWith<IDamageable>();
+
             // Loop through each combatant in the targets and apply damage.
-            foreach (Combatant targetCombatant in TargetingPattern.StoredTargets.Combatants)
+            foreach (IDamageable target in finalTargets)
             {
-                if (targetCombatant == null) { continue; }
+                if (target == null) { continue; }
                 
-                targetCombatant.Damage(_abilityDamage);
+                if (!target.IsCurrentlyDamageable())
+                {
+                    return;
+                }
+
+                target.Damage(_abilityDamage);
             }
         }
     }

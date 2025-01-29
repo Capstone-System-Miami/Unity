@@ -8,8 +8,6 @@ namespace SystemMiami.CombatRefactor
 {
     public class PlayerActionSelection : ActionSelection
     {
-        CombatAction selectedAction;
-
         bool slotBeenClicked = false;
 
         public PlayerActionSelection(Combatant combatant)
@@ -18,21 +16,19 @@ namespace SystemMiami.CombatRefactor
         public override void OnEnter()
         {
             base.OnEnter();
-            combatant.Physical.Add(new AbilityPhysical((combatant as PlayerCombatant).test, combatant));
-
             UI.MGR.RefactorSlotClicked += HandleSlotClick;
         }
 
-        private void HandleSlotClick(AbilitySlot slot)
+        private void HandleSlotClick(ActionQuickslot slot)
         {
             // TODO
             // Actually determine the correct action to return
 
-            if (combatant.Physical == null) { return; }
-            if (!combatant.Physical.Any()) { return; }
-            if (combatant.Physical[0] == null) { return; }
+            if (combatant.loadout.PhysicalAbilities == null) { Debug.LogWarning("physnull");return; }
+            if (!combatant.loadout.PhysicalAbilities.Any()) { Debug.LogWarning("physnone"); return; }
+            if (combatant.loadout.PhysicalAbilities[0] == null) { Debug.LogWarning("phys[0]null"); return; }
 
-            selectedAction = combatant.Physical[0];
+            selectedCombatAction = combatant.loadout.PhysicalAbilities[0];
 
             slotBeenClicked = true;
         }
@@ -41,6 +37,7 @@ namespace SystemMiami.CombatRefactor
         {
             if (slotBeenClicked)
             {
+                Debug.LogWarning("Made it to equip request");
                 slotBeenClicked = false;
                 return true;
             }
