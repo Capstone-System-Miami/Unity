@@ -33,7 +33,7 @@ namespace SystemMiami.CombatRefactor
             base.OnEnter();
             currentSpeedStat = (int)combatant.Speed.Get();
 
-            occupiedTile = combatant.CurrentTile;
+            occupiedTile = combatant.PositionTile;
 
             confirmPathConditions.Add(() => path != null);
             confirmPathConditions.Add(() => !path.IsEmpty);
@@ -42,7 +42,7 @@ namespace SystemMiami.CombatRefactor
 
         public override void Update()
         {
-            occupiedTile = combatant.CurrentTile;
+            occupiedTile = combatant.PositionTile;
 
             // Find a new possible focus tile
             // by the means described
@@ -136,7 +136,7 @@ namespace SystemMiami.CombatRefactor
 
         protected DirectionContext GetNewDirection()
         {
-            Vector2Int occupiedPos = (Vector2Int)combatant.CurrentTile.GridLocation;
+            Vector2Int occupiedPos = (Vector2Int)combatant.PositionTile.GridLocation;
 
             // If the character isn't focusing on anything,
             // Then use the position 1 tile in "front" of them,

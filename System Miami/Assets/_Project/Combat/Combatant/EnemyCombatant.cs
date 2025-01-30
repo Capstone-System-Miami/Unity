@@ -14,7 +14,7 @@ namespace SystemMiami.CombatSystem
             if (IsInDetectionRange(targetPlayer))
             {
                 Debug.Log($"Player found in {name}'s range");
-                return targetPlayer.CurrentTile;
+                return targetPlayer.PositionTile;
             }
             else
             {
@@ -27,8 +27,8 @@ namespace SystemMiami.CombatSystem
         public bool IsInDetectionRange(Combatant target)
         {
             MovementPath fullPathToPlayer = new(
-                CurrentTile,
-                target.CurrentTile
+                PositionTile,
+                target.PositionTile
                 );
 
             if (fullPathToPlayer.ForMovement.Count <= detectionRadius)

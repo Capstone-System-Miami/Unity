@@ -31,7 +31,7 @@ namespace SystemMiami.CombatRefactor
             // Find a new possible focus tile
             // by the means described
             // by int the derived classes.
-            if (!TryGetNewFocus(out OverlayTile newFocus))
+            if (!TryGetNewFocus(combatant.FocusTile, out OverlayTile newFocus))
             {
                 // Focus was not new.
                 // Nothing to update.
@@ -46,9 +46,9 @@ namespace SystemMiami.CombatRefactor
 
         public override void MakeDecision()
         {
-            if (canEquip.Met())
+            if (EquipRequested())
             {
-                if (!EquipRequested()) { return; }
+                if (!canEquip.Met()) { return; }
 
                 SwitchState(factory.ActionEquipped(selectedCombatAction));
                 return;
@@ -69,13 +69,5 @@ namespace SystemMiami.CombatRefactor
         // Decision
         protected abstract bool EquipRequested();
         protected abstract bool SkipPhaseRequested();
-
-        // Focus Tile
-        protected bool TryGetNewFocus(out OverlayTile newFocus)
-        {
-            newFocus = combatant.GetNewFocus() ?? combatant.GetDefaultFocus();
-
-            return newFocus != highlightOnlyFocusTile;
-        }
     }
 }

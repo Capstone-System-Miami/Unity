@@ -30,7 +30,7 @@ namespace SystemMiami.CombatRefactor
 
         public override void Update()
         {
-            positionTile = combatant.CurrentTile;
+            positionTile = combatant.PositionTile;
             if (TryGetFocus(out focusTile))
             {
                 if (focusTile == null) { return; }

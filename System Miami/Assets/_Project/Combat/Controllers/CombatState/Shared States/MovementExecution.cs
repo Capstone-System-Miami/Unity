@@ -44,7 +44,7 @@ namespace SystemMiami.CombatRefactor
             if (!pathToConsume.Any())
                 { Debug.Log($"{combatant.name} no path"); return; }
 
-            occupiedTile = combatant.CurrentTile;
+            occupiedTile = combatant.PositionTile;
             focusTile = pathToConsume[0];
 
             combatant.CurrentDirectionContext = new(

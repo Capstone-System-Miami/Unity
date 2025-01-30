@@ -16,6 +16,8 @@ namespace SystemMiami.CombatRefactor
 
         private Combatant user;
 
+        #region Construction
+        // ========================================================
         public Loadout(
             List<NewAbilitySO> physicalPresets,
             List<NewAbilitySO> magicalPresets,
@@ -24,33 +26,101 @@ namespace SystemMiami.CombatRefactor
         {
             this.user = user;
 
-            if (!TryGetInstances(
-                    physicalPresets,
-                    out List<AbilityPhysical> physicalInstances))
-            {
-                return;
-            }
-            PhysicalAbilities = physicalInstances;
+            PhysicalAbilities = ConvertPhysical(physicalPresets);
 
-            if (!TryGetInstances(
-                    magicalPresets,
-                    out List<AbilityMagical> magicalInstances))
-            {
-                return;
-            }
-            MagicalAbilities = magicalInstances;
+            MagicalAbilities = ConvertMagical(magicalPresets);
 
-            if (!TryGetInstances(
-                    consumablePresets,
-                    out List<Consumable> consumableInstances))
-            {
-                return;
-            }
-            Consumables = consumableInstances;
+            Consumables = ConvertConsumable(consumablePresets);
 
             Consumables.ForEach(consumable
                 => consumable.Consumed += HandleConsume);
         }
+
+        private List<AbilityPhysical> ConvertPhysical(List<NewAbilitySO> presets)
+        {
+            List<AbilityPhysical> result = new();
+
+            if (presets == null)
+            {
+                Debug.LogWarning(
+                    $"The preset list in {this} was null" +
+                    $"when assigning Physical Abilities. " +
+                    $"Returning an empty list");
+                return new();
+            }
+
+            foreach (NewAbilitySO preset in presets)
+            {
+                if (preset.AbilityType != AbilitySystem.AbilityType.PHYSICAL)
+                {
+                    Debug.LogWarning(
+                        $"An error occurred in {this} " +
+                        $"when assigning Physical Abilities. " +
+                        $"Ensure that all presets are in " +
+                        $"The list corresponding to their type. " +
+                        $"Returning an empty list.");
+                    return new();
+                }
+
+                result.Add(new AbilityPhysical(preset, user));
+            }
+
+            return result;
+        }
+
+        private List<AbilityMagical> ConvertMagical(List<NewAbilitySO> presets)
+        {
+            List<AbilityMagical> result = new();
+
+            if (presets == null)
+            {
+                Debug.LogWarning(
+                    $"The preset list in {this} was null" +
+                    $"when assigning Magical Abilities. " +
+                    $"Returning an empty list.");
+                return new();
+            }
+
+            foreach (NewAbilitySO preset in presets)
+            {
+                if (preset.AbilityType != AbilitySystem.AbilityType.MAGICAL)
+                {
+                    Debug.LogWarning(
+                        $"An error occurred in {this} " +
+                        $"when assigning Magical Abilities. " +
+                        $"Ensure that all presets are in " +
+                        $"The list corresponding to their type. " +
+                        $"Returning an empty list.");
+                    return new();
+                }
+
+                result.Add(new AbilityMagical(preset, user));
+            }
+
+            return result;
+        }
+
+        private List<Consumable> ConvertConsumable(List<ConsumableSO> presets)
+        {
+            List<Consumable> result = new();
+
+            if (presets == null)
+            {
+                Debug.LogWarning(
+                    $"The preset list in {this} was null " +
+                    $"when assigning Consumable Actions. " +
+                    $"Returning an empty list");
+                return result;
+            }
+
+            foreach (ConsumableSO preset in presets)
+            {
+                result.Add(new Consumable(preset, user));
+            }
+
+            return result;
+        }
+        #endregion Construction
 
         public void ReduceCooldowns()
         {
@@ -66,87 +136,5 @@ namespace SystemMiami.CombatRefactor
             consumable.Consumed -= HandleConsume;
         }
 
-
-        private bool TryGetInstances(
-            List<NewAbilitySO> presets,
-            out List<AbilityPhysical> instances)
-        {
-            instances = new();
-
-            if (presets == null)
-            {
-                Debug.LogWarning(
-                    $"The preset list in {this} was null" +
-                    $"when assigning Physical Abilities.");
-                return false;
-            }
-
-            foreach (NewAbilitySO preset in presets)
-            {
-                if (preset.AbilityType != AbilitySystem.AbilityType.PHYSICAL)
-                {
-                    instances = new();
-                    Debug.LogWarning(
-                        $"An error occurred in {this} " +
-                        $"when assigning Physical Abilities.");
-                    return false;
-                }
-
-                instances.Add(new AbilityPhysical(preset, user));
-            }
-
-            return true;
-        }
-
-        private bool TryGetInstances(
-            List<NewAbilitySO> presets,
-            out List<AbilityMagical> instances)
-        {
-            instances = new();
-
-            if (presets == null)
-            {
-                Debug.LogWarning(
-                    $"The preset list in {this} was null" +
-                    $"when assigning Magical Abilities.");
-            }
-
-            foreach (NewAbilitySO preset in presets)
-            {
-                if (preset.AbilityType != AbilitySystem.AbilityType.MAGICAL)
-                {
-                    instances = new();
-                    Debug.LogWarning(
-                        $"An error occurred in {this} " +
-                        $"when assigning Magical Abilities.");
-                    return false;
-                }
-
-                instances.Add(new AbilityMagical(preset, user));
-            }
-
-            return true;
-        }
-
-        private bool TryGetInstances(
-            List<ConsumableSO> presets,
-            out List<Consumable> instances)
-        {
-            instances = new();            
-
-            if (presets == null)
-            {
-                Debug.LogWarning(
-                    $"The preset list in {this} was null " +
-                    $"when assigning Consumable Actions.");
-            }
-
-            foreach (ConsumableSO preset in presets)
-            {
-                instances.Add(new Consumable(preset, user));
-            }
-
-            return true;
-        }
     }
 }

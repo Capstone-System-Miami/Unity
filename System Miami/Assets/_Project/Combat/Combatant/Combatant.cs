@@ -6,7 +6,6 @@ using SystemMiami.CombatRefactor;
 using SystemMiami.Enums;
 using SystemMiami.Utilities;
 using UnityEngine;
-using static Unity.Burst.Intrinsics.X86;
 
 namespace SystemMiami.CombatSystem
 {
@@ -18,24 +17,20 @@ namespace SystemMiami.CombatSystem
     {
         protected const float PLACEMENT_RANGE = 0.0001f;
 
-        // These Actions will be subscribed to by each ability's
-        // CombatActions when they are equipped and targeting.
-        // Which one they subscribe to will depend on the origin
-        // of the pattern.
-        public Action<DirectionContext> OnSubjectChanged;
-        public Action<DirectionContext> OnDirectionChanged;
-
         [SerializeField] private Color _colorTag = Color.white;
         [SerializeField] private bool _printUItoConsole;
         [SerializeField] private float _movementSpeed;
 
+        [SerializeField] private List<NewAbilitySO> physical;
+        [SerializeField] private List<NewAbilitySO> magical;
+        [SerializeField] private List<ConsumableSO> consumable;
+
+        #region priv
         private CombatantStateFactory stateFactory;
         private CombatantState currentState;
 
         private Stats _stats;
         private float _endOfTurnDamage;
-
-        private Abilities _abilities;
 
         private SpriteRenderer _renderer;
         private Color _defaultColor;
@@ -43,21 +38,22 @@ namespace SystemMiami.CombatSystem
         private Animator _animator;
         private int dirParam = Animator.StringToHash("TileDir");
 
+        OverlayTile positionTile;
+        OverlayTile focusTile;
+        DirectionContext directionContext;
 
-        public bool IsDamageable = true;
-        public bool IsHealable = true;
-        public bool IsMovable = true;
-        public bool IsStunned = false;
-        public bool IsInvisible = false;
+        private bool isDamageable = true;
+        private bool isHealable = true;
+        private bool isMovable = true;
+        private bool isStunned = false;
+        private bool isInvisible = false;
+        #endregion priv
 
+        #region Properties
         public int ID { get; set; }
         public Color ColorTag { get { return _colorTag; } }
-        public bool PrintUItoConsole { get { return _printUItoConsole; } }
 
-        public bool IsMyTurn { get; set; }
-        public bool ReadyToStart { get { return currentState is Idle; } }
-        public Phase CurrentPhase { get { return currentState.phase; } }
-
+        // State Machine
         public CombatantStateFactory Factory { get { return stateFactory; } }
         public CombatantState CurrentState
         {
@@ -80,37 +76,78 @@ namespace SystemMiami.CombatSystem
                 currentState = value;
             }
         }
+        public bool PrintUItoConsole { get { return _printUItoConsole; } }
 
+        public bool IsMyTurn { get; set; }
+        public bool ReadyToStart { get { return currentState is Idle; } }
+        public Phase CurrentPhase { get { return currentState.phase; } }
+
+        // Stats & Resources
         public Stats Stats { get { return _stats; } }
-        [HideInInspector] public Resource Health;
-        [HideInInspector] public Resource Stamina;
-        [HideInInspector] public Resource Mana;
-        [HideInInspector] public Resource Speed;
+        public Resource Health { get; set; }
+        public Resource Stamina { get; set; }
+        public Resource Mana { get; set; }
+        public Resource Speed { get; set; }
 
-        public Abilities Abilities { get { return _abilities; } }
-        // vvv refactored, testing vvv
-        [SerializeField] private List<NewAbilitySO> physical;
-        [SerializeField] private List<NewAbilitySO> magical;
-        [SerializeField] private List<ConsumableSO> consumable;
+
         public Loadout loadout;
-
         public CombatAction selectedAbility { get; set; }
         // ^^^ refactored, testing ^^^
 
         public Animator Animator { get { return _animator; } }
 
 
-        // Should only be null if dead.
-        public OverlayTile CurrentTile { get; private set; }
-        public DirectionContext CurrentDirectionContext;
+        // TODO Should only be null if dead.
+        public OverlayTile PositionTile
+        {
+            get { return positionTile; }
+            private set { value = positionTile; }
+        }
+        public OverlayTile FocusTile
+        {
+            get { return focusTile; }
+
+            set
+            {
+                if (value == focusTile) { return; }
+
+                OverlayTile previous = focusTile;
+                focusTile = value;
+                OnFocusTileChanged(previous, focusTile);
+
+                CurrentDirectionContext =
+                    new((Vector2Int)PositionTile.GridLocation,
+                    (Vector2Int)focusTile.GridLocation);                
+            }
+        }
+        public DirectionContext CurrentDirectionContext
+        {
+            get { return directionContext; }
+            set
+            {
+                DirectionContext previous = directionContext;
+                directionContext = value;
+
+                if (previous.BoardDirection == directionContext.BoardDirection)
+                {
+                    return;
+                }
+
+                OnDirectionChanged(directionContext);
+            }
+        }
+        #endregion Properties
+
+        #region Events
+        public event EventHandler<FocusTileChangedEventArgs> FocusTileChanged;
+        public event EventHandler<DirectionChangedEventArgs> DirectionChanged;
+        #endregion Events
 
 
         #region Unity
         private void Awake()
         {
             _stats = GetComponent<Stats>();
-
-            _abilities = GetComponent<Abilities>();
 
             _renderer = GetComponent<SpriteRenderer>();
             _defaultColor = _renderer.color;
@@ -130,6 +167,8 @@ namespace SystemMiami.CombatSystem
         private void Update()
         {
             UpdateResources();
+
+            FocusTile = GetNewFocus();
 
             CurrentState.Update();
             CurrentState.MakeDecision();
@@ -154,7 +193,7 @@ namespace SystemMiami.CombatSystem
         private void initDirection()
         {
             Vector2Int currentPos
-                = (Vector2Int)CurrentTile.GridLocation;
+                = (Vector2Int)PositionTile.GridLocation;
 
             Vector2Int forwardPos = MapManager.MGR.CenterPos;
 
@@ -208,8 +247,8 @@ namespace SystemMiami.CombatSystem
                     $"on {tile.gameObject.name}'s {tile}.");
             }
 
-            CurrentTile?.RemoveOccupier(this);
-            CurrentTile = tile;
+            PositionTile?.RemoveOccupier(this);
+            PositionTile = tile;
         }
         #endregion Movement
 
@@ -228,13 +267,19 @@ namespace SystemMiami.CombatSystem
             Vector2Int forwardPos
                 = CurrentDirectionContext.ForwardA;
 
-            if (!MapManager.MGR.map.TryGetValue(forwardPos, out result))
+            if (MapManager.MGR.map.TryGetValue(forwardPos, out result))
             {
+                return result;
+            }
+
+            if (MapManager.MGR.map.TryGetValue(MapManager.MGR.CenterPos, out result))
+            {
+
+            }
                 Debug.LogError(
                     $"FATAL | {name}'s {this}" +
                     $"FOUND NO TILE TO FOCUS ON."
                     );
-            }
 
             return result;
         }
@@ -277,11 +322,11 @@ namespace SystemMiami.CombatSystem
         /// should have their functions called when
         /// DirectionContext.BoardDirection changes.</para>
         /// </summary>
-        public void NotifyTargetingPatterns(DirectionContext directionContext)
-        {
-            OnSubjectChanged?.Invoke(directionContext);
-            OnDirectionChanged?.Invoke(directionContext);
-        }
+        //public void NotifyTargetingPatterns(DirectionContext directionContext)
+        //{
+        //    OnSubjectChanged?.Invoke(directionContext);
+        //    OnDirectionChanged?.Invoke(directionContext);
+        //}
 
         #endregion Updates
 
@@ -298,7 +343,7 @@ namespace SystemMiami.CombatSystem
 
         public void Highlight(Color color)
         {
-            if (!IsInvisible)
+            if (!isInvisible)
             {
                 print($"{name} is being highlighted");
                 _renderer.color = color;
@@ -324,7 +369,7 @@ namespace SystemMiami.CombatSystem
         #region IDamageable
         public bool IsCurrentlyDamageable()
         {
-            return IsDamageable;
+            return isDamageable;
         }
 
         public void RecieveDamageAmount(float amount)
@@ -348,7 +393,7 @@ namespace SystemMiami.CombatSystem
         #region IHealable
         public bool IsCurrentlyHealable()
         {
-            return IsHealable;
+            return isHealable;
         }
 
         public void RecieveFullHeal()
@@ -390,12 +435,12 @@ namespace SystemMiami.CombatSystem
 
         public Vector2Int GetTilePos()
         {
-            return (Vector2Int)CurrentTile.GridLocation;
+            return (Vector2Int)PositionTile.GridLocation;
         }
 
         public bool TryMoveTo(Vector2Int tilePos)
         {
-            if (IsMovable)
+            if (isMovable)
             {
                 // TODO: Implement movement logic
                 print($"{name} would move to {tilePos}, but this mechanic has not been implemented");
@@ -410,10 +455,10 @@ namespace SystemMiami.CombatSystem
 
         public bool TryMoveInDirection(Vector2Int boardDirection, int distance)
         {
-            if (IsMovable)
+            if (isMovable)
             {
                 // TODO: Implement directional movement logic
-                Vector2Int newPos = (Vector2Int)CurrentTile.GridLocation + boardDirection * distance;
+                Vector2Int newPos = (Vector2Int)PositionTile.GridLocation + boardDirection * distance;
 
                 print($"{name} would move to {newPos}, but this mechanic has not been implemented");
                 return true;
@@ -430,14 +475,6 @@ namespace SystemMiami.CombatSystem
         {
             _stats.AddStatusEffect(effect);
             _endOfTurnDamage = effect.Damage;
-        }
-
-        public void ResetTurn()
-        {
-            //Speed = new Resource(_stats.GetStat(StatType.SPEED));
-            //_abilities.ReduceCooldowns();
-            //_stats.UpdateStatusEffects();
-            //Health?.Lose(_endOfTurnDamage);
         }
 
         #region ITargetable
@@ -502,5 +539,36 @@ namespace SystemMiami.CombatSystem
             return true;
         }
         #endregion ITargetable
+
+        protected virtual void OnFocusTileChanged(OverlayTile prevTile, OverlayTile newTile)
+        {
+            FocusTileChanged(this, new FocusTileChangedEventArgs(prevTile, newTile));
+        }
+        protected virtual void OnDirectionChanged(DirectionContext newDirection)
+        {
+            DirectionChanged(this, new DirectionChangedEventArgs(newDirection));
+        }
+    }
+
+    public class FocusTileChangedEventArgs : EventArgs
+    {
+        public OverlayTile previousTile;
+        public OverlayTile newTile;
+
+        public FocusTileChangedEventArgs(OverlayTile previousTile, OverlayTile newTile)
+        {
+            this.previousTile = previousTile;
+            this.newTile = newTile;
+        }
+    }
+
+    public class DirectionChangedEventArgs : EventArgs
+    {
+        public DirectionContext newDirectionContext;
+
+        public DirectionChangedEventArgs(DirectionContext newDirectionContext)
+        {
+            this.newDirectionContext = newDirectionContext;
+        }
     }
 }

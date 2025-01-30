@@ -2,6 +2,7 @@ using SystemMiami.AbilitySystem;
 using SystemMiami.CombatSystem;
 using System.Collections;
 using UnityEngine;
+using System;
 
 namespace SystemMiami.CombatRefactor
 {
@@ -133,6 +134,14 @@ namespace SystemMiami.CombatRefactor
 
             combatant.CurrentState = newState;
             newState.OnEnter();
+        }
+
+        // Focus Tile
+        protected bool TryGetNewFocus(OverlayTile currentFocus, out OverlayTile newFocus)
+        {
+            newFocus = combatant.GetNewFocus() ?? combatant.GetDefaultFocus();
+
+            return newFocus != currentFocus;
         }
 
         // VVVVV KEEP FOR REFERENCE PLEASE  VVVVV
