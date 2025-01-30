@@ -170,7 +170,7 @@ namespace SystemMiami
         /// Finds a random unblocked tile on the map.
         /// </summary>
         /// <returns>An unblocked OverlayTile or null if none are available.</returns>
-        public OverlayTile GetRandomUnblockedTile()
+        public OverlayTile GetRandomValidTile()
         {
             // Get all unblocked tiles
             List<OverlayTile> unblockedTiles = new List<OverlayTile>();

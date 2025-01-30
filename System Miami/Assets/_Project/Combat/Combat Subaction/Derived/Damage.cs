@@ -15,24 +15,28 @@ namespace SystemMiami.CombatSystem
         {
             foreach (ITargetable target in currentTargets.all)
             {
-                if (!target.TryGetDamageable(out IDamageable damageTarget))
+                if (!target.TryGetDamageable(out IDamageReciever damageTarget))
                 {
                     if (damageTarget.IsCurrentlyDamageable())
                     {
                         return;
                     }
-                    damageTarget.Damage(_abilityDamage);
+                    damageTarget.RecieveDamageAmount(_abilityDamage);
                 }
             }
         }
     }
-}
 
-namespace SystemMiami
-{
-    public interface IDamageable
+
+    /// <summary>
+    /// This is the interface needed for
+    /// <see cref="Damage"/> to be performed
+    /// on an object.
+    /// </summary>
+    public interface IDamageReciever
     {
         bool IsCurrentlyDamageable();
-        void Damage(float amount);
+        void RecieveDamageAmount(float amount);
+        void RecieveDamagePercent(float percent, bool ofMax);
     }
 }

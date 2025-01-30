@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
 
-namespace SystemMiami.CombatRefactor
+namespace SystemMiami.CombatSystem
 {
     public interface ITargetable
     {
         void HandleBeginTargeting(Color preferredColor);
         void HandleEndTargeting(Color preferredColor);
-        bool TryGetDamageable(out IDamageable damageInterface);
-        bool TryGetHealable(out IHealable healInterface);
-        bool TryGetMovable(out IMovable moveInterface);
+        bool TryGetDamageable(out IDamageReciever damageInterface);
+        bool TryGetHealable(out IHealReciever healInterface);
+        bool TryGetMovable(out IForceMoveReciever moveInterface);
     }
 }

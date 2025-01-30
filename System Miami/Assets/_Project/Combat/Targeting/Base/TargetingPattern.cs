@@ -1,5 +1,6 @@
 // Authors: Layla Hoey, Lee St. Louis
 using SystemMiami.Utilities;
+using SystemMiami.CombatRefactor;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem
@@ -18,23 +19,48 @@ namespace SystemMiami.CombatSystem
         public Color TargetedCombatantColor = Color.white;
 
         public PatternOriginType PatternOrigin { get { return _patternOrigin; } }
-
-        public Targets StoredTargets;
-        [HideInInspector] public bool _targetsLocked;
        
         #region Public
+        /// <summary>
+        /// Method by which to return Targets.
+        /// Defined in the derived classes.
+        /// </summary>
+        /// 
+        /// <param name="userDirection">
+        /// The direction on which the pattern
+        /// will determine its own direction.
+        /// </param>
+        /// 
+        /// <returns>
+        /// A <see cref="Targets"/> object,
+        /// containing a List{} of all
+        /// <see cref="ITargetable"/> objects found
+        /// on any tile, including tiles themselves.
+        /// </returns>
         public abstract Targets GetTargets(DirectionContext userDirection);
 
         /// <summary>
-        /// Takes directional info about the user,
-        /// and uses it as the basis for creating
-        /// a new set of DirectionalInfo about
-        /// the targetting pattern specific to
-        /// the CombatAction.
+        /// Uses the <see cref="DirectionContext"/>
+        /// of the combatant, as well as the
+        /// <see cref="PatternOriginType"/>
+        /// of the pattern to create a new 
+        /// <see cref="DirectionContext"/> of
+        /// the targetting pattern.
         /// </summary>
-        /// <param name="userDirection"></param>
-        /// <returns></returns>
-        protected DirectionContext getPatternDirection(DirectionContext userDirection)
+        /// 
+        /// <param name="userDirection">
+        /// The current direction of the combatant user.
+        /// </param>
+        /// 
+        /// <returns>
+        /// A <see cref="DirectionContext"/> object
+        /// representing the direction of this pattern,
+        /// including its Origin position on the game board
+        /// (as <see cref="DirectionContext.TilePositionA"/>)
+        /// and Focus position
+        /// (as <see cref="DirectionContext.TilePositionB"/>).
+        /// </returns>
+        protected DirectionContext GetPatternDirection(DirectionContext userDirection)
         {
             if (PatternOrigin == PatternOriginType.USER)
             {

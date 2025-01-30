@@ -17,7 +17,7 @@ namespace SystemMiami.CombatRefactor
         {
             base.OnEnter();
             combatant.IsMyTurn = true;
-            combatant.ResetTurn();
+            ResetTurn();
         }
 
         public override void MakeDecision()
@@ -49,11 +49,10 @@ namespace SystemMiami.CombatRefactor
 
         public void ResetTurn()
         {
-            combatant.Stats.UpdateStatusEffects();
-
             combatant.loadout.ReduceCooldowns();
+            combatant.Stats.UpdateStatusEffects();
+            combatant.Speed = new Resource(combatant.Stats.GetStat(StatType.SPEED));
+            combatant.Health?.Lose(combatant.Stats.GetNetDamagePerTurn());
         }
     }
 }
-            //combatant.Speed = new Resource(combatant.Stats.GetStat(StatType.SPEED));
-            //combatant.Health?.Lose(combatant.Stats.GetNetDamagePerTurn());

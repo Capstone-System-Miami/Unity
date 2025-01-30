@@ -19,7 +19,7 @@ namespace SystemMiami.CombatSystem
 
             // The map origin & moveDirection of
             // THIS PATTERN
-            DirectionContext patternDirectionInfo = getPatternDirection(userDirection);
+            DirectionContext patternDirectionInfo = GetPatternDirection(userDirection);
 
             // Check the pattern's origin
             Vector2Int checkedPosition = checkedPosition = patternDirectionInfo.TilePositionA;

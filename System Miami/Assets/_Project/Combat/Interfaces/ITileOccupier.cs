@@ -1,10 +1,6 @@
 ﻿using UnityEngine;
 
-namespace SystemMiami.Interfaces
+namespace SystemMiami.CombatSystem
 {
-    public interface ITileOccupier
-    {
-        void AddTo(OverlayTile tile);
-        void RemoveFrom(OverlayTile tile);
-    }
+
 }

@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using SystemMiami.AbilitySystem;
 using SystemMiami.CombatRefactor;
 using SystemMiami.Enums;
-using SystemMiami.Interfaces;
 using SystemMiami.Utilities;
 using UnityEngine;
+using static Unity.Burst.Intrinsics.X86;
 
 namespace SystemMiami.CombatSystem
 {
@@ -14,7 +14,7 @@ namespace SystemMiami.CombatSystem
         typeof(Stats),
         typeof(Abilities)
         )]
-    public abstract class Combatant : MonoBehaviour, IHighlightable, ITileOccupier, IDamageable, IHealable, IMovable
+    public abstract class Combatant : MonoBehaviour, IHighlightable, IDamageReciever, IHealReciever, IForceMoveReciever, ITargetable
     {
         protected const float PLACEMENT_RANGE = 0.0001f;
 
@@ -199,16 +199,17 @@ namespace SystemMiami.CombatSystem
             return distanceToTarget < PLACEMENT_RANGE;
         }
 
-        public void AddTo(OverlayTile tile)
+        public void SnapTo(OverlayTile tile)
         {
+            if (!tile.TryAddOccupier(this))
+            {
+                Debug.LogWarning(
+                    $"{name}'s {this} could not place itself" +
+                    $"on {tile.gameObject.name}'s {tile}.");
+            }
+
             CurrentTile?.RemoveOccupier(this);
             CurrentTile = tile;
-            tile.AddOccupier(this);
-        }
-
-        public void RemoveFrom(OverlayTile tile)
-        {
-            throw new NotImplementedException();
         }
         #endregion Movement
 
@@ -326,18 +327,21 @@ namespace SystemMiami.CombatSystem
             return IsDamageable;
         }
 
-        public void Damage(float amount)
+        public void RecieveDamageAmount(float amount)
         {
-            if (IsDamageable)
-            {
-                print($"{name} lost {amount} health.");
+            print($"{name} took {amount} damage.");
 
-                Health.Lose(amount);
-            }
-            else
-            {
-                print($"{name} took no damage");
-            }
+            Health.Lose(amount);
+        }
+        public void RecieveDamagePercent(float percent, bool ofMax)
+        {
+            float amount = ofMax
+                ? (Health.Get() * percent)
+                : (Health.GetMax() * percent);
+
+            print($"{name} took {amount} damage.");
+
+            Health.Lose(amount);
         }
         #endregion
 
@@ -347,44 +351,35 @@ namespace SystemMiami.CombatSystem
             return IsHealable;
         }
 
-        public void Heal()
+        public void RecieveFullHeal()
         {
-            if (IsHealable)
-            {
-                print($"{name} gained full health.");
+            print($"{name} gained full health.");
 
-                Health.Reset();
-            }
-            else
-            {
-                print($"{name} is not healable");
-            }
+            Health.Reset();
         }
 
-        public void Heal(float amount)
+        public void ReceiveHealAmount(float amount)
         {
-            if (IsHealable)
-            {
-                print($"{name} gained {amount} health.");
-
-                Health.Gain(amount);
-            }
-            else
-            {
-                print($"{name} is not healable");
-            }
+            print($"{name} gained {amount} health.");
+            Health.Gain(amount);
         }
 
-        public void HealPercent(float percent)
+        public void RecieveHealPercent(float percent, bool ofMax)
         {
-            throw new NotImplementedException();
+            float amount = ofMax
+                ? (Health.Get() * percent)
+                : (Health.GetMax() * percent);
+
+            print($"{name} gained {amount} health.");
+
+            Health.Gain(amount);
         }
         #endregion
 
-        public void RestoreResource(Resource type, float amount)
+        public void RestoreResource(Resource resource, float amount)
         {
-            print($"{name} gained {amount} {type}.");
-            type.Gain(amount);
+            print($"{name} gained {amount} {resource}.");
+            resource.Gain(amount);
         }
 
         #region IMovable
@@ -445,27 +440,67 @@ namespace SystemMiami.CombatSystem
             //Health?.Lose(_endOfTurnDamage);
         }
 
-        public void SelectPhysicalAbility(ActionQuickslot slot)
+        #region ITargetable
+        //============================================================
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <param name="preferredColor"></param>
+        public void HandleBeginTargeting(Color preferredColor)
         {
-            int ind = slot.Index;
-
-            if (loadout.PhysicalAbilities.Count <= ind)
-            {
-                Debug.Log($"{name} Phys count less than {ind}");
-
-                return;
-            }
-
-            if (loadout.PhysicalAbilities[ind] == null)
-            {
-                Debug.Log($"{name} Phys count nothing found at {ind}");
-
-                return;
-            }
-
-            selectedAbility = loadout.PhysicalAbilities[ind];
-
-            Debug.Log($"{name} selected {selectedAbility}");
+            ///
         }
+
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <param name="preferredColor"></param>
+        public void HandleEndTargeting(Color preferredColor)
+        {
+            ///
+        }
+
+        /// <summary>
+        /// TODO this might end up returning a state,
+        /// rather than the combatant itself.
+        /// This way, states can decide what to do when
+        /// Damage methods are called on the combatant.
+        /// </summary>
+        /// <param name="damageInterface"></param>
+        /// <returns></returns>
+        public bool TryGetDamageable(out IDamageReciever damageInterface)
+        {
+            damageInterface = this;
+            return true;
+        }
+
+        /// <summary>
+        /// TODO this might end up returning a state,
+        /// rather than the combatant itself.
+        /// This way, states can decide what to do when
+        /// Heal methods are called on the combatant.
+        /// </summary>
+        /// <param name="healInterface"></param>
+        /// <returns></returns>
+        public bool TryGetHealable(out IHealReciever healInterface)
+        {
+            healInterface = this;
+            return true;
+        }
+
+        /// <summary>
+        /// TODO this might end up returning a state,
+        /// rather than the combatant itself.
+        /// This way, states can decide what to do when
+        /// ForceMove methods are called on the combatant.
+        /// </summary>
+        /// <param name="moveInterface"></param>
+        /// <returns></returns>
+        public bool TryGetMovable(out IForceMoveReciever moveInterface)
+        {
+            moveInterface = this;
+            return true;
+        }
+        #endregion ITargetable
     }
 }

@@ -37,7 +37,7 @@ namespace SystemMiami.CombatSystem
 
             // The map origin & moveDirection of
             // THIS PATTERN
-            DirectionContext patternDirectionInfo = getPatternDirection(userDirection);
+            DirectionContext patternDirectionInfo = GetPatternDirection(userDirection);
 
             /// <summary>
             /// The set of adjacent positions

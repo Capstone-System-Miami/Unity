@@ -12,13 +12,26 @@ namespace SystemMiami.CombatSystem
 
         public override void Perform()
         {
-            List<IHealable> targets = currentTargets.GetTargetsWith<IHealable>();
-            foreach (IHealable target in targets)
+            List<IHealReciever> targets = currentTargets.GetTargetsWith<IHealReciever>();
+            foreach (IHealReciever target in targets)
             {
                 if (target == null) { continue; }
 
-                target.Heal(_amount);
+                target.ReceiveHealAmount(_amount);
             }
         }
+    }
+
+    /// <summary>
+    /// This is the interface needed for
+    /// <see cref="Heal"/> to be performed
+    /// on an object.
+    /// </summary>
+    public interface IHealReciever
+    {
+        bool IsCurrentlyHealable();
+        void RecieveFullHeal();
+        void ReceiveHealAmount(float amount);
+        void RecieveHealPercent(float percent, bool ofMax);
     }
 }

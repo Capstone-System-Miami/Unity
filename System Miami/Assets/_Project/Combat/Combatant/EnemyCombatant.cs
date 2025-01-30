@@ -20,7 +20,7 @@ namespace SystemMiami.CombatSystem
             {
                 Debug.Log($"Player not found in {name}'s range." +
                     $"Getting random tile");
-                return MapManager.MGR.GetRandomUnblockedTile();
+                return MapManager.MGR.GetRandomValidTile();
             }
         }
 

@@ -85,7 +85,7 @@ namespace SystemMiami
                     }
                 }
 
-                playerCharacter.AddTo(charTile);
+                playerCharacter.SnapTo(charTile);
             }
 
             if (GAME.MGR.TryGetEnemies(out enemyPrefabs))
@@ -180,7 +180,7 @@ namespace SystemMiami
             for (int i = 0; i < numberOfEnemies; i++)
             {
                 // Find a random unblocked tile to place the enemy
-                OverlayTile spawnTile = MapManager.MGR.GetRandomUnblockedTile();
+                OverlayTile spawnTile = MapManager.MGR.GetRandomValidTile();
 
                 if (spawnTile == null)
                 {
@@ -195,7 +195,7 @@ namespace SystemMiami
         {
             for (int i = 0; i < prefabs.Count; i++)
             {
-                OverlayTile spawnTile = MapManager.MGR.GetRandomUnblockedTile();
+                OverlayTile spawnTile = MapManager.MGR.GetRandomValidTile();
 
                 if (spawnTile == null)
                 {
@@ -226,7 +226,7 @@ namespace SystemMiami
             enemyCombatant.name = newName;
 
             // Position enemy on the tile
-            enemyCombatant.AddTo(spawnTile);
+            enemyCombatant.SnapTo(spawnTile);
 
             // Add to enemy list
             enemyCharacters.Add(enemyCombatant);

@@ -1,7 +1,5 @@
-// Author: Alec
-using SystemMiami.CombatRefactor;
+// Author: Alec, Layla
 using SystemMiami.CombatSystem;
-using SystemMiami.Interfaces;
 using UnityEngine;
 
 namespace SystemMiami
@@ -11,8 +9,14 @@ namespace SystemMiami
         #region PUBLIC VARS
         // ==================================
 
-        // ??
+        /// <summary>
+        /// TODO ???
+        /// </summary>
         public int G;
+
+        /// <summary>
+        /// TODO ???
+        /// </summary>
         public int H;
 
         #endregion // PUBLIC VARS ===========
@@ -37,7 +41,7 @@ namespace SystemMiami
 
         private bool _hasObstacle;
 
-        private ITileOccupier occupier;
+        private ITargetable occupier;
 
         private bool _isHovering;
 
@@ -76,7 +80,7 @@ namespace SystemMiami
             }
         }
 
-        public ITileOccupier Occupier
+        public ITargetable Occupier
         {
             get
             {
@@ -86,8 +90,18 @@ namespace SystemMiami
 
         /// <summary>
         /// Whether something can be positioned onto the tile.
+        /// 
+        /// TODO
+        /// right now, this is just the opposite of
+        /// <see cref="Occupied"/>.
+        /// I'm not sure if we'll need to implement
+        /// logic for "holes"?? A hole isn't quite an
+        /// "Occupier", but it would definitely mean you
+        /// can't move there. So I'm leaving this property
+        /// here in case we need to add a condition
+        /// like <c>IsGround</c> or something.
         /// </summary>
-        public bool ValidForPlacement
+        public virtual bool ValidForPlacement
         {
             get
             {
@@ -95,7 +109,9 @@ namespace SystemMiami
             }
         }
 
-        // ??
+        /// <summary>
+        /// TODO ???
+        /// </summary>
         public int F { get { return G + H; } }
 
         #endregion // PROPERTIES ============
@@ -134,45 +150,16 @@ namespace SystemMiami
         #endregion // UNITY =================
 
 
-        #region VISIBILITY
+        #region Visibility
         // ==================================
 
-        private Color getHighlightedColor()
-        {
-            if (ValidForPlacement)
-            {
-                return _defaultColor;
-            }
-            else
-            {
-                return _invalidColor;
-            }
-        }
-
-        private Color getUnhighlightedColor()
-        {
-            if (Occupied)
-            {
-                if (CurrentCombatant.IsMyTurn)
-                {
-                    return _activeCombatantColor;
-                }
-                else
-                {
-                    return _occupiedColor;
-                }
-            }
-
-            // Alpha set to 0 means transparent.
-            return new Color(1, 1, 1, 0);
-        }
-
-        #endregion // VISIBILITY ============
 
 
-        #region MOUSEOVER
+        #endregion // Visibility====
+
+
+        #region Mouseover
         // ==================================
-
         public void BeginHover(Combatant combatant)
         {
             if (combatant.gameObject != PlayerManager.MGR.gameObject) { return; }
@@ -205,10 +192,10 @@ namespace SystemMiami
             }
         }
 
-        #endregion // MOUSEOVER =============
+        #endregion Mouseover
 
 
-        #region HIGHLIGHTABLE
+        #region IHighlightable
         // ==================================
 
         public void Highlight()
@@ -238,7 +225,7 @@ namespace SystemMiami
             return gameObject;
         }
 
-        #endregion // HIGHLIGHTABLE =========
+        #endregion IHighlightable
 
 
         /// <summary>
@@ -248,7 +235,7 @@ namespace SystemMiami
         /// combatant's CurrentTile before setting it to
         /// this tile.
         /// </summary>
-        public void AddOccupier(ITileOccupier occupier)
+        public bool TryAddOccupier(ITargetable occupier)
         {
             if (!ValidForPlacement
                 && this.occupier != occupier)
@@ -258,19 +245,23 @@ namespace SystemMiami
                     $"on{gameObject}." +
                     $"This placement is invalid."
                     );
-                return;
+                return false;
             }
 
-            if (occupier is not Transform) { return; }
+            if (occupier is not Transform) { return false; }
 
             (occupier as Transform).position = new Vector3(transform.position.x, transform.position.y + 0.0001f, transform.position.z);
 
             this.occupier = occupier;
+
+            return true;
         }
 
-        public void RemoveOccupier(ITileOccupier occupier)
+        public void RemoveOccupier(ITargetable occupier)
         {
             if (this.occupier != occupier) { return; }
+
+            this.occupier = null;
         }
 
         public void HandleBeginTargeting(Color preferredColor)
@@ -283,37 +274,53 @@ namespace SystemMiami
             UnHighlight();
         }
 
-        public bool TryGetDamageable(IDamageable damageInterface)
+        public bool TryGetDamageable(out IDamageReciever damageInterface)
         {
             damageInterface = null;
             return false;
         }
 
-        public bool TryGetHealable(IHealable healInterface)
+        public bool TryGetHealable(out IHealReciever healInterface)
         {
             healInterface = null;
             return false;
         }
 
-        public bool TryGetMovable(IMovable moveInterface)
+        public bool TryGetMovable(out IForceMoveReciever moveInterface)
         {
             moveInterface = null;
             return false;
         }
 
-        public bool TryGetDamageable(out IDamageable damageInterface)
+
+        private Color getHighlightedColor()
         {
-            throw new System.NotImplementedException();
+            if (ValidForPlacement)
+            {
+                return _defaultColor;
+            }
+            else
+            {
+                return _invalidColor;
+            }
         }
 
-        public bool TryGetHealable(out IHealable healInterface)
+        private Color getUnhighlightedColor()
         {
-            throw new System.NotImplementedException();
-        }
+            if (Occupied)
+            {
+                if (CurrentCombatant.IsMyTurn)
+                {
+                    return _activeCombatantColor;
+                }
+                else
+                {
+                    return _occupiedColor;
+                }
+            }
 
-        public bool TryGetMovable(out IMovable moveInterface)
-        {
-            throw new System.NotImplementedException();
+            // Alpha set to 0 means transparent.
+            return new Color(1, 1, 1, 0);
         }
     }
 }
