@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using SystemMiami.CombatSystem;
@@ -6,18 +7,15 @@ using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
 {
+    public enum CombatActionEventType { UNEQUIPPED, EQUIPPED, CONFIRMED, EXECUTING, COMPLETED }
     public abstract class CombatAction
     {
-        #region PUBLIC VARS
-        //==============================
         public readonly Sprite Icon;
         public readonly List<CombatSubaction> SubActions;
         public readonly AnimatorOverrideController OverrideController;
         public readonly Combatant User;
-        #endregion PUBLIC VARS
 
-        #region PUBLIC METHODS
-        //==============================
+        public event EventHandler<CombatActionEventArgs> CombatActionEvent;
 
         protected CombatAction(
             Sprite icon,
@@ -31,19 +29,34 @@ namespace SystemMiami.CombatRefactor
             User = user;
         }
 
-        public void UpdateTargets(
-            DirectionContext newDirection,
-            bool directionChanged)
+        public void RegisterSubactions()
+        {
+            Debug.Log($"{this} made it to registration");
+            SubActions.ForEach(subaction
+                => subaction.RegisterForActionUpdates(this));
+        }
+
+        public void DeregisterSubactions()
         {
             SubActions.ForEach(subaction
-                => subaction.UpdateTargets(newDirection, directionChanged));
+                => subaction.DeregisterForActionUpdates(this));
+        }
+
+        public void Equip()
+        {
+            OnActionEvent(CombatActionEventType.EQUIPPED);
         }
 
         public void Unequip()
         {
-            SubActions.ForEach(subaction
-                => subaction.ClearTargets());
+            OnActionEvent(CombatActionEventType.UNEQUIPPED);
         }
+
+        public void BeginConfirmingTargets()
+        {
+            OnActionEvent(CombatActionEventType.CONFIRMED);
+        }
+
 
         /// TODO: Implement this method
         public bool PlayerFoundInTargets()
@@ -52,14 +65,29 @@ namespace SystemMiami.CombatRefactor
         }
 
         public abstract IEnumerator Execute();
-        #endregion PUBLIC METHODS
 
-        #region PROTECTED METHODS
-        //==============================
-        protected void performActions()
+        protected void PerformActions()
         {
             SubActions.ForEach(subaction => subaction.Perform());
         }
-        #endregion PROTECTED METHODS
+
+        protected virtual void OnActionEvent(CombatActionEventType eventType)
+        {
+            Debug.LogWarning($"{this} trying to invoke a {eventType}");
+
+            CombatActionEvent?.Invoke(this, new(User, eventType));
+        }
+    }
+
+    public class CombatActionEventArgs : EventArgs
+    {
+        public Combatant user;
+        public CombatActionEventType actionState;
+
+        public CombatActionEventArgs(Combatant user, CombatActionEventType actionState)
+        {
+            this.user = user;
+            this.actionState = actionState;
+        }
     }
 }

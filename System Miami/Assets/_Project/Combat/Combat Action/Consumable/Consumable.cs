@@ -42,7 +42,7 @@ namespace SystemMiami.CombatRefactor
 
         public override IEnumerator Execute()
         {
-            performActions();
+            PerformActions();
 
             yield return null;
 

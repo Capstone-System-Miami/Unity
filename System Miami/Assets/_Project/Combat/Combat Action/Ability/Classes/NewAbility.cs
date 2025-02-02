@@ -42,7 +42,7 @@ namespace SystemMiami.CombatRefactor
             targetResource.Lose(ResourceCost);
             yield return null;
 
-            performActions();
+            PerformActions();
 
             startCooldown();
         }

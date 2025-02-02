@@ -193,6 +193,23 @@ namespace SystemMiami
             return null;
         }
 
+        public bool TryPlaceOnTile(ITileOccupant occupant, OverlayTile tile)
+        {
+            if (!tile.ValidForPlacement)
+            {
+                Debug.LogError(
+                    $"Trying to place {occupant} " +
+                    $"on {tile.gameObject}. " +
+                    $"This placement is invalid.");
+                return false;
+            }
+
+            occupant.PositionTile?.ClearOccupant();
+
+            tile.SetOccupant(occupant);
+            return true;
+        }
+
         public Vector3 IsoToScreen(Vector3Int tileLocation)
         {
             return Coordinates.IsoToScreen(tileLocation, gridTilesHeight);

@@ -44,8 +44,8 @@ namespace SystemMiami.CombatRefactor
         /// <returns></returns>
         protected CombatAction SelectRandomCombatAction()
         {
-            List<NewAbility> allAbilities = new(combatant.loadout.PhysicalAbilities);
-            allAbilities.AddRange(combatant.loadout.MagicalAbilities);
+            List<NewAbility> allAbilities = new(combatant.Loadout.PhysicalAbilities);
+            allAbilities.AddRange(combatant.Loadout.MagicalAbilities);
             
             int randomIndex = Random.Range(0, allAbilities.Count);
 

@@ -13,43 +13,67 @@ namespace SystemMiami.CombatSystem
         typeof(Stats),
         typeof(Abilities)
         )]
-    public abstract class Combatant : MonoBehaviour, IHighlightable, IDamageReciever, IHealReciever, IForceMoveReciever, ITargetable
+    public abstract class Combatant : MonoBehaviour, IHighlightable, IDamageReciever, IHealReciever, IForceMoveReciever, ITargetable, ITileOccupant
     {
         protected const float PLACEMENT_RANGE = 0.0001f;
 
+        #region Serialized Vars
+        //============================================================
+
+        [Header("General Info")]
         [SerializeField] private Color _colorTag = Color.white;
+
+        [Header("Settings"), Space(10)]
         [SerializeField] private bool _printUItoConsole;
         [SerializeField] private float _movementSpeed;
 
+        [Header("CombatAction Presets")]
+        // Eventually, these will move.
+        // For the player, they will move to their Inventory,
+        // And for enemies, they will move to their derived class.
+        // vvvvvvvvvvvvvvvvvvvvvvv
         [SerializeField] private List<NewAbilitySO> physical;
         [SerializeField] private List<NewAbilitySO> magical;
         [SerializeField] private List<ConsumableSO> consumable;
+        #endregion Serialized Vars
 
-        #region priv
+
+        #region Private Vars
+        //============================================================
+
+        // State Machine
         private CombatantStateFactory stateFactory;
         private CombatantState currentState;
-
-        private Stats _stats;
-        private float _endOfTurnDamage;
-
+        
+        // Rendering
         private SpriteRenderer _renderer;
         private Color _defaultColor;
 
-        private Animator _animator;
-        private int dirParam = Animator.StringToHash("TileDir");
-
-        OverlayTile positionTile;
-        OverlayTile focusTile;
-        DirectionContext directionContext;
-
+        // Stats & status
+        private Stats _stats;
         private bool isDamageable = true;
         private bool isHealable = true;
         private bool isMovable = true;
         private bool isStunned = false;
         private bool isInvisible = false;
-        #endregion priv
+        private float _endOfTurnDamage;
+
+        // Animator
+        private Animator _animator;
+        private int dirParam = Animator.StringToHash("TileDir");
+
+        // Tile Management
+        private OverlayTile positionTile;
+        private OverlayTile focusTile;
+        private OverlayTile previousFocus;
+        private DirectionContext directionContext;
+        #endregion Private Vars
+
 
         #region Properties
+        //============================================================
+
+        // General Info
         public int ID { get; set; }
         public Color ColorTag { get { return _colorTag; } }
 
@@ -82,26 +106,22 @@ namespace SystemMiami.CombatSystem
         public bool ReadyToStart { get { return currentState is Idle; } }
         public Phase CurrentPhase { get { return currentState.phase; } }
 
-        // Stats & Resources
+        // Stats, Status, Resources
         public Stats Stats { get { return _stats; } }
         public Resource Health { get; set; }
         public Resource Stamina { get; set; }
         public Resource Mana { get; set; }
         public Resource Speed { get; set; }
 
-
-        public Loadout loadout;
-        public CombatAction selectedAbility { get; set; }
-        // ^^^ refactored, testing ^^^
-
+        // Animator
         public Animator Animator { get { return _animator; } }
 
-
+        // Tile Management
         // TODO Should only be null if dead.
         public OverlayTile PositionTile
         {
             get { return positionTile; }
-            private set { value = positionTile; }
+            set { positionTile = value; }
         }
         public OverlayTile FocusTile
         {
@@ -111,31 +131,35 @@ namespace SystemMiami.CombatSystem
             {
                 if (value == focusTile) { return; }
 
-                OverlayTile previous = focusTile;
+                previousFocus = focusTile;
                 focusTile = value;
-                OnFocusTileChanged(previous, focusTile);
+                OnFocusTileChanged();
 
-                CurrentDirectionContext =
-                    new((Vector2Int)PositionTile.GridLocation,
-                    (Vector2Int)focusTile.GridLocation);                
+              
             }
         }
         public DirectionContext CurrentDirectionContext
         {
             get { return directionContext; }
-            set
+            private set
             {
                 DirectionContext previous = directionContext;
                 directionContext = value;
 
-                if (previous.BoardDirection == directionContext.BoardDirection)
+                if (previous.BoardDirection
+                    == directionContext.BoardDirection)
                 {
                     return;
                 }
 
-                OnDirectionChanged(directionContext);
+                OnDirectionChanged();
             }
         }
+
+        // Loadout
+        public Loadout Loadout { get; private set; }
+        public CombatAction SelectedAbility { get; set; }
+
         #endregion Properties
 
         #region Events
@@ -144,7 +168,9 @@ namespace SystemMiami.CombatSystem
         #endregion Events
 
 
-        #region Unity
+        #region Unity Methods
+        //============================================================
+
         private void Awake()
         {
             _stats = GetComponent<Stats>();
@@ -168,15 +194,15 @@ namespace SystemMiami.CombatSystem
         {
             UpdateResources();
 
-            FocusTile = GetNewFocus();
-
             CurrentState.Update();
             CurrentState.MakeDecision();
         }
 
-        #endregion Unity
+        #endregion Unity Methods
 
         #region Construction
+        //============================================================
+
         private void initResources()
         {
             Health = new Resource(_stats.GetStat(StatType.MAX_HEALTH));
@@ -187,7 +213,7 @@ namespace SystemMiami.CombatSystem
 
         private void initLoadout()
         {
-            loadout = new(physical, magical, consumable, this);
+            Loadout = new(physical, magical, consumable, this);
         }
 
         private void initDirection()
@@ -199,7 +225,7 @@ namespace SystemMiami.CombatSystem
 
             CurrentDirectionContext = new(currentPos, forwardPos);
 
-            UpdateAnimDirection(CurrentDirectionContext.ScreenDirection);
+            UpdateAnimDirection();
         }
 
         private void initStateMachine()
@@ -208,14 +234,11 @@ namespace SystemMiami.CombatSystem
             currentState = stateFactory.Idle();
             currentState.OnEnter();
         }
-
-        private void initAbilities()
-        {
-
-        }
         #endregion Construction
 
         #region Movement
+        //============================================================
+
         public void StepTowards(OverlayTile target)
         {
             float stepDistance = _movementSpeed * Time.deltaTime;
@@ -237,22 +260,25 @@ namespace SystemMiami.CombatSystem
                 );
             return distanceToTarget < PLACEMENT_RANGE;
         }
-
-        public void SnapTo(OverlayTile tile)
-        {
-            if (!tile.TryAddOccupier(this))
-            {
-                Debug.LogWarning(
-                    $"{name}'s {this} could not place itself" +
-                    $"on {tile.gameObject.name}'s {tile}.");
-            }
-
-            PositionTile?.RemoveOccupier(this);
-            PositionTile = tile;
-        }
         #endregion Movement
 
-        #region Focus
+
+        #region Tile Management
+        //============================================================
+
+        public void UpdateFocus()
+        {
+            FocusTile = GetNewFocus() ?? GetDefaultFocus();
+        }
+
+        public void UpdateDirection()
+        {
+            CurrentDirectionContext = new(
+                (Vector2Int)PositionTile.GridLocation,
+                (Vector2Int)focusTile.GridLocation
+                );
+        }
+
         /// <summary>
         /// Whatever tile the combatant
         /// is currently focusing on.
@@ -260,6 +286,7 @@ namespace SystemMiami.CombatSystem
         /// must be defined in derived classes.
         /// </summary>
         public abstract OverlayTile GetNewFocus();
+
         public OverlayTile GetDefaultFocus()
         {
             OverlayTile result;
@@ -283,9 +310,23 @@ namespace SystemMiami.CombatSystem
 
             return result;
         }
-        #endregion Focus
 
-        #region Updates
+        public void SnapToPositionTile()
+        {
+            if (PositionTile == null)
+            {
+                Debug.LogError(
+                    $"{gameObject}'s {this} tried to " +
+                    $"snap to its posiiton tile, but " +
+                    $"its PositionTile was null.");
+            }
+            transform.position = PositionTile.OccupiedPosition;
+        }
+        #endregion Tile Management
+
+
+        #region Resource Management
+        //============================================================
         private void UpdateResources()
         {
             Health = new Resource(_stats.GetStat(StatType.MAX_HEALTH), Health.Get());
@@ -293,45 +334,24 @@ namespace SystemMiami.CombatSystem
             Mana = new Resource(_stats.GetStat(StatType.MANA), Mana.Get());
             Speed = new Resource(_stats.GetStat(StatType.SPEED), Speed.Get());
         }
+        #endregion Resource Management
 
-        public void UpdateAnimDirection(ScreenDir screenDirection)
+
+        #region Animation
+        //============================================================
+        public void UpdateAnimDirection()
         {
+            if (FocusTile == null) { return; }
             Animator.SetInteger(
                 dirParam,
-                (int)screenDirection
+                (int)CurrentDirectionContext.ScreenDirection
                 );
         }
+        #endregion Animation
 
-        /// <summary>
-        /// TODO:
-        /// These are being subscribed to by
-        /// Ability's TargetingPatterns.
-        /// 
-        /// <para>
-        /// These "subscription" response fns in
-        /// TargettingPattern should just be called
-        /// in ActionEquipped states when necessary.</para>
-        /// 
-        /// <para>
-        /// Patterns that subscribe to OnSubjectChanged
-        /// should have their funcitons called when
-        /// DirectionContext.TilePositionB changes.</para>
-        /// 
-        /// <para>
-        /// OnDirectionChanged subscribers
-        /// should have their functions called when
-        /// DirectionContext.BoardDirection changes.</para>
-        /// </summary>
-        //public void NotifyTargetingPatterns(DirectionContext directionContext)
-        //{
-        //    OnSubjectChanged?.Invoke(directionContext);
-        //    OnDirectionChanged?.Invoke(directionContext);
-        //}
-
-        #endregion Updates
 
         #region IHighlightable
-
+        //============================================================
         public void Highlight()
         {
             Debug.Log($"Highlight (no args overload) called on {name}.\n" +
@@ -366,7 +386,9 @@ namespace SystemMiami.CombatSystem
         }
         #endregion
 
-        #region IDamageable
+
+        #region IDamageReciever
+        //============================================================
         public bool IsCurrentlyDamageable()
         {
             return isDamageable;
@@ -388,9 +410,11 @@ namespace SystemMiami.CombatSystem
 
             Health.Lose(amount);
         }
-        #endregion
+        #endregion IDamageReciever
 
-        #region IHealable
+
+        #region IHealReciever
+        //============================================================
         public bool IsCurrentlyHealable()
         {
             return isHealable;
@@ -419,15 +443,11 @@ namespace SystemMiami.CombatSystem
 
             Health.Gain(amount);
         }
-        #endregion
+        #endregion IHealReciever
 
-        public void RestoreResource(Resource resource, float amount)
-        {
-            print($"{name} gained {amount} {resource}.");
-            resource.Gain(amount);
-        }
 
-        #region IMovable
+        #region IForceMoveReciever
+        //============================================================
         public bool IsCurrentlyMovable()
         {
             throw new NotImplementedException();
@@ -469,13 +489,8 @@ namespace SystemMiami.CombatSystem
                 return false;
             }
         }
-        #endregion
+        #endregion IForceMoveReciever
 
-        public void InflictStatusEffect(StatusEffect effect)
-        {
-            _stats.AddStatusEffect(effect);
-            _endOfTurnDamage = effect.Damage;
-        }
 
         #region ITargetable
         //============================================================
@@ -497,68 +512,107 @@ namespace SystemMiami.CombatSystem
             ///
         }
 
-        /// <summary>
-        /// TODO this might end up returning a state,
+        public Transform GetTransform()
+        {
+            return transform;
+        }
+
+        /// <inheritdoc />
+        /// <remarks>
+        /// TODO (specific to Combatant implementation):
+        /// This might end up returning a state,
         /// rather than the combatant itself.
         /// This way, states can decide what to do when
         /// Damage methods are called on the combatant.
-        /// </summary>
-        /// <param name="damageInterface"></param>
-        /// <returns></returns>
-        public bool TryGetDamageable(out IDamageReciever damageInterface)
+        /// </remarks>
+        public IDamageReciever GetDamageInterface()
         {
-            damageInterface = this;
-            return true;
+            // Example of how these state-driven interfaces might work.
+            // return currentState is IDamageReciever ? currentState : null;
+
+            return this;
         }
 
-        /// <summary>
-        /// TODO this might end up returning a state,
+        /// <inheritdoc />
+        /// <remarks>
+        /// TODO (specific to Combatant implementation):
+        /// This might end up returning a state,
         /// rather than the combatant itself.
         /// This way, states can decide what to do when
         /// Heal methods are called on the combatant.
-        /// </summary>
-        /// <param name="healInterface"></param>
-        /// <returns></returns>
-        public bool TryGetHealable(out IHealReciever healInterface)
+        /// </remarks>
+        public IHealReciever GetHealInterface()
         {
-            healInterface = this;
-            return true;
+            return this;
         }
 
-        /// <summary>
-        /// TODO this might end up returning a state,
+        /// <inheritdoc />
+        /// <remarks>
+        /// TODO (specific to Combatant implementation):
+        /// This might end up returning a state,
         /// rather than the combatant itself.
         /// This way, states can decide what to do when
         /// ForceMove methods are called on the combatant.
-        /// </summary>
-        /// <param name="moveInterface"></param>
-        /// <returns></returns>
-        public bool TryGetMovable(out IForceMoveReciever moveInterface)
+        /// </remarks>
+        public IForceMoveReciever GetForceMoveInterface()
         {
-            moveInterface = this;
-            return true;
+            return this;
         }
         #endregion ITargetable
 
-        protected virtual void OnFocusTileChanged(OverlayTile prevTile, OverlayTile newTile)
+        #region Tile Event Raisers
+        //============================================================
+        protected virtual void OnFocusTileChanged()
         {
-            FocusTileChanged(this, new FocusTileChangedEventArgs(prevTile, newTile));
+            UpdateDirection();
+
+            FocusTileChanged?.Invoke(
+                this,
+                new FocusTileChangedEventArgs(
+                    previousFocus,
+                    focusTile,
+                    directionContext)
+            );
         }
-        protected virtual void OnDirectionChanged(DirectionContext newDirection)
+        protected virtual void OnDirectionChanged()
         {
-            DirectionChanged(this, new DirectionChangedEventArgs(newDirection));
+            DirectionChanged?.Invoke(
+                this,
+                new DirectionChangedEventArgs(directionContext)
+            );
+        }
+        #endregion Tile Event Raisers
+
+        public void RestoreResource(Resource resource, float amount)
+        {
+            print($"{name} gained {amount} {resource}.");
+            resource.Gain(amount);
+        }
+        public void InflictStatusEffect(StatusEffect effect)
+        {
+            _stats.AddStatusEffect(effect);
+            _endOfTurnDamage = effect.Damage;
         }
     }
 
+
+    #region Event Args
+    //============================================================
+    //============================================================
     public class FocusTileChangedEventArgs : EventArgs
     {
         public OverlayTile previousTile;
         public OverlayTile newTile;
+        public DirectionContext directionContext;
 
-        public FocusTileChangedEventArgs(OverlayTile previousTile, OverlayTile newTile)
+        public FocusTileChangedEventArgs(
+            OverlayTile previousTile,
+            OverlayTile newTile,
+            DirectionContext directionContext)
         {
             this.previousTile = previousTile;
             this.newTile = newTile;
+            this.directionContext = directionContext;
         }
     }
 
@@ -566,9 +620,11 @@ namespace SystemMiami.CombatSystem
     {
         public DirectionContext newDirectionContext;
 
-        public DirectionChangedEventArgs(DirectionContext newDirectionContext)
+        public DirectionChangedEventArgs(
+            DirectionContext newDirectionContext)
         {
             this.newDirectionContext = newDirectionContext;
         }
     }
+    #endregion Event Args
 }

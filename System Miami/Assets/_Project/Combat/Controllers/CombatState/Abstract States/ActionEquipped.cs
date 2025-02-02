@@ -9,12 +9,6 @@ namespace SystemMiami.CombatRefactor
     {
         protected CombatAction combatAction;
 
-        OverlayTile positionTile;
-        OverlayTile focusTile;
-
-        DirectionContext previousDirection;
-        DirectionContext currentDirection;
-
         public ActionEquipped(Combatant combatant, CombatAction combatAction)
             : base(combatant, Phase.Action)
         {
@@ -24,30 +18,19 @@ namespace SystemMiami.CombatRefactor
         public override void OnEnter()
         {
             base.OnEnter();
-            previousDirection = combatant.CurrentDirectionContext;
-            currentDirection = combatant.CurrentDirectionContext;
+            combatant.FocusTileChanged += HandleFocusTileChanged;
+
+            combatant.Loadout.PhysicalAbilities.ForEach(phys => phys.RegisterSubactions());
+            combatant.Loadout.MagicalAbilities.ForEach(mag => mag.RegisterSubactions());
+            combatant.Loadout.Consumables.ForEach(cons => cons.RegisterSubactions());
+
+            combatAction.Equip();
         }
 
         public override void Update()
         {
-            positionTile = combatant.PositionTile;
-            if (TryGetFocus(out focusTile))
-            {
-                if (focusTile == null) { return; }
-            }
-
-            previousDirection = currentDirection;
-            currentDirection = new(
-                (Vector2Int)positionTile.GridLocation,
-                (Vector2Int)focusTile.GridLocation);
-
-            bool directionChanged
-                = previousDirection.BoardDirection
-                != currentDirection.BoardDirection;
-
-            combatant.CurrentDirectionContext = currentDirection;
-
-            combatAction.UpdateTargets(currentDirection, directionChanged);
+            combatant.UpdateFocus();
+            combatant.UpdateAnimDirection();
         }
 
         public override void MakeDecision()
@@ -69,16 +52,23 @@ namespace SystemMiami.CombatRefactor
         {
             base.OnExit();
             combatAction.Unequip();
+
+            combatant.Loadout.PhysicalAbilities.ForEach(phys => phys.DeregisterSubactions());
+            combatant.Loadout.MagicalAbilities.ForEach(mag => mag.DeregisterSubactions());
+            combatant.Loadout.Consumables.ForEach(cons => cons.DeregisterSubactions());
+
+            combatant.FocusTileChanged -= HandleFocusTileChanged;
         }
 
         protected abstract bool SelectTileRequested();
         protected abstract bool UnequipRequested();
 
-        private bool TryGetFocus(out OverlayTile newFocus)
+        protected virtual void HandleFocusTileChanged(
+            object sender,
+            FocusTileChangedEventArgs args)
         {
-            newFocus = combatant.GetNewFocus() ?? combatant.GetDefaultFocus();
-
-            return focusTile != newFocus;
+            args.previousTile?.EndHover(combatant);
+            args.newTile?.BeginHover(combatant);
         }
     }
 }

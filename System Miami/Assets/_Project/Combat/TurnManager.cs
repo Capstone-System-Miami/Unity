@@ -80,12 +80,20 @@ namespace SystemMiami
                 {
                     if (!MapManager.MGR.map.TryGetValue((Vector2Int.zero), out charTile))
                     {
-                        Debug.LogError("Player Placement failed.");
+                        Debug.LogError(
+                            $"{this} failed to find a tile " +
+                            $"to place the player on.");
                         return;
                     }
                 }
 
-                playerCharacter.SnapTo(charTile);
+                if (!MapManager.MGR.TryPlaceOnTile(playerCharacter, charTile))
+                {
+                    Debug.LogError(
+                        $"{this} tried to place {playerCharacter} " +
+                        $"through the MapManager, but it failed.");
+                    return;
+                }
             }
 
             if (GAME.MGR.TryGetEnemies(out enemyPrefabs))
@@ -226,7 +234,13 @@ namespace SystemMiami
             enemyCombatant.name = newName;
 
             // Position enemy on the tile
-            enemyCombatant.SnapTo(spawnTile);
+            if (!MapManager.MGR.TryPlaceOnTile(enemyCombatant, spawnTile))
+            {
+                Debug.LogError($"" +
+                    $"{this} couldn't place " +
+                    $"{enemyCombatant.gameObject} " +
+                    $"on {spawnTile.gameObject}");
+            }
 
             // Add to enemy list
             enemyCharacters.Add(enemyCombatant);

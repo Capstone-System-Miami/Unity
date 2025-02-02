@@ -3,6 +3,7 @@ using System.Linq;
 using SystemMiami.CombatSystem;
 using SystemMiami.Utilities;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace SystemMiami.CombatRefactor
 {
@@ -10,10 +11,6 @@ namespace SystemMiami.CombatRefactor
     public abstract class MovementTileSelection : CombatantState
     {
         int currentSpeedStat;
-
-        // Tiles
-        OverlayTile occupiedTile;
-        OverlayTile focusTile;
 
         // Pathing
         protected MovementPath path;
@@ -33,55 +30,17 @@ namespace SystemMiami.CombatRefactor
             base.OnEnter();
             currentSpeedStat = (int)combatant.Speed.Get();
 
-            occupiedTile = combatant.PositionTile;
-
             confirmPathConditions.Add(() => path != null);
             confirmPathConditions.Add(() => !path.IsEmpty);
-        }
 
+            combatant.FocusTileChanged += HandleFocusTileChanged;
+        }
 
         public override void Update()
         {
-            occupiedTile = combatant.PositionTile;
+            combatant.UpdateFocus();
+            combatant.UpdateAnimDirection();
 
-            // Find a new possible focus tile
-            // by the means described
-            // by int the derived classes.
-            if (!TryGetNewFocus(out OverlayTile newFocus))
-            {
-                // Focus was not new.
-                // Nothing to update.
-                return;
-            }
-
-            // Update currentTile & tile hover
-            focusTile?.EndHover(combatant);
-            focusTile = newFocus;
-            focusTile?.BeginHover(combatant);
-
-            combatant.CurrentDirectionContext = GetNewDirection();
-
-            // Update animator based on direction.
-            combatant.UpdateAnimDirection(
-                combatant.CurrentDirectionContext.ScreenDirection);
-
-            // If there is already a
-            // path set, unhighlight it.
-            path?.Unhighlight();
-
-            // Generate a path based on 
-            path = new(
-                occupiedTile,
-                focusTile,
-                currentSpeedStat
-                );
-
-            if (path.IsEmpty) { return; }
-
-            path.DrawArrows();
-
-            path.HighlightValidMoves(Color.yellow);
-            path.HighlightInvalidMoves(Color.red);
         }
 
         public override void MakeDecision()
@@ -114,7 +73,9 @@ namespace SystemMiami.CombatRefactor
         public override void OnExit()
         {
             base.OnExit();
-            path.UnDrawAll();
+            path?.UnDrawAll();
+
+            combatant.FocusTileChanged -= HandleFocusTileChanged;
         }
 
 
@@ -123,30 +84,31 @@ namespace SystemMiami.CombatRefactor
         protected abstract bool SkipMovementRequested();
         protected abstract bool ConfirmPathRequested();
 
-
-        // Focus
-        protected bool TryGetNewFocus(out OverlayTile newFocus)
+        protected virtual void HandleFocusTileChanged(
+            object sender,
+            FocusTileChangedEventArgs args)
         {
-            newFocus = combatant.GetNewFocus() ?? combatant.GetDefaultFocus();
+            //args.previousTile?.EndHover(combatant);
+            //args.newTile?.BeginHover(combatant);
 
-            return newFocus != focusTile;
-        }
+            // If there is already a
+            // path set, unhighlight it.
+            path?.Unhighlight();
+
+            // Generate a path based on 
+            path = new(
+                MapManager.MGR.map[args.directionContext.TilePositionA],
+                MapManager.MGR.map[args.directionContext.TilePositionB],
+                currentSpeedStat
+                );
 
 
+            if (path.IsEmpty) { return; }
 
-        protected DirectionContext GetNewDirection()
-        {
-            Vector2Int occupiedPos = (Vector2Int)combatant.PositionTile.GridLocation;
+            path.DrawArrows();
 
-            // If the character isn't focusing on anything,
-            // Then use the position 1 tile in "front" of them,
-            // **relative to where the already are**,
-            // not forward relative to the board.
-            Vector2Int focusPos = (focusTile != null) ?
-                (Vector2Int)focusTile.GridLocation
-                : combatant.CurrentDirectionContext.ForwardA;
-
-            return new DirectionContext(occupiedPos, focusPos);
+            path.HighlightValidMoves(Color.yellow);
+            path.HighlightInvalidMoves(Color.red);
         }
     }
 }

@@ -49,7 +49,7 @@ namespace SystemMiami.CombatRefactor
 
         public void ResetTurn()
         {
-            combatant.loadout.ReduceCooldowns();
+            combatant.Loadout.ReduceCooldowns();
             combatant.Stats.UpdateStatusEffects();
             combatant.Speed = new Resource(combatant.Stats.GetStat(StatType.SPEED));
             combatant.Health?.Lose(combatant.Stats.GetNetDamagePerTurn());

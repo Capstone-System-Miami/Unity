@@ -24,11 +24,11 @@ namespace SystemMiami.CombatRefactor
             // TODO
             // Actually determine the correct action to return
 
-            if (combatant.loadout.PhysicalAbilities == null) { Debug.LogWarning("physnull");return; }
-            if (!combatant.loadout.PhysicalAbilities.Any()) { Debug.LogWarning("physnone"); return; }
-            if (combatant.loadout.PhysicalAbilities[0] == null) { Debug.LogWarning("phys[0]null"); return; }
+            if (combatant.Loadout.PhysicalAbilities == null) { Debug.LogWarning("physnull");return; }
+            if (!combatant.Loadout.PhysicalAbilities.Any()) { Debug.LogWarning("physnone"); return; }
+            if (combatant.Loadout.PhysicalAbilities[0] == null) { Debug.LogWarning("phys[0]null"); return; }
 
-            selectedCombatAction = combatant.loadout.PhysicalAbilities[0];
+            selectedCombatAction = combatant.Loadout.PhysicalAbilities[0];
 
             slotBeenClicked = true;
         }

@@ -13,11 +13,6 @@ namespace SystemMiami.CombatRefactor
 
         protected MovementPath path;
         protected List<OverlayTile> pathToConsume = new();
-        protected OverlayTile occupiedTile;
-        protected OverlayTile focusTile;
-        protected OverlayTile destinationTile;
-
-        protected float distanceToTarget;
 
         public MovementExecution(
             Combatant combatant,
@@ -44,25 +39,26 @@ namespace SystemMiami.CombatRefactor
             if (!pathToConsume.Any())
                 { Debug.Log($"{combatant.name} no path"); return; }
 
-            occupiedTile = combatant.PositionTile;
-            focusTile = pathToConsume[0];
+            combatant.FocusTile = pathToConsume[0];
 
-            combatant.CurrentDirectionContext = new(
-                (Vector2Int)occupiedTile.GridLocation,
-                (Vector2Int)focusTile.GridLocation
-                );
+            combatant.StepTowards(combatant.FocusTile);
 
-            combatant.StepTowards(focusTile);
-
-            if (combatant.InPlacementRangeOf(focusTile))
+            if (combatant.InPlacementRangeOf(combatant.FocusTile))
             {
-                combatant.SnapTo(focusTile);
+                if (!MapManager.MGR.TryPlaceOnTile(combatant, combatant.FocusTile))
+                {
+                    Debug.LogError(
+                        $"{combatant.gameObject} " +
+                        $"was not able to be placed on" +
+                        $"{combatant.FocusTile.gameObject}.");
+                    return;
+                }
 
                 pathToConsume.RemoveAt(0);
-
                 combatant.Speed.Lose(1);
+
                 Debug.Log(
-                    $"{combatant} new tile snap," +
+                    $"{combatant} moved along path. " +
                     $"new speed: {combatant.Speed.Get()}"
                     );
             }

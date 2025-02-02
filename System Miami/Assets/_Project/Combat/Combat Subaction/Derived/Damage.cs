@@ -15,14 +15,12 @@ namespace SystemMiami.CombatSystem
         {
             foreach (ITargetable target in currentTargets.all)
             {
-                if (!target.TryGetDamageable(out IDamageReciever damageTarget))
-                {
-                    if (damageTarget.IsCurrentlyDamageable())
-                    {
-                        return;
-                    }
-                    damageTarget.RecieveDamageAmount(_abilityDamage);
-                }
+                IDamageReciever damageTarget = target.GetDamageInterface();
+
+                if (damageTarget == null) { return; }
+                if (damageTarget.IsCurrentlyDamageable()) { return; }
+
+                damageTarget.RecieveDamageAmount(_abilityDamage);
             }
         }
     }

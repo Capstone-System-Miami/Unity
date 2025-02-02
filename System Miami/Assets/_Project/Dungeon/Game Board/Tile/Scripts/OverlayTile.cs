@@ -6,6 +6,8 @@ namespace SystemMiami
 {
     public class OverlayTile : MonoBehaviour, IHighlightable, ITargetable
     {
+        private readonly Vector3 offsetVector = new(0f, 0.0001f, 0f);
+
         #region PUBLIC VARS
         // ==================================
 
@@ -41,7 +43,8 @@ namespace SystemMiami
 
         private bool _hasObstacle;
 
-        private ITargetable occupier;
+        private ITileOccupant occupant;
+        private Vector3 occupantPosition;
 
         private bool _isHovering;
 
@@ -61,32 +64,27 @@ namespace SystemMiami
         /// Cast this to Vector2Int to use it as a key
         /// for the map dict.
         /// </summary>
-        public Vector3Int GridLocation { get { return _gridLocation; } set { _gridLocation = value; } }
+        public Vector3Int GridLocation
+            { get { return _gridLocation; } set { _gridLocation = value; } }
+
+        public Vector3 OccupiedPosition
+            { get { return transform.position + offsetVector; } }
 
         /// <summary>
         /// Reference to the combatant currently occupying this tile
         /// This is a getter property, and casts the ITileOccupier
         /// </summary>
-        public Combatant CurrentCombatant { get { return occupier as Combatant; } }
+        public Combatant CurrentCombatant
+            { get { return occupant as Combatant; } }
 
         /// <summary>
         /// Whether or not the tile is occupied by a combatant.
         /// </summary>
         public bool Occupied
-        {
-            get
-            {
-                return occupier != null;
-            }
-        }
+            { get { return occupant != null; } }
 
-        public ITargetable Occupier
-        {
-            get
-            {
-                return occupier;
-            }
-        }
+        public ITileOccupant Occupier
+            { get { return occupant; } }
 
         /// <summary>
         /// Whether something can be positioned onto the tile.
@@ -102,12 +100,7 @@ namespace SystemMiami
         /// like <c>IsGround</c> or something.
         /// </summary>
         public virtual bool ValidForPlacement
-        {
-            get
-            {
-                return !Occupied;
-            }
-        }
+            { get { return !Occupied; } }
 
         /// <summary>
         /// TODO ???
@@ -148,14 +141,6 @@ namespace SystemMiami
         }
 
         #endregion // UNITY =================
-
-
-        #region Visibility
-        // ==================================
-
-
-
-        #endregion // Visibility====
 
 
         #region Mouseover
@@ -235,61 +220,46 @@ namespace SystemMiami
         /// combatant's CurrentTile before setting it to
         /// this tile.
         /// </summary>
-        public bool TryAddOccupier(ITargetable occupier)
+        public void SetOccupant(ITileOccupant newOccupant)
         {
-            if (!ValidForPlacement
-                && this.occupier != occupier)
-            {
-                Debug.LogError(
-                    $"Trying to place {occupier}" +
-                    $"on{gameObject}." +
-                    $"This placement is invalid."
-                    );
-                return false;
-            }
+            if (!ValidForPlacement) { return; }
 
-            if (occupier is not Transform) { return false; }
-
-            (occupier as Transform).position = new Vector3(transform.position.x, transform.position.y + 0.0001f, transform.position.z);
-
-            this.occupier = occupier;
-
-            return true;
+            occupant = newOccupant;
+            occupant.PositionTile = this;
+            occupant.SnapToPositionTile();
         }
 
-        public void RemoveOccupier(ITargetable occupier)
+        public void ClearOccupant()
         {
-            if (this.occupier != occupier) { return; }
+            if (occupant == null) { return; }
 
-            this.occupier = null;
+            occupant.PositionTile = null;
+            occupant = null;
         }
 
-        public void HandleBeginTargeting(Color preferredColor)
+        public virtual void HandleBeginTargeting(Color preferredColor)
         {
             Highlight(preferredColor);
         }
 
-        public void HandleEndTargeting(Color preferredColor)
+        public virtual void HandleEndTargeting(Color preferredColor)
         {
             UnHighlight();
         }
 
-        public bool TryGetDamageable(out IDamageReciever damageInterface)
+        public virtual IDamageReciever GetDamageInterface()
         {
-            damageInterface = null;
-            return false;
+            return null;
         }
 
-        public bool TryGetHealable(out IHealReciever healInterface)
+        public virtual IHealReciever GetHealInterface()
         {
-            healInterface = null;
-            return false;
+            return null;
         }
 
-        public bool TryGetMovable(out IForceMoveReciever moveInterface)
+        public virtual IForceMoveReciever GetForceMoveInterface()
         {
-            moveInterface = null;
-            return false;
+            return null;
         }
 
 

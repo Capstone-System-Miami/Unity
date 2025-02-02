@@ -12,6 +12,16 @@ namespace SystemMiami.CombatRefactor
             this.combatAction = combatAction;
         }
 
+        public override void OnEnter()
+        {
+            base.OnEnter();
+            combatant.Loadout.PhysicalAbilities.ForEach(phys => phys.RegisterSubactions());
+            combatant.Loadout.MagicalAbilities.ForEach(mag => mag.RegisterSubactions());
+            combatant.Loadout.Consumables.ForEach(cons => cons.RegisterSubactions());
+
+            combatAction.BeginConfirmingTargets();
+        }
+
         public override void MakeDecision()
         {
             if (ConfirmSelection())
@@ -34,6 +44,15 @@ namespace SystemMiami.CombatRefactor
             // if there is request for a state transition,
             // which checks the conditions for the
             // requested transition?
+        }
+
+        public override void OnExit()
+        {
+            base.OnExit();
+
+            combatant.Loadout.PhysicalAbilities.ForEach(phys => phys.DeregisterSubactions());
+            combatant.Loadout.MagicalAbilities.ForEach(mag => mag.DeregisterSubactions());
+            combatant.Loadout.Consumables.ForEach(cons => cons.DeregisterSubactions());
         }
 
         // Decision

@@ -22,26 +22,18 @@ namespace SystemMiami.CombatRefactor
         {
             base.OnEnter();
             canEquip.Add(() => selectedCombatAction != null);
+
+            combatant.FocusTileChanged += HandleFocusTileChanged;
+
+            combatant.Loadout.PhysicalAbilities.ForEach(phys => phys.RegisterSubactions());
+            combatant.Loadout.MagicalAbilities.ForEach(mag => mag.RegisterSubactions());
+            combatant.Loadout.Consumables.ForEach(cons => cons.RegisterSubactions());
         }
 
         public override void Update()
         {
             base.Update();
-
-            // Find a new possible focus tile
-            // by the means described
-            // by int the derived classes.
-            if (!TryGetNewFocus(combatant.FocusTile, out OverlayTile newFocus))
-            {
-                // Focus was not new.
-                // Nothing to update.
-                return;
-            }
-
-            // Update currentTile & tile hover
-            highlightOnlyFocusTile?.EndHover(combatant);
-            highlightOnlyFocusTile = newFocus;
-            highlightOnlyFocusTile?.BeginHover(combatant);
+            combatant.UpdateFocus();
         }
 
         public override void MakeDecision()
@@ -66,8 +58,26 @@ namespace SystemMiami.CombatRefactor
             }
         }
 
+        public override void OnExit()
+        {
+            base.OnExit();
+            combatant.Loadout.PhysicalAbilities.ForEach(phys => phys.DeregisterSubactions());
+            combatant.Loadout.MagicalAbilities.ForEach(mag => mag.DeregisterSubactions());
+            combatant.Loadout.Consumables.ForEach(cons => cons.DeregisterSubactions());
+
+            combatant.FocusTileChanged -= HandleFocusTileChanged;
+        }
+
         // Decision
         protected abstract bool EquipRequested();
         protected abstract bool SkipPhaseRequested();
+
+        protected virtual void HandleFocusTileChanged(
+            object sender,
+            FocusTileChangedEventArgs args)
+        {
+            args.previousTile?.EndHover(combatant);
+            args.newTile?.BeginHover(combatant);
+        }
     }
 }
