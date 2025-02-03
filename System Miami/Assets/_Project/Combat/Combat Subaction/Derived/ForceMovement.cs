@@ -17,14 +17,7 @@ namespace SystemMiami.CombatSystem
 
         public override void Perform()
         {
-            List<IForceMoveReciever> targets = currentTargets.GetTargetsWith<IForceMoveReciever>();
-
-            foreach (IForceMoveReciever target in targets)
-            {
-                if (target == null) { continue; }
-
-                target.TryMoveInDirection(_direction, _distance);
-            }
+            /// TODO
         }
     }
 

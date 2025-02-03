@@ -12,13 +12,7 @@ namespace SystemMiami.CombatSystem
 
         public override void Perform()
         {
-            List<IHealReciever> targets = currentTargets.GetTargetsWith<IHealReciever>();
-            foreach (IHealReciever target in targets)
-            {
-                if (target == null) { continue; }
-
-                target.ReceiveHealAmount(_amount);
-            }
+            /// TODO
         }
     }
 

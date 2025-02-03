@@ -32,26 +32,6 @@ namespace SystemMiami
             }
         }
 
-        public List<TInterface> GetTargetsWith<TInterface>()
-        {
-            return ParseListForImplementations<TInterface, ITargetable>(all);
-        }
-
-        private List<TInterface> ParseListForImplementations<TInterface, KInterface>(List<KInterface> list)
-        {
-            List<TInterface> result = new();
-
-            foreach (KInterface item in list)
-            {
-                if (item is TInterface implementer)
-                {
-                    result.Add(implementer);
-                }
-            }
-
-            return result;
-        }
-
         public static Targets operator +(Targets a, Targets b)
         {
             List<OverlayTile> newTiles = new(a.tiles);
