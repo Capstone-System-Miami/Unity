@@ -12,7 +12,7 @@ namespace SystemMiami
         protected override bool SelectTileRequested()
         {
             // Player clicks? Event from UI buttons?
-            return false;
+            return Input.GetMouseButtonDown(0);
         }
 
         protected override bool UnequipRequested()

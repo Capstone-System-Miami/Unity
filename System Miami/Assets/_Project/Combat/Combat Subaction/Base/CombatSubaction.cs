@@ -39,9 +39,9 @@ namespace SystemMiami.CombatSystem
 
         protected void HandleCombatActionEvent(object sender, CombatActionEventArgs args)
         {
-            Debug.LogWarning($"{this} trying to handle a {args.actionState} event");
+            Debug.LogWarning($"{this} trying to handle a {args.eventType} event");
 
-            switch (args.actionState)
+            switch (args.eventType)
             {
                 default:
                 case CombatActionEventType.UNEQUIPPED:
@@ -54,12 +54,15 @@ namespace SystemMiami.CombatSystem
                     break;
 
                 case CombatActionEventType.CONFIRMED:
+                    DeregisterForDirectionUpdates(args.user);
                     break;
 
                 case CombatActionEventType.EXECUTING:
+                    // ?
                     break;
 
                 case CombatActionEventType.COMPLETED:
+                    EndTargeting();
                     break;
             }
         }

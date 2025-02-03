@@ -15,11 +15,10 @@ namespace SystemMiami.CombatRefactor
 
         public override void OnEnter()
         {
-            combatant.Loadout.PhysicalAbilities.ForEach(phys => phys.RegisterSubactions());
-            combatant.Loadout.MagicalAbilities.ForEach(mag => mag.RegisterSubactions());
-            combatant.Loadout.Consumables.ForEach(cons => cons.RegisterSubactions());
+            base.OnEnter();
+            combatAction.RegisterSubactions();
 
-            combatant.StartCoroutine(combatAction.Execute());
+            combatAction.BeginExecution();
         }
 
         public override void MakeDecision()
@@ -31,9 +30,8 @@ namespace SystemMiami.CombatRefactor
         public override void OnExit()
         {
             base.OnExit();
-            combatant.Loadout.PhysicalAbilities.ForEach(phys => phys.DeregisterSubactions());
-            combatant.Loadout.MagicalAbilities.ForEach(mag => mag.DeregisterSubactions());
-            combatant.Loadout.Consumables.ForEach(cons => cons.DeregisterSubactions());
+
+            combatAction.DeregisterSubactions();
         }
     }
 }

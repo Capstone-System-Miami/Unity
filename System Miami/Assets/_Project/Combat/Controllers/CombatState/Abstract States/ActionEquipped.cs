@@ -20,9 +20,7 @@ namespace SystemMiami.CombatRefactor
             base.OnEnter();
             combatant.FocusTileChanged += HandleFocusTileChanged;
 
-            combatant.Loadout.PhysicalAbilities.ForEach(phys => phys.RegisterSubactions());
-            combatant.Loadout.MagicalAbilities.ForEach(mag => mag.RegisterSubactions());
-            combatant.Loadout.Consumables.ForEach(cons => cons.RegisterSubactions());
+            combatAction.RegisterSubactions();
 
             combatAction.Equip();
         }
@@ -53,9 +51,7 @@ namespace SystemMiami.CombatRefactor
             base.OnExit();
             combatAction.Unequip();
 
-            combatant.Loadout.PhysicalAbilities.ForEach(phys => phys.DeregisterSubactions());
-            combatant.Loadout.MagicalAbilities.ForEach(mag => mag.DeregisterSubactions());
-            combatant.Loadout.Consumables.ForEach(cons => cons.DeregisterSubactions());
+            combatAction.DeregisterSubactions();
 
             combatant.FocusTileChanged -= HandleFocusTileChanged;
         }

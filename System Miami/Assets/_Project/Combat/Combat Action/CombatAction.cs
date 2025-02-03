@@ -15,6 +15,8 @@ namespace SystemMiami.CombatRefactor
         public readonly AnimatorOverrideController OverrideController;
         public readonly Combatant User;
 
+        private Coroutine executionProcess;
+
         public event EventHandler<CombatActionEventArgs> CombatActionEvent;
 
         protected CombatAction(
@@ -57,6 +59,11 @@ namespace SystemMiami.CombatRefactor
             OnActionEvent(CombatActionEventType.CONFIRMED);
         }
 
+        public void BeginExecution()
+        {
+            OnActionEvent(CombatActionEventType.EXECUTING);
+        }
+
 
         /// TODO: Implement this method
         public bool PlayerFoundInTargets()
@@ -64,17 +71,43 @@ namespace SystemMiami.CombatRefactor
             return false;
         }
 
-        public abstract IEnumerator Execute();
-
-        protected void PerformActions()
+        // TODO:
+        // (layla question)
+        // Does this need to be an IEnumerator?
+        // It feels like it could just be a System.Action
+        // or other delegate type
+        protected IEnumerator Execute()
         {
-            SubActions.ForEach(subaction => subaction.Perform());
+            PreExecution();
+            yield return null;
+
+            foreach (CombatSubaction subaction in SubActions)
+            {
+                subaction.Perform();
+                yield return null;
+            }
+
+            CountdownTimer timer = new(User, 2f);
+            timer.Start();
+
+            yield return new WaitUntil(() => timer.IsStarted);
+            Debug.Log($"An ability is starting an Anim simulation timer");
+
+            do
+            {
+                Debug.Log($"AnimSim time remaining: {timer.StatusMsg}");
+                yield return null;
+            } while (!timer.IsFinished);
+
+            OnActionEvent(CombatActionEventType.COMPLETED);
+
+            PostExecution();
         }
+        protected abstract void PreExecution();
+        protected abstract void PostExecution();
 
         protected virtual void OnActionEvent(CombatActionEventType eventType)
         {
-            Debug.LogWarning($"{this} trying to invoke a {eventType}");
-
             CombatActionEvent?.Invoke(this, new(User, eventType));
         }
     }
@@ -82,12 +115,12 @@ namespace SystemMiami.CombatRefactor
     public class CombatActionEventArgs : EventArgs
     {
         public Combatant user;
-        public CombatActionEventType actionState;
+        public CombatActionEventType eventType;
 
         public CombatActionEventArgs(Combatant user, CombatActionEventType actionState)
         {
             this.user = user;
-            this.actionState = actionState;
+            this.eventType = actionState;
         }
     }
 }

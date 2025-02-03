@@ -39,15 +39,13 @@ namespace SystemMiami.CombatRefactor
             MaxUses = preset.Uses;
         }
 
-
-        public override IEnumerator Execute()
+        protected override void PreExecution()
         {
-            PerformActions();
-
-            yield return null;
-
             usesRemaining--;
+        }
 
+        protected override void PostExecution()
+        {
             if (usesRemaining <= 0)
             {
                 Consumed?.Invoke(this);

@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Linq;
 using SystemMiami.CombatSystem;
+using SystemMiami.Utilities;
+using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
 {
@@ -32,21 +34,6 @@ namespace SystemMiami.CombatRefactor
             this.targetResource = targetResource;
         }
 
-        // TODO:
-        // (layla question)
-        // Does this need to be an IEnumerator?
-        // It feels like it could just be a System.Action
-        // or other delegate type
-        public override IEnumerator Execute()
-        {
-            targetResource.Lose(ResourceCost);
-            yield return null;
-
-            PerformActions();
-
-            startCooldown();
-        }
-
         public void ReduceCooldown()
         {
             if (cooldownRemaining > 0)
@@ -55,6 +42,15 @@ namespace SystemMiami.CombatRefactor
             }
         }
 
+        protected override void PreExecution()
+        {
+            targetResource.Lose(ResourceCost);
+        }
+
+        protected override void PostExecution()
+        {
+            startCooldown();
+        }
         private void startCooldown()
         {
             cooldownRemaining = CooldownTurns;
