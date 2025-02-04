@@ -3201,7 +3201,6 @@ MonoBehaviour:
   _background: {fileID: 503616945}
   _nameBox: {fileID: 419541399}
   _health: {fileID: 4060436505031851562}
-  _healthImage: {fileID: 0}
 --- !u!114 &503616945
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3279,12 +3278,12 @@ GameObject:
   - component: {fileID: 529145485}
   - component: {fileID: 529145484}
   m_Layer: 5
-  m_Name: PlayerInfoCanvas
+  m_Name: Leave Dungeon Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &529145484
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5206,7 +5205,6 @@ MonoBehaviour:
   _background: {fileID: 848491072}
   _nameBox: {fileID: 1223317355}
   _health: {fileID: 680616568}
-  _healthImage: {fileID: 0}
 --- !u!114 &848491072
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7695,7 +7693,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 6
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -7720,7 +7718,7 @@ Transform:
   m_GameObject: {fileID: 1290769829}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8375,8 +8373,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _text: {fileID: 1426151296}
   _unselectedMessages:
-    _normal: '[return to neighborhood]'
-    _highlighted: '[return to neighborhood]'
+    _normal: '[return to neighborhood] - dev only feature'
+    _highlighted: '[return to neighborhood] - dev only feature'
   _selectedMessages:
     _normal: 
     _highlighted: 
@@ -10623,7 +10621,6 @@ MonoBehaviour:
   _background: {fileID: 1782660110}
   _nameBox: {fileID: 1563116848}
   _health: {fileID: 503163958}
-  _healthImage: {fileID: 0}
 --- !u!114 &1782660110
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10993,7 +10990,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1838528425
 RectTransform:
   m_ObjectHideFlags: 0
