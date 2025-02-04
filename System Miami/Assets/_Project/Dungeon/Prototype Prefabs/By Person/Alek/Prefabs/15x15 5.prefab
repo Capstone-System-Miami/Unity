@@ -132,7 +132,7 @@ GameObject:
   - component: {fileID: 4079847885079332116}
   - component: {fileID: 2912290510196961716}
   m_Layer: 0
-  m_Name: Dynamic decorations
+  m_Name: Obstacles (dynamic)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -151,7 +151,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 8658446536804358407}
+  m_Father: {fileID: 4228182455835726849}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1839735485 &4079847885079332116
 Tilemap:
@@ -284,7 +284,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8658446536804358407}
   m_Layer: 0
-  m_Name: Decorations
+  m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -303,8 +303,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 6742296481698092542}
   - {fileID: 8200614816245872371}
-  - {fileID: 7785143714766874150}
   - {fileID: 1128061893607798791}
   - {fileID: 568896113790047277}
   m_Father: {fileID: 4228182455835726849}
@@ -333,16 +333,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1924258726445592370}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 368039024703717036}
   - {fileID: 536891061250993033}
   - {fileID: 6063113934334378185}
   - {fileID: 3002119663054795599}
-  m_Father: {fileID: 4228182455835726849}
+  m_Father: {fileID: 8658446536804358407}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2049111078516893759
 GameObject:
@@ -356,7 +355,7 @@ GameObject:
   - component: {fileID: 4305355657524180400}
   - component: {fileID: 5240409164953200216}
   m_Layer: 0
-  m_Name: ColorBlocks (2)
+  m_Name: Chairs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -602,7 +601,7 @@ GameObject:
   - component: {fileID: 3324860571597850420}
   - component: {fileID: 2937577685214303165}
   m_Layer: 0
-  m_Name: board
+  m_Name: Board
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -621,7 +620,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 6742296481698092542}
+  m_Father: {fileID: 4228182455835726849}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1839735485 &3324860571597850420
 Tilemap:
@@ -5276,6 +5275,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4228182455835726849}
   - component: {fileID: 5035014268905121015}
+  - component: {fileID: 8560642505538105974}
+  - component: {fileID: 304045433711479052}
   m_Layer: 0
   m_Name: 15x15 5
   m_TagString: Untagged
@@ -5296,8 +5297,10 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 368039024703717036}
+  - {fileID: 7785143714766874150}
+  - {fileID: 4901441293523038683}
   - {fileID: 2124062693438926561}
-  - {fileID: 6742296481698092542}
   - {fileID: 8658446536804358407}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5313,6 +5316,36 @@ Grid:
   m_CellGap: {x: 0, y: 0, z: 0}
   m_CellLayout: 3
   m_CellSwizzle: 0
+--- !u!114 &8560642505538105974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6131545446203729284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa551ad072719bb419915ece4e0c1d3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _style: 4
+  _boardTilesHeight: 2
+  _gameBoard: {fileID: 2315302534141641814}
+  _obstacles: {fileID: 492667933452164029}
+  _overlayTileContainer: {fileID: 8170625875032487559}
+--- !u!114 &304045433711479052
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6131545446203729284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb20427a53820444087b59e4e0802c21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _notes: IN USE FOR BUILD
 --- !u!1 &6361931066830825402
 GameObject:
   m_ObjectHideFlags: 0
@@ -19341,3 +19374,34 @@ TilemapRenderer:
   m_Mode: 1
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
+--- !u!1 &8170625875032487559
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4901441293523038683}
+  m_Layer: 0
+  m_Name: OverlayTile Container
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4901441293523038683
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8170625875032487559}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4228182455835726849}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
