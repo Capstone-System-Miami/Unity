@@ -3,36 +3,37 @@ using SystemMiami.CombatSystem;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InventoryButtonUI : MonoBehaviour
+namespace SystemMiami.LeeInventory
 {
-    public Item item;
-    public int index;
-    public Image Icon;
-    [SerializeField] Combatant player;
-    private void Start()
+    public class InventoryButtonUI : MonoBehaviour
     {
-        UpdateInventory();
-        int ID = gameObject.GetInstanceID();
-        Debug.LogWarning($"{ID}");
-    }
-
-    public void UpdateInventory()
-    {
-        if (Inventory.MGR.quickslot[index].itemData != null)
+        public Item item;
+        public int index;
+        public Image Icon;
+        [SerializeField] Combatant player;
+        private void Start()
         {
-            item = Inventory.MGR.quickslot[index];
-            Icon.sprite = item.itemData.icon;
-            item.itemData.Init(player);
+            UpdateInventory();
+            int ID = gameObject.GetInstanceID();
+            Debug.LogWarning($"{ID}");
         }
-        Debug.Log("Update Inventory was called");
 
-    }
+        public void UpdateInventory()
+        {
+            if (Inventory.MGR.quickslot[index].itemData != null)
+            {
+                item = Inventory.MGR.quickslot[index];
+                Icon.sprite = item.itemData.icon;
+                item.itemData.Init(player);
+            }
+            Debug.Log("Update Inventory was called");
 
-    public void Clicked()
-    {
-        item.itemData.Use();
-        Debug.Log("Item Clicked");
+        }
+
+        public void Clicked()
+        {
+            item.itemData.Use();
+            Debug.Log("Item Clicked");
+        }
     }
 }
-
-

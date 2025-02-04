@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using SystemMiami.Management;
+using SystemMiami.LeeInventory;
 
 namespace SystemMiami
 {

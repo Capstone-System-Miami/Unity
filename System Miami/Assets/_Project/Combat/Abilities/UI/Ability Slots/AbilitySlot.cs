@@ -6,20 +6,20 @@ namespace SystemMiami.ui
 {
     public class AbilitySlot : MonoBehaviour
     {
-        [Header("Background Panel")]
+       /* [Header("Background Panel")]
         [SerializeField] private SelectableSprite _background;
 
         [Header("Number")]
         [SerializeField] private SelectableText _number;
         [SerializeField] private SelectableSprite _numberBKG;
-
+       */
         [Header("Icon")]
         [SerializeField] private SelectableSprite _icon;
-        [SerializeField] private SelectableSprite _iconBKG;
+      /* [SerializeField] private SelectableSprite _iconBKG; */
 
-        [Header("Name")]
+       /* [Header("Name")]
         [SerializeField] private SelectableText _name;
-        [SerializeField] private SelectableSprite _nameBKG;
+        [SerializeField] private SelectableSprite _nameBKG; */
 
         private Ability _ability;
 
@@ -35,16 +35,16 @@ namespace SystemMiami.ui
 
         private void newStateAllFields(SelectionState state)
         {
-            _background.NewState(state);
+          /*  _background.NewState(state);
 
             _number.NewState(state);
-            _numberBKG.NewState(state);
+            _numberBKG.NewState(state); */
 
             _icon.NewState(state);
-            _iconBKG.NewState(state);
+            /*  _iconBKG.NewState(state); 
 
-            _name.NewState(state);
-            _nameBKG.NewState(state);
+              _name.NewState(state);
+              _nameBKG.NewState(state); */
         }
 
         public void Initialize(AbilityType type, int index)
@@ -55,7 +55,7 @@ namespace SystemMiami.ui
             // Set every string in the selectable text
             // so it won't change depending on
             // mouse over, clicking, etc.
-            _number.SetAllMessages((_index + 1).ToString());
+           /* _number.SetAllMessages((_index + 1).ToString()); */
 
             DisableSelection();
         }
@@ -69,7 +69,7 @@ namespace SystemMiami.ui
             // what the artists cook up UI-wise.
             _icon.SetAllSprites(_ability.Icon);
 
-            _name.SetAllMessages(_ability.name);
+          /*  _name.SetAllMessages(_ability.name); */
 
             _type = _ability.Type;
         }
