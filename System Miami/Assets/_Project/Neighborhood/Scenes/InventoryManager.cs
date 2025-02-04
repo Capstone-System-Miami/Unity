@@ -1,28 +1,31 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InventoryManager : MonoBehaviour
+namespace SystemMiami.LeeInventory
 {
-    public static InventoryManager instance;
-
-    public InventorySlot[] slots;
-
-    private void Awake()
+    public class InventoryManager : MonoBehaviour
     {
-        instance = this;
-    }
+        public static InventoryManager instance;
 
-    public void Add(Item item)
-    {
-        foreach (var slot in slots)
+        public InventorySlot[] slots;
+
+        private void Awake()
         {
-            if (slot.item == null)
-            {
-                slot.AddItem(item);
-                return;
-            }
+            instance = this;
         }
 
-        Debug.Log("Inventory full!");
+        public void Add(wtf.Item item)
+        {
+            foreach (InventorySlot slot in slots)
+            {
+                if (slot.item == null)
+                {
+                    slot.AddItem(item);
+                    return;
+                }
+            }
+
+            Debug.Log("Inventory full!");
+        }
     }
 }

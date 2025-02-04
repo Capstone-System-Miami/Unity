@@ -12,7 +12,6 @@ namespace SystemMiami
         [SerializeField] private Image _background;
         [SerializeField] private TextBox _nameBox;
         [SerializeField] private LabeledField _health;
-        [SerializeField] private Image _healthImage;
 
         private Vector3 _currentPosition;
 
@@ -42,8 +41,6 @@ namespace SystemMiami
         {
             string result = $"{_combatant.Health.Get()} / {_combatant.Health.GetMax()}";
             _health.Value.SetForeground(result);
-
-            _healthImage.fillAmount = _combatant.Health.Get() / _combatant.Health.GetMax();
         }
 
         private void onCombatantDeath(Combatant deadCombatant)

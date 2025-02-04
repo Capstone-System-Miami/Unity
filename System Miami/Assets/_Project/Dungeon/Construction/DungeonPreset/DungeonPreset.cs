@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using SystemMiami.AbilitySystem;
 using UnityEngine;
+using SystemMiami.LeeInventory;
 
 namespace SystemMiami.Dungeons
 {

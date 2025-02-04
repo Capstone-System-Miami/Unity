@@ -6,11 +6,12 @@ using SystemMiami;
 using SystemMiami.CombatSystem;
 using UnityEngine;
 
-
-/// <summary>
-/// Manages the QuickslotInventory of a combatant, handling selection, targeting, and execution.
-/// </summary>
-public class QuickslotInventory : MonoBehaviour
+namespace SystemMiami.LeeInventory
+{
+    /// <summary>
+    /// Manages the QuickslotInventory of a combatant, handling selection, targeting, and execution.
+    /// </summary>
+    public class QuickslotInventory : MonoBehaviour
     {
         #region EVENTS
         // ======================================
@@ -38,15 +39,15 @@ public class QuickslotInventory : MonoBehaviour
         private class ItemState
         {
             private QuickslotInventory _owner;
-            private QuickslotInventory.State _state;
+            private State _state;
             private Item _selectedItem;
 
-            public QuickslotInventory.State Get()
+            public State Get()
             {
                 return _state;
             }
 
-            public void Set(QuickslotInventory.State newState)
+            public void Set(State newState)
             {
                 if (!validSet()) { return; }
 
@@ -55,25 +56,25 @@ public class QuickslotInventory : MonoBehaviour
 
                 switch (newState)
                 {
-                    case QuickslotInventory.State.UNEQUIPPED:
+                    case State.UNEQUIPPED:
                         _owner.ItemUnequipped?.Invoke();
                         break;
-                    case QuickslotInventory.State.EQUIPPED:
+                    case State.EQUIPPED:
                         _owner.ItemEquipped?.Invoke(_selectedItem);
                         break;
-                    case QuickslotInventory.State.TARGETS_LOCKED:
+                    case State.TARGETS_LOCKED:
                         _owner.TargetsLocked?.Invoke(_selectedItem);
                         break;
-                    case QuickslotInventory.State.EXECUTING:
+                    case State.EXECUTING:
                         _owner.ExecuteItemStarted?.Invoke(_selectedItem);
                         break;
-                    case QuickslotInventory.State.COMPLETE:
+                    case State.COMPLETE:
                         _owner.ExecuteItemCompleted?.Invoke(_selectedItem);
                         break;
                 }
             }
 
-            public ItemState(QuickslotInventory owner, QuickslotInventory.State state)
+            public ItemState(QuickslotInventory owner, State state)
             {
                 _owner = owner;
                 _state = state;
@@ -90,7 +91,7 @@ public class QuickslotInventory : MonoBehaviour
                     return false;
                 }
 
-                if (_state != QuickslotInventory.State.UNEQUIPPED && _selectedItem == null)
+                if (_state != State.UNEQUIPPED && _selectedItem == null)
                 {
                     Debug.LogWarning($"{_owner.name} is trying to set a new" +
                         $"ItemState, but has no selected Item");
@@ -106,7 +107,7 @@ public class QuickslotInventory : MonoBehaviour
         #region SERIALIZED
         // ======================================
 
-       
+
         [SerializeField] private AnimatorOverrideController animController;
         #endregion // SERIALIZED ================
 
@@ -128,9 +129,9 @@ public class QuickslotInventory : MonoBehaviour
 
         #region PROPERTIES
         // ======================================
-       
 
-        public QuickslotInventory.State CurrentState { get { return _state.Get(); } }
+
+        public State CurrentState { get { return _state.Get(); } }
 
         public Item SelectedItem { get { return _selectedItem; } }
 
@@ -143,7 +144,7 @@ public class QuickslotInventory : MonoBehaviour
         void Awake()
         {
             _combatant = GetComponent<Combatant>();
-            _state = new ItemState(this, QuickslotInventory.State.UNEQUIPPED);
+            _state = new ItemState(this, State.UNEQUIPPED);
         }
 
         #endregion // UNITY METHODS ==============
@@ -191,25 +192,25 @@ public class QuickslotInventory : MonoBehaviour
             switch (_state.Get())
             {
                 default:
-                case QuickslotInventory.State.UNEQUIPPED:
+                case State.UNEQUIPPED:
                     Debug.LogWarning($"{name} failed to unequip. " +
                         $"There is nothing equipped to unequip.");
                     return false;
 
-                case QuickslotInventory.State.EQUIPPED:
+                case State.EQUIPPED:
                     unequip();
                     return true;
 
-                case QuickslotInventory.State.TARGETS_LOCKED:
+                case State.TARGETS_LOCKED:
                     unequip();
                     return true;
 
-                case QuickslotInventory.State.EXECUTING:
+                case State.EXECUTING:
                     Debug.LogWarning($"{name} failed to unequip. " +
                         $"{_selectedItem} is already in use!");
                     return false;
 
-                case QuickslotInventory.State.COMPLETE:
+                case State.COMPLETE:
                     Debug.LogWarning($"{name} failed to unequip. " +
                         $"{_selectedItem} is already finishing execution!");
                     return false;
@@ -387,11 +388,11 @@ public class QuickslotInventory : MonoBehaviour
         private Item getItem(int index)
         {
             List<Item> quickslotItems = Inventory.MGR.quickslot;
-            
+
 
             return quickslotItems[index];
         }
 
         #endregion // PRIVATE METHODS ===========
     }
-
+}

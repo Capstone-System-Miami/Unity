@@ -3,7 +3,9 @@ using SystemMiami.CombatSystem;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class QuickslotButtonUI : MonoBehaviour
+namespace SystemMiami.LeeInventory
+{
+    public class QuickslotButtonUI : MonoBehaviour
     {
         public Item item;
         public int index;
@@ -15,7 +17,7 @@ public class QuickslotButtonUI : MonoBehaviour
             UpdateQuickslotInventory();
             int ID = gameObject.GetInstanceID();
             Debug.LogWarning($"{ID}");
-           locked = false;
+            locked = false;
         }
 
         public void UpdateQuickslotInventory()
@@ -37,5 +39,4 @@ public class QuickslotButtonUI : MonoBehaviour
             Debug.Log("Item Clicked");
         }
     }
-
-
+}

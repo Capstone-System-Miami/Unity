@@ -1,25 +1,28 @@
 using System;
 using UnityEngine;
 
-[Serializable]
-public class Item
+namespace SystemMiami.LeeInventory
 {
-    public ItemData itemData;
-    public int stackSize;
-
-    public Item(ItemData item)
+    [Serializable]
+    public class Item
     {
-        itemData = item;
-        AddToStack();
-    }
-
-    public void AddToStack()
-    {
-        stackSize++;
-    }
-
-    public void RemoveFromStack()
-    {
-        stackSize--;
+        public ItemData itemData;
+        public int stackSize;
+    
+        public Item(ItemData item)
+        {
+            itemData = item;
+            AddToStack();
+        }
+    
+        public void AddToStack()
+        {
+            stackSize++;
+        }
+    
+        public void RemoveFromStack()
+        {
+            stackSize--;
+        }
     }
 }
