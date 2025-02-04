@@ -14,9 +14,18 @@ namespace SystemMiami
             string prompt = $"Press {interactKey}";
             string actionPrompt = interaction.GetActionPrompt();
 
-            if (interaction.GetActionPrompt() != null)
+            if (interaction.GetActionPrompt() != null
+                && interaction.GetActionPrompt() != "")
             {
                 prompt += $" to {actionPrompt}";
+            }
+            ///TODO: This is truly duct tape and spit
+            else if (interaction is MonoBehaviour m)
+            {
+                if (m.transform.parent.TryGetComponent(out DungeonEntrance entrance))
+                {
+                    prompt += "to Enter";
+                }
             }
 
             ShowBackground();
