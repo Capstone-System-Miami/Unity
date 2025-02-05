@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
 {
-    public enum CombatActionEventType { UNEQUIPPED, EQUIPPED, CONFIRMED, EXECUTING, COMPLETED }
+    public enum CombatActionEventType { CONFIRMED, EXECUTING, COMPLETED }
     public abstract class CombatAction
     {
         public readonly Sprite Icon;
@@ -16,6 +16,10 @@ namespace SystemMiami.CombatRefactor
         public readonly Combatant User;
 
         private Coroutine executionProcess;
+
+        private Targets cumulativeTargets;
+
+        private bool registered;
 
         public event EventHandler<CombatActionEventArgs> CombatActionEvent;
 
@@ -31,27 +35,99 @@ namespace SystemMiami.CombatRefactor
             User = user;
         }
 
-        public void RegisterSubactions()
+        public void RegisterForDirectionUpdates(Combatant user)
         {
-            Debug.Log($"{this} made it to registration");
-            SubActions.ForEach(subaction
-                => subaction.RegisterForActionUpdates(this));
+            Debug.LogWarning($"{this} trying to register for tile updates");
+
+            if (registered) { return; }
+
+            foreach (CombatSubaction subaction in SubActions)
+            {
+                if (subaction.TargetingPattern.PatternOrigin == PatternOriginType.USER)
+                {
+                    Debug.LogWarning($"{this} trying to register for {subaction.TargetingPattern.PatternOrigin} tile updates");
+
+                    user.DirectionChanged += HandleDirectionChanged;
+                }
+                else
+                {
+                    Debug.LogWarning($"{this} trying to register for {subaction.TargetingPattern.PatternOrigin} tile updates");
+                    user.FocusTileChanged += HandleFocusTileChanged;
+                }
+            }
+
+            registered = true;
+            Debug.LogWarning($"{this} registered for tile updates");
         }
 
-        public void DeregisterSubactions()
+        public void DeregisterForDirectionUpdates(Combatant user)
         {
-            SubActions.ForEach(subaction
-                => subaction.DeregisterForActionUpdates(this));
+            if (!registered) { return; }
+
+            foreach (CombatSubaction subaction in SubActions)
+            {
+                if (subaction.TargetingPattern.PatternOrigin == PatternOriginType.USER)
+                {
+                    user.DirectionChanged -= HandleDirectionChanged;
+                }
+                else
+                {
+                    user.FocusTileChanged -= HandleFocusTileChanged;
+                }
+            }
+
+            registered = false;
+        }
+
+        protected void HandleFocusTileChanged(
+            object sender,
+            FocusTileChangedEventArgs args)
+        {
+            UnsubscribeCumulativeTargets();
+            RecalculateCumulativeTargets(args.directionContext);
+            SubscribeCumulativeTargets();
+        }
+
+        protected void HandleDirectionChanged(
+            object sender,
+            DirectionChangedEventArgs args)
+        {
+            UnsubscribeCumulativeTargets();
+            RecalculateCumulativeTargets(args.newDirectionContext);
+            SubscribeCumulativeTargets();
+        }
+
+        protected void SubscribeCumulativeTargets()
+        {
+            cumulativeTargets?.all?.ForEach(target => target.SubscribeTo(CombatActionEvent));
+        }
+
+        protected void UnsubscribeCumulativeTargets()
+        {
+            cumulativeTargets?.all?.ForEach(target => target.UnsubscribeTo(CombatActionEvent));
+        }
+
+        protected void RecalculateCumulativeTargets(DirectionContext newDirectionContext)
+        {
+            cumulativeTargets.Clear();
+
+            foreach(CombatSubaction subaction in SubActions)
+            {
+                Targets subactionTargs = subaction.TargetingPattern.GetTargets(newDirectionContext);
+
+                subaction.IssueCommands(subactionTargs.all);
+
+                cumulativeTargets += subactionTargs;
+            }
         }
 
         public void Equip()
         {
-            OnActionEvent(CombatActionEventType.EQUIPPED);
         }
 
         public void Unequip()
         {
-            OnActionEvent(CombatActionEventType.UNEQUIPPED);
+            
         }
 
         public void BeginConfirmingTargets()
@@ -61,7 +137,7 @@ namespace SystemMiami.CombatRefactor
 
         public void BeginExecution()
         {
-            OnActionEvent(CombatActionEventType.EXECUTING);
+            executionProcess = User.StartCoroutine(Execute());
         }
 
 
@@ -71,21 +147,13 @@ namespace SystemMiami.CombatRefactor
             return false;
         }
 
-        // TODO:
-        // (layla question)
-        // Does this need to be an IEnumerator?
-        // It feels like it could just be a System.Action
-        // or other delegate type
         protected IEnumerator Execute()
         {
             PreExecution();
             yield return null;
 
-            foreach (CombatSubaction subaction in SubActions)
-            {
-                subaction.Perform();
-                yield return null;
-            }
+            OnActionEvent(CombatActionEventType.EXECUTING);
+            yield return null;
 
             CountdownTimer timer = new(User, 2f);
             timer.Start();
@@ -108,6 +176,7 @@ namespace SystemMiami.CombatRefactor
 
         protected virtual void OnActionEvent(CombatActionEventType eventType)
         {
+            Debug.LogWarning($"{this} trying to raise an event");
             CombatActionEvent?.Invoke(this, new(User, eventType));
         }
     }
@@ -119,6 +188,7 @@ namespace SystemMiami.CombatRefactor
 
         public CombatActionEventArgs(Combatant user, CombatActionEventType actionState)
         {
+            Debug.LogWarning($"INSIDE CONSTRUCTOR of {this}");
             this.user = user;
             this.eventType = actionState;
         }

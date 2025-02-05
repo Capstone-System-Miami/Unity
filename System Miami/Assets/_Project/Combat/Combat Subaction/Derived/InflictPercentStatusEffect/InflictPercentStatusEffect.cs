@@ -11,7 +11,7 @@ namespace SystemMiami.CombatSystem
         [SerializeField] StatSetSO effectStats;
         [SerializeField] float damage;
         [SerializeField] int durationTurns;
-        public override void Perform()
+        public void Perform()
         {
             List<Combatant> finalTargets = new();
             foreach (ITargetable target in currentTargets.all)
@@ -31,6 +31,11 @@ namespace SystemMiami.CombatSystem
                     target.InflictStatusEffect(statusEffect);
                 }
             }
+        }
+
+        protected override ISubactionCommand GenerateCommand(ITargetable t)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

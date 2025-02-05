@@ -31,8 +31,6 @@ namespace SystemMiami.CombatSystem
         {
             List<OverlayTile> foundTiles = new();
 
-            Targets result = new(foundTiles);
-
             List<TileDir> directionsToCheck = getDirectionsToCheck();
 
             // The map origin & moveDirection of
@@ -60,6 +58,7 @@ namespace SystemMiami.CombatSystem
                     {
                         foundTiles.Add(checkedTile);
                     }
+                    continue;
                 }
 
                 /// Check the position at each direction in the pattern.
@@ -78,7 +77,7 @@ namespace SystemMiami.CombatSystem
                 }
             }
 
-            return result;
+            return new Targets(foundTiles);
         }
 
         /// <summary>

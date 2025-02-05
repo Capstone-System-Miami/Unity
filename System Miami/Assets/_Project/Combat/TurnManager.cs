@@ -117,7 +117,7 @@ namespace SystemMiami
             if (CurrentTurnOwner == null)
                 { return; }
 
-            Debug.Log($"Current Turn Owner: {CurrentTurnOwner.name}");
+            //Debug.Log($"Current Turn Owner: {CurrentTurnOwner.name}");
         }
         //===============================
         #endregion // ^Unity Methods^

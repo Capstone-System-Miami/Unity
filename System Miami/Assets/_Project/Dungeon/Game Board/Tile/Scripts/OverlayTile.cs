@@ -1,6 +1,10 @@
 // Author: Alec, Layla
+using System;
+using System.Collections.Generic;
+using SystemMiami.CombatRefactor;
 using SystemMiami.CombatSystem;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 namespace SystemMiami
 {
@@ -237,29 +241,68 @@ namespace SystemMiami
             occupant = null;
         }
 
-        public virtual void HandleBeginTargeting(Color preferredColor)
+        public List<ISubactionCommand> TargetedBy { get; set; } = new();
+        public string nameMessageForDB { get { return gameObject.name; } set { ; } }
+        public void SubscribeTo(EventHandler<CombatActionEventArgs> combatActionEvent)
         {
-            Highlight(preferredColor);
+            combatActionEvent += HandleCombatActionEvent;
         }
 
-        public virtual void HandleEndTargeting(Color preferredColor)
+        public void UnsubscribeTo(EventHandler<CombatActionEventArgs> combatActionEvent)
         {
-            UnHighlight();
+            combatActionEvent -= HandleCombatActionEvent;
         }
 
-        public virtual IDamageReciever GetDamageInterface()
+        public void HandleCombatActionEvent(object sender, CombatActionEventArgs args)
         {
-            return null;
+            switch (args.eventType)
+            {
+                case CombatActionEventType.UNEQUIPPED:
+                    TargetedBy.Clear();
+                    UnHighlight();
+                    break;
+                case CombatActionEventType.EQUIPPED:
+                    Highlight(Color.red);
+                    break;
+                case CombatActionEventType.CONFIRMED:
+                    DisplayPreview();
+                    break;
+                case CombatActionEventType.EXECUTING:
+                    ApplyCombatAction();
+                    break;
+                case CombatActionEventType.COMPLETED:
+                    break;
+                default:
+                    break;
+            }
         }
 
-        public virtual IHealReciever GetHealInterface()
+        public void DisplayPreview()
         {
-            return null;
+            ///
         }
 
-        public virtual IForceMoveReciever GetForceMoveInterface()
+        public void ApplyCombatAction()
         {
-            return null;
+            ///
+        }
+
+        public virtual bool TryGetDamageInterface(out IDamageReciever damageInterface)
+        {
+            damageInterface = null;
+            return false;
+        }
+
+        public virtual bool TryGetHealInterface(out IHealReciever healInterface)
+        {
+            healInterface = null;
+            return false;
+        }
+
+        public virtual bool TryGetMoveInterface(out IForceMoveReciever forceMoveInterface)
+        {
+            forceMoveInterface = null;
+            return false;
         }
 
 

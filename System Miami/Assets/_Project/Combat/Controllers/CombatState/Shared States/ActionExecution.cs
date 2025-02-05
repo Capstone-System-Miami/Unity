@@ -16,7 +16,7 @@ namespace SystemMiami.CombatRefactor
         public override void OnEnter()
         {
             base.OnEnter();
-            combatAction.RegisterSubactions();
+            combatAction.RegisterForDirectionUpdates(combatant);
 
             combatAction.BeginExecution();
         }
@@ -31,7 +31,7 @@ namespace SystemMiami.CombatRefactor
         {
             base.OnExit();
 
-            combatAction.DeregisterSubactions();
+            combatAction.DeregisterForDirectionUpdates(combatant);
         }
     }
 }

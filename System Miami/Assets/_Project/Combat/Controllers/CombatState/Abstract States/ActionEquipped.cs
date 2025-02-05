@@ -20,7 +20,7 @@ namespace SystemMiami.CombatRefactor
             base.OnEnter();
             combatant.FocusTileChanged += HandleFocusTileChanged;
 
-            combatAction.RegisterSubactions();
+            combatAction.RegisterForDirectionUpdates(combatant);
 
             combatAction.Equip();
         }
@@ -51,7 +51,7 @@ namespace SystemMiami.CombatRefactor
             base.OnExit();
             combatAction.Unequip();
 
-            combatAction.DeregisterSubactions();
+            combatAction.DeregisterForDirectionUpdates(combatant);
 
             combatant.FocusTileChanged -= HandleFocusTileChanged;
         }
@@ -63,8 +63,8 @@ namespace SystemMiami.CombatRefactor
             object sender,
             FocusTileChangedEventArgs args)
         {
-            args.previousTile?.EndHover(combatant);
-            args.newTile?.BeginHover(combatant);
+            //args.previousTile?.EndHover(combatant);
+            //args.newTile?.BeginHover(combatant);
         }
     }
 }

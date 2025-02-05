@@ -11,9 +11,14 @@ namespace SystemMiami.CombatSystem
     public class DebugCombatAction : CombatSubaction
     {
         
-        public override void Perform()
+        public void Perform()
         {           
             Debug.Log("Ability has been used!");
+        }
+
+        protected override ISubactionCommand GenerateCommand(ITargetable t)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

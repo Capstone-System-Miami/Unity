@@ -19,7 +19,6 @@ namespace SystemMiami.CombatSystem
 
         #region Serialized Vars
         //============================================================
-
         [Header("General Info")]
         [SerializeField] private Color _colorTag = Color.white;
 
@@ -53,7 +52,7 @@ namespace SystemMiami.CombatSystem
         private Stats _stats;
         private bool isDamageable = true;
         private bool isHealable = true;
-        private bool isMovable = true;
+        private bool isMovable = true;   
         private bool isStunned = false;
         private bool isInvisible = false;
         private float _endOfTurnDamage;
@@ -162,15 +161,18 @@ namespace SystemMiami.CombatSystem
 
         #endregion Properties
 
+
         #region Events
         public event EventHandler<FocusTileChangedEventArgs> FocusTileChanged;
         public event EventHandler<DirectionChangedEventArgs> DirectionChanged;
         #endregion Events
 
+        // ******************************************************
+        // Methods
+        // ******************************************************
 
         #region Unity Methods
         //============================================================
-
         private void Awake()
         {
             _stats = GetComponent<Stats>();
@@ -200,9 +202,9 @@ namespace SystemMiami.CombatSystem
 
         #endregion Unity Methods
 
+
         #region Construction
         //============================================================
-
         private void initResources()
         {
             Health = new Resource(_stats.GetStat(StatType.MAX_HEALTH));
@@ -236,9 +238,9 @@ namespace SystemMiami.CombatSystem
         }
         #endregion Construction
 
+
         #region Movement
         //============================================================
-
         public void StepTowards(OverlayTile target)
         {
             float stepDistance = _movementSpeed * Time.deltaTime;
@@ -265,7 +267,6 @@ namespace SystemMiami.CombatSystem
 
         #region Tile Management
         //============================================================
-
         public void UpdateFocus()
         {
             FocusTile = GetNewFocus() ?? GetDefaultFocus();
@@ -354,29 +355,29 @@ namespace SystemMiami.CombatSystem
         //============================================================
         public void Highlight()
         {
-            Debug.Log($"Highlight (no args overload) called on {name}.\n" +
-                $"This should be called from OverlayTile when the player\n" +
-                $"mouses over a tile containing a combatant.\n" +
-                $"The function should enable / instantiate a\n" +
-                $"worldspace UI canvas with combatant info.");
+            //Debug.Log($"Highlight (no args overload) called on {name}.\n" +
+            //    $"This should be called from OverlayTile when the player\n" +
+            //    $"mouses over a tile containing a combatant.\n" +
+            //    $"The function should enable / instantiate a\n" +
+            //    $"worldspace UI canvas with combatant info.");
         }
 
         public void Highlight(Color color)
         {
             if (!isInvisible)
             {
-                print($"{name} is being highlighted");
+                //print($"{name} is being highlighted");
                 _renderer.color = color;
             }
             else
             {
-                print($"{name} is not being highlighted, because it's invisible");
+                //print($"{name} is not being highlighted, because it's invisible");
             }
         }
 
         public void UnHighlight()
         {
-            print($"{name} is no longer highlighted");
+            //print($"{name} is no longer highlighted");
             _renderer.color = _defaultColor;
         }
 
@@ -394,56 +395,35 @@ namespace SystemMiami.CombatSystem
             return isDamageable;
         }
 
-        public void RecieveDamageAmount(float amount)
+        public void PreviewDamage(float amount)
         {
-            print($"{name} took {amount} damage.");
-
-            Health.Lose(amount);
+            //throw new NotImplementedException();
         }
-        public void RecieveDamagePercent(float percent, bool ofMax)
+
+        public void ReceiveDamage(float amount)
         {
-            float amount = ofMax
-                ? (Health.Get() * percent)
-                : (Health.GetMax() * percent);
-
-            print($"{name} took {amount} damage.");
-
-            Health.Lose(amount);
+            //throw new NotImplementedException();
         }
         #endregion IDamageReciever
 
 
-        #region IHealReciever
+        #region IHealReceiver
         //============================================================
         public bool IsCurrentlyHealable()
         {
             return isHealable;
         }
 
-        public void RecieveFullHeal()
+        public void PreviewHeal(float amount)
         {
-            print($"{name} gained full health.");
-
-            Health.Reset();
+            throw new NotImplementedException();
         }
 
-        public void ReceiveHealAmount(float amount)
+        public void ReceiveHeal(float amount)
         {
-            print($"{name} gained {amount} health.");
-            Health.Gain(amount);
+            throw new NotImplementedException();
         }
-
-        public void RecieveHealPercent(float percent, bool ofMax)
-        {
-            float amount = ofMax
-                ? (Health.Get() * percent)
-                : (Health.GetMax() * percent);
-
-            print($"{name} gained {amount} health.");
-
-            Health.Gain(amount);
-        }
-        #endregion IHealReciever
+        #endregion IHealReceiver
 
 
         #region IForceMoveReciever
@@ -452,85 +432,131 @@ namespace SystemMiami.CombatSystem
         {
             throw new NotImplementedException();
         }
-
-        public Vector2Int GetTilePos()
+        public void PreviewForceMove(int distance, Vector2Int direction)
         {
-            return (Vector2Int)PositionTile.GridLocation;
+            throw new NotImplementedException();
         }
 
-        public bool TryMoveTo(Vector2Int tilePos)
+        public void ReceiveForceMove(int distance, Vector2Int direction)
         {
-            if (isMovable)
-            {
-                // TODO: Implement movement logic
-                print($"{name} would move to {tilePos}, but this mechanic has not been implemented");
-                return true;
-            }
-            else
-            {
-                print($"{name} cannot move");
-                return false;
-            }
+            throw new NotImplementedException();
         }
 
-        public bool TryMoveInDirection(Vector2Int boardDirection, int distance)
-        {
-            if (isMovable)
-            {
-                // TODO: Implement directional movement logic
-                Vector2Int newPos = (Vector2Int)PositionTile.GridLocation + boardDirection * distance;
+        //public Vector2Int GetTilePos()
+        //{
+        //    return (Vector2Int)PositionTile.GridLocation;
+        //}
 
-                print($"{name} would move to {newPos}, but this mechanic has not been implemented");
-                return true;
-            }
-            else
-            {
-                print($"{name} cannot move");
-                return false;
-            }
-        }
+        //public bool TryMoveTo(Vector2Int tilePos)
+        //{
+        //    if (isMovable)
+        //    {
+        //        // TODO: Implement movement logic
+        //        print($"{name} would move to {tilePos}, but this mechanic has not been implemented");
+        //        return true;
+        //    }
+        //    else
+        //    {
+        //        print($"{name} cannot move");
+        //        return false;
+        //    }
+        //}
+
+        //public bool TryMoveInDirection(Vector2Int boardDirection, int distance)
+        //{
+        //    if (isMovable)
+        //    {
+        //        // TODO: Implement directional movement logic
+        //        Vector2Int newPos = (Vector2Int)PositionTile.GridLocation + boardDirection * distance;
+
+        //        print($"{name} would move to {newPos}, but this mechanic has not been implemented");
+        //        return true;
+        //    }
+        //    else
+        //    {
+        //        print($"{name} cannot move");
+        //        return false;
+        //    }
+        //}
         #endregion IForceMoveReciever
 
 
         #region ITargetable
         //============================================================
-        /// <summary>
-        /// TODO
-        /// </summary>
-        /// <param name="preferredColor"></param>
-        public void HandleBeginTargeting(Color preferredColor)
+        List<ISubactionCommand> ITargetable.TargetedBy { get; set; } = new();
+        public string nameMessageForDB { get { return gameObject.name; } set { ; } }
+        void ITargetable.SubscribeTo(
+            EventHandler<CombatActionEventArgs> combatActionEvent)
         {
-            ///
+            Debug.LogWarning($"inside {gameObject}'s Subscribe to action fn");
+            combatActionEvent += (this as ITargetable).HandleCombatActionEvent;
         }
 
-        /// <summary>
-        /// TODO
-        /// </summary>
-        /// <param name="preferredColor"></param>
-        public void HandleEndTargeting(Color preferredColor)
+        void ITargetable.UnsubscribeTo(
+            EventHandler<CombatActionEventArgs> combatActionEvent)
         {
-            ///
+            combatActionEvent -= (this as ITargetable).HandleCombatActionEvent;
         }
 
-        public Transform GetTransform()
+        void ITargetable.HandleCombatActionEvent(object sender, CombatActionEventArgs args)
         {
-            return transform;
+            Debug.Log($"{gameObject} is trying to process a combatActionEvent");
+            if (this is not ITargetable me) { return; }
+
+            switch (args.eventType)
+            {
+                case CombatActionEventType.UNEQUIPPED:
+                    me.TargetedBy.Clear();
+                    UnHighlight();
+                    break;
+                case CombatActionEventType.EQUIPPED:
+                    Debug.Log(
+                        $"{name} is trying to process " +
+                        $"an equip event (against itself");
+                    Highlight(Color.red);
+                    break;
+                case CombatActionEventType.CONFIRMED:
+                    me.DisplayPreview();
+                    break;
+                case CombatActionEventType.EXECUTING:
+                    me.ApplyCombatAction();
+                    break;
+                case CombatActionEventType.COMPLETED:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        void ITargetable.DisplayPreview()
+        {
+            if (this is not ITargetable me) { return; }
+
+            me.TargetedBy.ForEach(subaction => subaction.Preview());
+        }
+
+        void ITargetable.ApplyCombatAction()
+        {
+            if (this is not ITargetable me) { return; }
+
+            me.TargetedBy.ForEach(subaction => subaction.Execute());
         }
 
         /// <inheritdoc />
         /// <remarks>
-        /// TODO (specific to Combatant implementation):
+        /// TODO (specific to Combatant implementation) :
         /// This might end up returning a state,
         /// rather than the combatant itself.
         /// This way, states can decide what to do when
         /// Damage methods are called on the combatant.
         /// </remarks>
-        public IDamageReciever GetDamageInterface()
+        public bool TryGetDamageInterface(out IDamageReciever damageInterface)
         {
-            // Example of how these state-driven interfaces might work.
+            //Example of how these state-driven interfaces might work.
             // return currentState is IDamageReciever ? currentState : null;
 
-            return this;
+            damageInterface = this;
+            return true;
         }
 
         /// <inheritdoc />
@@ -541,9 +567,10 @@ namespace SystemMiami.CombatSystem
         /// This way, states can decide what to do when
         /// Heal methods are called on the combatant.
         /// </remarks>
-        public IHealReciever GetHealInterface()
+        public bool TryGetHealInterface(out IHealReciever healInterface)
         {
-            return this;
+            healInterface = this;
+            return true;
         }
 
         /// <inheritdoc />
@@ -554,11 +581,13 @@ namespace SystemMiami.CombatSystem
         /// This way, states can decide what to do when
         /// ForceMove methods are called on the combatant.
         /// </remarks>
-        public IForceMoveReciever GetForceMoveInterface()
+        public bool TryGetMoveInterface(out IForceMoveReciever forceMoveInterface)
         {
-            return this;
+            forceMoveInterface = this;
+            return true;
         }
         #endregion ITargetable
+
 
         #region Tile Event Raisers
         //============================================================
@@ -591,7 +620,7 @@ namespace SystemMiami.CombatSystem
         public void InflictStatusEffect(StatusEffect effect)
         {
             _stats.AddStatusEffect(effect);
-            _endOfTurnDamage = effect.Damage;
+            _endOfTurnDamage = effect.DamagePerTurn;
         }
     }
 

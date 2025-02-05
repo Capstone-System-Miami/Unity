@@ -103,7 +103,7 @@ namespace SystemMiami
         public void AddStatusEffect(StatusEffect effect)
         {
             _statusEffects.Add(effect);
-            Debug.Log($"{name} received a status effect for {effect.Duration} turns.");
+            Debug.Log($"{name} received a status effect for {effect.DurationTurns} turns.");
         }
 
         public float GetNetStatusEffects(StatType type)
@@ -124,7 +124,7 @@ namespace SystemMiami
 
             foreach (StatusEffect statusEffect in _statusEffects)
             {
-                result += statusEffect.Damage;
+                result += statusEffect.DamagePerTurn;
             }
 
             return result;

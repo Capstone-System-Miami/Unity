@@ -24,10 +24,6 @@ namespace SystemMiami.CombatRefactor
             canEquip.Add(() => selectedCombatAction != null);
 
             combatant.FocusTileChanged += HandleFocusTileChanged;
-
-            combatant.Loadout.PhysicalAbilities.ForEach(phys => phys.RegisterSubactions());
-            combatant.Loadout.MagicalAbilities.ForEach(mag => mag.RegisterSubactions());
-            combatant.Loadout.Consumables.ForEach(cons => cons.RegisterSubactions());
         }
 
         public override void Update()
@@ -61,9 +57,6 @@ namespace SystemMiami.CombatRefactor
         public override void OnExit()
         {
             base.OnExit();
-            combatant.Loadout.PhysicalAbilities.ForEach(phys => phys.DeregisterSubactions());
-            combatant.Loadout.MagicalAbilities.ForEach(mag => mag.DeregisterSubactions());
-            combatant.Loadout.Consumables.ForEach(cons => cons.DeregisterSubactions());
 
             combatant.FocusTileChanged -= HandleFocusTileChanged;
         }

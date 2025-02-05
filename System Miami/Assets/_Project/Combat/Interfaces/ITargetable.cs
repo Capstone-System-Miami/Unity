@@ -1,11 +1,20 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using SystemMiami.CombatRefactor;
+using UnityEngine;
 
 namespace SystemMiami.CombatSystem
 {
     public interface ITargetable
     {
-        void HandleBeginTargeting(Color preferredColor);
-        void HandleEndTargeting(Color preferredColor);
+        void SubscribeTo(EventHandler<CombatActionEventArgs> combatActionEvent);
+        void UnsubscribeTo(EventHandler<CombatActionEventArgs> combatActionEvent);
+        void HandleCombatActionEvent(object sender, CombatActionEventArgs args);
+
+        List<ISubactionCommand> TargetedBy { get; set; }
+        string nameMessageForDB { get; set; }
+        void DisplayPreview();
+        void ApplyCombatAction();
 
 
         /// <summary>
@@ -17,7 +26,7 @@ namespace SystemMiami.CombatSystem
         /// The <see cref="IDamageReciever"/> (IF ANY)
         /// provided by the targeted object.
         /// </returns>
-        IDamageReciever GetDamageInterface();
+        bool TryGetDamageInterface(out IDamageReciever damageInterface);
 
         /// <summary>
         /// The method by which a targeting
@@ -28,7 +37,7 @@ namespace SystemMiami.CombatSystem
         /// The <see cref="IHealReciever"/> (IF ANY)
         /// provided by the targeted object.
         /// </returns>
-        IHealReciever GetHealInterface();
+        bool TryGetHealInterface(out IHealReciever healInterface);
 
         /// <summary>
         /// The method by which a targeting
@@ -39,6 +48,6 @@ namespace SystemMiami.CombatSystem
         /// The <see cref="IForceMoveReciever"/> (IF ANY)
         /// provided by the targeted object.
         /// </returns>
-        IForceMoveReciever GetForceMoveInterface();
+        bool TryGetMoveInterface(out IForceMoveReciever forceMovementInterface);
     }
 }
