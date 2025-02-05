@@ -1,35 +1,24 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace SystemMiami.LeeInventory
 {
     public class InventorySlot : MonoBehaviour
     {
-        public Image icon; // Icon for the item
-        public Button removeButton; // Optional: Button to remove the item
-    
-        public wtf.Item item { get; private set; } // The item currently in this slot
-    
+        public wtf.Item item; // Reference to the item in the slot
+
         public void AddItem(wtf.Item newItem)
         {
-            item = newItem;
-            icon.sprite = item.icon;
-            icon.enabled = true;
+            item = newItem; // Assign the new item to the slot
+            // Update the visual representation, e.g., set an icon
+            GetComponent<UnityEngine.UI.Image>().sprite = newItem.icon;
+            GetComponent<UnityEngine.UI.Image>().color = Color.white; // Make the slot visible
         }
-    
+
         public void ClearSlot()
         {
-            item = null;
-            icon.sprite = null;
-            icon.enabled = false;
-        }
-    
-        public void UseItem()
-        {
-            if (item != null)
-            {
-                item.Use();
-            }
+            item = null; // Remove the item from the slot
+            GetComponent<UnityEngine.UI.Image>().sprite = null;
+            GetComponent<UnityEngine.UI.Image>().color = new Color(1, 1, 1, 0); // Hide the slot
         }
     }
 }
