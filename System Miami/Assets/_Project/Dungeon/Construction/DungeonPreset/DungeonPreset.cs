@@ -99,7 +99,8 @@ namespace SystemMiami.Dungeons
                         $"{this} {name} {_prefabPool} " +
                         $"returned a list with a null " +
                         $"GameObject at [0]."
-                        );    
+                        );
+                    return null;
                 }
 
                 if (!golist[0].TryGetComponent(out dungeon))
@@ -128,9 +129,21 @@ namespace SystemMiami.Dungeons
 
             if (iterationsRemaining == 0)
             {
-                Debug.LogError(
+                string warning =
                     $"Dungeon Preset ({this})'s search " +
-                    $"for a prefab timed out!!");
+                    $"for a prefab timed out!! Default prefab ";
+
+                if (_prefabPool.DefaultPrefab == null)
+                {
+                    warning += "WAS ALSO NULL.";
+                }
+                else
+                {
+                    warning += "is being returned.";
+                }
+
+                Debug.LogWarning( warning );
+                return _prefabPool.DefaultPrefab;
             }
 
             return golist[0];
