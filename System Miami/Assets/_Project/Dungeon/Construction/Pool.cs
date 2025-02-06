@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using SystemMiami.Dungeons;
+using SystemMiami.Utilities;
 using UnityEngine;
 
 namespace SystemMiami
@@ -138,7 +138,7 @@ namespace SystemMiami
                         $"{this} Added a default prefab ({_defaultPrefab.name})\n" +
                         getLoopInfo(validElementsMinIndex, validElementsMaxIndex, randomIndex, i) +
                         $"Updated Elements:\n" +
-                        string.Join( "\n", validElements.Select( e => db.GetInfo(e, BindingFlags.NonPublic | BindingFlags.Instance) ) )
+                        string.Join( "\n", validElements.Select( e => DebugHelpers.GetInfo(e, BindingFlags.NonPublic | BindingFlags.Instance) ) )
                         );
 
                     continue;
@@ -170,7 +170,7 @@ namespace SystemMiami
 
             return $"Elements:\n" +
             string.Join("\n",
-                    elements.Select(e => $"{element++}:\n" + db.GetInfo(e, binding))
+                    elements.Select(e => $"{element++}:\n" + DebugHelpers.GetInfo(e, binding))
                     );
         }
 

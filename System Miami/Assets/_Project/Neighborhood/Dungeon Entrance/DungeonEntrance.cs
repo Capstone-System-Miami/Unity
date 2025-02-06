@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using SystemMiami.Dungeons;
 using SystemMiami.Management;
+using SystemMiami.Utilities;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -11,7 +12,7 @@ namespace SystemMiami
     {
         #region SERIALIZED
         // ======================================
-
+        [SerializeField] private dbug log;
         [SerializeField] private List<Dungeons.Style> _excludedStyles = new();
 
         //=======================================
@@ -45,7 +46,7 @@ namespace SystemMiami
         {
             if (preset == null)
             {
-                Debug.LogError(
+                log.error(
                     $"{gameObject.name}'s {name} has been passed a null DungeonEntrancePreset.\n" +
                     $"Its CurrentPreset will remain unchanged, " +
                     $"and it will not call ApplyPreset().");
@@ -73,7 +74,7 @@ namespace SystemMiami
 
             _material.SetColor("_Color", CurrentPreset.DoorOffColor);
 
-            Debug.Log($"Turned off dungeon color for {gameObject.name}.");
+            log.print($"Turned off dungeon color for {gameObject.name}.");
         }
 
         public void TurnOnDungeonColor()
@@ -83,7 +84,7 @@ namespace SystemMiami
 
             _material.SetColor("_Color", CurrentPreset.DoorOnColor);
 
-            Debug.Log($"Turned on dungeon color for {gameObject.name}.");
+            log.print($"Turned on dungeon color for {gameObject.name}.");
         }
 
         //=======================================
@@ -97,7 +98,7 @@ namespace SystemMiami
         {
             if (CurrentPreset == null)
             {
-                Debug.LogError(
+                log.error(
                     $"{gameObject.name}'s {name} script" +
                     $"is trying to apply a null CurrentPreset."
                     );
@@ -107,11 +108,11 @@ namespace SystemMiami
             // Create a little data packet to send to the GAME.MGR
             _dungeonData = CurrentPreset.GetData(_excludedStyles);
 
-            Debug.LogWarning($"DungeonData being stored:\n {_dungeonData}");
+            log.warn($"DungeonData being stored:\n {_dungeonData}");
 
             if (!tryApplyMaterial(out string materialError))
             {
-                Debug.LogWarning(materialError);
+                log.warn(materialError);
             }
 
             TurnOffDungeonColor();
@@ -153,7 +154,7 @@ namespace SystemMiami
         {
             if (GAME.MGR.RegenerateDungeonDataOnInteract)
             {
-                Debug.LogWarning($"DungeonData being re-generated:\n {_dungeonData}");
+                log.warn($"DungeonData being re-generated:\n {_dungeonData}");
                 _dungeonData = CurrentPreset.GetData(_excludedStyles);
             }
 
