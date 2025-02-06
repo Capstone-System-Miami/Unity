@@ -16,6 +16,8 @@ namespace SystemMiami
 
         private T _defaultPrefab;
 
+        public T DefaultPrefab { get { return _defaultPrefab; } }
+
         /// <summary>
         /// Resets the counts of all Pool elements
         /// Finds and stores the default element
