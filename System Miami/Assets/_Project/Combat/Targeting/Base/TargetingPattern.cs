@@ -5,8 +5,6 @@ using UnityEngine;
 
 namespace SystemMiami.CombatSystem
 {
-    // TODO
-    // 1. Create a function for setting targets without showing it (for enemy use)
     public enum PatternOriginType { USER, FOCUS };
     public abstract class TargetingPattern : ScriptableObject
     {

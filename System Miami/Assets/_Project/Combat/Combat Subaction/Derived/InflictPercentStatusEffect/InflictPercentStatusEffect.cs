@@ -1,41 +1,45 @@
-using System.Collections.Generic;
-using SystemMiami.CombatRefactor;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem
 {
+    /// <summary>
+    /// TODO: Feeling pretty sure at this point that this should
+    /// not be its own Subaction?
+    /// <para>
+    /// Maybe each Subaction should
+    /// just have a bool about whether it's a percent-based Subaction.
+    /// This class would disolve into 3 Subactions:</para>
+    /// <para>
+    /// InflictStatusEffect, Damage, and Heal, each with their
+    /// boxes checked for <c>percentBased</c>.</para>
+    /// </summary>
     [System.Serializable]
-    [CreateAssetMenu(fileName = "New Status Effect", menuName = "Abilities/CombatActions/Inflict Percent Status Effect")]
+    [CreateAssetMenu(
+        fileName = "New Status Effect",
+        menuName = "Abilities/CombatActions/Inflict Percent Status Effect")]
     public class InflictPercentStatusEffect : CombatSubaction
     {
         [SerializeField] StatSetSO effectStats;
-        [SerializeField] float damage;
+        [SerializeField] float damagePerTurn;
+        [SerializeField] float healPerTurn;
         [SerializeField] int durationTurns;
-        public void Perform()
+        protected override ISubactionCommand GenerateCommand(ITargetable target)
         {
-            List<Combatant> finalTargets = new();
-            foreach (ITargetable target in currentTargets.all)
+            IStatusEffectReceiver statusEffectReceiver;
+            if (!target.TryGetStatusEffectInterface(out statusEffectReceiver))
             {
-                if (target is Combatant c)
-                {
-                    finalTargets.Add(c);
-                }
+                Debug.LogWarning(
+                    $"Generating a command for {target}, " +
+                    $"no status effect interface returned");
+                return null;
             }
 
-            foreach (Combatant target in finalTargets)
-            {
-                StatusEffect statusEffect = new StatusEffect(effectStats, damage, durationTurns);
-                target.Stats.AddStatusEffect(statusEffect);
-                if (target != null)
-                {
-                    target.InflictStatusEffect(statusEffect);
-                }
-            }
-        }
-
-        protected override ISubactionCommand GenerateCommand(ITargetable t)
-        {
-            throw new System.NotImplementedException();
+            return new StatusEffectCommand(
+                statusEffectReceiver,
+                new StatSet(effectStats),
+                damagePerTurn,
+                healPerTurn,
+                durationTurns);
         }
     }
 }

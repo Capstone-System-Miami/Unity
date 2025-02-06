@@ -1,9 +1,5 @@
 // Authors: Layla Hoey, Lee St. Louis
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using SystemMiami.CombatRefactor;
-using SystemMiami.Utilities;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem

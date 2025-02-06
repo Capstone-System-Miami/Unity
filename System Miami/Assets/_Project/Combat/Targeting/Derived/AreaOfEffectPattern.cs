@@ -6,7 +6,9 @@ using UnityEngine;
 
 namespace SystemMiami.CombatSystem
 {
-    [CreateAssetMenu(fileName = "New AOE Pattern", menuName = "Abilities/Targeting Pattern/Area of Effect")]
+    [CreateAssetMenu(
+        fileName = "New AOE Pattern",
+        menuName = "Abilities/Targeting Pattern/Area of Effect")]
     public class AreaOfEffectPattern : TargetingPattern
     {
         [Tooltip("Radius of the pattern, in Tiles.")]
@@ -65,12 +67,14 @@ namespace SystemMiami.CombatSystem
                 foreach (TileDir direction in directionsToCheck)
                 {
                     Vector2Int checkedPosition;
-                    OverlayTile checkedTile;
 
-                    checkedPosition = adjacent.AdjacentBoardPositions[direction] +
-                        adjacent.BoardDirectionVectors[direction] * (radial);
+                    checkedPosition =
+                        adjacent.AdjacentBoardPositions[direction]
+                        + (adjacent.BoardDirectionVectors[direction] * (radial));
 
-                    if (MapManager.MGR.TryGetTile(checkedPosition, out checkedTile))
+                    if (MapManager.MGR.TryGetTile(
+                        checkedPosition,
+                        out OverlayTile checkedTile))
                     {
                         foundTiles.Add(checkedTile);
                     }

@@ -33,6 +33,10 @@ namespace SystemMiami.CombatRefactor
             SubActions = subActions;
             OverrideController = overrideController;
             User = user;
+
+            cumulativeTargets = new();
+            RecalculateCumulativeTargets(User.CurrentDirectionContext);
+            SubscribeCumulativeTargets();
         }
 
         public void RegisterForDirectionUpdates(Combatant user)
@@ -109,7 +113,7 @@ namespace SystemMiami.CombatRefactor
 
         protected void RecalculateCumulativeTargets(DirectionContext newDirectionContext)
         {
-            cumulativeTargets.Clear();
+            cumulativeTargets?.Clear();
 
             foreach(CombatSubaction subaction in SubActions)
             {

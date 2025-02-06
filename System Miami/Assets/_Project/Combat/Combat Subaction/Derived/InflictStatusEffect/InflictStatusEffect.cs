@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using SystemMiami.CombatRefactor;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem
@@ -13,45 +11,62 @@ namespace SystemMiami.CombatSystem
         [SerializeField] float healPerTurn;
         [SerializeField] int durationTurns;
 
-        public void Perform()
+        protected override ISubactionCommand GenerateCommand(ITargetable target)
         {
-            List<Combatant> finalTargets = new();
-            foreach (ITargetable target in currentTargets.all)
+            IStatusEffectReceiver statusEffectReceiver;
+            if (!target.TryGetStatusEffectInterface(out statusEffectReceiver))
             {
-                if (target is Combatant c)
-                {
-                    finalTargets.Add(c);
-                }
+                Debug.LogWarning(
+                    $"Generating a command for {target}, " +
+                    $"no status effect interface returned");
+                return null;
             }
-            StatusEffect statusEffect = new StatusEffect(effectStats, damagePerTurn, durationTurns);
 
-            foreach (Combatant target in finalTargets)
-            {
-                if (target != null)
-                {
-                    target.InflictStatusEffect(statusEffect);
-                }
-            }
-        }
-
-        protected override ISubactionCommand GenerateCommand(ITargetable t)
-        {
-            return null;
+            return new StatusEffectCommand(
+                statusEffectReceiver,
+                new StatSet(effectStats),
+                damagePerTurn,
+                healPerTurn,
+                durationTurns);
         }
     }
 
-    public class StatusEffectData : ISubactionCommand
+    /// <summary>
+    /// This is the interface needed for
+    /// <see cref="InflictStatusEffect"/> to be performed
+    /// on an object.
+    /// </summary>
+    public interface IStatusEffectReceiver
     {
+        bool IsCurrentlyStatusEffectable();
+        void PreviewEffect(
+            StatSet statMod,
+            float damagePerTurn,
+            float healPerTurn,
+            int durationTurns);
+        void ReceiveEffect(
+            StatSet statMod,
+            float damagePerTurn,
+            float healPerTurn,
+            int durationTurns);
+    }
+
+    public class StatusEffectCommand : ISubactionCommand
+    {
+        public readonly IStatusEffectReceiver receiver;
         public readonly StatSet effect;
         public readonly float damagePerTurn;
         public readonly float healPerTurn;
         public readonly int durationTurns;
 
-        public StatusEffectData(StatSet effect,
+        public StatusEffectCommand(
+            IStatusEffectReceiver statusEffectReceiver,
+            StatSet effect,
             float damagePerTurn,
             float healPerTurn,
             int durationTurns)
         {
+            this.receiver = statusEffectReceiver;
             this.effect = effect;
             this.damagePerTurn = damagePerTurn;
             this.healPerTurn = healPerTurn;
@@ -60,12 +75,12 @@ namespace SystemMiami.CombatSystem
 
         public void Execute()
         {
-            throw new System.NotImplementedException();
+
         }
 
         public void Preview()
         {
-            throw new System.NotImplementedException();
+
         }
     }
 }

@@ -11,18 +11,20 @@ namespace SystemMiami.CombatSystem
     {
         [SerializeField] private float damageToDeal;
 
-        public override ISubactionCommand GenerateCommand(ITargetable target)
+        protected override ISubactionCommand GenerateCommand(ITargetable target)
         {
-            Debug.LogWarning($"Generating a command for {target} about to check damage interface");
-
             IDamageReciever damageReciever;
             if (!target.TryGetDamageInterface(out damageReciever))
             {
-                Debug.LogWarning($"Generating a command for {target} no damage interface returned");
+                Debug.LogWarning(
+                    $"Generating a command for {target}, " +
+                    $"NO damage interface returned");
                 return null;
             }
 
-            Debug.LogWarning($"Generating a command for {target} YES damage interface returned");
+            Debug.LogWarning(
+                $"Generating a command for {target} " +
+                $"YES damage interface returned");
             return new DamageCommand(damageReciever, damageToDeal);
         }
     }

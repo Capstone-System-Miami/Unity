@@ -246,24 +246,23 @@ namespace SystemMiami
         public void SubscribeTo(EventHandler<CombatActionEventArgs> combatActionEvent)
         {
             combatActionEvent += HandleCombatActionEvent;
+
+            /// TODO: This doesn't belong here probably vvv
+            Highlight(Color.red);
         }
 
         public void UnsubscribeTo(EventHandler<CombatActionEventArgs> combatActionEvent)
         {
             combatActionEvent -= HandleCombatActionEvent;
+
+            /// TODO: This doesn't belong here probably vvv
+            UnHighlight();
         }
 
         public void HandleCombatActionEvent(object sender, CombatActionEventArgs args)
         {
             switch (args.eventType)
             {
-                case CombatActionEventType.UNEQUIPPED:
-                    TargetedBy.Clear();
-                    UnHighlight();
-                    break;
-                case CombatActionEventType.EQUIPPED:
-                    Highlight(Color.red);
-                    break;
                 case CombatActionEventType.CONFIRMED:
                     DisplayPreview();
                     break;
@@ -271,6 +270,7 @@ namespace SystemMiami
                     ApplyCombatAction();
                     break;
                 case CombatActionEventType.COMPLETED:
+
                     break;
                 default:
                     break;
@@ -305,6 +305,11 @@ namespace SystemMiami
             return false;
         }
 
+        public bool TryGetStatusEffectInterface(out IStatusEffectReceiver statusEffectInterface)
+        {
+            statusEffectInterface = null;
+            return false;
+        }
 
         private Color getHighlightedColor()
         {
@@ -335,5 +340,6 @@ namespace SystemMiami
             // Alpha set to 0 means transparent.
             return new Color(1, 1, 1, 0);
         }
+
     }
 }

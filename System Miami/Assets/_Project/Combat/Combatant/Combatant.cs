@@ -490,12 +490,18 @@ namespace SystemMiami.CombatSystem
         {
             Debug.LogWarning($"inside {gameObject}'s Subscribe to action fn");
             combatActionEvent += (this as ITargetable).HandleCombatActionEvent;
+
+            /// TODO: This doesn't belong here probably vvv
+            Highlight(Color.magenta);
         }
 
         void ITargetable.UnsubscribeTo(
             EventHandler<CombatActionEventArgs> combatActionEvent)
         {
             combatActionEvent -= (this as ITargetable).HandleCombatActionEvent;
+
+            /// TODO: This doesn't belong here probably vvv
+            UnHighlight();
         }
 
         void ITargetable.HandleCombatActionEvent(object sender, CombatActionEventArgs args)
@@ -505,16 +511,6 @@ namespace SystemMiami.CombatSystem
 
             switch (args.eventType)
             {
-                case CombatActionEventType.UNEQUIPPED:
-                    me.TargetedBy.Clear();
-                    UnHighlight();
-                    break;
-                case CombatActionEventType.EQUIPPED:
-                    Debug.Log(
-                        $"{name} is trying to process " +
-                        $"an equip event (against itself");
-                    Highlight(Color.red);
-                    break;
                 case CombatActionEventType.CONFIRMED:
                     me.DisplayPreview();
                     break;
@@ -522,6 +518,8 @@ namespace SystemMiami.CombatSystem
                     me.ApplyCombatAction();
                     break;
                 case CombatActionEventType.COMPLETED:
+                    /// TODO: Wait until !TargetedBy.Any() ?
+                    me.TargetedBy = new();
                     break;
                 default:
                     break;
@@ -586,6 +584,20 @@ namespace SystemMiami.CombatSystem
             forceMoveInterface = this;
             return true;
         }
+
+        /// <inheritdoc />
+        /// <remarks>
+        /// TODO (specific to Combatant implementation):
+        /// This might end up returning a state,
+        /// rather than the combatant itself.
+        /// This way, states can decide what to do when
+        /// StatusEffect methods are called on the combatant.
+        /// </remarks>
+        public bool TryGetStatusEffectInterface(out IStatusEffectReceiver statusEffectInterface)
+        {
+            statusEffectInterface = null;
+            return false;
+        }
         #endregion ITargetable
 
 
@@ -622,6 +634,7 @@ namespace SystemMiami.CombatSystem
             _stats.AddStatusEffect(effect);
             _endOfTurnDamage = effect.DamagePerTurn;
         }
+
     }
 
 

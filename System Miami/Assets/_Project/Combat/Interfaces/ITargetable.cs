@@ -26,7 +26,8 @@ namespace SystemMiami.CombatSystem
         /// The <see cref="IDamageReciever"/> (IF ANY)
         /// provided by the targeted object.
         /// </returns>
-        bool TryGetDamageInterface(out IDamageReciever damageInterface);
+        bool TryGetDamageInterface(
+            out IDamageReciever damageInterface);
 
         /// <summary>
         /// The method by which a targeting
@@ -37,7 +38,8 @@ namespace SystemMiami.CombatSystem
         /// The <see cref="IHealReciever"/> (IF ANY)
         /// provided by the targeted object.
         /// </returns>
-        bool TryGetHealInterface(out IHealReciever healInterface);
+        bool TryGetHealInterface(
+            out IHealReciever healInterface);
 
         /// <summary>
         /// The method by which a targeting
@@ -48,6 +50,19 @@ namespace SystemMiami.CombatSystem
         /// The <see cref="IForceMoveReciever"/> (IF ANY)
         /// provided by the targeted object.
         /// </returns>
-        bool TryGetMoveInterface(out IForceMoveReciever forceMovementInterface);
+        bool TryGetMoveInterface(
+            out IForceMoveReciever forceMovementInterface);
+
+        /// <summary>
+        /// The method by which a targeting
+        /// object can request the appropriate
+        /// interface from the targeted object.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="IStatusEffectReceiver"/> (IF ANY)
+        /// provided by the targeted object.
+        /// </returns>
+        bool TryGetStatusEffectInterface(
+            out IStatusEffectReceiver statusEffectInterface);
     }
 }
