@@ -13,19 +13,19 @@ namespace SystemMiami.CombatRefactor
         public readonly Combatant combatant;
         protected readonly CombatantStateFactory factory;
 
-        private string uiMsg = "";
-        public string UI_Prompts
+        private string inputPrompts = "";
+        public string InputPrompts
         {
             get
             {
-                return uiMsg;
+                return inputPrompts;
             }
             protected set
             {
-                uiMsg = value;
+                inputPrompts = value;
                 if (combatant.PrintUItoConsole)
                 {
-                    Debug.Log($"{combatant.name} UI message: {uiMsg}");
+                    Debug.Log($"{combatant.name} UI message: {inputPrompts}");
                 }
             }
         }

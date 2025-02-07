@@ -15,6 +15,9 @@ namespace SystemMiami.CombatRefactor
         public override void OnEnter()
         {
             base.OnEnter();
+
+            /// Subscribe the selected CombatAction to
+            /// Directional updates.
             combatAction.RegisterForDirectionUpdates(combatant);
 
             combatAction.BeginConfirmingTargets();

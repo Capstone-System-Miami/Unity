@@ -19,6 +19,9 @@ namespace SystemMiami.CombatRefactor
             combatAction.RegisterForDirectionUpdates(combatant);
 
             combatAction.BeginExecution();
+
+            InputPrompts =
+                "Executing Action.";
         }
 
         public override void MakeDecision()

@@ -13,7 +13,7 @@ namespace SystemMiami.CombatSystem
         typeof(Stats),
         typeof(Abilities)
         )]
-    public abstract class Combatant : MonoBehaviour, IHighlightable, IDamageReciever, IHealReciever, IForceMoveReciever, ITargetable, ITileOccupant
+    public abstract class Combatant : MonoBehaviour, ITargetable, ITileOccupant, IHighlightable, IDamageReciever, IHealReciever, IForceMoveReciever
     {
         protected const float PLACEMENT_RANGE = 0.0001f;
 

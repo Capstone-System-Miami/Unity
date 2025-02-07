@@ -21,9 +21,17 @@ namespace SystemMiami.CombatRefactor
         public override void OnEnter()
         {
             base.OnEnter();
+
+            /// Add equip conditions
             canEquip.Add(() => selectedCombatAction != null);
 
+            /// Subscribe to FocusTile events.
             combatant.FocusTileChanged += HandleFocusTileChanged;
+            
+            /// Update prompts
+            InputPrompts = 
+                "Select an action from your Loadout Menu.\n" +
+                "Or press Enter/Return to end your turn.\n";
         }
 
         public override void Update()
@@ -41,9 +49,9 @@ namespace SystemMiami.CombatRefactor
                 SwitchState(factory.ActionEquipped(selectedCombatAction));
                 return;
             }
-            else if (canSkipPhase.Met())
+            else if (SkipPhaseRequested())
             {
-                if (!SkipPhaseRequested()) {  return; }
+                if (!canSkipPhase.Met()) {  return; }
 
                 SwitchState(factory.TurnEnd());
                 return;

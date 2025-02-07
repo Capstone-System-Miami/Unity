@@ -32,12 +32,9 @@ namespace SystemMiami.CombatSystem
 
             RaycastHit2D[] hits = Physics2D.RaycastAll(mousePos2d, Vector2.zero);
 
-            if (hits.Length > 0)
-            {
-                return hits.OrderByDescending(i => i.collider.transform.position.z).First();
-            }
-
-            return null;
+            return hits.Length > 0
+                ? hits.OrderByDescending(i => i.collider.transform.position.z).First()
+                : null;
         }
 
         /// <summary>
@@ -47,9 +44,9 @@ namespace SystemMiami.CombatSystem
         /// </summary>
         private OverlayTile getTileFromRaycast(RaycastHit2D? hit)
         {
-            if (!hit.HasValue) { return null; }
-
-            return hit.Value.collider.gameObject.GetComponent<OverlayTile>();
+            return hit.HasValue 
+                ? hit.Value.collider.gameObject.GetComponent<OverlayTile>()
+                : null;
         }
     }
 }

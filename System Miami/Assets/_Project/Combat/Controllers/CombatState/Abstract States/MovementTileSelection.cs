@@ -28,28 +28,38 @@ namespace SystemMiami.CombatRefactor
         public override void OnEnter()
         {
             base.OnEnter();
+
+            /// Store current speed for use in pathing.
             currentSpeedStat = (int)combatant.Speed.Get();
 
+            /// Set conditions for being able to confirm the path.
             confirmPathConditions.Add(() => path != null);
             confirmPathConditions.Add(() => !path.IsEmpty);
 
+            /// Subscribe to FocusTile changed events.
             combatant.FocusTileChanged += HandleFocusTileChanged;
+
+            InputPrompts =
+                "Hover over a tile to preview movement.\n" +
+                "Click to lock in your path.\n" +
+                "(You will still be able to change your mind).\n";
         }
 
         public override void Update()
         {
             combatant.UpdateFocus();
             combatant.UpdateAnimDirection();
-
         }
 
         public override void MakeDecision()
         {
             if (TurnEndRequested())
             {
-                if (!turnEndConditions.Met()) { return; }
+                if (!turnEndConditions.Met())
+                {
+                    SwitchState(factory.TurnEnd());
+                }
 
-                SwitchState(factory.TurnEnd());
                 return;
             }
 

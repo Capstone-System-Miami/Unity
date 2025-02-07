@@ -18,11 +18,21 @@ namespace SystemMiami.CombatRefactor
         public override void OnEnter()
         {
             base.OnEnter();
-            combatant.FocusTileChanged += HandleFocusTileChanged;
 
+            /// Subscribe the selected CombatAction to
+            /// Directional updates.
             combatAction.RegisterForDirectionUpdates(combatant);
 
+            /// Subscribe to FocusTile events
+            combatant.FocusTileChanged += HandleFocusTileChanged;
+
+
             combatAction.Equip();
+
+            InputPrompts =
+                "Hover over a tile to aim.\n" +
+                "Click to lock your targets.\n" +
+                "(You will still be able to change your mind)\n";
         }
 
         public override void Update()

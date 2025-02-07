@@ -28,10 +28,21 @@ namespace SystemMiami.CombatRefactor
         public override void OnEnter()
         {
             base.OnEnter();
+
+            /// Copy path so we can remove elements as we go.
             pathToConsume = new(path.ForMovement);
 
+            /// Set conditions for moving again when the
+            /// path is used up.
             moveAgainConditions.Add( () => !pathToConsume.Any() );
             moveAgainConditions.Add( () => combatant.Speed.Get() > 0 );
+
+            /// Set conditions for changing to action
+            /// selection state
+            actionSelectionConditions.Add( () => !pathToConsume.Any() );
+
+            InputPrompts = 
+                "Executing Movement.\n";
         }
 
         public override void Update()
@@ -77,10 +88,6 @@ namespace SystemMiami.CombatRefactor
             {
                 SwitchState(factory.ActionSelection());
                 return;
-            }
-            else
-            {
-                SwitchState(factory.TurnEnd());
             }
         }
 

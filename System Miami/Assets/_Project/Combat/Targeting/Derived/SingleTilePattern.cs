@@ -9,12 +9,6 @@ namespace SystemMiami.CombatSystem
         menuName = "Abilities/Targeting Pattern/Single-Tile")]
     public class SingleTilePattern : TargetingPattern
     {
-        [Tooltip("The amount of targets that can be single-selected for this pattern's CombatAction")]
-        [SerializeField] private int _maxTargets;
-        private int _currentTargetCount;
-
-        public int MaxTargets { get { return _maxTargets; } }
-
         public override Targets GetTargets(DirectionContext userDirection)
         {
             List<OverlayTile> foundTiles = new();
