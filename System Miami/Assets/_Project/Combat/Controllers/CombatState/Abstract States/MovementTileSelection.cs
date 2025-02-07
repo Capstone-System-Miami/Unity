@@ -34,7 +34,7 @@ namespace SystemMiami.CombatRefactor
 
             /// Set conditions for being able to confirm the path.
             confirmPathConditions.Add(() => path != null);
-            confirmPathConditions.Add(() => !path.IsEmpty);
+            confirmPathConditions.Add(() => path.ContainsValidMoves);
 
             /// Subscribe to FocusTile changed events.
             combatant.FocusTileChanged += HandleFocusTileChanged;
@@ -55,7 +55,7 @@ namespace SystemMiami.CombatRefactor
         {
             if (TurnEndRequested())
             {
-                if (!turnEndConditions.Met())
+                if (!turnEndConditions.AllMet())
                 {
                     SwitchState(factory.TurnEnd());
                 }
@@ -65,7 +65,7 @@ namespace SystemMiami.CombatRefactor
 
             if (SkipMovementRequested())
             {
-                if (!skipMovementConditions.Met()) { return; }
+                if (!skipMovementConditions.AllMet()) { return; }
 
                 SwitchState(factory.ActionSelection());
                 return;
@@ -73,7 +73,7 @@ namespace SystemMiami.CombatRefactor
 
             if (ConfirmPathRequested())
             {
-                if (!confirmPathConditions.Met()) { return; }
+                if (!confirmPathConditions.AllMet()) { return; }
 
                 SwitchState(factory.MovementConfirmation(path));
                 return;
@@ -113,7 +113,7 @@ namespace SystemMiami.CombatRefactor
                 );
 
 
-            if (path.IsEmpty) { return; }
+            if (!path.ContainsValidMoves) { return; }
 
             path.DrawArrows();
 

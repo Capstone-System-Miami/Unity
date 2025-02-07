@@ -32,13 +32,13 @@ namespace SystemMiami.CombatRefactor
 
         protected void HandleProceedRequest()
         {
-            if (movementTileSelectionConditions.Met())
+            if (movementTileSelectionConditions.AllMet())
             {
                 SwitchState(factory.MovementTileSelection());
                 return;
             }
 
-            if (actionSelectionConditions.Met())
+            if (actionSelectionConditions.AllMet())
             {
                 SwitchState(factory.ActionSelection());
                 return;

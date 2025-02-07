@@ -28,7 +28,7 @@ namespace SystemMiami.Utilities
             conditions.Remove(condition);
         }
 
-        public bool Met()
+        public bool AllMet()
         {
             foreach (Func<bool> condition in conditions)
             {

@@ -47,6 +47,12 @@ namespace SystemMiami.CombatRefactor
             }
         }
 
+        public override void OnExit()
+        {
+            base.OnExit();
+            path.UnDrawAll();
+        }
+
         // Decision
         protected abstract bool ConfirmSelection();
         protected abstract bool CancelSelection();

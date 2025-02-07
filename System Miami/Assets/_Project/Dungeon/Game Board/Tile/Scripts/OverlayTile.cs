@@ -199,7 +199,7 @@ namespace SystemMiami
             _targetColor.Set(color);
             _customHighlight = true;
 
-            //print($"{name} cust highlight");
+            if (color == Color.blue) { Debug.LogError("Blue boi");}
         }
 
         public void UnHighlight()

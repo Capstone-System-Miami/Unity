@@ -26,17 +26,12 @@ namespace SystemMiami.CombatSystem
 
         public bool IsInDetectionRange(Combatant target)
         {
-            MovementPath fullPathToPlayer = new(
+            MovementPath pathToPlayerData = new(
                 PositionTile,
                 target.PositionTile
                 );
 
-            if (fullPathToPlayer.ForMovement.Count <= detectionRadius)
-            {
-                return true;
-            }
-
-            return false;
+            return pathToPlayerData.ForMovement.Count <= detectionRadius;
         }
     }
 }

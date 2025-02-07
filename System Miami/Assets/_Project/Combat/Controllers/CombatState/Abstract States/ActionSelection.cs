@@ -44,21 +44,16 @@ namespace SystemMiami.CombatRefactor
         {
             if (EquipRequested())
             {
-                if (!canEquip.Met()) { return; }
+                if (!canEquip.AllMet()) { return; }
 
                 SwitchState(factory.ActionEquipped(selectedCombatAction));
                 return;
             }
             else if (SkipPhaseRequested())
             {
-                if (!canSkipPhase.Met()) {  return; }
-
+                if (!canSkipPhase.AllMet()) {  return; }
                 SwitchState(factory.TurnEnd());
                 return;
-            }
-            else
-            {
-                SwitchState(factory.TurnEnd());
             }
         }
 
@@ -67,6 +62,7 @@ namespace SystemMiami.CombatRefactor
             base.OnExit();
 
             combatant.FocusTileChanged -= HandleFocusTileChanged;
+            combatant.FocusTile?.EndHover(combatant);
         }
 
         // Decision

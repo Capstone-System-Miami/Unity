@@ -10,7 +10,11 @@ namespace SystemMiami.CombatRefactor
 
         public override void OnEnter()
         {
-            Debug.Log($"{combatant.name}Calling end of turn");
+            base.OnEnter();
+            
+            InputPrompts = 
+                $"Turn over.\n" +
+                $"Press Enter/Return to continue.";
         }
 
         public override void MakeDecision()

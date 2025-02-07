@@ -10,8 +10,8 @@ namespace SystemMiami.CombatRefactor
 
         protected override bool Proceed()
         {
-            // Wait for input?
-            return true;
+            // Wait for input
+            return Input.GetKeyDown(KeyCode.Return);
         }
     }
 }

@@ -19,45 +19,52 @@ namespace SystemMiami
         private int toRemove;
         private List<OverlayTile> removed;
 
-        public List<OverlayTile> RawPath => new(path);
-
+        /// <summary>
+        /// Returns a list of the valid movement tiles along the
+        /// path to the target.
+        /// <para>
+        /// NOTE This is a "Lazy Loader"</para>
+        /// </summary>
         public List<OverlayTile> ForMovement
         {
             get
             {
-                if (startExclusive == null)
-                {
-                    startExclusive = GetTruncated(false);
-                }
+                startExclusive ??= GetTruncated(false);
                 return startExclusive;
             }
         }
 
-        public List<OverlayTile> ForDrawing
+        /// <summary>
+        /// Returns a list of the valid movement tiles along the
+        /// path to the target, INCLUDING the player's position.
+        /// <para>
+        /// NOTE This is a "Lazy Loader"</para>
+        /// </summary>
+        public List<OverlayTile> ForDrawingValid
         {
             get
             {
-                if (startInclusive == null)
-                {
-                    startInclusive = GetTruncated(true);
-                }
+                startInclusive ??= GetTruncated(true);
                 return startInclusive;
             }
         }
 
-        public List<OverlayTile> Removed
+        /// <summary>
+        /// Returns a list of the *invalid* movement tiles along the
+        /// path to the target.
+        /// <para>
+        /// NOTE This is a "Lazy Loader"</para>
+        /// </summary>
+        public List<OverlayTile> ForDrawingInvalid
         {
             get
             {
-                if (removed == null)
-                {
-                    removed = GetRemoved();
-                }
+                removed ??= GetRemoved();
                 return removed;
             }
         }
 
-        public bool IsEmpty => !ForMovement.Any();
+        public bool ContainsValidMoves => ForMovement.Any();
 
         public MovementPath(
             OverlayTile start,
@@ -102,7 +109,7 @@ namespace SystemMiami
 
         public void DrawArrows()
         {
-            ArrowDrawer.MGR.DrawPath(ForDrawing);
+            ArrowDrawer.MGR.DrawPath(ForDrawingValid);
         }
 
         public void UnDrawArrows()
@@ -112,7 +119,7 @@ namespace SystemMiami
 
         public void HighlightValidMoves(Color color)
         {
-            foreach(OverlayTile tile in ForDrawing)
+            foreach(OverlayTile tile in ForDrawingValid)
             {
                 tile.Highlight(color);
             }
@@ -120,13 +127,13 @@ namespace SystemMiami
 
         public void UnhighlightValidMoves()
         {
-            Unhighlight(ForDrawing);
+            Unhighlight(ForDrawingValid);
         }
 
 
         public void HighlightInvalidMoves(Color color)
         {
-            foreach(OverlayTile tile in Removed)
+            foreach(OverlayTile tile in ForDrawingInvalid)
             {
                 tile.Highlight(color);
             }
@@ -134,14 +141,13 @@ namespace SystemMiami
 
         public void UnhighlightInvalidMoves()
         {
-            Unhighlight(Removed);
+            Unhighlight(ForDrawingInvalid);
         }
 
         public void Unhighlight()
         {
-            Unhighlight(RawPath);
-            Unhighlight(ForMovement);
-            Unhighlight(ForDrawing);
+            Unhighlight(ForDrawingValid);
+            Unhighlight(ForDrawingInvalid);
         }
 
         private void Unhighlight(List<OverlayTile> tiles)
@@ -250,10 +256,10 @@ namespace SystemMiami
         {
             List<OverlayTile> result = new(path);
 
-            path.Insert(0, tileContext.Current);
+            result.Insert(0, tileContext.Current);
 
             // return an empty list if null
-            return path ?? new();
+            return result ?? new();
         }
     }
 }

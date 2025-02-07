@@ -29,6 +29,10 @@ namespace SystemMiami.CombatRefactor
         {
             base.OnEnter();
 
+            /// Display whatever part of the path we want to here
+            path.HighlightValidMoves(Color.green);
+            path.DrawArrows();
+
             /// Copy path so we can remove elements as we go.
             pathToConsume = new(path.ForMovement);
 
@@ -79,12 +83,12 @@ namespace SystemMiami.CombatRefactor
         {
             if (pathToConsume.Any()) { return; }
 
-            if (moveAgainConditions.Met())
+            if (moveAgainConditions.AllMet())
             {
                 SwitchState(factory.MovementTileSelection());
                 return;
             }
-            else if (actionSelectionConditions.Met())
+            else if (actionSelectionConditions.AllMet())
             {
                 SwitchState(factory.ActionSelection());
                 return;
