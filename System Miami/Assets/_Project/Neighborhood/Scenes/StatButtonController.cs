@@ -1,13 +1,13 @@
 using UnityEngine;
 
-public class StatButtonController : MonoBehaviour
+public class StatsPanelController : MonoBehaviour
 {
-    public GameObject detailPanel; // The detailed info panel for this stat
-    private bool isExpanded = false; // Tracks if the panel is expanded
+    public GameObject statsPanel; // Reference to the panel containing detailed stats
+    private bool isExpanded = false; // Track whether the panel is expanded
 
-    public void ToggleDetail()
+    public void ToggleStatsPanel()
     {
-        isExpanded = !isExpanded; // Toggle state
-        detailPanel.SetActive(isExpanded); // Show or hide the panel
+        isExpanded = !isExpanded; // Toggle the state
+        statsPanel.SetActive(isExpanded); // Show or hide the panel based on the state
     }
 }
