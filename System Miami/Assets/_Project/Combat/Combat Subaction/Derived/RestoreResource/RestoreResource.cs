@@ -13,7 +13,7 @@ namespace SystemMiami
         [SerializeField] [Range(0, 1)] private float _percentage; // To change percentage to 50% or 75%, change the 0 to 0.5 or 0.75
         [SerializeField] private ResourceType resourceType;
 
-        protected override ISubactionCommand GenerateCommand(ITargetable t)
+        public override ISubactionCommand GenerateCommand(ITargetable t)
         {
             throw new System.NotImplementedException();
         }

@@ -13,7 +13,7 @@ namespace SystemMiami.CombatSystem
         typeof(Stats),
         typeof(Abilities)
         )]
-    public abstract class Combatant : MonoBehaviour, ITargetable, ITileOccupant, IHighlightable, IDamageReceiver, IHealReceiver, IForceMoveReceiver
+    public abstract class Combatant : MonoBehaviour, ITargetable, ITileOccupant, IHighlightable, IDamageReceiver, IHealReceiver, IForceMoveReceiver, IStatusEffectReceiver
     {
         protected const float PLACEMENT_RANGE = 0.0001f;
 
@@ -56,6 +56,7 @@ namespace SystemMiami.CombatSystem
         private bool isStunned = false;
         private bool isInvisible = false;
         private float _endOfTurnDamage;
+        private float _endOfTurnHeal;
 
         // Animator
         private Animator _animator;
@@ -399,12 +400,19 @@ namespace SystemMiami.CombatSystem
 
         public void PreviewDamage(float amount)
         {
-            //throw new NotImplementedException();
+            float currentHealth = Health.Get();
+            Debug.Log(
+                $"{gameObject.name} will take {amount} damage,\n" +
+                $"taking its health from {currentHealth} to " +
+                $"{currentHealth - amount}");
         }
 
         public void ReceiveDamage(float amount)
         {
-            //throw new NotImplementedException();
+            Health.Lose(amount);
+            Debug.Log(
+                $"{gameObject.name} took {amount} damage,\n" +
+                $"its Health is now {Health.Get()}");
         }
         #endregion IDamageReciever
 
@@ -483,6 +491,43 @@ namespace SystemMiami.CombatSystem
         #endregion IForceMoveReciever
 
 
+        #region IStatusEffectReceiver
+        //============================================================
+        bool IStatusEffectReceiver.IsCurrentlyStatusEffectable()
+        {
+            return true;
+        }
+
+        void IStatusEffectReceiver.PreviewEffect(
+            StatSet statMod,
+            float damagePerTurn,
+            float healPerTurn,
+            int durationTurns)
+        {
+            Debug.Log(
+                $"{gameObject.name} will have {statMod} applied,\n" +
+                $"will begin taking {damagePerTurn} per turn,\n" +
+                $"and healing {healPerTurn} per turn.\n" +
+                $"The effect will last for {durationTurns} turns.");
+        }
+
+        void IStatusEffectReceiver.ReceiveEffect(
+            StatSet statMod,
+            float damagePerTurn,
+            float healPerTurn,
+            int durationTurns)
+        {
+            _stats.AddStatusEffect(statMod, durationTurns);
+
+            /// TODO:   (from layla)
+            /// These are not implemented and I can't think
+            /// too deeply about them right now, I'm sorry lol
+            _endOfTurnDamage = damagePerTurn;
+            _endOfTurnHeal = healPerTurn;
+        }
+        #endregion // IStatusEffectReveiver
+
+
         #region ITargetable
         //============================================================
         List<ISubactionCommand> ITargetable.TargetedBy { get; set; } = new();
@@ -506,7 +551,7 @@ namespace SystemMiami.CombatSystem
             Debug.Log($"{gameObject.name} is trying to process a combatActionEvent");
             if (this is not ITargetable me) { return; }
 
-            switch (args.eventType)
+            switch (args.EventType)
             {
                 case TargetingEventType.CANCELLED:
                     UnHighlight();
@@ -516,9 +561,9 @@ namespace SystemMiami.CombatSystem
                     Highlight(Color.magenta + new Color(-0.2f, 0, 0, 0));
                     break;
 
-                case TargetingEventType.CONFIRMED:
+                case TargetingEventType.LOCKED:
                     Highlight(Color.magenta);
-                    me.DisplayPreview();
+                    me.PreviewOn();
                     break;
 
                 case TargetingEventType.EXECUTING:
@@ -535,11 +580,21 @@ namespace SystemMiami.CombatSystem
             }
         }
 
-        void ITargetable.DisplayPreview()
+        public void PreviewOn()
         {
             if (this is not ITargetable me) { return; }
 
             me.TargetedBy.ForEach(subaction => subaction.Preview());
+            //Debug.Log(
+            //    $"{gameObject.name} wants to START" +
+            //    $"displaying a preivew.");
+        }
+
+        public void PreviewOff()
+        {
+            Debug.Log(
+                $"{gameObject.name} wants to STOP" +
+                $"displaying a preivew.");
         }
 
         void ITargetable.ApplyCombatAction()
@@ -600,7 +655,7 @@ namespace SystemMiami.CombatSystem
         /// </remarks>
         public virtual IStatusEffectReceiver GetStatusEffectInterface()
         {
-            return null;
+            return this;
         }
         #endregion ITargetable
 
@@ -635,9 +690,9 @@ namespace SystemMiami.CombatSystem
         }
         public void InflictStatusEffect(StatusEffect effect)
         {
-            _stats.AddStatusEffect(effect);
-            _endOfTurnDamage = effect.DamagePerTurn;
+
         }
+
 
     }
 

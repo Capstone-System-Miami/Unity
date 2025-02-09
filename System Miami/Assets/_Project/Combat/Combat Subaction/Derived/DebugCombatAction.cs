@@ -16,7 +16,7 @@ namespace SystemMiami.CombatSystem
             Debug.Log("Ability has been used!");
         }
 
-        protected override ISubactionCommand GenerateCommand(ITargetable t)
+        public override ISubactionCommand GenerateCommand(ITargetable t)
         {
             throw new System.NotImplementedException();
         }

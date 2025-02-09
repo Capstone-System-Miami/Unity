@@ -50,9 +50,8 @@ namespace SystemMiami.CombatRefactor
         public void ResetTurn()
         {
             combatant.Loadout.ReduceCooldowns();
-            combatant.Stats.UpdateStatusEffects();
+            combatant.Stats.DecrementStatusEffectDurations();
             combatant.Speed = new Resource(combatant.Stats.GetStat(StatType.SPEED));
-            combatant.Health?.Lose(combatant.Stats.GetNetDamagePerTurn());
         }
     }
 }

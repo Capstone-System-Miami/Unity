@@ -15,7 +15,7 @@ namespace SystemMiami.CombatSystem
         // In reference to attacker or reciever though, idk.
         [SerializeField] private Vector2Int direction;
 
-        protected override ISubactionCommand GenerateCommand(ITargetable target)
+        public override ISubactionCommand GenerateCommand(ITargetable target)
         {
             return new ForceMoveData(target, distance, direction);
         }

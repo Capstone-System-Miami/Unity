@@ -26,7 +26,7 @@ namespace SystemMiami
         private StatSet _afterEffects = new StatSet();
 
         // For any current status effects
-        private List<StatusEffect> _statusEffects = new List<StatusEffect>();
+        private Dictionary<StatSet, int> _statusEffects = new();
 
         //===============================
         #endregion // ^vars^
@@ -65,7 +65,7 @@ namespace SystemMiami
             {
                 StatType stat = (StatType)i;
 
-                _afterEffects.Set(stat, (_beforeEffects.Get(stat) + GetNetStatusEffects(stat)) );
+                _afterEffects.Set(stat, (_beforeEffects.GetStat(stat) + GetNetStatusEffects(stat)) );
             }
         }
 
@@ -77,7 +77,7 @@ namespace SystemMiami
             {
                 StatType stat = (StatType)i;
 
-                result += $"{ stat }: \t { _afterEffects.Get(stat) }\n";
+                result += $"{ stat }: \t { _afterEffects.GetStat(stat) }\n";
             }
 
             return result;
@@ -95,56 +95,42 @@ namespace SystemMiami
         /// </summary>
         public float GetStat(StatType type)
         {
-            return _afterEffects.Get(type);
+            return _afterEffects.GetStat(type);
         }
 
         // PREVIOUSLY LOCATED IN ATTRIBUTES
         #region Status Effects
-        public void AddStatusEffect(StatusEffect effect)
+        public void AddStatusEffect(StatSet effect, int durationTurns)
         {
-            _statusEffects.Add(effect);
-            Debug.Log($"{name} received a status effect for {effect.DurationTurns} turns.");
+            _statusEffects[effect] = durationTurns;
+            Debug.Log($"{name} received a status effect for {durationTurns} turns.");
         }
 
         public float GetNetStatusEffects(StatType type)
         {
             float result = 0;
 
-            foreach (StatusEffect statusEffect in _statusEffects)
+            foreach (StatSet statSet in _statusEffects.Keys)
             {
-                result += statusEffect.Effect.Get(type);
+                result += statSet.GetStat(type);
             }
 
             return result;
         }
 
-        public float GetNetDamagePerTurn()
+        public void DecrementStatusEffectDurations()
         {
-            float result = 0;
+            List<StatSet> toRemove = new();
 
-            foreach (StatusEffect statusEffect in _statusEffects)
+            foreach (KeyValuePair<StatSet, int> entry in _statusEffects)
             {
-                result += statusEffect.DamagePerTurn;
-            }
-
-            return result;
-        }
-
-        public void UpdateStatusEffects()
-        {
-            for (int i = _statusEffects.Count - 1; i >= 0; i--)
-            {
-                _statusEffects[i].DecrementDuration();
-
-                if (_statusEffects[i].IsExpired())
+                if (entry.Value <= 0)
                 {
-                    _statusEffects.RemoveAt(i);
+                    toRemove.Add(entry.Key);
                 }
             }
-        }
-        public void UpdateStatusEffectOverTime()
-        {
 
+            toRemove.ForEach(statSet => _statusEffects.Remove(statSet));
         }
         #endregion
 

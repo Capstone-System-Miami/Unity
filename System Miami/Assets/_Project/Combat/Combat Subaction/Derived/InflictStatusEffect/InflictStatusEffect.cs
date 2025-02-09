@@ -11,7 +11,7 @@ namespace SystemMiami.CombatSystem
         [SerializeField] float healPerTurn;
         [SerializeField] int durationTurns;
 
-        protected override ISubactionCommand GenerateCommand(ITargetable target)
+        public override ISubactionCommand GenerateCommand(ITargetable target)
         {
             return new StatusEffectCommand(
                 target,
@@ -44,34 +44,36 @@ namespace SystemMiami.CombatSystem
 
     public class StatusEffectCommand : ISubactionCommand
     {
-        public readonly ITargetable receiver;
+        public readonly ITargetable target;
         public readonly StatSet effect;
         public readonly float damagePerTurn;
         public readonly float healPerTurn;
         public readonly int durationTurns;
 
         public StatusEffectCommand(
-            ITargetable statusEffectReceiver,
+            ITargetable target,
             StatSet effect,
             float damagePerTurn,
             float healPerTurn,
             int durationTurns)
         {
-            this.receiver = statusEffectReceiver;
+            this.target = target;
             this.effect = effect;
             this.damagePerTurn = damagePerTurn;
             this.healPerTurn = healPerTurn;
             this.durationTurns = durationTurns;
         }
 
-        public void Execute()
-        {
-
-        }
-
         public void Preview()
         {
+            target.GetStatusEffectInterface()?.PreviewEffect(
+                effect, damagePerTurn, healPerTurn, durationTurns);
+        }
 
+        public void Execute()
+        {
+            target.GetStatusEffectInterface()?.ReceiveEffect(
+                effect, damagePerTurn, healPerTurn, durationTurns);
         }
     }
 }

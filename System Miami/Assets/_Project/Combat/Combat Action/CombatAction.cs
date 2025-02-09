@@ -7,11 +7,8 @@ using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
 {
-    public enum TargetingEventType { CANCELLED, STARTED, CONFIRMED, EXECUTING, COMPLETED }
+    public enum TargetingEventType { CANCELLED, STARTED, LOCKED, EXECUTING, COMPLETED }
 
-    /// <summary>
-    /// TODO: Figure out why things aren't Unsubscribing.
-    /// </summary>
     public abstract class CombatAction
     {
         public readonly Sprite Icon;
@@ -58,6 +55,7 @@ namespace SystemMiami.CombatRefactor
             if (registered) { return; }
 
             user.FocusTileChanged += HandleFocusTileChanged;
+            user.DirectionChanged += HandleDirectionChanged;
 
             registered = true;
             Debug.LogWarning($"{this} registered for tile updates");
@@ -68,6 +66,7 @@ namespace SystemMiami.CombatRefactor
             if (!registered) { return; }
 
             user.FocusTileChanged -= HandleFocusTileChanged;
+            user.DirectionChanged -= HandleDirectionChanged;
 
             registered = false;
         }
@@ -78,6 +77,7 @@ namespace SystemMiami.CombatRefactor
         {
             UnTarget(focusBasedTargetSet);
             RecalculateFocusBasedTargets(args.directionContext);
+            RecalculateCumulativeTargets();
             Target(focusBasedTargetSet);
         }
 
@@ -87,6 +87,7 @@ namespace SystemMiami.CombatRefactor
         {
             UnTarget(directionBasedTargetSet);
             RecalculateDirectionBasedTargets(args.newDirectionContext);
+            RecalculateCumulativeTargets();
             Target(directionBasedTargetSet);
         }
 
@@ -111,26 +112,20 @@ namespace SystemMiami.CombatRefactor
             }
         }
 
-        protected void RecalculateDirectionBasedTargets(DirectionContext directionContext)
-        {
-            directionBasedTargetSet?.Clear();
-
-            DirectionBasedSubactions.ForEach(subaction
-                => directionBasedTargetSet
-                += subaction.TargetingPattern.GetTargets(directionContext));
-
-            RecalculateCumulativeTargets();
-        }
-
         protected void RecalculateFocusBasedTargets(DirectionContext directionContext)
         {
             focusBasedTargetSet?.Clear();
 
-            FocusBasedSubactions.ForEach(subaction
-                => focusBasedTargetSet
+            FocusBasedSubactions.ForEach(subaction => focusBasedTargetSet
                 += subaction.TargetingPattern.GetTargets(directionContext));
+        }
 
-            RecalculateCumulativeTargets();
+        protected void RecalculateDirectionBasedTargets(DirectionContext directionContext)
+        {
+            directionBasedTargetSet?.Clear();
+
+            DirectionBasedSubactions.ForEach(subaction => directionBasedTargetSet
+                += subaction.TargetingPattern.GetTargets(directionContext));
         }
 
         protected void RecalculateCumulativeTargets()
@@ -144,6 +139,8 @@ namespace SystemMiami.CombatRefactor
             /// Subscribe to direction updates
             RecalculateFocusBasedTargets(User.CurrentDirectionContext);
             RecalculateDirectionBasedTargets(User.CurrentDirectionContext);
+            RecalculateCumulativeTargets();
+
             Target(cumulativeTargetSet);
             SubscribeToDirectionUpdates(User);
         }
@@ -157,12 +154,12 @@ namespace SystemMiami.CombatRefactor
         public void LockTargets()
         {
             UnTarget(cumulativeTargetSet);
-            cumulativeTargetSet.Clear();
             RecalculateFocusBasedTargets(User.CurrentDirectionContext);
             RecalculateDirectionBasedTargets(User.CurrentDirectionContext);
+            RecalculateCumulativeTargets();
             Target(cumulativeTargetSet);
             UnsubscribeToDirectionUpdates(User);
-            OnTargetingEvent(TargetingEventType.CONFIRMED);
+            OnTargetingEvent(TargetingEventType.LOCKED);
         }
 
         public void UnlockTargets()
@@ -248,34 +245,58 @@ namespace SystemMiami.CombatRefactor
             targets?.all?.ForEach(target =>
             {
                 Debug.LogWarning($"Subscribing {target} to TargetingEvent...");
+
                 target.SubscribeTo(ref TargetingEvent);
-                Debug.LogWarning($"Subscription complete for {target}. TargetingEvent is null: {TargetingEvent == null}");
+
+                Debug.LogWarning(
+                    $"Subscription complete for {target}." +
+                    $"TargetingEvent is null: {TargetingEvent == null}");
+
+                AssignCommands(target);
             });
 
             Debug.LogWarning("All subscriptions complete. Raising event...");
+
             OnTargetingEvent(TargetingEventType.STARTED);            
         }
         private void UnTarget(TargetSet targets)
         {
             OnTargetingEvent(TargetingEventType.CANCELLED);
-            targets?.all?.ForEach(target => target.UnsubscribeTo( ref TargetingEvent));
+            targets?.all?.ForEach(target =>
+            {
+                target.UnsubscribeTo( ref TargetingEvent);
+
+                ClearCommands(target);
+            });
+
+        }
+
+        private void AssignCommands(ITargetable target)
+        {
+            Subactions.ForEach(subaction =>
+                target.TargetedBy.Add(subaction.GenerateCommand(target)));
+        }
+
+        private void ClearCommands(ITargetable target)
+        {
+            target.TargetedBy.Clear();
         }
     }
 
     public class TargetingEventArgs : EventArgs
     {
-        public Combatant user;
-        public TargetingEventType eventType;
-        public readonly DirectionContext directionContext;
+        public readonly Combatant User;
+        public readonly TargetingEventType EventType;
+        public readonly DirectionContext DirectionContext;
 
         public TargetingEventArgs(
             Combatant user,
-            TargetingEventType actionState,
+            TargetingEventType eventType,
             DirectionContext directionContext)
         {
-            this.user = user;
-            this.eventType = actionState;
-            this.directionContext = directionContext;
+            User = user;
+            EventType = eventType;
+            DirectionContext = directionContext;
         }
     }
 }

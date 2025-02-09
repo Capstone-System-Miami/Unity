@@ -13,7 +13,8 @@ namespace SystemMiami.CombatSystem
 
         List<ISubactionCommand> TargetedBy { get; set; }
         string nameMessageForDB { get; set; }
-        void DisplayPreview();
+        void PreviewOn();
+        void PreviewOff();
         void ApplyCombatAction();
 
 

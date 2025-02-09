@@ -11,7 +11,7 @@ namespace SystemMiami.CombatSystem
     {
         [SerializeField] private float damageToDeal;
 
-        protected override ISubactionCommand GenerateCommand(ITargetable target)
+        public override ISubactionCommand GenerateCommand(ITargetable target)
         {
             return new DamageCommand(target, damageToDeal);
         }
@@ -41,7 +41,7 @@ namespace SystemMiami.CombatSystem
         }
 
         public void Preview()
-        {
+        {           
             target.GetDamageInterface()?.PreviewDamage(amount);
         }
 
@@ -50,6 +50,4 @@ namespace SystemMiami.CombatSystem
             target.GetDamageInterface()?.ReceiveDamage(amount);
         }
     }
-
-
 }

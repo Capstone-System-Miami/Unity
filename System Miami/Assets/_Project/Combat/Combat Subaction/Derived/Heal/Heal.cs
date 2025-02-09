@@ -10,7 +10,7 @@ namespace SystemMiami.CombatSystem
     {
         [SerializeField] private float healAmount;
 
-        protected override ISubactionCommand GenerateCommand(ITargetable target)
+        public override ISubactionCommand GenerateCommand(ITargetable target)
         {
             return new HealCommand(target, healAmount);
         }

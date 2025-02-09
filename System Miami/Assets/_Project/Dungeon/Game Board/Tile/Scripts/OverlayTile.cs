@@ -1,6 +1,7 @@
 // Author: Alec, Layla
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using SystemMiami.CombatRefactor;
 using SystemMiami.CombatSystem;
 using UnityEngine;
@@ -156,6 +157,11 @@ namespace SystemMiami
             //if (combatant.gameObject != PlayerManager.MGR.gameObject) { return; }
 
             Highlight();
+
+            if (TargetedBy.Any())
+            {
+                PreviewOn();
+            }
         }
 
         public void EndHover(Combatant combatant)
@@ -167,9 +173,8 @@ namespace SystemMiami
             //    _targetColor.Revert();
             //}
             //else
-            {
-                UnHighlight();
-            }
+
+            UnHighlight();
         }
 
         #endregion Mouseover
@@ -263,21 +268,20 @@ namespace SystemMiami
 
         public void HandleTargetingEvent(object sender, TargetingEventArgs args)
         {
-            Debug.LogWarning($"Handling Targeting Event of type {args.eventType}");
-            switch (args.eventType)
+            Debug.LogWarning($"Handling Targeting Event of type {args.EventType}");
+            switch (args.EventType)
             {
                 case TargetingEventType.CANCELLED:
                     UnHighlight();
-                    TargetedBy.Clear();
                     break;
 
                 case TargetingEventType.STARTED:
                     Highlight(Color.yellow + new Color(0, -0.2f, 0, 0));                    
                     break;
 
-                case TargetingEventType.CONFIRMED:
+                case TargetingEventType.LOCKED:
                     Highlight(Color.red);
-                    DisplayPreview();
+                    PreviewOn();
                     break;
                 case TargetingEventType.EXECUTING:
                     ApplyCombatAction();
@@ -290,16 +294,25 @@ namespace SystemMiami
             }
         }
 
-        public void DisplayPreview()
+        public void PreviewOn()
         {
-            ///
-            Debug.Log($"{gameObject.name} wants to display a preivew.");
+            Debug.Log(
+                $"{gameObject.name} wants to START" +
+                $"displaying a preivew.");
+        }
+
+        public void PreviewOff()
+        {
+            Debug.Log(
+                $"{gameObject.name} wants to STOP" +
+                $"displaying a preivew.");
         }
 
         public void ApplyCombatAction()
         {
-            ///
-            Debug.Log($"{gameObject.name} wants to get some subactions done to itself.");
+            Debug.Log(
+                $"{gameObject.name} wants to get some" +
+                $"subactions done to itself.");
         }
 
         public virtual IDamageReceiver GetDamageInterface()

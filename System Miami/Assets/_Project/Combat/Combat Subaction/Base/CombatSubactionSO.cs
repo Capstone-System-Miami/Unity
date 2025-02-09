@@ -16,10 +16,8 @@ namespace SystemMiami.CombatSystem
 
         public TargetingPattern TargetingPattern { get { return _targetingPattern; } }
 
-        protected abstract ISubactionCommand GenerateCommand(ITargetable target);
+        public abstract ISubactionCommand GenerateCommand(ITargetable target);
     }
-
-
 
     public interface ISubactionCommand
     {

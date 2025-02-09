@@ -23,7 +23,7 @@ namespace SystemMiami.CombatSystem
         [SerializeField] float damagePerTurn;
         [SerializeField] float healPerTurn;
         [SerializeField] int durationTurns;
-        protected override ISubactionCommand GenerateCommand(ITargetable target)
+        public override ISubactionCommand GenerateCommand(ITargetable target)
         {
             return new StatusEffectCommand(
                 target,
