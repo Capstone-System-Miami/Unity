@@ -8,6 +8,10 @@ using UnityEngine;
 namespace SystemMiami.CombatRefactor
 {
     public enum TargetingEventType { CANCELLED, STARTED, CONFIRMED, EXECUTING, COMPLETED }
+
+    /// <summary>
+    /// TODO: Figure out why things aren't Unsubscribing.
+    /// </summary>
     public abstract class CombatAction
     {
         public readonly Sprite Icon;
@@ -28,7 +32,6 @@ namespace SystemMiami.CombatRefactor
 
         private bool registered;
 
-        private readonly object eventLock = new object();
         public event EventHandler<TargetingEventArgs> TargetingEvent;
 
         protected CombatAction(
@@ -139,6 +142,9 @@ namespace SystemMiami.CombatRefactor
         public void Equip()
         {
             /// Subscribe to direction updates
+            RecalculateFocusBasedTargets(User.CurrentDirectionContext);
+            RecalculateDirectionBasedTargets(User.CurrentDirectionContext);
+            Target(cumulativeTargetSet);
             SubscribeToDirectionUpdates(User);
         }
 
@@ -150,12 +156,21 @@ namespace SystemMiami.CombatRefactor
 
         public void LockTargets()
         {
+            UnTarget(cumulativeTargetSet);
+            cumulativeTargetSet.Clear();
+            RecalculateFocusBasedTargets(User.CurrentDirectionContext);
+            RecalculateDirectionBasedTargets(User.CurrentDirectionContext);
+            Target(cumulativeTargetSet);
+            UnsubscribeToDirectionUpdates(User);
             OnTargetingEvent(TargetingEventType.CONFIRMED);
         }
 
         public void UnlockTargets()
         {
-            SubscribeToDirectionUpdates(User);
+            UnTarget(cumulativeTargetSet);
+            cumulativeTargetSet.Clear();
+            focusBasedTargetSet.Clear();
+            directionBasedTargetSet.Clear();
             OnTargetingEvent(TargetingEventType.CANCELLED);
         }
 
@@ -224,35 +239,26 @@ namespace SystemMiami.CombatRefactor
                 eventType,
                 User.CurrentDirectionContext);
 
-            lock (eventLock)
-            {
-                TargetingEvent?.Invoke(this, args);
-            }
+            TargetingEvent?.Invoke(this, args);
         }
 
         private void Target(TargetSet targets)
         {
-            lock (eventLock)
+            Debug.LogWarning("Starting subscription process...");
+            targets?.all?.ForEach(target =>
             {
-                Debug.LogError("Starting subscription process...");
-                targets?.all?.ForEach(target =>
-                {
-                    Debug.LogError($"Subscribing {target} to TargetingEvent...");
-                    target.SubscribeTo(ref TargetingEvent);
-                    Debug.LogError($"Subscription complete for {target}. TargetingEvent is null: {TargetingEvent == null}");
-                });
+                Debug.LogWarning($"Subscribing {target} to TargetingEvent...");
+                target.SubscribeTo(ref TargetingEvent);
+                Debug.LogWarning($"Subscription complete for {target}. TargetingEvent is null: {TargetingEvent == null}");
+            });
 
-                Debug.LogError("All subscriptions complete. Raising event...");
-                OnTargetingEvent(TargetingEventType.STARTED);
-            }
+            Debug.LogWarning("All subscriptions complete. Raising event...");
+            OnTargetingEvent(TargetingEventType.STARTED);            
         }
         private void UnTarget(TargetSet targets)
         {
-            lock (eventLock)
-            {
-                targets?.all?.ForEach(target => target.UnsubscribeTo( ref TargetingEvent));
-                OnTargetingEvent(TargetingEventType.CANCELLED);
-            }
+            OnTargetingEvent(TargetingEventType.CANCELLED);
+            targets?.all?.ForEach(target => target.UnsubscribeTo( ref TargetingEvent));
         }
     }
 

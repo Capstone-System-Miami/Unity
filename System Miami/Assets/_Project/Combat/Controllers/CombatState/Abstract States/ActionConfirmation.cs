@@ -15,7 +15,7 @@ namespace SystemMiami.CombatRefactor
         public override void OnEnter()
         {
             base.OnEnter();
-
+            combatAction.Equip();
             combatAction.LockTargets();
         }
 

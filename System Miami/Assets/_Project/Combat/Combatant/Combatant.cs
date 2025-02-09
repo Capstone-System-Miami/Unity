@@ -492,22 +492,16 @@ namespace SystemMiami.CombatSystem
         {
             Debug.LogWarning($"inside {gameObject}'s Subscribe to action fn");
 
-            lock (eventLock)
-            {
-                combatActionEvent += (this as ITargetable).HandleTargetingEvent;
-            }
+            combatActionEvent += HandleTargetingEvent;
         }
 
         void ITargetable.UnsubscribeTo(
             ref EventHandler<TargetingEventArgs> combatActionEvent)
         {
-            lock (eventLock)
-            {
-                combatActionEvent -= (this as ITargetable).HandleTargetingEvent;
-            }
+            combatActionEvent -= HandleTargetingEvent;
         }
 
-        void ITargetable.HandleTargetingEvent(object sender, TargetingEventArgs args)
+        public void HandleTargetingEvent(object sender, TargetingEventArgs args)
         {
             Debug.Log($"{gameObject.name} is trying to process a combatActionEvent");
             if (this is not ITargetable me) { return; }
@@ -519,7 +513,7 @@ namespace SystemMiami.CombatSystem
                     break;
 
                 case TargetingEventType.STARTED:
-                    Highlight(Color.magenta + new Color(0, 0, .1f, 1f));
+                    Highlight(Color.magenta + new Color(-0.2f, 0, 0, 0));
                     break;
 
                 case TargetingEventType.CONFIRMED:

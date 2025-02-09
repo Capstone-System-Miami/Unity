@@ -153,33 +153,22 @@ namespace SystemMiami
         // ==================================
         public void BeginHover(Combatant combatant)
         {
-            if (combatant.gameObject != PlayerManager.MGR.gameObject) { return; }
-
-            if (Occupied)
-            {
-                Highlight();
-                CurrentCombatant.Highlight();
-            }
+            //if (combatant.gameObject != PlayerManager.MGR.gameObject) { return; }
 
             Highlight();
         }
 
         public void EndHover(Combatant combatant)
         {
-            if (combatant.gameObject != PlayerManager.MGR.gameObject) { return; }
+            //if (combatant.gameObject != PlayerManager.MGR.gameObject) { return; }
 
-            if (_customHighlight)
-            {
-                _targetColor.Revert();
-            }
-            else
+            //if (_customHighlight)
+            //{
+            //    _targetColor.Revert();
+            //}
+            //else
             {
                 UnHighlight();
-            }
-
-            if (Occupied)
-            {
-                CurrentCombatant.UnHighlight();
             }
         }
 
@@ -247,39 +236,34 @@ namespace SystemMiami
         public string nameMessageForDB { get { return gameObject.name; } set { ; } }
         public void SubscribeTo(ref EventHandler<TargetingEventArgs> combatActionEvent)
         {
-            Debug.LogError(
+            Debug.LogWarning(
                 $"inside {gameObject}'s SUBSCRIBE to action fn\n" +
                 $"Pre subscription, sp assume Invocation list len is 0.");
 
-            lock(eventLock)
-            {
-                combatActionEvent += HandleTargetingEvent;
-            }
+            combatActionEvent += HandleTargetingEvent;
 
-            Debug.LogError(
+
+            Debug.LogWarning(
                 $"inside {gameObject}'s SUBSCRIBE to action fn\n" +
                 $"Invocation list len: {combatActionEvent?.GetInvocationList().Length}");
         }
 
         public void UnsubscribeTo(ref EventHandler<TargetingEventArgs> combatActionEvent)
         {
-            Debug.LogError(
+            Debug.LogWarning(
                 $"inside {gameObject}'s UNSUBSCRIBE to action fn\n" +
                 $"Pre subscription, sp assume Invocation list len is 0.");
 
-            lock (eventLock)
-            {
-                combatActionEvent -= HandleTargetingEvent;
-            }
+            combatActionEvent -= HandleTargetingEvent;
 
-            Debug.LogError(
+            Debug.LogWarning(
                 $"inside {gameObject}'s UNSUBSCRIBE to action fn\n" +
                 $"Invocation list len: {combatActionEvent?.GetInvocationList().Length}");
         }
 
         public void HandleTargetingEvent(object sender, TargetingEventArgs args)
         {
-            Debug.LogError("Handling Targeting Event");
+            Debug.LogWarning($"Handling Targeting Event of type {args.eventType}");
             switch (args.eventType)
             {
                 case TargetingEventType.CANCELLED:
@@ -288,7 +272,7 @@ namespace SystemMiami
                     break;
 
                 case TargetingEventType.STARTED:
-                    Highlight(Color.yellow + new Color(.1f, 0, 0, 1f));                    
+                    Highlight(Color.yellow + new Color(0, -0.2f, 0, 0));                    
                     break;
 
                 case TargetingEventType.CONFIRMED:
