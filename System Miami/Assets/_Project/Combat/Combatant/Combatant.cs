@@ -66,6 +66,8 @@ namespace SystemMiami.CombatSystem
         private OverlayTile focusTile;
         private OverlayTile previousFocus;
         private DirectionContext directionContext;
+
+        private object eventLock = new object();
         #endregion Private Vars
 
 
@@ -486,16 +488,23 @@ namespace SystemMiami.CombatSystem
         List<ISubactionCommand> ITargetable.TargetedBy { get; set; } = new();
         public string nameMessageForDB { get { return gameObject.name; } set { ; } }
         void ITargetable.SubscribeTo(
-            EventHandler<TargetingEventArgs> combatActionEvent)
+            ref EventHandler<TargetingEventArgs> combatActionEvent)
         {
             Debug.LogWarning($"inside {gameObject}'s Subscribe to action fn");
-            combatActionEvent += (this as ITargetable).HandleTargetingEvent;
+
+            lock (eventLock)
+            {
+                combatActionEvent += (this as ITargetable).HandleTargetingEvent;
+            }
         }
 
         void ITargetable.UnsubscribeTo(
-            EventHandler<TargetingEventArgs> combatActionEvent)
+            ref EventHandler<TargetingEventArgs> combatActionEvent)
         {
-            combatActionEvent -= (this as ITargetable).HandleTargetingEvent;
+            lock (eventLock)
+            {
+                combatActionEvent -= (this as ITargetable).HandleTargetingEvent;
+            }
         }
 
         void ITargetable.HandleTargetingEvent(object sender, TargetingEventArgs args)

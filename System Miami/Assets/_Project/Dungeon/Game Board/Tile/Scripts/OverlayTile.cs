@@ -56,6 +56,8 @@ namespace SystemMiami
         private bool _customHighlight;
 
         private StructSwitcher<Color> _targetColor;
+
+        private object eventLock = new object();
         
         #endregion // PRIVATE VARS ==========
 
@@ -243,30 +245,36 @@ namespace SystemMiami
 
         public List<ISubactionCommand> TargetedBy { get; set; } = new();
         public string nameMessageForDB { get { return gameObject.name; } set { ; } }
-        public void SubscribeTo(EventHandler<TargetingEventArgs> combatActionEvent)
+        public void SubscribeTo(ref EventHandler<TargetingEventArgs> combatActionEvent)
         {
             Debug.LogError(
                 $"inside {gameObject}'s SUBSCRIBE to action fn\n" +
                 $"Pre subscription, sp assume Invocation list len is 0.");
 
-            combatActionEvent += HandleTargetingEvent;
+            lock(eventLock)
+            {
+                combatActionEvent += HandleTargetingEvent;
+            }
 
             Debug.LogError(
                 $"inside {gameObject}'s SUBSCRIBE to action fn\n" +
-                $"Invocation list len: {combatActionEvent.GetInvocationList().Length}");
+                $"Invocation list len: {combatActionEvent?.GetInvocationList().Length}");
         }
 
-        public void UnsubscribeTo(EventHandler<TargetingEventArgs> combatActionEvent)
+        public void UnsubscribeTo(ref EventHandler<TargetingEventArgs> combatActionEvent)
         {
             Debug.LogError(
                 $"inside {gameObject}'s UNSUBSCRIBE to action fn\n" +
                 $"Pre subscription, sp assume Invocation list len is 0.");
 
-            combatActionEvent -= HandleTargetingEvent;
+            lock (eventLock)
+            {
+                combatActionEvent -= HandleTargetingEvent;
+            }
 
             Debug.LogError(
                 $"inside {gameObject}'s UNSUBSCRIBE to action fn\n" +
-                $"Invocation list len: {combatActionEvent.GetInvocationList().Length}");
+                $"Invocation list len: {combatActionEvent?.GetInvocationList().Length}");
         }
 
         public void HandleTargetingEvent(object sender, TargetingEventArgs args)

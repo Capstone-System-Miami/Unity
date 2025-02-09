@@ -28,6 +28,7 @@ namespace SystemMiami.CombatRefactor
 
         private bool registered;
 
+        private readonly object eventLock = new object();
         public event EventHandler<TargetingEventArgs> TargetingEvent;
 
         protected CombatAction(
@@ -43,8 +44,8 @@ namespace SystemMiami.CombatRefactor
 
             SortByPatternOrigin(
                 Subactions,
-                out DirectionBasedSubactions,
-                out FocusBasedSubactions);
+                out FocusBasedSubactions,
+                out DirectionBasedSubactions);
         }
 
         public void SubscribeToDirectionUpdates(Combatant user)
@@ -88,21 +89,21 @@ namespace SystemMiami.CombatRefactor
 
         protected void SortByPatternOrigin(
             List<CombatSubactionSO> all,
-            out List<CombatSubactionSO> directionBased,
-            out List<CombatSubactionSO> focusBased)
+            out List<CombatSubactionSO> focusBased,
+            out List<CombatSubactionSO> directionBased)
         {
-            directionBased = new();
             focusBased = new();
+            directionBased = new();
 
             foreach (CombatSubactionSO subactionSO in Subactions)
             {
-                if (subactionSO.TargetingPattern.PatternOrigin == PatternOriginType.USER)
+                if (subactionSO.TargetingPattern.PatternOrigin == PatternOriginType.FOCUS)
                 {
-                    directionBased.Add(subactionSO);
+                    focusBased.Add(subactionSO);
                 }
                 else
                 {
-                    focusBased.Add(subactionSO);
+                    directionBased.Add(subactionSO);
                 }
             }
         }
@@ -223,18 +224,35 @@ namespace SystemMiami.CombatRefactor
                 eventType,
                 User.CurrentDirectionContext);
 
-            TargetingEvent?.Invoke(this, args);
+            lock (eventLock)
+            {
+                TargetingEvent?.Invoke(this, args);
+            }
         }
 
         private void Target(TargetSet targets)
         {
-            targets?.all?.ForEach(target => target.SubscribeTo(TargetingEvent));
-            OnTargetingEvent(TargetingEventType.STARTED);
+            lock (eventLock)
+            {
+                Debug.LogError("Starting subscription process...");
+                targets?.all?.ForEach(target =>
+                {
+                    Debug.LogError($"Subscribing {target} to TargetingEvent...");
+                    target.SubscribeTo(ref TargetingEvent);
+                    Debug.LogError($"Subscription complete for {target}. TargetingEvent is null: {TargetingEvent == null}");
+                });
+
+                Debug.LogError("All subscriptions complete. Raising event...");
+                OnTargetingEvent(TargetingEventType.STARTED);
+            }
         }
         private void UnTarget(TargetSet targets)
         {
-            targets?.all?.ForEach(target => target.UnsubscribeTo(TargetingEvent));
-            OnTargetingEvent(TargetingEventType.CANCELLED);
+            lock (eventLock)
+            {
+                targets?.all?.ForEach(target => target.UnsubscribeTo( ref TargetingEvent));
+                OnTargetingEvent(TargetingEventType.CANCELLED);
+            }
         }
     }
 

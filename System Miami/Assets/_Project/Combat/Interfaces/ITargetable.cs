@@ -7,8 +7,8 @@ namespace SystemMiami.CombatSystem
 {
     public interface ITargetable
     {
-        void SubscribeTo(EventHandler<TargetingEventArgs> combatActionEvent);
-        void UnsubscribeTo(EventHandler<TargetingEventArgs> combatActionEvent);
+        void SubscribeTo(ref EventHandler<TargetingEventArgs> combatActionEvent);
+        void UnsubscribeTo(ref EventHandler<TargetingEventArgs> combatActionEvent);
         void HandleTargetingEvent(object sender, TargetingEventArgs args);
 
         List<ISubactionCommand> TargetedBy { get; set; }

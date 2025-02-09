@@ -22,7 +22,6 @@ namespace SystemMiami.CombatRefactor
             /// Subscribe to FocusTile events
             combatant.FocusTileChanged += HandleFocusTileChanged;
 
-            combatAction.SubscribeToDirectionUpdates(combatant);
             combatAction.Equip();
 
             InputPrompts =
@@ -56,7 +55,6 @@ namespace SystemMiami.CombatRefactor
         {
             base.OnExit();
             combatAction.Unequip();
-            combatAction.UnsubscribeToDirectionUpdates(combatant);
             combatant.FocusTileChanged -= HandleFocusTileChanged;
         }
 
