@@ -8,7 +8,7 @@ namespace SystemMiami
 {
     [System.Serializable]
     [CreateAssetMenu(fileName = "New Restore Action", menuName = "Abilities/CombatActions/RestoreResource")]
-    public class RestoreResource : CombatSubaction
+    public class RestoreResource : CombatSubactionSO
     {
         [SerializeField] [Range(0, 1)] private float _percentage; // To change percentage to 50% or 75%, change the 0 to 0.5 or 0.75
         [SerializeField] private ResourceType resourceType;

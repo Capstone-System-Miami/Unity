@@ -4,7 +4,7 @@ namespace SystemMiami.CombatSystem
 {
     [System.Serializable]
     [CreateAssetMenu(fileName = "New Status Effect", menuName = "Abilities/CombatActions/Inflict Status Effect")]
-    public class InflictStatusEffect : CombatSubaction
+    public class InflictStatusEffect : CombatSubactionSO
     {
         [SerializeField] StatSetSO effectStats;
         [SerializeField] float damagePerTurn;

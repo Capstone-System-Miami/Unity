@@ -7,7 +7,8 @@ namespace SystemMiami
 {
     public class MovementPath
     {
-        private TileContext tileContext;
+        private OverlayTile start;
+        private OverlayTile end;
 
         private PathFinder pathFinder;
 
@@ -68,26 +69,20 @@ namespace SystemMiami
 
         public MovementPath(
             OverlayTile start,
-            OverlayTile end,
-            int maxTiles)
-                : this(
-                    new TileContext(start, end),
-                    maxTiles
-                )
+            OverlayTile end)
+                : this(start, end, -1)
         { }
 
         public MovementPath(
             OverlayTile start,
-            OverlayTile end)
-                : this( new TileContext(start, end), -1)
-        { }
-
-        public MovementPath(TileContext tileContext, int maxTiles)
+            OverlayTile end,
+            int maxTiles)
         {
-            this.tileContext = tileContext;
+            this.start = start;
+            this.end = end;
             this.pathFinder = new();
             this.maxTiles = maxTiles;
-            this.path = pathFinder.FindPath(this.tileContext);
+            this.path = pathFinder.FindPath(this.start, this.end);
 
             toRemove = path.Count - maxTiles;
         }
@@ -256,7 +251,7 @@ namespace SystemMiami
         {
             List<OverlayTile> result = new(path);
 
-            result.Insert(0, tileContext.Current);
+            result.Insert(0, start);
 
             // return an empty list if null
             return result ?? new();

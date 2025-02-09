@@ -7,7 +7,7 @@ namespace SystemMiami.CombatSystem
 {
     [System.Serializable]
     [CreateAssetMenu(fileName = "New Push Action", menuName = "Abilities/CombatActions/Push")]
-    public class ForceMovement : CombatSubaction
+    public class ForceMovement : CombatSubactionSO
     {
         [SerializeField] private int distance;
         
@@ -28,11 +28,11 @@ namespace SystemMiami.CombatSystem
 
     public class ForceMoveData : ISubactionCommand
     {
-        public readonly IForceMoveReciever receiver;
+        public readonly IForceMoveReceiver receiver;
         public readonly int distance;
         public readonly Vector2Int direction;
 
-        public ForceMoveData(IForceMoveReciever receiver, int distance, Vector2Int direction)
+        public ForceMoveData(IForceMoveReceiver receiver, int distance, Vector2Int direction)
         {
             this.receiver = receiver;
             this.distance = distance;
@@ -56,7 +56,7 @@ namespace SystemMiami.CombatSystem
     /// <see cref="ForceMovement"/> to be performed
     /// on an object.
     /// </summary>
-    public interface IForceMoveReciever
+    public interface IForceMoveReceiver
     {
         bool IsCurrentlyMovable();
         void PreviewForceMove(int distance, Vector2Int direction);

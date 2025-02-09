@@ -6,13 +6,13 @@ namespace SystemMiami.CombatSystem
 {
     [System.Serializable]
     [CreateAssetMenu(fileName = "New Heal Action", menuName = "Abilities/CombatActions/Heal")]
-    public class Heal : CombatSubaction
+    public class Heal : CombatSubactionSO
     {
         [SerializeField] private float healAmount;
 
         protected override ISubactionCommand GenerateCommand(ITargetable target)
         {
-            IHealReciever healReciever;
+            IHealReceiver healReciever;
             if (!target.TryGetHealInterface(out healReciever))
             {
                 return null;
@@ -24,10 +24,10 @@ namespace SystemMiami.CombatSystem
 
     public class HealCommand : ISubactionCommand
     {
-        public readonly IHealReciever reciever;
+        public readonly IHealReceiver reciever;
         public readonly float amount;
         
-        public HealCommand(IHealReciever healReciever, float amount)
+        public HealCommand(IHealReceiver healReciever, float amount)
         {
             this.amount = amount;
         }
@@ -48,7 +48,7 @@ namespace SystemMiami.CombatSystem
     /// <see cref="Heal"/> to be performed
     /// on an object.
     /// </summary>
-    public interface IHealReciever
+    public interface IHealReceiver
     {
         bool IsCurrentlyHealable();
         void PreviewHeal(float amount);

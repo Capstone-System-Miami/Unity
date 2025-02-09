@@ -30,12 +30,12 @@ namespace SystemMiami.CombatSystem
         /// </param>
         /// 
         /// <returns>
-        /// A <see cref="Targets"/> object,
+        /// A <see cref="TargetSet"/> object,
         /// containing a List{} of all
         /// <see cref="ITargetable"/> objects found
         /// on any tile, including tiles themselves.
         /// </returns>
-        public abstract Targets GetTargets(DirectionContext userDirection);
+        public abstract TargetSet GetTargets(DirectionContext userDirection);
 
         /// <summary>
         /// Uses the <see cref="DirectionContext"/>

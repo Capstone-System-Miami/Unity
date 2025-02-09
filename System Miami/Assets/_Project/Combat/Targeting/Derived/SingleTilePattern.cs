@@ -9,7 +9,7 @@ namespace SystemMiami.CombatSystem
         menuName = "Abilities/Targeting Pattern/Single-Tile")]
     public class SingleTilePattern : TargetingPattern
     {
-        public override Targets GetTargets(DirectionContext userDirection)
+        public override TargetSet GetTargets(DirectionContext userDirection)
         {
             List<OverlayTile> foundTiles = new();
 

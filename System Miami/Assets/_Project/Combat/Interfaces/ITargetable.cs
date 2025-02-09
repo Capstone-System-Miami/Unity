@@ -7,9 +7,9 @@ namespace SystemMiami.CombatSystem
 {
     public interface ITargetable
     {
-        void SubscribeTo(EventHandler<CombatActionEventArgs> combatActionEvent);
-        void UnsubscribeTo(EventHandler<CombatActionEventArgs> combatActionEvent);
-        void HandleCombatActionEvent(object sender, CombatActionEventArgs args);
+        void SubscribeTo(EventHandler<TargetingEventArgs> combatActionEvent);
+        void UnsubscribeTo(EventHandler<TargetingEventArgs> combatActionEvent);
+        void HandleTargetingEvent(object sender, TargetingEventArgs args);
 
         List<ISubactionCommand> TargetedBy { get; set; }
         string nameMessageForDB { get; set; }
@@ -23,11 +23,10 @@ namespace SystemMiami.CombatSystem
         /// interface from the targeted object.
         /// </summary>
         /// <returns>
-        /// The <see cref="IDamageReciever"/> (IF ANY)
+        /// The <see cref="IDamageReceiver"/> (IF ANY)
         /// provided by the targeted object.
         /// </returns>
-        bool TryGetDamageInterface(
-            out IDamageReciever damageInterface);
+        IDamageReceiver GetDamageInterface();
 
         /// <summary>
         /// The method by which a targeting
@@ -35,11 +34,10 @@ namespace SystemMiami.CombatSystem
         /// interface from the targeted object.
         /// </summary>
         /// <returns>
-        /// The <see cref="IHealReciever"/> (IF ANY)
+        /// The <see cref="IHealReceiver"/> (IF ANY)
         /// provided by the targeted object.
         /// </returns>
-        bool TryGetHealInterface(
-            out IHealReciever healInterface);
+        IHealReceiver GetHealInterface();
 
         /// <summary>
         /// The method by which a targeting
@@ -47,11 +45,10 @@ namespace SystemMiami.CombatSystem
         /// interface from the targeted object.
         /// </summary>
         /// <returns>
-        /// The <see cref="IForceMoveReciever"/> (IF ANY)
+        /// The <see cref="IForceMoveReceiver"/> (IF ANY)
         /// provided by the targeted object.
         /// </returns>
-        bool TryGetMoveInterface(
-            out IForceMoveReciever forceMovementInterface);
+        IForceMoveReceiver GetMoveInterface();
 
         /// <summary>
         /// The method by which a targeting
@@ -62,7 +59,6 @@ namespace SystemMiami.CombatSystem
         /// The <see cref="IStatusEffectReceiver"/> (IF ANY)
         /// provided by the targeted object.
         /// </returns>
-        bool TryGetStatusEffectInterface(
-            out IStatusEffectReceiver statusEffectInterface);
+        IStatusEffectReceiver GetStatusEffectInterface();
     }
 }

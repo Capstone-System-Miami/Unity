@@ -16,11 +16,7 @@ namespace SystemMiami.CombatRefactor
         {
             base.OnEnter();
 
-            /// Subscribe the selected CombatAction to
-            /// Directional updates.
-            combatAction.RegisterForDirectionUpdates(combatant);
-
-            combatAction.BeginConfirmingTargets();
+            combatAction.LockTargets();
         }
 
         public override void MakeDecision()
@@ -50,7 +46,7 @@ namespace SystemMiami.CombatRefactor
         public override void OnExit()
         {
             base.OnExit();
-            combatAction.DeregisterForDirectionUpdates(combatant);
+            combatAction.UnlockTargets();
         }
 
         // Decision

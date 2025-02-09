@@ -17,7 +17,7 @@ namespace SystemMiami.CombatSystem
     [CreateAssetMenu(
         fileName = "New Status Effect",
         menuName = "Abilities/CombatActions/Inflict Percent Status Effect")]
-    public class InflictPercentStatusEffect : CombatSubaction
+    public class InflictPercentStatusEffect : CombatSubactionSO
     {
         [SerializeField] StatSetSO effectStats;
         [SerializeField] float damagePerTurn;

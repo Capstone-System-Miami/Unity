@@ -7,78 +7,63 @@ using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
 {
-    public enum CombatActionEventType { CONFIRMED, EXECUTING, COMPLETED }
+    public enum TargetingEventType { CANCELLED, STARTED, CONFIRMED, EXECUTING, COMPLETED }
     public abstract class CombatAction
     {
         public readonly Sprite Icon;
-        public readonly List<CombatSubaction> SubActions;
         public readonly AnimatorOverrideController OverrideController;
         public readonly Combatant User;
 
+        public readonly List<CombatSubactionSO> Subactions = new();
+        public readonly List<CombatSubactionSO> DirectionBasedSubactions = new();
+        public readonly List<CombatSubactionSO> FocusBasedSubactions = new();
+
+        public readonly List<ISubactionCommand> Commands = new();
+
         private Coroutine executionProcess;
 
-        private Targets cumulativeTargets;
+        private TargetSet directionBasedTargetSet = new();
+        private TargetSet focusBasedTargetSet = new();
+        private TargetSet cumulativeTargetSet = new();
 
         private bool registered;
 
-        public event EventHandler<CombatActionEventArgs> CombatActionEvent;
+        public event EventHandler<TargetingEventArgs> TargetingEvent;
 
         protected CombatAction(
             Sprite icon,
-            List<CombatSubaction> subActions,
+            List<CombatSubactionSO> subactions,
             AnimatorOverrideController overrideController,
             Combatant user)
         {
             Icon = icon;
-            SubActions = subActions;
+            Subactions = subactions;
             OverrideController = overrideController;
             User = user;
 
-            cumulativeTargets = new();
-            RecalculateCumulativeTargets(User.CurrentDirectionContext);
-            SubscribeCumulativeTargets();
+            SortByPatternOrigin(
+                Subactions,
+                out DirectionBasedSubactions,
+                out FocusBasedSubactions);
         }
 
-        public void RegisterForDirectionUpdates(Combatant user)
+        public void SubscribeToDirectionUpdates(Combatant user)
         {
             Debug.LogWarning($"{this} trying to register for tile updates");
 
             if (registered) { return; }
 
-            foreach (CombatSubaction subaction in SubActions)
-            {
-                if (subaction.TargetingPattern.PatternOrigin == PatternOriginType.USER)
-                {
-                    Debug.LogWarning($"{this} trying to register for {subaction.TargetingPattern.PatternOrigin} tile updates");
-
-                    user.DirectionChanged += HandleDirectionChanged;
-                }
-                else
-                {
-                    Debug.LogWarning($"{this} trying to register for {subaction.TargetingPattern.PatternOrigin} tile updates");
-                    user.FocusTileChanged += HandleFocusTileChanged;
-                }
-            }
+            user.FocusTileChanged += HandleFocusTileChanged;
 
             registered = true;
             Debug.LogWarning($"{this} registered for tile updates");
         }
 
-        public void DeregisterForDirectionUpdates(Combatant user)
+        public void UnsubscribeToDirectionUpdates(Combatant user)
         {
             if (!registered) { return; }
 
-            foreach (CombatSubaction subaction in SubActions)
-            {
-                if (subaction.TargetingPattern.PatternOrigin == PatternOriginType.USER)
-                {
-                    user.DirectionChanged -= HandleDirectionChanged;
-                }
-                else
-                {
-                    user.FocusTileChanged -= HandleFocusTileChanged;
-                }
-            }
+            user.FocusTileChanged -= HandleFocusTileChanged;
 
             registered = false;
         }
@@ -87,56 +72,90 @@ namespace SystemMiami.CombatRefactor
             object sender,
             FocusTileChangedEventArgs args)
         {
-            UnsubscribeCumulativeTargets();
-            RecalculateCumulativeTargets(args.directionContext);
-            SubscribeCumulativeTargets();
+            UnTarget(focusBasedTargetSet);
+            RecalculateFocusBasedTargets(args.directionContext);
+            Target(focusBasedTargetSet);
         }
 
         protected void HandleDirectionChanged(
             object sender,
             DirectionChangedEventArgs args)
         {
-            UnsubscribeCumulativeTargets();
-            RecalculateCumulativeTargets(args.newDirectionContext);
-            SubscribeCumulativeTargets();
+            UnTarget(directionBasedTargetSet);
+            RecalculateDirectionBasedTargets(args.newDirectionContext);
+            Target(directionBasedTargetSet);
         }
 
-        protected void SubscribeCumulativeTargets()
+        protected void SortByPatternOrigin(
+            List<CombatSubactionSO> all,
+            out List<CombatSubactionSO> directionBased,
+            out List<CombatSubactionSO> focusBased)
         {
-            cumulativeTargets?.all?.ForEach(target => target.SubscribeTo(CombatActionEvent));
-        }
+            directionBased = new();
+            focusBased = new();
 
-        protected void UnsubscribeCumulativeTargets()
-        {
-            cumulativeTargets?.all?.ForEach(target => target.UnsubscribeTo(CombatActionEvent));
-        }
-
-        protected void RecalculateCumulativeTargets(DirectionContext newDirectionContext)
-        {
-            cumulativeTargets?.Clear();
-
-            foreach(CombatSubaction subaction in SubActions)
+            foreach (CombatSubactionSO subactionSO in Subactions)
             {
-                Targets subactionTargs = subaction.TargetingPattern.GetTargets(newDirectionContext);
-
-                subaction.IssueCommands(subactionTargs.all);
-
-                cumulativeTargets += subactionTargs;
+                if (subactionSO.TargetingPattern.PatternOrigin == PatternOriginType.USER)
+                {
+                    directionBased.Add(subactionSO);
+                }
+                else
+                {
+                    focusBased.Add(subactionSO);
+                }
             }
+        }
+
+        protected void RecalculateDirectionBasedTargets(DirectionContext directionContext)
+        {
+            directionBasedTargetSet?.Clear();
+
+            DirectionBasedSubactions.ForEach(subaction
+                => directionBasedTargetSet
+                += subaction.TargetingPattern.GetTargets(directionContext));
+
+            RecalculateCumulativeTargets();
+        }
+
+        protected void RecalculateFocusBasedTargets(DirectionContext directionContext)
+        {
+            focusBasedTargetSet?.Clear();
+
+            FocusBasedSubactions.ForEach(subaction
+                => focusBasedTargetSet
+                += subaction.TargetingPattern.GetTargets(directionContext));
+
+            RecalculateCumulativeTargets();
+        }
+
+        protected void RecalculateCumulativeTargets()
+        {
+            cumulativeTargetSet?.Clear();
+            cumulativeTargetSet = directionBasedTargetSet + focusBasedTargetSet;
         }
 
         public void Equip()
         {
+            /// Subscribe to direction updates
+            SubscribeToDirectionUpdates(User);
         }
 
         public void Unequip()
         {
-            
+            UnsubscribeToDirectionUpdates(User);
+            UnTarget(cumulativeTargetSet);
         }
 
-        public void BeginConfirmingTargets()
+        public void LockTargets()
         {
-            OnActionEvent(CombatActionEventType.CONFIRMED);
+            OnTargetingEvent(TargetingEventType.CONFIRMED);
+        }
+
+        public void UnlockTargets()
+        {
+            SubscribeToDirectionUpdates(User);
+            OnTargetingEvent(TargetingEventType.CANCELLED);
         }
 
         public void BeginExecution()
@@ -156,7 +175,7 @@ namespace SystemMiami.CombatRefactor
             PreExecution();
             yield return null;
 
-            OnActionEvent(CombatActionEventType.EXECUTING);
+            OnTargetingEvent(TargetingEventType.EXECUTING);
             yield return null;
 
             CountdownTimer timer = new(User, 2f);
@@ -171,30 +190,68 @@ namespace SystemMiami.CombatRefactor
                 yield return null;
             } while (!timer.IsFinished);
 
-            OnActionEvent(CombatActionEventType.COMPLETED);
+            OnTargetingEvent(TargetingEventType.COMPLETED);
 
             PostExecution();
         }
+
         protected abstract void PreExecution();
         protected abstract void PostExecution();
 
-        protected virtual void OnActionEvent(CombatActionEventType eventType)
+
+        protected virtual void OnTargetingEvent(TargetingEventType eventType)
         {
-            Debug.LogWarning($"{this} trying to raise an event");
-            CombatActionEvent?.Invoke(this, new(User, eventType));
+            string eventMessage =
+                $"{this} trying to raise an event\n" +
+                $"Event is: ";
+
+            if (TargetingEvent == null)
+            {
+                eventMessage += $"null.";
+            }
+            else
+            {
+                eventMessage +=
+                    $"not null, and its subscriber count is:" +
+                    $"{TargetingEvent.GetInvocationList().Length}";
+            }
+            Debug.LogWarning(eventMessage);
+
+
+            TargetingEventArgs args = new(
+                User,
+                eventType,
+                User.CurrentDirectionContext);
+
+            TargetingEvent?.Invoke(this, args);
+        }
+
+        private void Target(TargetSet targets)
+        {
+            targets?.all?.ForEach(target => target.SubscribeTo(TargetingEvent));
+            OnTargetingEvent(TargetingEventType.STARTED);
+        }
+        private void UnTarget(TargetSet targets)
+        {
+            targets?.all?.ForEach(target => target.UnsubscribeTo(TargetingEvent));
+            OnTargetingEvent(TargetingEventType.CANCELLED);
         }
     }
 
-    public class CombatActionEventArgs : EventArgs
+    public class TargetingEventArgs : EventArgs
     {
         public Combatant user;
-        public CombatActionEventType eventType;
+        public TargetingEventType eventType;
+        public readonly DirectionContext directionContext;
 
-        public CombatActionEventArgs(Combatant user, CombatActionEventType actionState)
+        public TargetingEventArgs(
+            Combatant user,
+            TargetingEventType actionState,
+            DirectionContext directionContext)
         {
-            Debug.LogWarning($"INSIDE CONSTRUCTOR of {this}");
             this.user = user;
             this.eventType = actionState;
+            this.directionContext = directionContext;
         }
     }
 }

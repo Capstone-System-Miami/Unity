@@ -243,33 +243,54 @@ namespace SystemMiami
 
         public List<ISubactionCommand> TargetedBy { get; set; } = new();
         public string nameMessageForDB { get { return gameObject.name; } set { ; } }
-        public void SubscribeTo(EventHandler<CombatActionEventArgs> combatActionEvent)
+        public void SubscribeTo(EventHandler<TargetingEventArgs> combatActionEvent)
         {
-            combatActionEvent += HandleCombatActionEvent;
+            Debug.LogError(
+                $"inside {gameObject}'s SUBSCRIBE to action fn\n" +
+                $"Pre subscription, sp assume Invocation list len is 0.");
 
-            /// TODO: This doesn't belong here probably vvv
-            Highlight(Color.red);
+            combatActionEvent += HandleTargetingEvent;
+
+            Debug.LogError(
+                $"inside {gameObject}'s SUBSCRIBE to action fn\n" +
+                $"Invocation list len: {combatActionEvent.GetInvocationList().Length}");
         }
 
-        public void UnsubscribeTo(EventHandler<CombatActionEventArgs> combatActionEvent)
+        public void UnsubscribeTo(EventHandler<TargetingEventArgs> combatActionEvent)
         {
-            combatActionEvent -= HandleCombatActionEvent;
+            Debug.LogError(
+                $"inside {gameObject}'s UNSUBSCRIBE to action fn\n" +
+                $"Pre subscription, sp assume Invocation list len is 0.");
 
-            /// TODO: This doesn't belong here probably vvv
-            UnHighlight();
+            combatActionEvent -= HandleTargetingEvent;
+
+            Debug.LogError(
+                $"inside {gameObject}'s UNSUBSCRIBE to action fn\n" +
+                $"Invocation list len: {combatActionEvent.GetInvocationList().Length}");
         }
 
-        public void HandleCombatActionEvent(object sender, CombatActionEventArgs args)
+        public void HandleTargetingEvent(object sender, TargetingEventArgs args)
         {
+            Debug.LogError("Handling Targeting Event");
             switch (args.eventType)
             {
-                case CombatActionEventType.CONFIRMED:
+                case TargetingEventType.CANCELLED:
+                    UnHighlight();
+                    TargetedBy.Clear();
+                    break;
+
+                case TargetingEventType.STARTED:
+                    Highlight(Color.yellow + new Color(.1f, 0, 0, 1f));                    
+                    break;
+
+                case TargetingEventType.CONFIRMED:
+                    Highlight(Color.red);
                     DisplayPreview();
                     break;
-                case CombatActionEventType.EXECUTING:
+                case TargetingEventType.EXECUTING:
                     ApplyCombatAction();
                     break;
-                case CombatActionEventType.COMPLETED:
+                case TargetingEventType.COMPLETED:
 
                     break;
                 default:
@@ -280,35 +301,33 @@ namespace SystemMiami
         public void DisplayPreview()
         {
             ///
+            Debug.Log($"{gameObject.name} wants to display a preivew.");
         }
 
         public void ApplyCombatAction()
         {
             ///
+            Debug.Log($"{gameObject.name} wants to get some subactions done to itself.");
         }
 
-        public virtual bool TryGetDamageInterface(out IDamageReciever damageInterface)
+        public virtual IDamageReceiver GetDamageInterface()
         {
-            damageInterface = null;
-            return false;
+            return null;
         }
 
-        public virtual bool TryGetHealInterface(out IHealReciever healInterface)
+        public virtual IHealReceiver GetHealInterface()
         {
-            healInterface = null;
-            return false;
+            return null;
         }
 
-        public virtual bool TryGetMoveInterface(out IForceMoveReciever forceMoveInterface)
+        public virtual IForceMoveReceiver GetMoveInterface()
         {
-            forceMoveInterface = null;
-            return false;
+            return null;
         }
 
-        public bool TryGetStatusEffectInterface(out IStatusEffectReceiver statusEffectInterface)
+        public virtual IStatusEffectReceiver GetStatusEffectInterface()
         {
-            statusEffectInterface = null;
-            return false;
+            return null;
         }
 
         private Color getHighlightedColor()

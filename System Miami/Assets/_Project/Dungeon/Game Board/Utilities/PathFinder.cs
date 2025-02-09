@@ -7,12 +7,6 @@ namespace SystemMiami
 {
     public class PathFinder
     {
-        // Gets a path using the TileContext struct
-        public List<OverlayTile> FindPath(TileContext context)
-        {
-            return FindPath(context.Current, context.Focus);
-        }
-
         // Finds shortest path between two overlay tiles
         public List<OverlayTile> FindPath(OverlayTile start, OverlayTile end)
         {
@@ -46,10 +40,10 @@ namespace SystemMiami
                 }
 
                 //get all neighbor tiles to current tile
-                var neighbourTiles = GetNeighbourTiles(currentOverlayTile);
+                List<OverlayTile> neighbourTiles = GetNeighbourTiles(currentOverlayTile);
 
                 //loop through eac
-                foreach (var neighbour in neighbourTiles)
+                foreach (OverlayTile neighbour in neighbourTiles)
                 {                    
                     // skip any tiles already explored
                     if (closedList.Contains(neighbour)) { continue; }

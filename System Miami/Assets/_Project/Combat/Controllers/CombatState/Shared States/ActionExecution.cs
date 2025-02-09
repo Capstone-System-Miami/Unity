@@ -16,8 +16,6 @@ namespace SystemMiami.CombatRefactor
         public override void OnEnter()
         {
             base.OnEnter();
-            combatAction.RegisterForDirectionUpdates(combatant);
-
             combatAction.BeginExecution();
 
             InputPrompts =
@@ -34,7 +32,7 @@ namespace SystemMiami.CombatRefactor
         {
             base.OnExit();
 
-            combatAction.DeregisterForDirectionUpdates(combatant);
+            combatAction.Unequip();
         }
     }
 }

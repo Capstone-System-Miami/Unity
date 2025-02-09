@@ -19,14 +19,10 @@ namespace SystemMiami.CombatRefactor
         {
             base.OnEnter();
 
-            /// Subscribe the selected CombatAction to
-            /// Directional updates.
-            combatAction.RegisterForDirectionUpdates(combatant);
-
             /// Subscribe to FocusTile events
             combatant.FocusTileChanged += HandleFocusTileChanged;
 
-
+            combatAction.SubscribeToDirectionUpdates(combatant);
             combatAction.Equip();
 
             InputPrompts =
@@ -60,9 +56,7 @@ namespace SystemMiami.CombatRefactor
         {
             base.OnExit();
             combatAction.Unequip();
-
-            combatAction.DeregisterForDirectionUpdates(combatant);
-
+            combatAction.UnsubscribeToDirectionUpdates(combatant);
             combatant.FocusTileChanged -= HandleFocusTileChanged;
         }
 
@@ -73,8 +67,8 @@ namespace SystemMiami.CombatRefactor
             object sender,
             FocusTileChangedEventArgs args)
         {
-            //args.previousTile?.EndHover(combatant);
-            //args.newTile?.BeginHover(combatant);
+            args.previousTile?.EndHover(combatant);
+            args.newTile?.BeginHover(combatant);
         }
     }
 }

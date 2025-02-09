@@ -29,7 +29,7 @@ namespace SystemMiami.CombatSystem
 
 
 
-        public override Targets GetTargets(DirectionContext userDirection)
+        public override TargetSet GetTargets(DirectionContext userDirection)
         {
             List<OverlayTile> foundTiles = new();
 
@@ -81,7 +81,7 @@ namespace SystemMiami.CombatSystem
                 }
             }
 
-            return new Targets(foundTiles);
+            return new (foundTiles);
         }
 
         /// <summary>

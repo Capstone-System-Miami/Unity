@@ -13,7 +13,7 @@ namespace SystemMiami.CombatSystem
         typeof(Stats),
         typeof(Abilities)
         )]
-    public abstract class Combatant : MonoBehaviour, ITargetable, ITileOccupant, IHighlightable, IDamageReciever, IHealReciever, IForceMoveReciever
+    public abstract class Combatant : MonoBehaviour, ITargetable, ITileOccupant, IHighlightable, IDamageReceiver, IHealReceiver, IForceMoveReceiver
     {
         protected const float PLACEMENT_RANGE = 0.0001f;
 
@@ -486,41 +486,47 @@ namespace SystemMiami.CombatSystem
         List<ISubactionCommand> ITargetable.TargetedBy { get; set; } = new();
         public string nameMessageForDB { get { return gameObject.name; } set { ; } }
         void ITargetable.SubscribeTo(
-            EventHandler<CombatActionEventArgs> combatActionEvent)
+            EventHandler<TargetingEventArgs> combatActionEvent)
         {
             Debug.LogWarning($"inside {gameObject}'s Subscribe to action fn");
-            combatActionEvent += (this as ITargetable).HandleCombatActionEvent;
-
-            /// TODO: This doesn't belong here probably vvv
-            Highlight(Color.magenta);
+            combatActionEvent += (this as ITargetable).HandleTargetingEvent;
         }
 
         void ITargetable.UnsubscribeTo(
-            EventHandler<CombatActionEventArgs> combatActionEvent)
+            EventHandler<TargetingEventArgs> combatActionEvent)
         {
-            combatActionEvent -= (this as ITargetable).HandleCombatActionEvent;
-
-            /// TODO: This doesn't belong here probably vvv
-            UnHighlight();
+            combatActionEvent -= (this as ITargetable).HandleTargetingEvent;
         }
 
-        void ITargetable.HandleCombatActionEvent(object sender, CombatActionEventArgs args)
+        void ITargetable.HandleTargetingEvent(object sender, TargetingEventArgs args)
         {
-            Debug.Log($"{gameObject} is trying to process a combatActionEvent");
+            Debug.Log($"{gameObject.name} is trying to process a combatActionEvent");
             if (this is not ITargetable me) { return; }
 
             switch (args.eventType)
             {
-                case CombatActionEventType.CONFIRMED:
+                case TargetingEventType.CANCELLED:
+                    UnHighlight();
+                    break;
+
+                case TargetingEventType.STARTED:
+                    Highlight(Color.magenta + new Color(0, 0, .1f, 1f));
+                    break;
+
+                case TargetingEventType.CONFIRMED:
+                    Highlight(Color.magenta);
                     me.DisplayPreview();
                     break;
-                case CombatActionEventType.EXECUTING:
+
+                case TargetingEventType.EXECUTING:
                     me.ApplyCombatAction();
                     break;
-                case CombatActionEventType.COMPLETED:
+
+                case TargetingEventType.COMPLETED:
                     /// TODO: Wait until !TargetedBy.Any() ?
                     me.TargetedBy = new();
                     break;
+
                 default:
                     break;
             }
@@ -548,13 +554,11 @@ namespace SystemMiami.CombatSystem
         /// This way, states can decide what to do when
         /// Damage methods are called on the combatant.
         /// </remarks>
-        public bool TryGetDamageInterface(out IDamageReciever damageInterface)
+        public virtual IDamageReceiver GetDamageInterface()
         {
             //Example of how these state-driven interfaces might work.
             // return currentState is IDamageReciever ? currentState : null;
-
-            damageInterface = this;
-            return true;
+            return this;
         }
 
         /// <inheritdoc />
@@ -565,10 +569,9 @@ namespace SystemMiami.CombatSystem
         /// This way, states can decide what to do when
         /// Heal methods are called on the combatant.
         /// </remarks>
-        public bool TryGetHealInterface(out IHealReciever healInterface)
+        public virtual IHealReceiver GetHealInterface()
         {
-            healInterface = this;
-            return true;
+            return this;
         }
 
         /// <inheritdoc />
@@ -579,10 +582,9 @@ namespace SystemMiami.CombatSystem
         /// This way, states can decide what to do when
         /// ForceMove methods are called on the combatant.
         /// </remarks>
-        public bool TryGetMoveInterface(out IForceMoveReciever forceMoveInterface)
+        public virtual IForceMoveReceiver GetMoveInterface()
         {
-            forceMoveInterface = this;
-            return true;
+            return this;
         }
 
         /// <inheritdoc />
@@ -593,10 +595,9 @@ namespace SystemMiami.CombatSystem
         /// This way, states can decide what to do when
         /// StatusEffect methods are called on the combatant.
         /// </remarks>
-        public bool TryGetStatusEffectInterface(out IStatusEffectReceiver statusEffectInterface)
+        public virtual IStatusEffectReceiver GetStatusEffectInterface()
         {
-            statusEffectInterface = null;
-            return false;
+            return null;
         }
         #endregion ITargetable
 

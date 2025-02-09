@@ -7,25 +7,13 @@ namespace SystemMiami.CombatSystem
     [CreateAssetMenu(
         fileName = "New Damage Action",
         menuName = "Abilities/CombatActions/Damage")]
-    public class Damage : CombatSubaction
+    public class Damage : CombatSubactionSO
     {
         [SerializeField] private float damageToDeal;
 
         protected override ISubactionCommand GenerateCommand(ITargetable target)
         {
-            IDamageReciever damageReciever;
-            if (!target.TryGetDamageInterface(out damageReciever))
-            {
-                Debug.LogWarning(
-                    $"Generating a command for {target}, " +
-                    $"NO damage interface returned");
-                return null;
-            }
-
-            Debug.LogWarning(
-                $"Generating a command for {target} " +
-                $"YES damage interface returned");
-            return new DamageCommand(damageReciever, damageToDeal);
+            return new DamageCommand(target, damageToDeal);
         }
     }
 
@@ -34,7 +22,7 @@ namespace SystemMiami.CombatSystem
     /// <see cref="Damage"/> to be performed
     /// on an object.
     /// </summary>
-    public interface IDamageReciever
+    public interface IDamageReceiver
     {
         bool IsCurrentlyDamageable();
         void PreviewDamage(float amount);
@@ -43,23 +31,23 @@ namespace SystemMiami.CombatSystem
 
     public class DamageCommand : ISubactionCommand
     {
-        public readonly IDamageReciever receiver;
+        public readonly ITargetable target;
         public readonly float amount;
 
-        public DamageCommand(IDamageReciever receiver, float amount)
+        public DamageCommand(ITargetable target, float amount)
         {
-            this.receiver = receiver;
+            this.target = target;
             this.amount = amount;
         }
 
         public void Preview()
         {
-            receiver.PreviewDamage(amount);
+            target.GetDamageInterface()?.PreviewDamage(amount);
         }
 
         public void Execute()
         {
-            receiver.ReceiveDamage(amount);
+            target.GetDamageInterface()?.ReceiveDamage(amount);
         }
     }
 

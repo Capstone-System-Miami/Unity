@@ -8,7 +8,7 @@ namespace SystemMiami.CombatSystem
 {
     [System.Serializable]
     [CreateAssetMenu(fileName = "Debug Action", menuName = "Abilities/CombatActions/Debug")]
-    public class DebugCombatAction : CombatSubaction
+    public class DebugCombatAction : CombatSubactionSO
     {
         
         public void Perform()
