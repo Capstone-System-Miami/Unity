@@ -29,6 +29,9 @@ namespace SystemMiami.CombatRefactor
 
         private bool registered;
 
+        public bool ExecutionStarted { get; private set; } = false;
+        public bool ExecutionFinished { get; private set; } = false;
+
         public event EventHandler<TargetingEventArgs> TargetingEvent;
 
         protected CombatAction(
@@ -136,28 +139,32 @@ namespace SystemMiami.CombatRefactor
 
         public void Equip()
         {
-            /// Subscribe to direction updates
             RecalculateFocusBasedTargets(User.CurrentDirectionContext);
             RecalculateDirectionBasedTargets(User.CurrentDirectionContext);
             RecalculateCumulativeTargets();
 
             Target(cumulativeTargetSet);
+
             SubscribeToDirectionUpdates(User);
         }
 
         public void Unequip()
         {
             UnsubscribeToDirectionUpdates(User);
+
             UnTarget(cumulativeTargetSet);
         }
 
         public void LockTargets()
         {
             UnTarget(cumulativeTargetSet);
+
             RecalculateFocusBasedTargets(User.CurrentDirectionContext);
             RecalculateDirectionBasedTargets(User.CurrentDirectionContext);
             RecalculateCumulativeTargets();
+
             Target(cumulativeTargetSet);
+
             UnsubscribeToDirectionUpdates(User);
             OnTargetingEvent(TargetingEventType.LOCKED);
         }
@@ -185,6 +192,7 @@ namespace SystemMiami.CombatRefactor
 
         protected IEnumerator Execute()
         {
+            ExecutionStarted = true;
             PreExecution();
             yield return null;
 
@@ -206,6 +214,7 @@ namespace SystemMiami.CombatRefactor
             OnTargetingEvent(TargetingEventType.COMPLETED);
 
             PostExecution();
+            ExecutionFinished = true;
         }
 
         protected abstract void PreExecution();
@@ -259,6 +268,7 @@ namespace SystemMiami.CombatRefactor
 
             OnTargetingEvent(TargetingEventType.STARTED);            
         }
+
         private void UnTarget(TargetSet targets)
         {
             OnTargetingEvent(TargetingEventType.CANCELLED);
