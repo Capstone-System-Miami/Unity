@@ -13,17 +13,8 @@ namespace SystemMiami.CombatSystem
 
         protected override ISubactionCommand GenerateCommand(ITargetable target)
         {
-            IStatusEffectReceiver statusEffectReceiver;
-            if (!target.TryGetStatusEffectInterface(out statusEffectReceiver))
-            {
-                Debug.LogWarning(
-                    $"Generating a command for {target}, " +
-                    $"no status effect interface returned");
-                return null;
-            }
-
             return new StatusEffectCommand(
-                statusEffectReceiver,
+                target,
                 new StatSet(effectStats),
                 damagePerTurn,
                 healPerTurn,
@@ -53,14 +44,14 @@ namespace SystemMiami.CombatSystem
 
     public class StatusEffectCommand : ISubactionCommand
     {
-        public readonly IStatusEffectReceiver receiver;
+        public readonly ITargetable receiver;
         public readonly StatSet effect;
         public readonly float damagePerTurn;
         public readonly float healPerTurn;
         public readonly int durationTurns;
 
         public StatusEffectCommand(
-            IStatusEffectReceiver statusEffectReceiver,
+            ITargetable statusEffectReceiver,
             StatSet effect,
             float damagePerTurn,
             float healPerTurn,

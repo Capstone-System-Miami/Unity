@@ -15,24 +15,22 @@ namespace SystemMiami.CombatSystem
         // In reference to attacker or reciever though, idk.
         [SerializeField] private Vector2Int direction;
 
-        protected override ISubactionCommand GenerateCommand(ITargetable t)
+        protected override ISubactionCommand GenerateCommand(ITargetable target)
         {
-            if (!t.TryGetMoveInterface(out var moveInterface))
-            {
-                return null;
-            }
-
-            return new ForceMoveData(moveInterface, distance, direction);
+            return new ForceMoveData(target, distance, direction);
         }
     }
 
     public class ForceMoveData : ISubactionCommand
     {
-        public readonly IForceMoveReceiver receiver;
+        public readonly ITargetable receiver;
         public readonly int distance;
         public readonly Vector2Int direction;
 
-        public ForceMoveData(IForceMoveReceiver receiver, int distance, Vector2Int direction)
+        public ForceMoveData(
+            ITargetable receiver,
+            int distance,
+            Vector2Int direction)
         {
             this.receiver = receiver;
             this.distance = distance;
@@ -41,12 +39,14 @@ namespace SystemMiami.CombatSystem
 
         public void Preview()
         {
-            receiver.PreviewForceMove(distance, direction);
+            receiver.GetMoveInterface()
+                ?.PreviewForceMove(distance, direction);
         }
 
         public void Execute()
         {
-            receiver.ReceiveForceMove(distance, direction);
+            receiver.GetMoveInterface()
+                ?.ReceiveForceMove(distance, direction);
         }
     }
 

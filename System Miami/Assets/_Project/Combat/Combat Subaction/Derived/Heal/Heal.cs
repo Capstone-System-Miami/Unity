@@ -12,34 +12,28 @@ namespace SystemMiami.CombatSystem
 
         protected override ISubactionCommand GenerateCommand(ITargetable target)
         {
-            IHealReceiver healReciever;
-            if (!target.TryGetHealInterface(out healReciever))
-            {
-                return null;
-            }
-
-            return new HealCommand(healReciever, healAmount);
+            return new HealCommand(target, healAmount);
         }
     }
 
     public class HealCommand : ISubactionCommand
     {
-        public readonly IHealReceiver reciever;
+        public readonly ITargetable reciever;
         public readonly float amount;
         
-        public HealCommand(IHealReceiver healReciever, float amount)
+        public HealCommand(ITargetable healReciever, float amount)
         {
             this.amount = amount;
         }
 
         public void Preview()
         {
-            reciever.PreviewHeal(amount);
+            reciever.GetHealInterface()?.PreviewHeal(amount);
         }
 
         public void Execute()
         {
-            reciever.ReceiveHeal(amount);
+            reciever.GetHealInterface()?.ReceiveHeal(amount);
         }
     }
 

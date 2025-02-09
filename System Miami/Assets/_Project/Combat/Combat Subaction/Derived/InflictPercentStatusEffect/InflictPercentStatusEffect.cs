@@ -25,17 +25,8 @@ namespace SystemMiami.CombatSystem
         [SerializeField] int durationTurns;
         protected override ISubactionCommand GenerateCommand(ITargetable target)
         {
-            IStatusEffectReceiver statusEffectReceiver;
-            if (!target.TryGetStatusEffectInterface(out statusEffectReceiver))
-            {
-                Debug.LogWarning(
-                    $"Generating a command for {target}, " +
-                    $"no status effect interface returned");
-                return null;
-            }
-
             return new StatusEffectCommand(
-                statusEffectReceiver,
+                target,
                 new StatSet(effectStats),
                 damagePerTurn,
                 healPerTurn,
