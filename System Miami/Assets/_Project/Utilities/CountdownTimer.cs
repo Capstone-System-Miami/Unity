@@ -44,7 +44,7 @@ namespace SystemMiami.Utilities
         /// if something tries to read this property.
         /// on the timer.
         /// </summary>
-        public Func<string> StatusMsg { get; private set; } = () => NONE;
+        public string StatusMsg { get; private set; } = NONE;
 
 
         public CountdownTimer(MonoBehaviour runner, float seconds)
@@ -56,7 +56,7 @@ namespace SystemMiami.Utilities
             IsFinished = false;
             BeenCancelled = false;
 
-            StatusMsg = () => NONE;
+            StatusMsg = NONE;
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace SystemMiami.Utilities
         public void Cancel()
         {
             BeenCancelled = true;
-            StatusMsg = () => CANCELLED;
+            StatusMsg = CANCELLED;
 
             if (process == null) { return; }
 
@@ -97,10 +97,16 @@ namespace SystemMiami.Utilities
             IsFinished = false;
 
             float remaining = seconds;
-            StatusMsg = () => Mathf.RoundToInt(remaining).ToString("00");
+            int remainingRounded() => Mathf.RoundToInt(remaining);
 
             while (remaining >= 0)
             {
+                string msg = $"Remaining; {remainingRounded():00}";
+                if (StatusMsg != msg)
+                {
+                    StatusMsg = msg;
+                }
+
                 float frame = Time.deltaTime;
 
                 remaining -= frame;                  
@@ -109,7 +115,7 @@ namespace SystemMiami.Utilities
             }
 
             IsFinished = true;
-            StatusMsg = () => NONE;
+            StatusMsg = NONE;
             yield return null;
         }
     }    

@@ -1,4 +1,5 @@
 using SystemMiami.CombatSystem;
+using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
 {
@@ -17,6 +18,15 @@ namespace SystemMiami.CombatRefactor
             base.OnEnter();
             combatAction.Equip();
             combatAction.LockTargets();
+        }
+
+        public override void Update()
+        {
+            base.Update();
+            if (Input.GetKeyDown(KeyCode.Keypad7))
+            {
+                combatAction.Reportback();
+            }
         }
 
         public override void MakeDecision()
@@ -46,7 +56,7 @@ namespace SystemMiami.CombatRefactor
         public override void OnExit()
         {
             base.OnExit();
-            combatAction.UnlockTargets();
+            combatAction.Unequip();
         }
 
         // Decision

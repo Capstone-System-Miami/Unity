@@ -5,7 +5,6 @@ using System.Linq;
 using SystemMiami.CombatRefactor;
 using SystemMiami.CombatSystem;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 namespace SystemMiami
 {
@@ -287,8 +286,11 @@ namespace SystemMiami
                     ApplyCombatAction();
                     break;
                 case TargetingEventType.COMPLETED:
-
                     break;
+                case TargetingEventType.REPORTBACK:
+                    Debug.Log("Im subbed", this);
+                    break;
+
                 default:
                     break;
             }

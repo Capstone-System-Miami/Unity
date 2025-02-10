@@ -17,6 +17,11 @@ namespace SystemMiami.CombatRefactor
                 $"Press Enter/Return to continue.";
         }
 
+        public override void Update()
+        {
+            base.Update();
+        }
+
         public override void MakeDecision()
         {
             if (Proceed())

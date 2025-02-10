@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
 {
-    public enum TargetingEventType { CANCELLED, STARTED, LOCKED, EXECUTING, COMPLETED }
+    public enum TargetingEventType { CANCELLED, STARTED, LOCKED, EXECUTING, COMPLETED, REPORTBACK }
 
     public abstract class CombatAction
     {
@@ -49,6 +49,87 @@ namespace SystemMiami.CombatRefactor
                 Subactions,
                 out FocusBasedSubactions,
                 out DirectionBasedSubactions);
+        }
+
+        public void Equip()
+        {
+            RecalculateFocusBasedTargets(User.CurrentDirectionContext);
+            RecalculateDirectionBasedTargets(User.CurrentDirectionContext);
+            RecalculateCumulativeTargets();
+
+            Target(cumulativeTargetSet);
+
+            SubscribeToDirectionUpdates(User);
+        }
+
+        public void Unequip()
+        {
+            UnsubscribeToDirectionUpdates(User);
+
+            UnTarget(cumulativeTargetSet);
+
+            focusBasedTargetSet.Clear();
+            directionBasedTargetSet.Clear();
+            cumulativeTargetSet.Clear();
+        }
+
+        public void LockTargets()
+        {
+            UnsubscribeToDirectionUpdates(User);
+            OnTargetingEvent(TargetingEventType.LOCKED);
+        }
+
+        public void UnlockTargets()
+        {
+            Unequip();
+            Equip();
+        }
+
+        public void BeginExecution()
+        {
+            executionProcess = User.StartCoroutine(Execute());
+        }
+
+        public void CleanUp()
+        {
+            Debug.Log(
+                "Cleaning up CombatAction after execution.",
+                User);
+
+            Unequip();
+            ExecutionStarted = false;
+            ExecutionFinished = false;
+            if (executionProcess != null)
+            {
+                Debug.LogWarning(
+                    "ExecutionProcess was not null on cleanup." +
+                    "Stopping coroutine and deleting.",
+                    User);
+
+                User.StopCoroutine(executionProcess);
+                executionProcess = null;
+            }
+        }
+
+
+        public bool PlayerFoundInTargets()
+        {
+            foreach (ITargetable target in cumulativeTargetSet.all)
+            {
+                if (target is PlayerCombatant)
+                {
+                    Debug.Log("Player found in targets TRUE", User);
+                    return true;
+                }
+            }
+
+            Debug.Log("Player found in targets FALSE", User);
+            return false;
+        }
+
+        public void Reportback()
+        {
+            OnTargetingEvent(TargetingEventType.REPORTBACK);
         }
 
         public void SubscribeToDirectionUpdates(Combatant user)
@@ -137,67 +218,7 @@ namespace SystemMiami.CombatRefactor
             cumulativeTargetSet = directionBasedTargetSet + focusBasedTargetSet;
         }
 
-        public void Equip()
-        {
-            RecalculateFocusBasedTargets(User.CurrentDirectionContext);
-            RecalculateDirectionBasedTargets(User.CurrentDirectionContext);
-            RecalculateCumulativeTargets();
 
-            Target(cumulativeTargetSet);
-
-            SubscribeToDirectionUpdates(User);
-        }
-
-        public void Unequip()
-        {
-            UnsubscribeToDirectionUpdates(User);
-
-            UnTarget(cumulativeTargetSet);
-        }
-
-        public void LockTargets()
-        {
-            UnTarget(cumulativeTargetSet);
-
-            RecalculateFocusBasedTargets(User.CurrentDirectionContext);
-            RecalculateDirectionBasedTargets(User.CurrentDirectionContext);
-            RecalculateCumulativeTargets();
-
-            Target(cumulativeTargetSet);
-
-            UnsubscribeToDirectionUpdates(User);
-            OnTargetingEvent(TargetingEventType.LOCKED);
-        }
-
-        public void UnlockTargets()
-        {
-            UnTarget(cumulativeTargetSet);
-            cumulativeTargetSet.Clear();
-            focusBasedTargetSet.Clear();
-            directionBasedTargetSet.Clear();
-            OnTargetingEvent(TargetingEventType.CANCELLED);
-        }
-
-        public void BeginExecution()
-        {
-            executionProcess = User.StartCoroutine(Execute());
-        }
-
-
-        public bool PlayerFoundInTargets()
-        {
-            bool found = false;
-            foreach (ITargetable occupant in cumulativeTargetSet.occupants)
-            {
-                if (occupant is PlayerCombatant)
-                {
-                    found = true;
-                    break;
-                }
-            }
-
-            return found;
-        }
 
         protected IEnumerator Execute()
         {
@@ -212,17 +233,26 @@ namespace SystemMiami.CombatRefactor
             timer.Start();
 
             yield return new WaitUntil(() => timer.IsStarted);
-            Debug.Log($"An ability is starting an Anim simulation timer");
 
+            string timeMsg =
+                $"An action is starting an Anim simulation timer, " +
+                $"time remaining is {timer.StatusMsg}";
             do
             {
-                Debug.Log($"AnimSim time remaining: {timer.StatusMsg()}");
+                if (timeMsg != timer.StatusMsg)
+                {
+                    timeMsg = timer.StatusMsg;
+                    Debug.LogWarning(timeMsg);
+                }
                 yield return null;
             } while (!timer.IsFinished);
 
             OnTargetingEvent(TargetingEventType.COMPLETED);
+            yield return null;
 
             PostExecution();
+            yield return null;
+
             ExecutionFinished = true;
         }
 

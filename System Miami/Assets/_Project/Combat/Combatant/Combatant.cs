@@ -548,7 +548,7 @@ namespace SystemMiami.CombatSystem
 
         public void HandleTargetingEvent(object sender, TargetingEventArgs args)
         {
-            Debug.Log($"Trying to process a TargetingEvent", gameObject);
+            Debug.Log($"Trying to process a TargetingEvent of type {args.EventType}", gameObject);
             if (this is not ITargetable me) { return; }
 
             switch (args.EventType)
@@ -573,6 +573,10 @@ namespace SystemMiami.CombatSystem
 
                 case TargetingEventType.COMPLETED:
                     /// TODO: Wait until !TargetedBy.Any() ?
+                    break;
+
+                case TargetingEventType.REPORTBACK:
+                    Debug.Log("Im subbed.", this);
                     break;
 
                 default:

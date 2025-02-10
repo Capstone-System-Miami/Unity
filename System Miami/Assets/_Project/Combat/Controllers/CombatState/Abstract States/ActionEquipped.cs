@@ -35,6 +35,11 @@ namespace SystemMiami.CombatRefactor
             base.Update();
             combatant.UpdateFocus();
             combatant.UpdateAnimDirection();
+
+            if (Input.GetKeyDown(KeyCode.Keypad7))
+            {
+                combatAction.Reportback();
+            }
         }
 
         public override void MakeDecision()

@@ -7,19 +7,22 @@ namespace SystemMiami.CombatSystem
     {
         [SerializeField] private int detectionRadius = 3;
 
+        [HideInInspector] public bool PlayerInRange;
+
         public override OverlayTile GetNewFocus()
         {
             Combatant targetPlayer = TurnManager.MGR.playerCharacter;
+            PlayerInRange = IsInDetectionRange(targetPlayer);
 
-            if (IsInDetectionRange(targetPlayer))
+            if (PlayerInRange)
             {
-                Debug.Log($"Player found in {name}'s range");
+                Debug.Log($"Player found in {name}'s range", this);
                 return targetPlayer.PositionTile;
             }
             else
             {
                 Debug.Log($"Player not found in {name}'s range." +
-                    $"Getting random tile");
+                    $"Getting random tile", this);
                 return MapManager.MGR.GetRandomValidTile();
             }
         }

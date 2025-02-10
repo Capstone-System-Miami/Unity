@@ -1,6 +1,7 @@
 using System.Collections;
 using SystemMiami.CombatSystem;
 using SystemMiami.Utilities;
+using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
 {
@@ -20,13 +21,24 @@ namespace SystemMiami.CombatRefactor
         {
             base.OnEnter();
 
-            combatAction.Equip();
-            combatAction.BeginExecution();
             proceedConditions.Add( () => combatAction.ExecutionStarted);
             proceedConditions.Add( () => combatAction.ExecutionFinished);
 
+            combatAction.Equip();
+            combatAction.LockTargets();
+            combatAction.BeginExecution();
+
             InputPrompts =
                 "Executing Action.";
+        }
+
+        public override void Update()
+        {
+            base.Update();
+            if (Input.GetKeyDown(KeyCode.Keypad7))
+            {
+                combatAction.Reportback();
+            }
         }
 
         public override void MakeDecision()
@@ -40,7 +52,7 @@ namespace SystemMiami.CombatRefactor
         {
             base.OnExit();
 
-            combatAction.Unequip();
+            combatAction.CleanUp();
         }
     }
 }

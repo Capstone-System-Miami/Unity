@@ -58,6 +58,7 @@ namespace SystemMiami.CombatRefactor
 
             if (EndTurn())
             {
+                Debug.LogWarning($"Requesting turn end", combatant);
                 SwitchState(factory.TurnEnd());
             }
         }
@@ -67,34 +68,37 @@ namespace SystemMiami.CombatRefactor
             base.OnExit();
             if (CancelConfirmation())
             {
+                Debug.LogWarning(
+                    $"Requested cancel confirmation duing confirmation",
+                    combatant);
+
                 tilesToCheck--;
                 return;
             }
 
             if (EndTurn())
             {
+                Debug.LogWarning(
+                    $"Requested end turn during confirmation",
+                    combatant);
+
                 tilesToCheck = 4;
-                combatAction.Unequip();
                 return;
             }
         }
 
         protected override bool CancelConfirmation()
         {
-            Debug.LogWarning($"Requesting cancel confirmation", combatant);
             return cancelRequestConditions.AllMet();
         }
 
         protected override bool ConfirmSelection()
         {
-            Debug.LogWarning($"Requesting confirm", combatant);
-
             return combatAction.PlayerFoundInTargets();
         }
 
         protected bool EndTurn()
         {
-            Debug.LogWarning($"Requesting turn end", combatant);
             return endTurnRequestConditions.AllMet();
         }
     }
