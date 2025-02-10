@@ -14,7 +14,8 @@ namespace SystemMiami
         // ======================================
         [SerializeField] private dbug log;
         [SerializeField] private List<Dungeons.Style> _excludedStyles = new();
-
+        [SerializeField] private GameObject minimapIndicatorPrefab;
+       
         //=======================================
         #endregion // SERIALIZED
 
@@ -25,6 +26,7 @@ namespace SystemMiami
         private DungeonPreset _currentPreset;
         private DungeonData _dungeonData;
         private Material _material;
+        private GameObject _minimapIndicator;
 
         //=======================================
         #endregion // PRIVATE VARS
@@ -61,10 +63,11 @@ namespace SystemMiami
             // a change is made to what's subscribing to OnPlayerEnter or OnInteract, etc.
             InteractionTrigger entranceTrigger = GetComponentInChildren<InteractionTrigger>();
             entranceTrigger.OnInteract.AddListener(onInteract);
-
+            
             _currentPreset = preset;
-
+             
             applyStoredPreset();
+            createMinimapIndicator();
         }
 
         public void TurnOffDungeonColor()
@@ -159,6 +162,37 @@ namespace SystemMiami
             }
 
             GAME.MGR.GoToDungeon(_dungeonData);
+        }
+        
+        /// <summary>
+        /// Creates a small "minimap indicator" object as a child, using the same
+        /// color as the "DoorOnColor"
+        /// </summary>
+        private void createMinimapIndicator()
+        {
+            // Clean up an old indicator if it exists
+            if (_minimapIndicator != null)
+            {
+                Destroy(_minimapIndicator);
+            }
+
+            
+            if (CurrentPreset == null || CurrentPreset.EmmissiveMaterial == null)
+            {
+                return;
+            }
+
+            // Create the new child object
+            _minimapIndicator = Instantiate(minimapIndicatorPrefab, transform);
+            
+           SpriteRenderer spriteRenderer = _minimapIndicator.GetComponent<SpriteRenderer>();
+            _minimapIndicator.transform.localPosition = Vector3.up * 1.0f;
+          //clone the EmmissiveMaterial and apply the "DoorOnColor"
+            Material miniMapMaterial = new Material(CurrentPreset.EmmissiveMaterial);
+            miniMapMaterial.SetColor("_Color", CurrentPreset.DoorOnColor);
+
+            // Assign that material sprite renderer
+            spriteRenderer.material = miniMapMaterial;
         }
         
         //=======================================
