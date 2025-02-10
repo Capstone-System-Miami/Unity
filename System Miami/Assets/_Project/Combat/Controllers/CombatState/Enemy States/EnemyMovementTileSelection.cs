@@ -13,8 +13,8 @@ namespace SystemMiami.CombatRefactor
         {
             base.OnEnter();
 
-
-            //turnEndRequested.Add(() => combatant.)
+            InputPrompts = 
+                $"{combatant.gameObject.name} is selecting a tile...";
         }
 
         // Decision

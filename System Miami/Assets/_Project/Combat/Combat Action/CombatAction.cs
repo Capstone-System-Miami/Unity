@@ -207,7 +207,7 @@ namespace SystemMiami.CombatRefactor
 
             do
             {
-                Debug.Log($"AnimSim time remaining: {timer.StatusMsg}");
+                Debug.Log($"AnimSim time remaining: {timer.StatusMsg()}");
                 yield return null;
             } while (!timer.IsFinished);
 

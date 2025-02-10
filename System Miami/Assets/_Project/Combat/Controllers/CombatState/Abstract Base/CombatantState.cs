@@ -25,7 +25,7 @@ namespace SystemMiami.CombatRefactor
                 inputPrompts = value;
                 if (combatant.PrintUItoConsole)
                 {
-                    Debug.Log($"{combatant.name} UI message: {inputPrompts}");
+                    Debug.Log($"{combatant.name} UI message: {inputPrompts}", combatant);
                 }
             }
         }
@@ -47,7 +47,7 @@ namespace SystemMiami.CombatRefactor
         public virtual void OnEnter()
         {
             Debug.Log(
-                $"{combatant.name} is entering" +
+                $"{combatant.name} is entering " +
                 $"a state: {this.GetType()}");
         }
 

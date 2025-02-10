@@ -1,13 +1,15 @@
 using System.Collections;
 using SystemMiami.CombatSystem;
+using SystemMiami.Utilities;
 using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
 {
     public class EnemyTurnStart : TurnStart
     {
-        private float delay = .5f;
-        private bool flag_proceed;
+        private const float DELAY = 0.5f;
+
+        private CountdownTimer delayTimer;
 
         public EnemyTurnStart(Combatant combatant)
             : base(combatant) { }
@@ -18,25 +20,20 @@ namespace SystemMiami.CombatRefactor
             base.OnEnter();
             InputPrompts =
                 $"{combatant.name} Turn Start!";
+
+            delayTimer = new(combatant, DELAY);
+            delayTimer.Start();
         }
+
+        /// <inheritdoc/>
+        /// <summary>
+        /// Enemies won't "request" to proceed until their 
+        /// delay timer is up.
+        /// </summary>
+        /// <returns></returns>
         protected override bool ProceedRequested()
         {
-            return flag_proceed;
+            return delayTimer.IsFinished;
         }
-
-        IEnumerator delayForMessage()
-        {
-            yield return new WaitForSeconds(delay);
-            flag_proceed = true;
-        }
-
-        // NOTE
-        // Enemies could use
-        // () => ( (float waitedFor) > (float timerTime) )
-        // as a condition
-        //
-        // could also use
-        // () => ( (int tilesChecked) > (int tilesToCheck) )
-        // as a condition
     }
 }

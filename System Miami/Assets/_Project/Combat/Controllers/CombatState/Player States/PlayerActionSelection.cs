@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using SystemMiami.CombatSystem;
 using SystemMiami.Management;
@@ -16,14 +15,25 @@ namespace SystemMiami.CombatRefactor
         public override void OnEnter()
         {
             base.OnEnter();
+
             UI.MGR.RefactorSlotClicked += HandleSlotClick;
         }
 
+        public override void Update()
+        {
+            // For the player, we update the focus every frame.
+            combatant.UpdateFocus();
+        }
+
+        /// <summary>
+        /// TODO: Actually determine the correct CombatAction to
+        /// return based on the input. Right now it just returns
+        /// the first thing in the player's loadout, if there is
+        /// anything in there.
+        /// </summary>
+        /// <param name="slot"></param>
         private void HandleSlotClick(ActionQuickslot slot)
         {
-            // TODO
-            // Actually determine the correct action to return
-
             if (combatant.Loadout.PhysicalAbilities == null) { Debug.LogWarning("physnull");return; }
             if (!combatant.Loadout.PhysicalAbilities.Any()) { Debug.LogWarning("physnone"); return; }
             if (combatant.Loadout.PhysicalAbilities[0] == null) { Debug.LogWarning("phys[0]null"); return; }

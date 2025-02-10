@@ -34,12 +34,6 @@ namespace SystemMiami.CombatRefactor
                 "Or press Enter/Return to end your turn.\n";
         }
 
-        public override void Update()
-        {
-            base.Update();
-            combatant.UpdateFocus();
-        }
-
         public override void MakeDecision()
         {
             if (EquipRequested())

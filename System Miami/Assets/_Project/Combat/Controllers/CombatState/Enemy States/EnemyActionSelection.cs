@@ -1,17 +1,26 @@
 using System.Collections.Generic;
-using SystemMiami.AbilitySystem;
+using System.Linq;
 using SystemMiami.CombatSystem;
-using UnityEditor;
+using SystemMiami.Utilities;
 using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
 {
     public class EnemyActionSelection : ActionSelection
     {
+        private const float DELAY = 0.25f;
+        private CountdownTimer delayTimer;
+
         public EnemyActionSelection(Combatant combatant)
             : base (combatant) { }
 
+        public override void OnEnter()
+        {
+            base.OnEnter();
 
+            delayTimer = new(combatant, DELAY);
+            delayTimer.Start();
+        }
 
         /// <summary>
         /// This method always returns true,
@@ -29,7 +38,14 @@ namespace SystemMiami.CombatRefactor
         /// <returns></returns>
         protected override bool EquipRequested()
         {
+            if (!delayTimer.IsFinished) { return false; }
+
             selectedCombatAction = SelectRandomCombatAction();
+            Debug.Log(
+                $"selecting combatAction, it is " +
+                $"{( (selectedCombatAction != null) ? "not" : "" )}" +
+                $"null", combatant);
+
             return true;
         }
 
@@ -44,12 +60,18 @@ namespace SystemMiami.CombatRefactor
         /// <returns></returns>
         protected CombatAction SelectRandomCombatAction()
         {
-            List<NewAbility> allAbilities = new(combatant.Loadout.PhysicalAbilities);
-            allAbilities.AddRange(combatant.Loadout.MagicalAbilities);
+            List<CombatAction> allCombatActions = new(combatant.Loadout.PhysicalAbilities);
+            allCombatActions.AddRange(combatant.Loadout.MagicalAbilities);
+            allCombatActions.AddRange(combatant.Loadout.Consumables);
             
-            int randomIndex = Random.Range(0, allAbilities.Count);
+            int randomIndex = Random.Range(0, allCombatActions.Count);
 
-            return allAbilities[randomIndex];
+            /// TODO:
+            /// determine a safe way to do this.
+            if (allCombatActions == null) { return null; }
+            if (!allCombatActions.Any()) { return null; }
+
+            return allCombatActions[randomIndex];
         }
     }
 
