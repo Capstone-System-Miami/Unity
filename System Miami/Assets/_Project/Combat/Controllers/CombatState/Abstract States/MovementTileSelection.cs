@@ -15,11 +15,6 @@ namespace SystemMiami.CombatRefactor
         // Pathing
         protected MovementPath path;
 
-        // Transitioning
-        protected Conditions turnEndConditions = new();
-        protected Conditions turnEndRequested = new();
-
-        protected Conditions skipMovementConditions = new();
         protected Conditions confirmPathConditions = new();
 
         protected MovementTileSelection(Combatant combatant)
@@ -55,18 +50,14 @@ namespace SystemMiami.CombatRefactor
         {
             if (TurnEndRequested())
             {
-                if (!turnEndConditions.AllMet())
-                {
-                    SwitchState(factory.TurnEnd());
-                }
+                SwitchState(factory.TurnEnd());
 
                 return;
             }
 
             if (SkipMovementRequested())
             {
-                if (!skipMovementConditions.AllMet()) { return; }
-
+                Debug.LogWarning($"Skip movement requested", combatant);
                 SwitchState(factory.ActionSelection());
                 return;
             }

@@ -184,10 +184,19 @@ namespace SystemMiami.CombatRefactor
         }
 
 
-        /// TODO: Implement this method
         public bool PlayerFoundInTargets()
         {
-            return false;
+            bool found = false;
+            foreach (ITargetable occupant in cumulativeTargetSet.occupants)
+            {
+                if (occupant is PlayerCombatant)
+                {
+                    found = true;
+                    break;
+                }
+            }
+
+            return found;
         }
 
         protected IEnumerator Execute()

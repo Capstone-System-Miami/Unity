@@ -38,6 +38,7 @@ namespace SystemMiami.CombatRefactor
         {
             if (EquipRequested())
             {
+                Debug.Log("equip reqd", combatant);
                 if (!canEquip.AllMet()) { return; }
 
                 SwitchState(factory.ActionEquipped(selectedCombatAction));
@@ -45,7 +46,9 @@ namespace SystemMiami.CombatRefactor
             }
             else if (SkipPhaseRequested())
             {
+                Debug.Log("skip phase reqd", combatant);
                 if (!canSkipPhase.AllMet()) {  return; }
+
                 SwitchState(factory.TurnEnd());
                 return;
             }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using SystemMiami.CombatSystem;
+using SystemMiami.Utilities;
 using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
@@ -25,7 +26,12 @@ namespace SystemMiami.CombatRefactor
 
         protected override bool SkipMovementRequested()
         {
-            return false;
+            // Are the coordinates of what the enemy is focusing
+            // on the same as the coordinates right in front of them
+            return (
+                combatant.CurrentDirectionContext.TilePositionB
+                == combatant.CurrentDirectionContext.ForwardA
+                );
         }
 
         protected override bool ConfirmPathRequested()

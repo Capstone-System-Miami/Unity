@@ -32,6 +32,7 @@ namespace SystemMiami.CombatRefactor
 
         public override void Update()
         {
+            base.Update();
             combatant.UpdateFocus();
             combatant.UpdateAnimDirection();
         }
@@ -65,8 +66,8 @@ namespace SystemMiami.CombatRefactor
             object sender,
             FocusTileChangedEventArgs args)
         {
-            args.previousTile?.EndHover(combatant);
-            args.newTile?.BeginHover(combatant);
+            //args.previousTile?.EndHover(combatant);
+            //args.newTile?.BeginHover(combatant);
         }
     }
 }

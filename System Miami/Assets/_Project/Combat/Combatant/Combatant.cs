@@ -548,13 +548,14 @@ namespace SystemMiami.CombatSystem
 
         public void HandleTargetingEvent(object sender, TargetingEventArgs args)
         {
-            Debug.Log($"{gameObject.name} is trying to process a combatActionEvent");
+            Debug.Log($"Trying to process a TargetingEvent", gameObject);
             if (this is not ITargetable me) { return; }
 
             switch (args.EventType)
             {
                 case TargetingEventType.CANCELLED:
                     UnHighlight();
+                    me.PreviewOff();
                     break;
 
                 case TargetingEventType.STARTED:
@@ -572,7 +573,6 @@ namespace SystemMiami.CombatSystem
 
                 case TargetingEventType.COMPLETED:
                     /// TODO: Wait until !TargetedBy.Any() ?
-                    me.TargetedBy = new();
                     break;
 
                 default:
