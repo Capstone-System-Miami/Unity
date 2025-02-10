@@ -186,13 +186,27 @@ namespace SystemMiami
             _minimapIndicator = Instantiate(minimapIndicatorPrefab, transform);
             
            SpriteRenderer spriteRenderer = _minimapIndicator.GetComponent<SpriteRenderer>();
-            _minimapIndicator.transform.localPosition = Vector3.up * 1.0f;
-          //clone the EmmissiveMaterial and apply the "DoorOnColor"
-            Material miniMapMaterial = new Material(CurrentPreset.EmmissiveMaterial);
-            miniMapMaterial.SetColor("_Color", CurrentPreset.DoorOnColor);
+            
+        
+            switch (CurrentPreset.Difficulty)
+            {
+                case DifficultyLevel.EASY:
+                    spriteRenderer.color = Color.green;
+                    break;
+                case DifficultyLevel.MEDIUM:
+                    spriteRenderer.color = Color.yellow;
+                    break;
+                case DifficultyLevel.HARD:
+                    spriteRenderer.color = Color.red;
+                    break;
+                default:
+                    spriteRenderer.color = Color.white;
+                    break;
+                
+            }
 
-            // Assign that material sprite renderer
-            spriteRenderer.material = miniMapMaterial;
+            
+          
         }
         
         //=======================================
