@@ -184,7 +184,7 @@ namespace SystemMiami
 
             // Create the new child object
             _minimapIndicator = Instantiate(minimapIndicatorPrefab, transform);
-            
+            _minimapIndicator.transform.localPosition = new Vector3(0, 10, 0);
            SpriteRenderer spriteRenderer = _minimapIndicator.GetComponent<SpriteRenderer>();
             
         
