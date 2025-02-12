@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using SystemMiami.CombatRefactor;
+using UnityEngine;
 
 // Authors: Layla Hoey, Lee St Louis
 namespace SystemMiami.CombatSystem
@@ -8,6 +10,11 @@ namespace SystemMiami.CombatSystem
         [SerializeField] private int detectionRadius = 3;
 
         [HideInInspector] public bool PlayerInRange;
+
+        [Header("CombatAction Presets")]
+        [SerializeField] private List<NewAbilitySO> physicalSOs;
+        [SerializeField] private List<NewAbilitySO> magicalSOs;
+        [SerializeField] private List<ConsumableSO> consumableSOs;
 
         public override OverlayTile GetNewFocus()
         {
@@ -35,6 +42,11 @@ namespace SystemMiami.CombatSystem
                 );
 
             return pathToPlayerData.ForMovement.Count <= detectionRadius;
+        }
+
+        protected override void InitLoadout()
+        {
+            Loadout = new(physicalSOs, magicalSOs, consumableSOs, this);
         }
     }
 }

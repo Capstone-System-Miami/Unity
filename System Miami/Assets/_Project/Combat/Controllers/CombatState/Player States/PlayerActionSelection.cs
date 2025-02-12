@@ -16,29 +16,27 @@ namespace SystemMiami.CombatRefactor
         {
             base.OnEnter();
 
-            UI.MGR.RefactorSlotClicked += HandleSlotClick;
+            UI.MGR.SlotClicked += HandleSlotClick;
         }
 
         public override void Update()
         {
             // For the player, we update the focus every frame.
+            // Setting this as !canBeNull, so that when the
+            // player mouses over towards their abilities,
+            // the character focuses on the tile in front of them.
             combatant.UpdateFocus();
         }
 
         /// <summary>
-        /// TODO: Actually determine the correct CombatAction to
-        /// return based on the input. Right now it just returns
-        /// the first thing in the player's loadout, if there is
-        /// anything in there.
+        /// TODO: Test & ensure that this actually determines
+        /// the correct CombatAction to
+        /// return based on the input.
         /// </summary>
         /// <param name="slot"></param>
         private void HandleSlotClick(ActionQuickslot slot)
         {
-            if (combatant.Loadout.PhysicalAbilities == null) { Debug.LogWarning("physnull");return; }
-            if (!combatant.Loadout.PhysicalAbilities.Any()) { Debug.LogWarning("physnone"); return; }
-            if (combatant.Loadout.PhysicalAbilities[0] == null) { Debug.LogWarning("phys[0]null"); return; }
-
-            selectedCombatAction = combatant.Loadout.PhysicalAbilities[0];
+            selectedCombatAction = slot.CombatAction;
 
             slotBeenClicked = true;
         }

@@ -7,22 +7,34 @@ namespace SystemMiami.CombatRefactor
     // input delegates class?
     public abstract class ActionEquipped : CombatantState
     {
-        protected CombatAction combatAction;
+        protected CombatAction selectedCombatAction;
+        protected CombatAction requestedReEquip;
+
+        protected Conditions canSelectTile = new();
+        protected Conditions canReEquip = new();
 
         public ActionEquipped(Combatant combatant, CombatAction combatAction)
             : base(combatant, Phase.Action)
         {
-            this.combatAction = combatAction;
+            this.selectedCombatAction = combatAction;
         }
 
         public override void OnEnter()
         {
             base.OnEnter();
 
+            /// Directly calling GetNewFocus, rather than
+            /// reading the event. This way we can know if 
+            /// the mouse is actually over the board or not.
+            canSelectTile.Add( () => combatant.GetNewFocus() != null);
+
+            canReEquip.Add( () => selectedCombatAction != null);
+            canReEquip.Add( () => requestedReEquip != null);
+
             /// Subscribe to FocusTile events
             combatant.FocusTileChanged += HandleFocusTileChanged;
 
-            combatAction.Equip();
+            selectedCombatAction.Equip();
 
             InputPrompts =
                 "Hover over a tile to aim.\n" +
@@ -38,32 +50,45 @@ namespace SystemMiami.CombatRefactor
 
             if (Input.GetKeyDown(KeyCode.Keypad7))
             {
-                combatAction.Reportback();
+                selectedCombatAction.Reportback();
             }
         }
 
         public override void MakeDecision()
         {
+            if (SelectTileRequested())
+            {
+                if (canSelectTile.AllMet())
+                {
+                    SwitchState(factory.ActionConfirmation(selectedCombatAction));
+                    return;
+                }
+            }
+
             if (UnequipRequested())
             {
                 SwitchState(factory.ActionSelection());
                 return;
             }
 
-            if (SelectTileRequested())
+            if (ReEquipRequested())
             {
-                SwitchState(factory.ActionConfirmation(combatAction));
-                return;
+                if (canReEquip.AllMet())
+                {
+                    SwitchState(factory.ActionEquipped(requestedReEquip));
+                    return;
+                }
             }
         }
 
         public override void OnExit()
         {
             base.OnExit();
-            combatAction.Unequip();
+            selectedCombatAction.Unequip();
             combatant.FocusTileChanged -= HandleFocusTileChanged;
         }
 
+        protected abstract bool ReEquipRequested();
         protected abstract bool SelectTileRequested();
         protected abstract bool UnequipRequested();
 

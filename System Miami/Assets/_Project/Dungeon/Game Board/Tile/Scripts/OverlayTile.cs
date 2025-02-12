@@ -193,8 +193,6 @@ namespace SystemMiami
         {
             _targetColor.Set(color);
             _customHighlight = true;
-
-            if (color == Color.blue) { Debug.LogError("Blue boi");}
         }
 
         public void UnHighlight()
@@ -240,34 +238,34 @@ namespace SystemMiami
         public string nameMessageForDB { get { return gameObject.name; } set { ; } }
         public void SubscribeTo(ref EventHandler<TargetingEventArgs> combatActionEvent)
         {
-            Debug.LogWarning(
-                $"inside {gameObject}'s SUBSCRIBE to action fn\n" +
-                $"Pre subscription, sp assume Invocation list len is 0.");
+            //Debug.LogWarning(
+            //    $"inside {gameObject}'s SUBSCRIBE to action fn\n" +
+            //    $"Pre subscription, sp assume Invocation list len is 0.");
 
             combatActionEvent += HandleTargetingEvent;
 
 
-            Debug.LogWarning(
-                $"inside {gameObject}'s SUBSCRIBE to action fn\n" +
-                $"Invocation list len: {combatActionEvent?.GetInvocationList().Length}");
+            //Debug.LogWarning(
+            //    $"inside {gameObject}'s SUBSCRIBE to action fn\n" +
+            //    $"Invocation list len: {combatActionEvent?.GetInvocationList().Length}");
         }
 
         public void UnsubscribeTo(ref EventHandler<TargetingEventArgs> combatActionEvent)
         {
-            Debug.LogWarning(
-                $"inside {gameObject}'s UNSUBSCRIBE to action fn\n" +
-                $"Pre subscription, sp assume Invocation list len is 0.");
+            //Debug.LogWarning(
+            //    $"inside {gameObject}'s UNSUBSCRIBE to action fn\n" +
+            //    $"Pre subscription, sp assume Invocation list len is 0.");
 
             combatActionEvent -= HandleTargetingEvent;
 
-            Debug.LogWarning(
-                $"inside {gameObject}'s UNSUBSCRIBE to action fn\n" +
-                $"Invocation list len: {combatActionEvent?.GetInvocationList().Length}");
+            //Debug.LogWarning(
+            //    $"inside {gameObject}'s UNSUBSCRIBE to action fn\n" +
+            //    $"Invocation list len: {combatActionEvent?.GetInvocationList().Length}");
         }
 
         public void HandleTargetingEvent(object sender, TargetingEventArgs args)
         {
-            Debug.LogWarning($"Handling Targeting Event of type {args.EventType}");
+            //Debug.LogWarning($"Handling Targeting Event of type {args.EventType}");
             switch (args.EventType)
             {
                 case TargetingEventType.CANCELLED:
@@ -296,25 +294,34 @@ namespace SystemMiami
             }
         }
 
+        /// <summary>
+        /// TODO
+        /// </summary>
         public void PreviewOn()
         {
             Debug.Log(
                 $"{gameObject.name} wants to START" +
-                $"displaying a preivew.");
+                $"displaying a preivew. This has not yet been" +
+                $"implemented on OverlayTile", this);
         }
 
+        /// <summary>
+        /// TODO
+        /// </summary>
         public void PreviewOff()
         {
             Debug.Log(
-                $"{gameObject.name} wants to STOP" +
-                $"displaying a preivew.");
+                $"{gameObject.name} wants to START" +
+                $"displaying a preivew. This has not yet been" +
+                $"implemented on OverlayTile", this);
         }
 
         public void ApplyCombatAction()
         {
             Debug.Log(
                 $"{gameObject.name} wants to get some" +
-                $"subactions done to itself.");
+                $"subactions done to itself. This has not" +
+                $"yet been implemented on OverlayTile", this);
         }
 
         public virtual IDamageReceiver GetDamageInterface()

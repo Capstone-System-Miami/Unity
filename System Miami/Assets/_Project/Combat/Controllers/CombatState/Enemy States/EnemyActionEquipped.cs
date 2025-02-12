@@ -15,6 +15,17 @@ namespace SystemMiami.CombatRefactor
         public EnemyActionEquipped(Combatant combatant, CombatAction combatAction)
             : base (combatant, combatAction) { }
 
+        /// <inheritdoc/>
+        /// <summary>
+        /// TODO: This might come into play later.
+        /// Maybe if they don't find the player in their targets,
+        /// they could equip another CombatAction?
+        /// </summary>
+        /// <returns></returns>
+        protected override bool ReEquipRequested()
+        {
+            return false;
+        }
 
         protected override bool SelectTileRequested()
         {

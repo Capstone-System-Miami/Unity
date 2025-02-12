@@ -1,6 +1,6 @@
 // Author: Layla Hoey
 using System;
-using SystemMiami.AbilitySystem;
+using SystemMiami.Management;
 using SystemMiami.ui;
 using UnityEngine;
 
@@ -35,20 +35,6 @@ namespace SystemMiami.CombatRefactor
 
         public SelectionState State { get { return _selectionState; } }
 
-        private void newStateAllFields(SelectionState state)
-        {
-            /*  _background.NewState(state);
-
-              _number.NewState(state);
-              _numberBKG.NewState(state); */
-
-            _icon.NewState(state);
-            /*  _iconBKG.NewState(state); 
-
-              _name.NewState(state);
-              _nameBKG.NewState(state); */
-        }
-
         public void Initialize(Type type, int index)
         {
             _index = index;
@@ -76,9 +62,9 @@ namespace SystemMiami.CombatRefactor
             _type = combatAction.GetType();
         }
 
-        public void OnClick()
+        public void Click()
         {
-            Management.UI.MGR.RefactorSlotClicked.Invoke(this);
+            UI.MGR.ClickSlot(this);
         }
 
         public void Select()
@@ -107,6 +93,20 @@ namespace SystemMiami.CombatRefactor
             _selectionState = SelectionState.DISABLED;
 
             newStateAllFields(SelectionState.DISABLED);
+        }
+
+        private void newStateAllFields(SelectionState state)
+        {
+            /*  _background.NewState(state);
+
+              _number.NewState(state);
+              _numberBKG.NewState(state); */
+
+            _icon.NewState(state);
+            /*  _iconBKG.NewState(state); 
+
+              _name.NewState(state);
+              _nameBKG.NewState(state); */
         }
     }
 }

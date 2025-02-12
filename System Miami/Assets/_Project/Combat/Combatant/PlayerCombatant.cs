@@ -1,6 +1,7 @@
 ﻿// Authors: Layla Hoey, Lee St Louis
 using System.Linq;
 using SystemMiami.CombatRefactor;
+using SystemMiami.Management;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem
@@ -15,17 +16,37 @@ namespace SystemMiami.CombatSystem
         /// </summary>
         public override OverlayTile GetNewFocus()
         {
-            RaycastHit2D? mouseHit = getMouseHitInfo();
-            OverlayTile mouseTile = getTileFromRaycast(mouseHit);
+            RaycastHit2D? mouseHit = GetMouseHitInfo();
+            OverlayTile mouseTile = GetTileFromRaycast(mouseHit);
 
             return mouseTile;
+        }
+
+        /// <summary>
+        /// Asks <see cref="UI"/> to create a loadout for this
+        /// combatant. When <see cref="UI"/> is done, it will raise
+        /// an event which combatants subscribe to during OnEnable().
+        /// <para>
+        /// This Method should be called during start.</para>
+        /// <para>
+        /// See <see cref="UI.CombatantLoadoutCreated"/></para>
+        /// <para>
+        /// See also <seealso cref="Combatant.HandleLoadoutCreated(Loadout, Combatant)"/>
+        /// </para>
+        /// </summary>
+        protected override void InitLoadout()
+        {
+            UI.MGR.CreatePlayerLoadout(this);
         }
 
         /// <summary>
         /// Gets the raycastHit info for whatever
         /// the mouse is currently over.
         /// </summary>
-        private RaycastHit2D? getMouseHitInfo()
+        /// <returns>
+        /// A <c>nullable</c>-type <see cref="RaycastHit2D"/>
+        /// </returns>
+        private RaycastHit2D? GetMouseHitInfo()
         {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector3 mousePos2d = new Vector2(mousePos.x, mousePos.y);
@@ -42,7 +63,10 @@ namespace SystemMiami.CombatSystem
         /// either the tile found within the Hit,
         /// or null if no tile was found in the Hit.
         /// </summary>
-        private OverlayTile getTileFromRaycast(RaycastHit2D? hit)
+        /// <returns>
+        /// The <see cref="OverlayTile"/> hit by the 
+        /// <see cref="RaycastHit2D"/>, (IF ANY)</returns>
+        private OverlayTile GetTileFromRaycast(RaycastHit2D? hit)
         {
             return hit.HasValue 
                 ? hit.Value.collider.gameObject.GetComponent<OverlayTile>()

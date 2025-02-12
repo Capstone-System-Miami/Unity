@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using SystemMiami.AbilitySystem;
 using SystemMiami.CombatRefactor;
-using SystemMiami.Enums;
+using SystemMiami.Management;
 using SystemMiami.Utilities;
 using UnityEngine;
 
@@ -25,15 +25,6 @@ namespace SystemMiami.CombatSystem
         [Header("Settings"), Space(10)]
         [SerializeField] private bool _printUItoConsole;
         [SerializeField] private float _movementSpeed;
-
-        [Header("CombatAction Presets")]
-        // Eventually, these will move.
-        // For the player, they will move to their Inventory,
-        // And for enemies, they will move to their derived class.
-        // vvvvvvvvvvvvvvvvvvvvvvv
-        [SerializeField] private List<NewAbilitySO> physical;
-        [SerializeField] private List<NewAbilitySO> magical;
-        [SerializeField] private List<ConsumableSO> consumable;
         #endregion Serialized Vars
 
 
@@ -136,8 +127,6 @@ namespace SystemMiami.CombatSystem
                 previousFocus = focusTile;
                 focusTile = value;
                 OnFocusTileChanged();
-
-              
             }
         }
         public DirectionContext CurrentDirectionContext
@@ -159,7 +148,7 @@ namespace SystemMiami.CombatSystem
         }
 
         // Loadout
-        public Loadout Loadout { get; private set; }
+        public Loadout Loadout { get; protected set; }
         public CombatAction SelectedAbility { get; set; }
 
         #endregion Properties
@@ -187,12 +176,23 @@ namespace SystemMiami.CombatSystem
 
         }
 
+        private void OnEnable()
+        {
+            UI.MGR.CombatantLoadoutCreated += HandleLoadoutCreated;
+        }
+
+
+        private void OnDisable()
+        {
+            UI.MGR.CombatantLoadoutCreated -= HandleLoadoutCreated;
+        }
+
         protected virtual void Start()
         {
-            initResources();
-            initLoadout();
-            initDirection();
-            initStateMachine();
+            InitResources();
+            InitLoadout();
+            InitDirection();
+            InitStateMachine();
         }
 
         private void Update()
@@ -208,7 +208,7 @@ namespace SystemMiami.CombatSystem
 
         #region Construction
         //============================================================
-        private void initResources()
+        private void InitResources()
         {
             Health = new Resource(_stats.GetStat(StatType.MAX_HEALTH));
             Stamina = new Resource(_stats.GetStat(StatType.STAMINA));
@@ -216,12 +216,16 @@ namespace SystemMiami.CombatSystem
             Speed = new Resource(_stats.GetStat(StatType.SPEED));
         }
 
-        private void initLoadout()
+        protected abstract void InitLoadout();
+
+        private void HandleLoadoutCreated(Loadout loadout, Combatant combatant)
         {
-            Loadout = new(physical, magical, consumable, this);
+            if(combatant != this) { return; }
+
+            Loadout = loadout;
         }
 
-        private void initDirection()
+        private void InitDirection()
         {
             Vector2Int currentPos
                 = (Vector2Int)PositionTile.GridLocation;
@@ -233,7 +237,7 @@ namespace SystemMiami.CombatSystem
             UpdateAnimDirection();
         }
 
-        private void initStateMachine()
+        private void InitStateMachine()
         {
             stateFactory = new(this);
             currentState = stateFactory.Idle();
@@ -271,7 +275,7 @@ namespace SystemMiami.CombatSystem
         #region Tile Management
         //============================================================
         public void UpdateFocus()
-        {
+        {            
             FocusTile = GetNewFocus() ?? GetDefaultFocus();
         }
 

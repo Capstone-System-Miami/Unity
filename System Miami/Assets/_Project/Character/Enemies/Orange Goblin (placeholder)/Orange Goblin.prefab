@@ -211,10 +211,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0954a2eec1a6ef4eacf7b922aa8acda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _physical:
-  - {fileID: 11400000, guid: 70ebd8bea6e07d94faaad738e975bd9f, type: 2}
-  _magical: []
-  animController: {fileID: 0}
 --- !u!114 &920910292413876716
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -229,10 +225,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _colorTag: {r: 1, g: 0.28759372, b: 0.25943398, a: 1}
   _printUItoConsole: 1
-  _movementSpeed: 2
-  IsDamageable: 1
-  IsHealable: 1
-  IsMovable: 1
-  IsStunned: 0
-  IsInvisible: 0
-  detectionRadius: 3
+  _movementSpeed: 2.5
+  detectionRadius: 4
+  PlayerInRange: 0
+  physicalSOs:
+  - {fileID: 11400000, guid: 3c00588e6fc198640adfd59c9d3275cc, type: 2}
+  magicalSOs: []
+  consumableSOs: []

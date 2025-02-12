@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using SystemMiami.CombatSystem;
+using SystemMiami.Management;
 using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
@@ -13,6 +14,9 @@ namespace SystemMiami.CombatRefactor
             { get; private set; } = new();
         public List<Consumable> Consumables
             { get; private set; } = new();
+
+        public List<CombatAction> AllCombatActions
+        {get; private set; } = new();
 
         private Combatant user;
 
