@@ -226,8 +226,9 @@ namespace SystemMiami.CombatRefactor
             PreExecution();
             yield return null;
 
-            OnTargetingEvent(TargetingEventType.EXECUTING);
-            yield return null;
+            RuntimeAnimatorController temp = User.Animator.runtimeAnimatorController;
+
+            User.Animator.runtimeAnimatorController = OverrideController;
 
             CountdownTimer timer = new(User, 2f);
             timer.Start();
@@ -246,6 +247,11 @@ namespace SystemMiami.CombatRefactor
                 }
                 yield return null;
             } while (!timer.IsFinished);
+
+            OnTargetingEvent(TargetingEventType.EXECUTING);
+            yield return null;
+
+            User.Animator.runtimeAnimatorController = temp;
 
             OnTargetingEvent(TargetingEventType.COMPLETED);
             yield return null;
