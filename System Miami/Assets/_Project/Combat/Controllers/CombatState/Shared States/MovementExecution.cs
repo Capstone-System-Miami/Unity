@@ -45,6 +45,10 @@ namespace SystemMiami.CombatRefactor
             /// selection state
             actionSelectionConditions.Add( () => !pathToConsume.Any() );
 
+            /// Set the controller to the walking override
+            combatant.Animator.runtimeAnimatorController
+                = combatant.AnimControllerWalking;
+
             InputPrompts = 
                 "Executing Movement.\n";
         }
@@ -98,6 +102,10 @@ namespace SystemMiami.CombatRefactor
         public override void OnExit()
         {
             path.UnDrawAll();
+
+            /// Set the animator back to idle.
+            combatant.Animator.runtimeAnimatorController
+                = combatant.AnimControllerIdle;
         }
     }
 }

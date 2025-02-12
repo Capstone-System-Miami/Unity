@@ -5,6 +5,7 @@ using SystemMiami.AbilitySystem;
 using SystemMiami.CombatRefactor;
 using SystemMiami.Management;
 using SystemMiami.Utilities;
+using UnityEngine.Animations;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem
@@ -25,6 +26,11 @@ namespace SystemMiami.CombatSystem
         [Header("Settings"), Space(10)]
         [SerializeField] private bool _printUItoConsole;
         [SerializeField] private float _movementSpeed;
+
+        [Header("Animation")]
+        [SerializeField] private AnimatorOverrideController idleController;
+        [SerializeField] private AnimatorOverrideController walkingController;
+
         #endregion Serialized Vars
 
 
@@ -108,6 +114,8 @@ namespace SystemMiami.CombatSystem
 
         // Animator
         public Animator Animator { get { return _animator; } }
+        public AnimatorOverrideController AnimControllerIdle { get { return idleController; } }
+        public AnimatorOverrideController AnimControllerWalking { get { return walkingController; } }
 
         // Tile Management
         // TODO Should only be null if dead.
@@ -116,6 +124,7 @@ namespace SystemMiami.CombatSystem
             get { return positionTile; }
             set { positionTile = value; }
         }
+
         public OverlayTile FocusTile
         {
             get { return focusTile; }
@@ -129,6 +138,7 @@ namespace SystemMiami.CombatSystem
                 OnFocusTileChanged();
             }
         }
+
         public DirectionContext CurrentDirectionContext
         {
             get { return directionContext; }
@@ -167,13 +177,7 @@ namespace SystemMiami.CombatSystem
         //============================================================
         private void Awake()
         {
-            _stats = GetComponent<Stats>();
-
-            _renderer = GetComponent<SpriteRenderer>();
-            _defaultColor = _renderer.color;
-
-            _animator = GetComponent<Animator>();
-
+            InitComponents();
         }
 
         private void OnEnable()
@@ -208,6 +212,16 @@ namespace SystemMiami.CombatSystem
 
         #region Construction
         //============================================================
+        private void InitComponents()
+        {
+            _stats = GetComponent<Stats>();
+
+            _renderer = GetComponent<SpriteRenderer>();
+            _defaultColor = _renderer.color;
+
+            _animator = GetComponent<Animator>();
+        }
+
         private void InitResources()
         {
             Health = new Resource(_stats.GetStat(StatType.MAX_HEALTH));
@@ -684,24 +698,14 @@ namespace SystemMiami.CombatSystem
         }
         protected virtual void OnDirectionChanged()
         {
+            UpdateAnimDirection();
+
             DirectionChanged?.Invoke(
                 this,
                 new DirectionChangedEventArgs(directionContext)
             );
         }
         #endregion Tile Event Raisers
-
-        public void RestoreResource(Resource resource, float amount)
-        {
-            print($"{name} gained {amount} {resource}.");
-            resource.Gain(amount);
-        }
-        public void InflictStatusEffect(StatusEffect effect)
-        {
-
-        }
-
-
     }
 
 

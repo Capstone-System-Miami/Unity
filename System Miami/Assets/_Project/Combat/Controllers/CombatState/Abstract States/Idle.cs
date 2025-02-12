@@ -8,6 +8,12 @@ namespace SystemMiami.CombatRefactor
         public Idle(Combatant combatant)
             : base(combatant, Phase.None) { }
 
+        public override void OnEnter()
+        {
+            base.OnEnter();
+            combatant.Animator.runtimeAnimatorController
+                = combatant.AnimControllerIdle;
+        }
 
         public override void MakeDecision()
         {
