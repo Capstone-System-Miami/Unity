@@ -3,7 +3,7 @@ using UnityEngine;
 namespace SystemMiami.CombatSystem
 {
     [System.Serializable]
-    [CreateAssetMenu(fileName = "New Status Effect", menuName = "Abilities/CombatActions/Inflict Status Effect")]
+    [CreateAssetMenu(fileName = "New Status Effect Subaction", menuName = "Combat Subaction/Inflict Status Effect")]
     public class InflictStatusEffect : CombatSubactionSO
     {
         [SerializeField] StatSetSO effectStats;

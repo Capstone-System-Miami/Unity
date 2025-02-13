@@ -15,8 +15,8 @@ namespace SystemMiami.CombatSystem
     /// </summary>
     [System.Serializable]
     [CreateAssetMenu(
-        fileName = "New Status Effect",
-        menuName = "Abilities/CombatActions/Inflict Percent Status Effect")]
+        fileName = "New Precent Status Effect",
+        menuName = "Combat Subaction/Inflict Percent Status Effect")]
     public class InflictPercentStatusEffect : CombatSubactionSO
     {
         [SerializeField] StatSetSO effectStats;

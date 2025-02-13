@@ -2,7 +2,7 @@
 
 namespace SystemMiami.CombatRefactor
 {
-    [CreateAssetMenu(fileName = "New Ability", menuName = "Items/Consumable")]
+    [CreateAssetMenu(fileName = "New Consumable", menuName = "Combat Action/Consumable")]
     public class ConsumableSO : CombatActionSO
     {
         [Space(20)]

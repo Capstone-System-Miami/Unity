@@ -1,12 +1,10 @@
 // Authors: Layla Hoey
-using System.Collections.Generic;
-using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem
 {
     [System.Serializable]
-    [CreateAssetMenu(fileName = "New Push Action", menuName = "Abilities/CombatActions/Push")]
+    [CreateAssetMenu(fileName = "New Force Movement Subaction", menuName = "Combat Subaction/Force Movement")]
     public class ForceMovement : CombatSubactionSO
     {
         [SerializeField] private int distance;

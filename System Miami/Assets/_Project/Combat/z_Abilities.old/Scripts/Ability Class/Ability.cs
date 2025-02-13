@@ -8,7 +8,6 @@ using UnityEngine;
 
 namespace SystemMiami.Outdated
 {
-    [CreateAssetMenu(fileName = "New Ability", menuName = "Abilities/Ability")]
     public class Ability : ScriptableObject
     {
        // [Header("Basic Info")]

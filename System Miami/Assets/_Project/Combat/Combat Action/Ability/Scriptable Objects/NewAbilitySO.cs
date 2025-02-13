@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
 {
-    [CreateAssetMenu(fileName = "New Ability", menuName = "Abilities/Refactored Ability")]
+    [CreateAssetMenu(fileName = "New Ability", menuName = "Combat Action/Ability")]
     public class NewAbilitySO : CombatActionSO
     {
         [Space(20)]

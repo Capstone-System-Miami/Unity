@@ -6,7 +6,7 @@ namespace SystemMiami.CombatSystem
 {
     [CreateAssetMenu(
         fileName = "New Single Tile Pattern",
-        menuName = "Abilities/Targeting Pattern/Single-Tile")]
+        menuName = "Combat Subaction/Targeting Patterns/Single-Tile")]
     public class SingleTilePattern : TargetingPattern
     {
         public override TargetSet GetTargets(DirectionContext userDirection)

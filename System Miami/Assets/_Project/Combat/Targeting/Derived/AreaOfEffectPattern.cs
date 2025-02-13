@@ -8,7 +8,7 @@ namespace SystemMiami.CombatSystem
 {
     [CreateAssetMenu(
         fileName = "New AOE Pattern",
-        menuName = "Abilities/Targeting Pattern/Area of Effect")]
+        menuName = "Combat Subaction/Targeting Patterns/Area of Effect")]
     public class AreaOfEffectPattern : TargetingPattern
     {
         [Tooltip("Radius of the pattern, in Tiles.")]

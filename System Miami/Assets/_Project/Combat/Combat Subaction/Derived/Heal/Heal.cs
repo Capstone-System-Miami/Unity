@@ -1,11 +1,10 @@
 // Authors: Layla Hoey
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem
 {
     [System.Serializable]
-    [CreateAssetMenu(fileName = "New Heal Action", menuName = "Abilities/CombatActions/Heal")]
+    [CreateAssetMenu(fileName = "New Heal Subaction", menuName = "Combat Subaction/Heal")]
     public class Heal : CombatSubactionSO
     {
         [SerializeField] private float healAmount;
