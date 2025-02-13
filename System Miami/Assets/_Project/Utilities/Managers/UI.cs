@@ -1,16 +1,85 @@
 // Authors: Layla
 using System;
+using System.Linq;
+using SystemMiami.CombatRefactor;
+using SystemMiami.CombatSystem;
+using System.Collections.Generic;
 using SystemMiami.ui;
+using UnityEngine;
 
 namespace SystemMiami.Management
 {
     public class UI : Singleton<UI>
     {
-        public Action<AbilitySlot> SlotClicked;
+        public Action<ActionQuickslot> SlotClicked;
 
-        protected override void Awake()
+        [SerializeField] private CombatActionBar physicalAbilitiesBar;
+        [SerializeField] private CombatActionBar magicalAbilitiesBar;
+        [SerializeField] private CombatActionBar consumablesBar;
+
+
+        [Header("Player CombatAction Presets")]
+        // Eventually, these will move to the player's Inventory
+        // vvvvvvvvvvvvvvvvvvvvvvv
+        [SerializeField] private List<NewAbilitySO> physicalAbilitySOs;
+        [SerializeField] private List<NewAbilitySO> magicalAbilitySOs;
+        [SerializeField] private List<ConsumableSO> consumableSOs;
+
+        public Action<Loadout, Combatant> CombatantLoadoutCreated;
+
+        public void CreatePlayerLoadout(Combatant combatant)
         {
-            base.Awake();
+            OnCreatePlayerLoadout(combatant);
+        }
+
+        public void ClickSlot(ActionQuickslot slot)
+        {
+            physicalAbilitiesBar.DisableAllExcept(slot);
+            magicalAbilitiesBar.DisableAllExcept(slot);
+            consumablesBar.DisableAllExcept(slot);
+
+            // Raise event
+            OnSlotClicked(slot);
+        }
+
+        protected virtual void OnCreatePlayerLoadout(Combatant combatant)
+        {
+            Loadout combatantLoadout = new(
+                physicalAbilitySOs,
+                magicalAbilitySOs,
+                consumableSOs,
+                combatant);
+
+            if (combatant is PlayerCombatant)
+            {
+                FillLoadoutBars(combatantLoadout);
+            }
+
+            CombatantLoadoutCreated.Invoke(combatantLoadout, combatant);
+        }
+
+        protected virtual void OnSlotClicked(ActionQuickslot slot)
+        {
+            SlotClicked.Invoke(slot);
+        }
+
+        private void FillLoadoutBars(Loadout loadout)
+        {
+            List<CombatAction> convertedPhys
+                = loadout.PhysicalAbilities.Select(
+                    ability => (CombatAction)ability).ToList();
+
+            List<CombatAction> convertedMagical
+                = loadout.MagicalAbilities.Select(
+                    ability => (CombatAction)ability).ToList();
+
+            List<CombatAction> convertedConsumables
+                = loadout.Consumables.Select(
+                    ability => (CombatAction)ability).ToList();
+
+            physicalAbilitiesBar.FillWith(convertedPhys);
+            magicalAbilitiesBar.FillWith(convertedMagical);
+            consumablesBar.FillWith(convertedConsumables);
         }
     }
 }

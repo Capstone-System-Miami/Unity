@@ -2,19 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 namespace SystemMiami
 {
     public class PathFinder
     {
-        //finds shortest path between two overlay tiles
+        // Finds shortest path between two overlay tiles
         public List<OverlayTile> FindPath(OverlayTile start, OverlayTile end)
         {
             //tiles to explore
             List<OverlayTile> openList = new List<OverlayTile>();
             //tiles that have been explored
-            List<OverlayTile> closedList = new List<OverlayTile>();
+            HashSet<OverlayTile> closedList = new HashSet<OverlayTile>();
+
+            Dictionary<OverlayTile, OverlayTile> previousTilesMap = new();
 
             //adds starting tile to list
             openList.Add(start);
@@ -35,14 +36,14 @@ namespace SystemMiami
                 if(currentOverlayTile == end)
                 {
                     //finalize out path.
-                    return GetFinishedList(start, end);
+                    return GetFinishedList(start, end, previousTilesMap);
                 }
 
                 //get all neighbor tiles to current tile
-                var neighbourTiles = GetNeighbourTiles(currentOverlayTile);
+                List<OverlayTile> neighbourTiles = GetNeighbourTiles(currentOverlayTile);
 
                 //loop through eac
-                foreach (var neighbour in neighbourTiles)
+                foreach (OverlayTile neighbour in neighbourTiles)
                 {                    
                     // skip any tiles already explored
                     if (closedList.Contains(neighbour)) { continue; }
@@ -58,8 +59,8 @@ namespace SystemMiami
                     neighbour.G = GetManhattenDistance(start, neighbour);
                     neighbour.H = GetManhattenDistance(end, neighbour);
 
-                    //set the current tile as the parent of the neighbor (for path reconstrcution)
-                    neighbour.PreviousTile = currentOverlayTile;
+                    // Set the neighbor Key's Value to the current tile (for path reconstruction)
+                    previousTilesMap[neighbour] = currentOverlayTile;
 
                     //add neighbor to open list
                     if (!openList.Contains(neighbour))
@@ -74,8 +75,11 @@ namespace SystemMiami
             return new List<OverlayTile>();
         }
 
-        //reconstructs path by backtracking from end to start
-        private List<OverlayTile> GetFinishedList(OverlayTile start, OverlayTile end)
+        // Reconstructs path by backtracking from end to start
+        private List<OverlayTile> GetFinishedList(
+            OverlayTile start,
+            OverlayTile end,
+            Dictionary<OverlayTile, OverlayTile> previousTilesMap)
         {
             List<OverlayTile> finishedList = new List<OverlayTile>();
 
@@ -84,53 +88,61 @@ namespace SystemMiami
             while(currentTile != start)
             {
                 finishedList.Add(currentTile);
-                currentTile = currentTile.PreviousTile;
+                currentTile = previousTilesMap[currentTile];
             }
 
             finishedList.Reverse();
 
             return finishedList;
-         }
+        }
 
         private int GetManhattenDistance(OverlayTile start, OverlayTile neighbour)
         {
             return Mathf.Abs(start.GridLocation.x - neighbour.GridLocation.x) + Mathf.Abs(start.GridLocation.y - neighbour.GridLocation.y);
         }
 
-        public List<OverlayTile> GetNeighbourTiles(OverlayTile currentOverlayTile)
+        private List<OverlayTile> GetNeighbourTiles(OverlayTile currentOverlayTile)
         {
             var map = MapManager.MGR.map;
 
             List<OverlayTile> neighbours = new List<OverlayTile>();
+            Vector2Int locationToCheck;
 
-            //top
-            Vector2Int locationToCheck = new Vector2Int(
+            // Top
+            locationToCheck = new Vector2Int(
                 currentOverlayTile.GridLocation.x,
                 currentOverlayTile.GridLocation.y + 1);
+
             if(map.ContainsKey(locationToCheck))
             {
                 neighbours.Add(map[locationToCheck]);
             }
-            //Bottom
-             locationToCheck = new Vector2Int(
+
+            // Bottom
+            locationToCheck = new Vector2Int(
                 currentOverlayTile.GridLocation.x,
                 currentOverlayTile.GridLocation.y - 1);
+
             if (map.ContainsKey(locationToCheck))
             {
                 neighbours.Add(map[locationToCheck]);
             }
-            //Right
-             locationToCheck = new Vector2Int(
+
+            // Right
+            locationToCheck = new Vector2Int(
                 currentOverlayTile.GridLocation.x + 1,
                 currentOverlayTile.GridLocation.y);
+
             if (map.ContainsKey(locationToCheck))
             {
                 neighbours.Add(map[locationToCheck]);
             }
-            //Left
-             locationToCheck = new Vector2Int(
+
+            // Left
+            locationToCheck = new Vector2Int(
                 currentOverlayTile.GridLocation.x - 1,
                 currentOverlayTile.GridLocation.y);
+
             if (map.ContainsKey(locationToCheck))
             {
                 neighbours.Add(map[locationToCheck]);

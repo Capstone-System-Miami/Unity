@@ -5,7 +5,7 @@ namespace SystemMiami
 {
     public class StatSet
     {
-        private Dictionary<StatType, float> _dict = new Dictionary<StatType, float>();
+        private Dictionary<StatType, float> _dict = new();
 
         public StatSet()
         {
@@ -41,29 +41,6 @@ namespace SystemMiami
             _dict[StatType.MAX_HEALTH]      = statSet.MaxHealth;
             _dict[StatType.DMG_RDX]         = statSet.DamageRDX;
             _dict[StatType.SPEED]           = statSet.Speed;
-        }
-
-        public StatSet(int[] vals)
-        {
-            if (vals.Length != CharacterEnums.STATS_COUNT)
-            {
-                zero(ref vals);
-            }
-
-            foreach (StatType attr in _dict.Keys)
-            {
-                _dict[attr] = vals[(int)attr];
-            }
-        }
-
-        private void zero(ref int[] incoming)
-        {
-            incoming = new int[CharacterEnums.STATS_COUNT];
-
-            for (int i = 0; i < incoming.Length; i++)
-            {
-                incoming[i] = 0;
-            }
         }
 
         #region SETTERS/FORMULAS
@@ -143,7 +120,7 @@ namespace SystemMiami
         }
         #endregion // ^setters^
 
-        public float Get(StatType attr)
+        public float GetStat(StatType attr)
         {
             if (_dict.ContainsKey(attr))
             {

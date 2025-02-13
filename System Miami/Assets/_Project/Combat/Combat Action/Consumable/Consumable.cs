@@ -1,10 +1,14 @@
 using System.Collections;
+using System;
 using SystemMiami.CombatSystem;
+using System.Linq;
 
 namespace SystemMiami.CombatRefactor
 {
     public class Consumable : CombatAction
     {
+        public event Action<Consumable> Consumed = delegate{ };
+
         public readonly int MaxUses;
 
         private int usesRemaining;
@@ -28,21 +32,24 @@ namespace SystemMiami.CombatRefactor
         public Consumable(ConsumableSO preset, Combatant user)
             : base(
                   preset.Icon,
-                  preset.Actions,
+                  preset.Actions.ToList(),
                   preset.OverrideController,
                   user)
         {
             MaxUses = preset.Uses;
         }
 
-
-        public override IEnumerator Use()
+        protected override void PreExecution()
         {
-            performActions();
-
-            yield return null;
-
             usesRemaining--;
+        }
+
+        protected override void PostExecution()
+        {
+            if (usesRemaining <= 0)
+            {
+                Consumed?.Invoke(this);
+            }
         }
     }
 }

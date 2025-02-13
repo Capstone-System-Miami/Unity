@@ -430,11 +430,10 @@ GameObject:
   - component: {fileID: 8219263611542528465}
   - component: {fileID: 6386089713510983124}
   - component: {fileID: 4261404639173623324}
-  - component: {fileID: -487834630417795382}
-  - component: {fileID: -6597365728956606799}
+  - component: {fileID: 137947715004459473}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -484,8 +483,7 @@ MonoBehaviour:
   playerCamera: {fileID: 2773007214259317843}
   interactionUI: {fileID: 650297918678062704}
   dungeonComponents:
-  - {fileID: -487834630417795382}
-  - {fileID: -6597365728956606799}
+  - {fileID: 137947715004459473}
   neighborhoodSceneName: NEIGHBORHOOD
   dungeonSceneName: Dungeon
 --- !u!114 &2859284793658147475
@@ -607,7 +605,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9966b3c751b0d484a890e49dc32341fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _characterClass: 1
+  _characterClass: 0
   _baseAttributes:
   - {fileID: 11400000, guid: 8c9115a04c916e244bfdef36ea488f1f, type: 2}
   - {fileID: 11400000, guid: d19146937a49e1742ae279b06907ce80, type: 2}
@@ -639,15 +637,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0954a2eec1a6ef4eacf7b922aa8acda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _physical:
-  - {fileID: 11400000, guid: 0c7f450a52de53b4f9c332917f7d4cfc, type: 2}
-  - {fileID: 11400000, guid: 146ee7a517906464cb6712562b49fe47, type: 2}
-  _magical:
-  - {fileID: 11400000, guid: cfc9ccad38ef16c41bd2eda7877e8a30, type: 2}
-  - {fileID: 11400000, guid: dbd15121c6839b74e9cef4cb5a187157, type: 2}
-  - {fileID: 11400000, guid: b35a5b9b3040e524eb59c91d64d68170, type: 2}
-  - {fileID: 11400000, guid: f43504aa81fefc24582a02bbb095c7d5, type: 2}
-  animController: {fileID: 22100000, guid: decd93ce417d8f74fa9d4dc0cfe24f90, type: 2}
 --- !u!114 &5403784279387507798
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -670,7 +659,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6453553769002132252}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: bf4361dbd1b3bae4c8f67f0f1f85101e, type: 2}
   m_CullingMode: 0
@@ -763,7 +752,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.4988736, y: 0.16016328}
   m_EdgeRadius: 0
---- !u!114 &-487834630417795382
+--- !u!114 &137947715004459473
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -772,39 +761,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 6453553769002132252}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5dad0a304e458cf459016a52e1ee441a, type: 3}
+  m_Script: {fileID: 11500000, guid: e496e3e20fe77e6439ec6809d0c51888, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _colorTag: {r: 0.21688704, g: 0.6603774, b: 0.20870416, a: 1}
-  CurrentTile: {fileID: 0}
-  Animator: {fileID: 2662097473964725133, guid: bdbca1efcf89fd647b60b443969df89f, type: 3}
-  PlayerDirSprites:
-  - {fileID: -1891642137, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
-  - {fileID: 504766812, guid: 82236648256b77d4588c22a84d4da636, type: 3}
-  - {fileID: 1549921822, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
-  - {fileID: 1181817085, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
-  - {fileID: -1962472897, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
-  - {fileID: -663491783, guid: 82236648256b77d4588c22a84d4da636, type: 3}
-  - {fileID: -1403138823, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
-  - {fileID: 820659288, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
-  currentSprite: {fileID: 0}
-  IsDamageable: 1
-  IsHealable: 1
-  IsMovable: 1
-  IsStunned: 0
-  IsInvisible: 0
---- !u!114 &-6597365728956606799
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6453553769002132252}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0cd1c907f5a30504195dad71d0b41e5a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movementSpeed: 2
-  _endTurnKey: 113
-  _endPhaseKey: 101
+  _colorTag: {r: 0.6948949, g: 1, b: 0.5896226, a: 1}
+  _printUItoConsole: 1
+  _movementSpeed: 2
+  idleController: {fileID: 22100000, guid: decd93ce417d8f74fa9d4dc0cfe24f90, type: 2}
+  walkingController: {fileID: 22100000, guid: fa6e08b1c92be634090b672d4f4f3230, type: 2}
+  test: {fileID: 11400000, guid: 325584827e537574f87e9c204cceb703, type: 2}

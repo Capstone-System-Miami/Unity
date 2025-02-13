@@ -23,6 +23,8 @@ namespace SystemMiami
         //dictionary containing all tiles on map by their x, y coordinates
         public Dictionary<Vector2Int, OverlayTile> map;
 
+        public Vector2Int CenterPos { get; private set; }
+
         [SerializeField] private GameObject environment;
 
         private Dungeon dungeon;
@@ -109,11 +111,16 @@ namespace SystemMiami
             bounds = gameBoardTilemap.cellBounds;
 
             Debug.Log(
-                $"Bounds xmin {bounds.min.x} | xmax {bounds.max.x}\n" +
-                $"ymin {bounds.min.y} | ymax { bounds.max.y}\n" +
-                $"zmin { bounds.min.z} | zmax {bounds.max.z}"
+                $"Bounds\n" +
+                $"| xmin {bounds.min.x}\n" +
+                $"| xmax {bounds.max.x}\n" +
+                $"| ymin {bounds.min.y}\n" +
+                $"| ymax { bounds.max.y}\n" +
+                $"|zmin { bounds.min.z}\n" +
+                $"| zmax {bounds.max.z}"
                 );
 
+            CenterPos = GetCenter(bounds);
 
             // Looping through all of our tiles.
             // For each tile found in the tilemap, it instantiates an overlay tile
@@ -146,12 +153,24 @@ namespace SystemMiami
             }
         }
 
+        public bool TryGetTile(Vector2Int coordinates, out OverlayTile tile)
+        {
+            if (!map.ContainsKey(coordinates))
+            {
+                tile = null;
+                return false;
+            }
+
+            tile = map[coordinates];
+            return true;
+        }
+
         /// <summary>
         /// (Lee)
         /// Finds a random unblocked tile on the map.
         /// </summary>
         /// <returns>An unblocked OverlayTile or null if none are available.</returns>
-        public OverlayTile GetRandomUnblockedTile()
+        public OverlayTile GetRandomValidTile()
         {
             // Get all unblocked tiles
             List<OverlayTile> unblockedTiles = new List<OverlayTile>();
@@ -174,9 +193,34 @@ namespace SystemMiami
             return null;
         }
 
+        public bool TryPlaceOnTile(ITileOccupant occupant, OverlayTile tile)
+        {
+            if (!tile.ValidForPlacement)
+            {
+                Debug.LogError(
+                    $"Trying to place {occupant} " +
+                    $"on {tile.gameObject}. " +
+                    $"This placement is invalid.");
+                return false;
+            }
+
+            occupant.PositionTile?.ClearOccupant();
+
+            tile.SetOccupant(occupant);
+            return true;
+        }
+
         public Vector3 IsoToScreen(Vector3Int tileLocation)
         {
             return Coordinates.IsoToScreen(tileLocation, gridTilesHeight);
+        }
+
+        private Vector2Int GetCenter(BoundsInt bounds)
+        {
+            return new(
+                Mathf.RoundToInt(bounds.center.x),
+                Mathf.RoundToInt(bounds.center.y)
+                );
         }
     }
 }

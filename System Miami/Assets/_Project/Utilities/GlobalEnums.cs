@@ -2,9 +2,12 @@ using UnityEngine;
 
 namespace SystemMiami.Enums
 {
-    // An enum of directions
-    // Starting at the top center,
-    // And moving clockwise.
+    /// <summary>
+    /// An enum of ISOMETRIC directions,
+    /// starting from forward center,
+    /// ( i.e. coords (0, 1) )
+    /// moving clockwise.
+    /// </summary>
     public enum TileDir
     {
         FORWARD_C,
@@ -15,5 +18,17 @@ namespace SystemMiami.Enums
         BACKWARD_L,
         MIDDLE_L,
         FORWARD_L,
+    }
+
+    public enum ScreenDir
+    {
+        UP,
+        UP_R,
+        R,
+        DOWN_R,
+        DOWN_C,
+        DOWN_L,
+        L,
+        UP_L,
     }
 }

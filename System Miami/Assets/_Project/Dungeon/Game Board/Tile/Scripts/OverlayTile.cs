@@ -1,19 +1,29 @@
-// Author: Alec
+// Author: Alec, Layla
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using SystemMiami.CombatRefactor;
 using SystemMiami.CombatSystem;
 using UnityEngine;
 
 namespace SystemMiami
 {
-    public class OverlayTile : MonoBehaviour, IHighlightable
+    public class OverlayTile : MonoBehaviour, IHighlightable, ITargetable
     {
+        private readonly Vector3 offsetVector = new(0f, 0.0001f, 0f);
+
         #region PUBLIC VARS
         // ==================================
 
-        // ??
+        /// <summary>
+        /// TODO ???
+        /// </summary>
         public int G;
-        public int H;
 
-        public OverlayTile PreviousTile;
+        /// <summary>
+        /// TODO ???
+        /// </summary>
+        public int H;
 
         #endregion // PUBLIC VARS ===========
 
@@ -37,7 +47,8 @@ namespace SystemMiami
 
         private bool _hasObstacle;
 
-        private Combatant _currentCombatant;
+        private ITileOccupant occupant;
+        private Vector3 occupantPosition;
 
         private bool _isHovering;
 
@@ -45,6 +56,8 @@ namespace SystemMiami
         private bool _customHighlight;
 
         private StructSwitcher<Color> _targetColor;
+
+        private object eventLock = new object();
         
         #endregion // PRIVATE VARS ==========
 
@@ -57,47 +70,47 @@ namespace SystemMiami
         /// Cast this to Vector2Int to use it as a key
         /// for the map dict.
         /// </summary>
-        public Vector3Int GridLocation { get { return _gridLocation; } set { _gridLocation = value; } }
+        public Vector3Int GridLocation
+            { get { return _gridLocation; } set { _gridLocation = value; } }
+
+        public Vector3 OccupiedPosition
+            { get { return transform.position + offsetVector; } }
 
         /// <summary>
         /// Reference to the combatant currently occupying this tile
+        /// This is a getter property, and casts the ITileOccupier
         /// </summary>
-        public Combatant CurrentCombatant { get { return _currentCombatant; } }
-
-        /// <summary>
-        /// Whether or not the tile has an obstacle on it.
-        /// </summary>
-        public bool HasObstacle
-        {
-            get
-            {
-                return _hasObstacle;
-            }
-        }
+        public Combatant CurrentCombatant
+            { get { return occupant as Combatant; } }
 
         /// <summary>
         /// Whether or not the tile is occupied by a combatant.
         /// </summary>
         public bool Occupied
-        {
-            get
-            {
-                return _currentCombatant != null;
-            }
-        }
+            { get { return occupant != null; } }
+
+        public ITileOccupant Occupier
+            { get { return occupant; } }
 
         /// <summary>
         /// Whether something can be positioned onto the tile.
+        /// 
+        /// TODO
+        /// right now, this is just the opposite of
+        /// <see cref="Occupied"/>.
+        /// I'm not sure if we'll need to implement
+        /// logic for "holes"?? A hole isn't quite an
+        /// "Occupier", but it would definitely mean you
+        /// can't move there. So I'm leaving this property
+        /// here in case we need to add a condition
+        /// like <c>IsGround</c> or something.
         /// </summary>
-        public bool ValidForPlacement
-        {
-            get
-            {
-                return !HasObstacle && !Occupied;
-            }
-        }
+        public virtual bool ValidForPlacement
+            { get { return !Occupied; } }
 
-        // ??
+        /// <summary>
+        /// TODO ???
+        /// </summary>
         public int F { get { return G + H; } }
 
         #endregion // PROPERTIES ============
@@ -136,8 +149,200 @@ namespace SystemMiami
         #endregion // UNITY =================
 
 
-        #region VISIBILITY
+        #region Mouseover
         // ==================================
+        public void BeginHover(Combatant combatant)
+        {
+            //if (combatant.gameObject != PlayerManager.MGR.gameObject) { return; }
+
+            Highlight();
+
+            if (TargetedBy.Any())
+            {
+                PreviewOn();
+            }
+        }
+
+        public void EndHover(Combatant combatant)
+        {
+            //if (combatant.gameObject != PlayerManager.MGR.gameObject) { return; }
+
+            //if (_customHighlight)
+            //{
+            //    _targetColor.Revert();
+            //}
+            //else
+
+            UnHighlight();
+        }
+
+        #endregion Mouseover
+
+
+        #region IHighlightable
+        // ==================================
+
+        public void Highlight()
+        {
+            _isHighlighted = true;
+
+            //print ($"{name} highlight");
+        }
+
+        public void Highlight(Color color)
+        {
+            _targetColor.Set(color);
+            _customHighlight = true;
+        }
+
+        public void UnHighlight()
+        {
+            _isHighlighted = false;
+            _customHighlight = false;
+            //print($"{name} UN");
+        }
+
+        public GameObject GameObject()
+        {
+            return gameObject;
+        }
+
+        #endregion IHighlightable
+
+
+        /// <summary>
+        /// Positions a combatant on this tile.
+        /// If the combatant already has a CurrentTile,
+        /// this function calls RemoveCombatant() on
+        /// combatant's CurrentTile before setting it to
+        /// this tile.
+        /// </summary>
+        public void SetOccupant(ITileOccupant newOccupant)
+        {
+            if (!ValidForPlacement) { return; }
+
+            occupant = newOccupant;
+            occupant.PositionTile = this;
+            occupant.SnapToPositionTile();
+        }
+
+        public void ClearOccupant()
+        {
+            if (occupant == null) { return; }
+
+            occupant.PositionTile = null;
+            occupant = null;
+        }
+
+        public List<ISubactionCommand> TargetedBy { get; set; } = new();
+        public string nameMessageForDB { get { return gameObject.name; } set { ; } }
+        public void SubscribeTo(ref EventHandler<TargetingEventArgs> combatActionEvent)
+        {
+            //Debug.LogWarning(
+            //    $"inside {gameObject}'s SUBSCRIBE to action fn\n" +
+            //    $"Pre subscription, sp assume Invocation list len is 0.");
+
+            combatActionEvent += HandleTargetingEvent;
+
+
+            //Debug.LogWarning(
+            //    $"inside {gameObject}'s SUBSCRIBE to action fn\n" +
+            //    $"Invocation list len: {combatActionEvent?.GetInvocationList().Length}");
+        }
+
+        public void UnsubscribeTo(ref EventHandler<TargetingEventArgs> combatActionEvent)
+        {
+            //Debug.LogWarning(
+            //    $"inside {gameObject}'s UNSUBSCRIBE to action fn\n" +
+            //    $"Pre subscription, sp assume Invocation list len is 0.");
+
+            combatActionEvent -= HandleTargetingEvent;
+
+            //Debug.LogWarning(
+            //    $"inside {gameObject}'s UNSUBSCRIBE to action fn\n" +
+            //    $"Invocation list len: {combatActionEvent?.GetInvocationList().Length}");
+        }
+
+        public void HandleTargetingEvent(object sender, TargetingEventArgs args)
+        {
+            //Debug.LogWarning($"Handling Targeting Event of type {args.EventType}");
+            switch (args.EventType)
+            {
+                case TargetingEventType.CANCELLED:
+                    UnHighlight();
+                    break;
+
+                case TargetingEventType.STARTED:
+                    Highlight(Color.yellow + new Color(0, -0.2f, 0, 0));                    
+                    break;
+
+                case TargetingEventType.LOCKED:
+                    Highlight(Color.red);
+                    PreviewOn();
+                    break;
+                case TargetingEventType.EXECUTING:
+                    ApplyCombatAction();
+                    break;
+                case TargetingEventType.COMPLETED:
+                    break;
+                case TargetingEventType.REPORTBACK:
+                    Debug.Log("Im subbed", this);
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// TODO
+        /// </summary>
+        public void PreviewOn()
+        {
+            Debug.Log(
+                $"{gameObject.name} wants to START" +
+                $"displaying a preivew. This has not yet been" +
+                $"implemented on OverlayTile", this);
+        }
+
+        /// <summary>
+        /// TODO
+        /// </summary>
+        public void PreviewOff()
+        {
+            Debug.Log(
+                $"{gameObject.name} wants to START" +
+                $"displaying a preivew. This has not yet been" +
+                $"implemented on OverlayTile", this);
+        }
+
+        public void ApplyCombatAction()
+        {
+            Debug.Log(
+                $"{gameObject.name} wants to get some" +
+                $"subactions done to itself. This has not" +
+                $"yet been implemented on OverlayTile", this);
+        }
+
+        public virtual IDamageReceiver GetDamageInterface()
+        {
+            return null;
+        }
+
+        public virtual IHealReceiver GetHealInterface()
+        {
+            return null;
+        }
+
+        public virtual IForceMoveReceiver GetMoveInterface()
+        {
+            return null;
+        }
+
+        public virtual IStatusEffectReceiver GetStatusEffectInterface()
+        {
+            return null;
+        }
 
         private Color getHighlightedColor()
         {
@@ -155,7 +360,7 @@ namespace SystemMiami
         {
             if (Occupied)
             {
-                if (CurrentCombatant.Controller.IsMyTurn)
+                if (CurrentCombatant.IsMyTurn)
                 {
                     return _activeCombatantColor;
                 }
@@ -169,106 +374,5 @@ namespace SystemMiami
             return new Color(1, 1, 1, 0);
         }
 
-        #endregion // VISIBILITY ============
-
-
-        #region MOUSEOVER
-        // ==================================
-
-        public void BeginHover(PlayerController controller)
-        {
-            if (Occupied)
-            {
-                Highlight();
-                CurrentCombatant.Highlight();
-            }
-
-            if (!controller.IsMyTurn) { return; }
-
-            if (controller.HasActed) { return; }
-
-            Highlight();
-        }
-
-        public void EndHover(PlayerController controller)
-        {
-            if (_customHighlight)
-            {
-                _targetColor.Revert();
-            }
-            else
-            {
-                UnHighlight();
-            }
-
-            if (Occupied)
-            {
-                CurrentCombatant.UnHighlight();
-            }
-        }
-
-        #endregion // MOUSEOVER =============
-
-
-        #region HIGHLIGHTABLE
-        // ==================================
-
-        public void Highlight()
-        {
-            _isHighlighted = true;
-
-            //print ($"{name} highlight");
-        }
-
-        public void Highlight(Color color)
-        {
-            _targetColor.Set(color);
-            _customHighlight = true;
-
-            //print($"{name} cust highlight");
-        }
-
-        public void UnHighlight()
-        {
-            _isHighlighted = false;
-            _customHighlight = false;
-            //print($"{name} UN");
-        }
-
-        public GameObject GameObject()
-        {
-            return gameObject;
-        }
-
-        #endregion // HIGHLIGHTABLE =========
-
-
-        /// <summary>
-        /// Positions a combatant on this tile.
-        /// If the combatant already has a CurrentTile,
-        /// this function calls RemoveCombatant() on
-        /// combatant's CurrentTile before setting it to
-        /// this tile.
-        /// </summary>
-        public void PlaceCombatant(Combatant combatant)
-        {
-            combatant.transform.position = new Vector3(transform.position.x, transform.position.y + 0.0001f, transform.position.z);
-
-            // Let the old tile know that we're gone
-            if (combatant.CurrentTile != null)
-            {
-                combatant.CurrentTile.RemoveCombatant();
-            }
-
-            // Update new tile's current combatant
-            _currentCombatant = combatant;
-            combatant.CurrentTile = this;
-        }
-
-        public void RemoveCombatant()
-        {
-            _currentCombatant.CurrentTile = null;
-            _currentCombatant = null;
-        }
     }
 }

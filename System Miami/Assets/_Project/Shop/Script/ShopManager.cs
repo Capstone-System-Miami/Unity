@@ -52,6 +52,7 @@ public class ShopManager : MonoBehaviour
             coins = coins - Items[btnNo].baseCost;
             coinUI.text = "Coins: " + coins.ToString();
             CheckPurchaseable();
+            Debug.Log("You bought: " + Items[btnNo].title);
         }
     }
 
