@@ -6,10 +6,10 @@ namespace SystemMiami.LeeInventory
     [Serializable]
     public class Item
     {
-        public ItemData itemData;
+        public OutdatedOrDuplicates.ItemData itemData;
         public int stackSize;
     
-        public Item(ItemData item)
+        public Item(OutdatedOrDuplicates.ItemData item)
         {
             itemData = item;
             AddToStack();

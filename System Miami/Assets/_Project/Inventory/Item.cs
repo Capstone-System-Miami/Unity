@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SystemMiami.wtf
+namespace SystemMiami.LeeInventory.OutdatedOrDuplicates
 {
     [CreateAssetMenu(fileName = "New Item", menuName = "Inventory/Item")]
     public class Item : ScriptableObject

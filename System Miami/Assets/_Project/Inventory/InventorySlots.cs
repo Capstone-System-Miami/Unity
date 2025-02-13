@@ -4,9 +4,9 @@ namespace SystemMiami.LeeInventory
 {
     public class InventorySlot : MonoBehaviour
     {
-        public wtf.Item item; // Reference to the item in the slot
+        public OutdatedOrDuplicates.Item item; // Reference to the item in the slot
 
-        public void AddItem(wtf.Item newItem)
+        public void AddItem(OutdatedOrDuplicates.Item newItem)
         {
             item = newItem; // Assign the new item to the slot
             // Update the visual representation, e.g., set an icon

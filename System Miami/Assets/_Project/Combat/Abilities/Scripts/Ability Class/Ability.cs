@@ -6,7 +6,7 @@ using SystemMiami.Enums;
 using SystemMiami.Utilities;
 using UnityEngine;
 
-namespace SystemMiami.AbilitySystem
+namespace SystemMiami.Outdated
 {
     [CreateAssetMenu(fileName = "New Ability", menuName = "Abilities/Ability")]
     public class Ability : ScriptableObject

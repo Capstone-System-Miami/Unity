@@ -1,20 +1,19 @@
 using System.Collections.Generic;
+using SystemMiami.Management;
 using UnityEngine;
 
 namespace SystemMiami.LeeInventory
 {
-    public class InventoryManager : MonoBehaviour
+    public class InventoryManager : Singleton<InventoryManager>
     {
-        public static InventoryManager instance;
-
         public InventorySlot[] slots;
 
-        private void Awake()
+        protected override void Awake()
         {
-            instance = this;
+            base.Awake();
         }
 
-        public void Add(wtf.Item item)
+        public void Add(OutdatedOrDuplicates.Item item)
         {
             foreach (InventorySlot slot in slots)
             {

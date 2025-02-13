@@ -37,8 +37,8 @@ namespace SystemMiami.Dungeons
         [Space(5), SerializeField] private Pool<GameObject> _enemyPool;
 
         [Header("Rewards")]
-        [Space(5), SerializeField] private Pool<Ability> _abilityRewards;
-        [Space(5), SerializeField] private Pool<ItemData> _itemRewards;
+        [Space(5), SerializeField] private Pool<Outdated.Ability> _abilityRewards;
+        [Space(5), SerializeField] private Pool<LeeInventory.OutdatedOrDuplicates.ItemData> _itemRewards;
 
         [Space(5)]
         [SerializeField] private int _minXP;
@@ -53,9 +53,9 @@ namespace SystemMiami.Dungeons
 
             List<GameObject> enemies = _enemyPool.GetNewList();
 
-            List<Ability> abilities = _abilityRewards.GetNewList();
+            List<Outdated.Ability> abilities = _abilityRewards.GetNewList();
 
-            List<ItemData> items = _itemRewards.GetNewList();
+            List<LeeInventory.OutdatedOrDuplicates.ItemData> items = _itemRewards.GetNewList();
 
             return new DungeonData(prefab, enemies, abilities, items);
         }

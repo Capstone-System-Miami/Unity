@@ -12,8 +12,8 @@ namespace SystemMiami
     {
         public GameObject Prefab;
         public List<GameObject> Enemies;
-        public List<Ability> AbilityRewards;
-        public List<ItemData> ItemRewards;
+        public List<Outdated.Ability> AbilityRewards;
+        public List<LeeInventory.OutdatedOrDuplicates.ItemData> ItemRewards;
 
         private string _prefabInfo;
         private string[] _enemyInfo;
@@ -22,7 +22,7 @@ namespace SystemMiami
 
         public DungeonData() : this( null, new(), new(), new() ) { }
 
-        public DungeonData(GameObject prefab, List<GameObject> enemies, List<Ability> abilities, List<ItemData> items)
+        public DungeonData(GameObject prefab, List<GameObject> enemies, List<Outdated.Ability> abilities, List<LeeInventory.OutdatedOrDuplicates.ItemData> items)
         {
             Prefab = prefab;
             Enemies = enemies;
