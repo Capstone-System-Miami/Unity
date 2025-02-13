@@ -46,7 +46,7 @@ namespace SystemMiami.CombatSystem
 
         protected override void InitLoadout()
         {
-            Loadout = new(physicalSOs, magicalSOs, consumableSOs, this);
+           // Loadout = new(physicalSOs, magicalSOs, consumableSOs, this);
         }
     }
 }

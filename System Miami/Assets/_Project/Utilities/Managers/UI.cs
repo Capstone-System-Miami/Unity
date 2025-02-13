@@ -16,22 +16,7 @@ namespace SystemMiami.Management
         [SerializeField] private CombatActionBar physicalAbilitiesBar;
         [SerializeField] private CombatActionBar magicalAbilitiesBar;
         [SerializeField] private CombatActionBar consumablesBar;
-
-
-        [Header("Player CombatAction Presets")]
-        // Eventually, these will move to the player's Inventory
-        // vvvvvvvvvvvvvvvvvvvvvvv
-        [SerializeField] private List<NewAbilitySO> physicalAbilitySOs;
-        [SerializeField] private List<NewAbilitySO> magicalAbilitySOs;
-        [SerializeField] private List<ConsumableSO> consumableSOs;
-
-        public Action<Loadout, Combatant> CombatantLoadoutCreated;
-
-        public void CreatePlayerLoadout(Combatant combatant)
-        {
-            OnCreatePlayerLoadout(combatant);
-        }
-
+        [SerializeField] private DatabaseSO database;
         public void ClickSlot(ActionQuickslot slot)
         {
             physicalAbilitiesBar.DisableAllExcept(slot);
@@ -42,22 +27,7 @@ namespace SystemMiami.Management
             OnSlotClicked(slot);
         }
 
-        protected virtual void OnCreatePlayerLoadout(Combatant combatant)
-        {
-            Loadout combatantLoadout = new(
-                physicalAbilitySOs,
-                magicalAbilitySOs,
-                consumableSOs,
-                combatant);
-
-            if (combatant is PlayerCombatant)
-            {
-                FillLoadoutBars(combatantLoadout);
-            }
-
-            CombatantLoadoutCreated.Invoke(combatantLoadout, combatant);
-        }
-
+       
         protected virtual void OnSlotClicked(ActionQuickslot slot)
         {
             SlotClicked.Invoke(slot);

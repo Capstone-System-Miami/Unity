@@ -36,7 +36,7 @@ namespace SystemMiami.CombatSystem
         /// </summary>
         protected override void InitLoadout()
         {
-            UI.MGR.CreatePlayerLoadout(this);
+           
         }
 
         /// <summary>

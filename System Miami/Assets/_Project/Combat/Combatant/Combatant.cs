@@ -182,13 +182,13 @@ namespace SystemMiami.CombatSystem
 
         private void OnEnable()
         {
-            UI.MGR.CombatantLoadoutCreated += HandleLoadoutCreated;
+            
         }
 
 
         private void OnDisable()
         {
-            UI.MGR.CombatantLoadoutCreated -= HandleLoadoutCreated;
+          
         }
 
         protected virtual void Start()
