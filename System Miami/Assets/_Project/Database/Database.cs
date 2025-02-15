@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace SystemMiami
 {
-   
+    [CreateAssetMenu(fileName = "Database", menuName = "Game Database")]
     public class Database : Singleton<Database>
     {
        public static Database instance;

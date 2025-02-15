@@ -11,7 +11,7 @@ namespace SystemMiami.Management
         public List<int> OwnedAbilityIDs { get; private set; } = new();
         public List<int> OwnedConsumableIDs { get; private set; } = new();
         
-        private DatabaseSO database;
+        private Database database;
         private Combatant user;
 
         // The actively equipped items
@@ -20,7 +20,7 @@ namespace SystemMiami.Management
         /// <summary>
         /// Constructs the Inventory and an empty Loadout.
         /// </summary>
-        public Inventory(DatabaseSO database, Combatant user)
+        public Inventory(Database database, Combatant user)
         {
             this.database = database;
             this.user = user;

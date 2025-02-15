@@ -1,72 +1,127 @@
 using System.Collections.Generic;
+using System.Linq;
 using SystemMiami.CombatSystem;
+using SystemMiami.Management;
 using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
 {
     public class Loadout
     {
-        public List<AbilityPhysical> PhysicalAbilities { get; private set; } = new();
-        public List<AbilityMagical> MagicalAbilities { get; private set; } = new();
-        public List<Consumable> Consumables { get; private set; } = new();
-        public List<CombatAction> AllCombatActions { get; private set; } = new();
+        public List<AbilityPhysical> PhysicalAbilities
+            { get; private set; } = new();
+        public List<AbilityMagical> MagicalAbilities
+            { get; private set; } = new();
+        public List<Consumable> Consumables
+            { get; private set; } = new();
+
+        public List<CombatAction> AllCombatActions
+        {get; private set; } = new();
 
         private Combatant user;
-        private DatabaseSO database;
 
         #region Construction
-        public Loadout(DatabaseSO database, Combatant user, List<int> abilityIDs, List<int> consumableIDs)
+        // ========================================================
+        public Loadout(
+            List<NewAbilitySO> physicalPresets,
+            List<NewAbilitySO> magicalPresets,
+            List<ConsumableSO> consumablePresets,
+            Combatant user)
         {
-            this.database = database;
             this.user = user;
 
-            PhysicalAbilities = LoadPhysicalAbilities(abilityIDs);
-            MagicalAbilities = LoadMagicalAbilities(abilityIDs);
-            Consumables = LoadConsumables(consumableIDs);
+            PhysicalAbilities = ConvertPhysical(physicalPresets);
 
-            // Subscribe consumables to consumption event
-            Consumables.ForEach(consumable => consumable.Consumed += HandleConsume);
+            MagicalAbilities = ConvertMagical(magicalPresets);
+
+            Consumables = ConvertConsumable(consumablePresets);
+
+            Consumables.ForEach(consumable
+                => consumable.Consumed += HandleConsume);
         }
 
-        private List<AbilityPhysical> LoadPhysicalAbilities(List<int> abilityIDs)
+        private List<AbilityPhysical> ConvertPhysical(List<NewAbilitySO> presets)
         {
             List<AbilityPhysical> result = new();
-            foreach (int id in abilityIDs)
+
+            if (presets == null)
             {
-                CombatAction instance = database.CreateInstance(id, user);
-                if (instance is AbilityPhysical physicalAbility)
-                {
-                    result.Add(physicalAbility);
-                }
+                Debug.LogWarning(
+                    $"The preset list in {this} was null" +
+                    $"when assigning Physical Abilities. " +
+                    $"Returning an empty list");
+                return new();
             }
+
+            foreach (NewAbilitySO preset in presets)
+            {
+                if (preset.AbilityType != AbilitySystem.AbilityType.PHYSICAL)
+                {
+                    Debug.LogWarning(
+                        $"An error occurred in {this} " +
+                        $"when assigning Physical Abilities. " +
+                        $"Ensure that all presets are in " +
+                        $"The list corresponding to their type. " +
+                        $"Returning an empty list.");
+                    return new();
+                }
+
+                result.Add(new AbilityPhysical(preset, user));
+            }
+
             return result;
         }
 
-        private List<AbilityMagical> LoadMagicalAbilities(List<int> abilityIDs)
+        private List<AbilityMagical> ConvertMagical(List<NewAbilitySO> presets)
         {
             List<AbilityMagical> result = new();
-            foreach (int id in abilityIDs)
+
+            if (presets == null)
             {
-                CombatAction instance = database.CreateInstance(id, user);
-                if (instance is AbilityMagical magicalAbility)
-                {
-                    result.Add(magicalAbility);
-                }
+                Debug.LogWarning(
+                    $"The preset list in {this} was null" +
+                    $"when assigning Magical Abilities. " +
+                    $"Returning an empty list.");
+                return new();
             }
+
+            foreach (NewAbilitySO preset in presets)
+            {
+                if (preset.AbilityType != AbilitySystem.AbilityType.MAGICAL)
+                {
+                    Debug.LogWarning(
+                        $"An error occurred in {this} " +
+                        $"when assigning Magical Abilities. " +
+                        $"Ensure that all presets are in " +
+                        $"The list corresponding to their type. " +
+                        $"Returning an empty list.");
+                    return new();
+                }
+
+                result.Add(new AbilityMagical(preset, user));
+            }
+
             return result;
         }
 
-        private List<Consumable> LoadConsumables(List<int> consumableIDs)
+        private List<Consumable> ConvertConsumable(List<ConsumableSO> presets)
         {
             List<Consumable> result = new();
-            foreach (int id in consumableIDs)
+
+            if (presets == null)
             {
-                CombatAction instance = database.CreateInstance(id, user);
-                if (instance is Consumable consumable)
-                {
-                    result.Add(consumable);
-                }
+                Debug.LogWarning(
+                    $"The preset list in {this} was null " +
+                    $"when assigning Consumable Actions. " +
+                    $"Returning an empty list");
+                return result;
             }
+
+            foreach (ConsumableSO preset in presets)
+            {
+                result.Add(new Consumable(preset, user));
+            }
+
             return result;
         }
         #endregion Construction
@@ -77,11 +132,13 @@ namespace SystemMiami.CombatRefactor
             MagicalAbilities.ForEach(ability => ability.ReduceCooldown());
         }
 
-        private void HandleConsume(Consumable consumable)
+        protected void HandleConsume(Consumable consumable)
         {
-            if (!Consumables.Contains(consumable)) return;
+            if (!Consumables.Contains(consumable)) { return; }
+
             Consumables.Remove(consumable);
             consumable.Consumed -= HandleConsume;
         }
+
     }
 }
