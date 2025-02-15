@@ -10,5 +10,6 @@ namespace SystemMiami.CombatRefactor
         public AbilityType AbilityType;
         public float ResourceCost;
         public int CooldownTurns;
+        public Data Data;
     }
 }
