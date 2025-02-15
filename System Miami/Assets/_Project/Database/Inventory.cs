@@ -1,89 +1,36 @@
 using System.Collections.Generic;
 using UnityEngine;
-using SystemMiami.CombatRefactor;
-using SystemMiami.CombatSystem;
 
-namespace SystemMiami.Management
+namespace SystemMiami.CombatSystem //temp namespace
 {
-    public class Inventory
+    public class Inventory : MonoBehaviour
     {
-        // Tracks what the player OWNS
-        public List<int> OwnedAbilityIDs { get; private set; } = new();
-        public List<int> OwnedConsumableIDs { get; private set; } = new();
-        
-        private Database database;
-        private Combatant user;
+        [Header("IDs for Items in the Inventory")]
+        [SerializeField] private List<int> abilityIDs;     
+        [SerializeField] private List<int> consumableIDs;  
 
-        // The actively equipped items
-        public Loadout PlayerLoadout { get; private set; }
+        public List<int> AbilityIDs => abilityIDs;
+        public List<int> ConsumableIDs => consumableIDs;
 
-        /// <summary>
-        /// Constructs the Inventory and an empty Loadout.
-        /// </summary>
-        public Inventory(Database database, Combatant user)
+       
+        public void AddItem(int id)
         {
-            this.database = database;
-            this.user = user;
-
-            // Start with empty ID lists for loadout
-            PlayerLoadout = new Loadout(database, user, new List<int>(), new List<int>());
-        }
-
-        /// <summary>
-        /// Add an ability to the inventory, then automatically try to equip it.
-        /// </summary>
-        public void AddAbility(int abilityID)
-        {
-            if (!OwnedAbilityIDs.Contains(abilityID))
-                OwnedAbilityIDs.Add(abilityID);
-
-            EquipAbility(abilityID);
-        }
-
-        /// <summary>
-        /// Add a consumable to the inventory, then automatically try to equip it.
-        /// </summary>
-        public void AddConsumable(int consumableID)
-        {
-            if (!OwnedConsumableIDs.Contains(consumableID))
-                OwnedConsumableIDs.Add(consumableID);
-
-            EquipConsumable(consumableID);
-        }
-
-        /// <summary>
-        /// Equip an owned ability ID into the Loadout.
-        /// </summary>
-        public void EquipAbility(int abilityID)
-        {
-            CombatAction instance = database.CreateInstance(abilityID, user);
-            if (instance is AbilityPhysical physicalAbility 
-                && !PlayerLoadout.PhysicalAbilities.Contains(physicalAbility))
+            // Use the Database to figure out the type
+            Data data = Database.Instance.GetData(id, DataType.Ability);
+            if (data.ID != 0)
             {
-                PlayerLoadout.PhysicalAbilities.Add(physicalAbility);
+                abilityIDs.Add(id);
+                return;
             }
-            else if (instance is AbilityMagical magicalAbility 
-                && !PlayerLoadout.MagicalAbilities.Contains(magicalAbility))
+
+            data = Database.Instance.GetData(id, DataType.Consumable);
+            if (data.ID != 0)
             {
-                PlayerLoadout.MagicalAbilities.Add(magicalAbility);
+                consumableIDs.Add(id);
+                return;
             }
+
+            Debug.LogWarning($"No valid item with ID {id} found in the Database.");
         }
-
-        /// <summary>
-        /// Equip an owned consumable ID into the Loadout.
-        /// </summary>
-        public void EquipConsumable(int consumableID)
-        {
-            CombatAction instance = database.CreateInstance(consumableID, user);
-            if (instance is Consumable consumable 
-                && !PlayerLoadout.Consumables.Contains(consumable))
-            {
-                PlayerLoadout.Consumables.Add(consumable);
-            }
-        }
-
-        
-
-        // TODO Equipmods 
     }
 }

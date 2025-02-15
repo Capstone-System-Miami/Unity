@@ -8,6 +8,7 @@ namespace SystemMiami.CombatSystem
 {
     public class PlayerCombatant : Combatant
     {
+        private Inventory _inventory;
         public NewAbilitySO test;
 
         /// <summary>
@@ -36,7 +37,21 @@ namespace SystemMiami.CombatSystem
         /// </summary>
         protected override void InitLoadout()
         {
-           
+            if (!_inventory) _inventory = FindObjectOfType<PlayerInventory>();
+            if (!_inventory)
+            {
+                Debug.LogWarning("No PlayerInventory found!");
+                return;
+            }
+
+            // Suppose your inventory has separate lists for physical vs. magical
+            // or you just treat them all as "abilities." This example keeps them separate:
+            Loadout = new Loadout(
+                _inventory.AbilityIDs.ToList(),   // treat them as Physical for the example
+                new System.Collections.Generic.List<int>(), // empty Magical
+                _inventory.ConsumableIDs.ToList(),
+                this
+            );
         }
 
         /// <summary>

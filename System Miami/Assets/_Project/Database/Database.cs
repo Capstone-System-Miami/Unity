@@ -9,12 +9,13 @@ using UnityEngine;
 
 namespace SystemMiami
 {
-    [CreateAssetMenu(fileName = "Database", menuName = "Game Database")]
+   
     public class Database : Singleton<Database>
     {
-       public static Database instance;
+       public static Database Instance;
        [SerializeField] private List<NewAbilitySO> abilityEntries = new();
        [SerializeField] private List<ConsumableSO> consumableEntries = new();
+       [SerializeField] private List<NewAbilitySO> enemyAbilityEntries = new();
       // [SerializeField] private List<EquipmentModDatabaseEntry> equipmentEntries = new();
 
        private Dictionary<int, NewAbilitySO> abilityDatabase;
