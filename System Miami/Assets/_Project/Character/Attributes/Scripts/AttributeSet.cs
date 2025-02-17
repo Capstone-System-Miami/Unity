@@ -11,7 +11,7 @@ namespace SystemMiami
         {
             int len = CharacterEnums.ATTRIBUTE_COUNT;
 
-            for(int i = 0; i < len; i++)
+            for (int i = 0; i < len; i++)
             {
                 _dict[(AttributeType)i] = 0;
             }
@@ -63,7 +63,7 @@ namespace SystemMiami
 
         public void Set(AttributeType attr, int value)
         {
-            if(_dict.ContainsKey(attr))
+            if (_dict.ContainsKey(attr))
             {
                 _dict[attr] = value;
             }
