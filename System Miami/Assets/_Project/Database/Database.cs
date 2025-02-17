@@ -5,6 +5,7 @@ using SystemMiami.AbilitySystem;
 using SystemMiami.CombatRefactor;
 using SystemMiami.CombatSystem;
 using SystemMiami.Management;
+using UnityEditor;
 using UnityEngine;
 
 namespace SystemMiami
@@ -17,6 +18,7 @@ namespace SystemMiami
        [SerializeField] private List<NewAbilitySO> magicalAbilityEntries = new();
        [SerializeField] private List<ConsumableSO> consumableEntries = new();
        [SerializeField] private List<NewAbilitySO> enemyAbilityEntries = new();
+      
       // [SerializeField] private List<EquipmentModDatabaseEntry> equipmentEntries = new();
 
        private Dictionary<int, NewAbilitySO> physicalAbilityDatabase;
@@ -29,6 +31,65 @@ namespace SystemMiami
            Initialize();
        }
 
+       #if UNITY_EDITOR
+        [ContextMenu("Load All Abilities & Consumables")]
+        private void LoadAllSOsInProject()
+        {
+            
+           
+            string[] newAbilityGuids = AssetDatabase.FindAssets("t:NewAbilitySO");
+            var allAbilities = new List<NewAbilitySO>();
+
+            foreach (string guid in newAbilityGuids)
+            {
+                string path = AssetDatabase.GUIDToAssetPath(guid);
+                var ability = AssetDatabase.LoadAssetAtPath<NewAbilitySO>(path);
+                if (ability != null)
+                {
+                    allAbilities.Add(ability);
+                }
+            }
+            physicalAbilityEntries.Clear();
+            magicalAbilityEntries.Clear();
+            foreach (var ability in allAbilities)
+            {
+                switch (ability.AbilityType)
+                {
+                    case AbilityType.PHYSICAL:
+                        physicalAbilityEntries.Add(ability);
+                        break;
+
+                    case AbilityType.MAGICAL:
+                        magicalAbilityEntries.Add(ability);
+                        break;
+
+                    
+                }
+            }
+
+            
+            string[] consumableGuids = AssetDatabase.FindAssets("t:ConsumableSO");
+            var allConsumables = new List<ConsumableSO>();
+
+            foreach (string guid in consumableGuids)
+            {
+                string path = AssetDatabase.GUIDToAssetPath(guid);
+                var consumable = AssetDatabase.LoadAssetAtPath<ConsumableSO>(path);
+                if (consumable != null)
+                {
+                    allConsumables.Add(consumable);
+                }
+            }
+
+            consumableEntries = allConsumables;
+
+            // ================ 4) Mark the asset as dirty ================
+            EditorUtility.SetDirty(this);
+            // optional: AssetDatabase.SaveAssets();
+
+            Debug.Log("Database updated with all NewAbilitySO and ConsumableSO assets in the project.");
+        }
+#endif
        
        public void Initialize()
        {
@@ -39,13 +100,18 @@ namespace SystemMiami
            //TODO equipmentModDatabase = equipmentEntries.ToDictionary(entry => entry.ID);
        }
        
-       public Data GetData(int id, DataType type)
+
+       
+       public Data GetData(int id, ItemType type)
        {
-           return type switch
+           int IDType = id / 1000;
+           
+           return IDType switch
            {
-               DataType.PhysicalAbility => physicalAbilityDatabase.ContainsKey(id) ? physicalAbilityDatabase[id].Data : default,
-               DataType.MagicalAbility => magicalAbilityDatabase.ContainsKey(id) ? magicalAbilityDatabase[id].Data : default,
-               DataType.Consumable => consumableDatabase.ContainsKey(id) ? consumableDatabase[id].Data : default,
+               
+               1 => physicalAbilityDatabase.ContainsKey(id) ? physicalAbilityDatabase[id].Data : default,
+               2 => magicalAbilityDatabase.ContainsKey(id) ? magicalAbilityDatabase[id].Data : default,
+               3 => consumableDatabase.ContainsKey(id) ? consumableDatabase[id].Data : default,
                _ => default
            };
        }
@@ -80,12 +146,12 @@ namespace SystemMiami
        /// <summary>
        /// Gets the data type of that ID(for sorting purposes)
        /// </summary>
-       public DataType GetDataType(int id)
+       public ItemType GetDataType(int id)
        {
-           if (physicalAbilityDatabase.ContainsKey(id)) return DataType.PhysicalAbility;
-           if (magicalAbilityDatabase.ContainsKey(id)) return DataType.MagicalAbility;
-           if (consumableDatabase.ContainsKey(id)) return DataType.Consumable;
-           return DataType.Consumable; //fallback
+           if (physicalAbilityDatabase.ContainsKey(id)) return ItemType.PhysicalAbility;
+           if (magicalAbilityDatabase.ContainsKey(id)) return ItemType.MagicalAbility;
+           if (consumableDatabase.ContainsKey(id)) return ItemType.Consumable;
+           return ItemType.Consumable; //fallback
        }
 
     }

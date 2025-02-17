@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace SystemMiami
 {
@@ -9,13 +11,18 @@ namespace SystemMiami
     {
         public int ID;
         public Sprite Icon;
-        public string AbilityName;
+        public string Name;
         public string Description;
-        public DataType dataType;
+        [FormerlySerializedAs("dataType")] public ItemType itemType;
+       
 
     }
 
-    public enum DataType
+   
+    
+    //keep everything the same but still have shops take IShopItem in case we ever need it
+    
+    public enum ItemType
     {
         PhysicalAbility,
         MagicalAbility,

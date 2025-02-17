@@ -377,10 +377,10 @@ public class CombatActionCreatorWindow : EditorWindow
         newAbility.name = _abilityName;
 
 
-        newAbility.Data.AbilityName = _abilityName;
+        newAbility.Data.Name = _abilityName;
         newAbility.Data.Description = _abilityDescription;
         newAbility.Data.Icon = _abilityIcon;
-        newAbility.Data.dataType = DataType.PhysicalAbility;
+        newAbility.Data.itemType = ItemType.PhysicalAbility;
 
 
         newAbility.Icon = _abilityIcon;
@@ -390,10 +390,15 @@ public class CombatActionCreatorWindow : EditorWindow
         newAbility.OverrideController = _abilityAnimator;
 
 
-        if (newAbility.Data.ID == 0)
+        if (newAbility.Data.ID == 0 && newAbility.AbilityType == AbilityType.PHYSICAL)
         {
-            newAbility.Data.ID = _idDatabase.nextAbilityID;
-            _idDatabase.nextAbilityID++;
+            newAbility.Data.ID = _idDatabase.nextPhysicalAbilityID;
+            _idDatabase.nextPhysicalAbilityID++;
+        }
+        else if (newAbility.Data.ID == 0 && newAbility.AbilityType == AbilityType.MAGICAL)
+        {
+            newAbility.Data.ID = _idDatabase.nextMagicalAbilityID;
+            _idDatabase.nextMagicalAbilityID++;
         }
 
 
@@ -442,10 +447,10 @@ public class CombatActionCreatorWindow : EditorWindow
         ConsumableSO newConsumable = ScriptableObject.CreateInstance<ConsumableSO>();
         newConsumable.name = _consumableName;
 
-        newConsumable.Data.AbilityName = _consumableName;
+        newConsumable.Data.Name = _consumableName;
         newConsumable.Data.Description = _consumableDescription;
         newConsumable.Data.Icon = _consumableIcon;
-        newConsumable.Data.dataType = DataType.Consumable;
+        newConsumable.Data.itemType = ItemType.Consumable;
 
         newConsumable.Icon = _consumableIcon;
         newConsumable.Uses = _uses;

@@ -10,16 +10,21 @@ namespace SystemMiami.CombatSystem
         [SerializeField] private List<int> physicalAbilityIDs = new();
         [SerializeField] private List<int> consumableIDs = new();
         [SerializeField] private List<int> equipmentModIDs = new(); //TODO
+
+        public List<int> MagicalAbilityIDs { get => magicalAbilityIDs; private set => magicalAbilityIDs = value; }
+        public List<int> PhysicalAbilityIDs { get => physicalAbilityIDs; private set => physicalAbilityIDs = value; }
+        public List<int> ConsumableIDs { get => consumableIDs; private set => consumableIDs = value; }
+        public List<int> EquipmentModIDs { get => equipmentModIDs; private set => equipmentModIDs = value; }
+        
+        public event System.Action OnInventoryChanged;
+
         
 
-        public IReadOnlyList<int> MagicalAbilityIDs => magicalAbilityIDs;
-        public IReadOnlyList<int> PhysicalAbilityIDs => physicalAbilityIDs;
-        public IReadOnlyList<int> ConsumableIDs => consumableIDs;
-        public IReadOnlyList<int> EquipmentModIDs => equipmentModIDs; //TODO
+        
 
         public void AddAbility(int abilityID)
         {
-            if (Database.Instance.GetDataType(abilityID) == DataType.MagicalAbility)
+            if (Database.Instance.GetDataType(abilityID) == ItemType.MagicalAbility)
             {
                 magicalAbilityIDs.Add(abilityID);
             }
@@ -28,7 +33,7 @@ namespace SystemMiami.CombatSystem
                 Debug.LogError("Wrong ability type! or ID is not an Ability! ensure that the ID starts with 1000");
             }
 
-            if (Database.Instance.GetDataType(abilityID) == DataType.PhysicalAbility)
+            if (Database.Instance.GetDataType(abilityID) == ItemType.PhysicalAbility)
             {
                 physicalAbilityIDs.Add(abilityID);
             }
@@ -36,11 +41,13 @@ namespace SystemMiami.CombatSystem
             {
                 Debug.LogError("Wrong ability type! ID is not an Ability! ensure that the ID starts with 1000");
             }
+            
+            OnInventoryChanged?.Invoke();
         }
 
         public void AddConsumable(int consumableID)
         {
-            if (Database.Instance.GetDataType(consumableID) == DataType.Consumable)
+            if (Database.Instance.GetDataType(consumableID) == ItemType.Consumable)
             {
                 consumableIDs.Add(consumableID);
             }
