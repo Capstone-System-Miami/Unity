@@ -87,7 +87,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
     {
         playerPrefab = GameObject.Find("Player");
         InitializeStreetPoolDictionary(); // Prepare the dictionary mapping StreetTypes to StreetPools.
-        InitializeStreetGrid(); // SetAll up the grid data structure for street generation.
+        InitializeStreetGrid(); // SetAll up the grid itemData structure for street generation.
         StartStreetGenerationFromStreet(new Vector2Int(gridSizeX / 2, gridSizeY / 2)); // Begin street generation from the center of the grid.
     }
 
@@ -576,7 +576,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
         return report;
     }
 
-    // Class to hold data about each street in the grid
+    // Class to hold itemData about each street in the grid
     private class StreetData
     {
         public Vector2Int gridIndex; // The grid coordinates of this street.

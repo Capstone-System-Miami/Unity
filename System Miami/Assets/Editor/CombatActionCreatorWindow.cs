@@ -131,9 +131,9 @@ public class CombatActionCreatorWindow : EditorWindow
     {
         EditorGUILayout.LabelField("Create a New Ability", EditorStyles.boldLabel);
 
-        _abilityName = EditorGUILayout.TextField("Name (Data.AbilityName)", _abilityName);
-        _abilityDescription = EditorGUILayout.TextField("Description (Data.Description)", _abilityDescription);
-        _abilityIcon = (Sprite)EditorGUILayout.ObjectField("Icon (Data.Icon)", _abilityIcon, typeof(Sprite), false);
+        _abilityName = EditorGUILayout.TextField("Name (ItemData.AbilityName)", _abilityName);
+        _abilityDescription = EditorGUILayout.TextField("Description (ItemData.Description)", _abilityDescription);
+        _abilityIcon = (Sprite)EditorGUILayout.ObjectField("Icon (ItemData.Icon)", _abilityIcon, typeof(Sprite), false);
 
         _abilityType = (AbilityType)EditorGUILayout.EnumPopup("Ability Type", _abilityType);
         _resourceCost = EditorGUILayout.FloatField("Resource Cost", _resourceCost);
@@ -195,10 +195,10 @@ public class CombatActionCreatorWindow : EditorWindow
     {
         EditorGUILayout.LabelField("Create a New Consumable", EditorStyles.boldLabel);
 
-        _consumableName = EditorGUILayout.TextField("Name (Data.AbilityName)", _consumableName);
-        _consumableDescription = EditorGUILayout.TextField("Description (Data.Description)", _consumableDescription);
+        _consumableName = EditorGUILayout.TextField("Name (ItemData.AbilityName)", _consumableName);
+        _consumableDescription = EditorGUILayout.TextField("Description (ItemData.Description)", _consumableDescription);
         _consumableIcon =
-            (Sprite)EditorGUILayout.ObjectField("Icon (Data.Icon)", _consumableIcon, typeof(Sprite), false);
+            (Sprite)EditorGUILayout.ObjectField("Icon (ItemData.Icon)", _consumableIcon, typeof(Sprite), false);
 
         _uses = EditorGUILayout.IntField("Uses", _uses);
         _consumableAnimator = (AnimatorOverrideController)EditorGUILayout.ObjectField(
@@ -348,7 +348,7 @@ public class CombatActionCreatorWindow : EditorWindow
             }
             else
             {
-                // For other data types, you could extend logic or skip
+                // For other itemData types, you could extend logic or skip
                 EditorGUILayout.LabelField($"(Type {field.FieldType.Name} not supported)");
             }
 
@@ -377,10 +377,10 @@ public class CombatActionCreatorWindow : EditorWindow
         newAbility.name = _abilityName;
 
 
-        newAbility.Data.Name = _abilityName;
-        newAbility.Data.Description = _abilityDescription;
-        newAbility.Data.Icon = _abilityIcon;
-        newAbility.Data.itemType = ItemType.PhysicalAbility;
+        newAbility.itemData.Name = _abilityName;
+        newAbility.itemData.Description = _abilityDescription;
+        newAbility.itemData.Icon = _abilityIcon;
+        newAbility.itemData.itemType = ItemType.PhysicalAbility;
 
 
         newAbility.Icon = _abilityIcon;
@@ -390,14 +390,14 @@ public class CombatActionCreatorWindow : EditorWindow
         newAbility.OverrideController = _abilityAnimator;
 
 
-        if (newAbility.Data.ID == 0 && newAbility.AbilityType == AbilityType.PHYSICAL)
+        if (newAbility.itemData.ID == 0 && newAbility.AbilityType == AbilityType.PHYSICAL)
         {
-            newAbility.Data.ID = _idDatabase.nextPhysicalAbilityID;
+            newAbility.itemData.ID = _idDatabase.nextPhysicalAbilityID;
             _idDatabase.nextPhysicalAbilityID++;
         }
-        else if (newAbility.Data.ID == 0 && newAbility.AbilityType == AbilityType.MAGICAL)
+        else if (newAbility.itemData.ID == 0 && newAbility.AbilityType == AbilityType.MAGICAL)
         {
-            newAbility.Data.ID = _idDatabase.nextMagicalAbilityID;
+            newAbility.itemData.ID = _idDatabase.nextMagicalAbilityID;
             _idDatabase.nextMagicalAbilityID++;
         }
 
@@ -424,7 +424,7 @@ public class CombatActionCreatorWindow : EditorWindow
         EditorUtility.FocusProjectWindow();
         Selection.activeObject = newAbility;
 
-        Debug.Log($"Created new Ability '{_abilityName}' with ID: {newAbility.Data.ID}");
+        Debug.Log($"Created new Ability '{_abilityName}' with ID: {newAbility.itemData.ID}");
     }
 
 
@@ -447,18 +447,18 @@ public class CombatActionCreatorWindow : EditorWindow
         ConsumableSO newConsumable = ScriptableObject.CreateInstance<ConsumableSO>();
         newConsumable.name = _consumableName;
 
-        newConsumable.Data.Name = _consumableName;
-        newConsumable.Data.Description = _consumableDescription;
-        newConsumable.Data.Icon = _consumableIcon;
-        newConsumable.Data.itemType = ItemType.Consumable;
+        newConsumable.itemData.Name = _consumableName;
+        newConsumable.itemData.Description = _consumableDescription;
+        newConsumable.itemData.Icon = _consumableIcon;
+        newConsumable.itemData.itemType = ItemType.Consumable;
 
         newConsumable.Icon = _consumableIcon;
         newConsumable.Uses = _uses;
         newConsumable.OverrideController = _consumableAnimator;
 
-        if (newConsumable.Data.ID == 0)
+        if (newConsumable.itemData.ID == 0)
         {
-            newConsumable.Data.ID = _idDatabase.nextConsumableID;
+            newConsumable.itemData.ID = _idDatabase.nextConsumableID;
             _idDatabase.nextConsumableID++;
         }
 
@@ -484,7 +484,7 @@ public class CombatActionCreatorWindow : EditorWindow
         EditorUtility.FocusProjectWindow();
         Selection.activeObject = newConsumable;
 
-        Debug.Log($"Created new Consumable '{_consumableName}' with ID: {newConsumable.Data.ID}");
+        Debug.Log($"Created new Consumable '{_consumableName}' with ID: {newConsumable.itemData.ID}");
     }
 
 

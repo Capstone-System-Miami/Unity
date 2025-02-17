@@ -7,7 +7,7 @@ using UnityEngine.Serialization;
 namespace SystemMiami
 {
     [System.Serializable]
-    public struct Data
+    public struct ItemData
     {
         public int ID;
         public Sprite Icon;

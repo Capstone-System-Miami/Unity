@@ -30,7 +30,7 @@ namespace SystemMiami.CombatSystem
             allIDs.AddRange(inventory.PhysicalAbilityIDs);
             allIDs.AddRange(inventory.ConsumableIDs);
 
-            // clear all slots so they don't display old data.
+            // clear all slots so they don't display old itemData.
             for (int i = 0; i < inventorySlots.Count; i++)
             {
                 inventorySlots[i].ClearSlot();
@@ -45,7 +45,7 @@ namespace SystemMiami.CombatSystem
             for (int i = 0; i < itemCount; i++)
             {
                 int id = allIDs[i];
-               // Data data = Database.Instance.GetData(id);
+               // ItemData itemData = Database.Instance.GetData(id);
                 inventorySlots[i].itemID = id;
                 inventorySlots[i].UpdateSlot();
                 

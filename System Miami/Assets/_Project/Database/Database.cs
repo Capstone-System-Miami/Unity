@@ -13,7 +13,7 @@ namespace SystemMiami
    
     public class Database : Singleton<Database>
     {
-       public static Database Instance;
+      
        [SerializeField] private List<NewAbilitySO> physicalAbilityEntries = new();
        [SerializeField] private List<NewAbilitySO> magicalAbilityEntries = new();
        [SerializeField] private List<ConsumableSO> consumableEntries = new();
@@ -94,24 +94,38 @@ namespace SystemMiami
        public void Initialize()
        {
            // Convert lists to dictionaries 
-           physicalAbilityDatabase = physicalAbilityEntries.ToDictionary(entry => entry.Data.ID);
-           magicalAbilityDatabase = magicalAbilityEntries.ToDictionary(entry => entry.Data.ID);
-           consumableDatabase = consumableEntries.ToDictionary(entry => entry.Data.ID);
+           physicalAbilityDatabase = physicalAbilityEntries.ToDictionary(entry => entry.itemData.ID);
+           magicalAbilityDatabase = magicalAbilityEntries.ToDictionary(entry => entry.itemData.ID);
+           consumableDatabase = consumableEntries.ToDictionary(entry => entry.itemData.ID);
            //TODO equipmentModDatabase = equipmentEntries.ToDictionary(entry => entry.ID);
        }
        
 
        
-       public Data GetData(int id, ItemType type)
+       public ItemData GetDataWithType(int id, ItemType type)
+       {
+           int IDType = id / 1000;
+           
+           return type switch
+           {
+               
+               ItemType.PhysicalAbility => physicalAbilityDatabase.ContainsKey(id) ? physicalAbilityDatabase[id].itemData : default,
+               ItemType.MagicalAbility => magicalAbilityDatabase.ContainsKey(id) ? magicalAbilityDatabase[id].itemData : default,
+               ItemType.Consumable => consumableDatabase.ContainsKey(id) ? consumableDatabase[id].itemData : default,
+               _ => default
+           };
+       }
+       
+       public ItemData GetDataWithJustID(int id)
        {
            int IDType = id / 1000;
            
            return IDType switch
            {
                
-               1 => physicalAbilityDatabase.ContainsKey(id) ? physicalAbilityDatabase[id].Data : default,
-               2 => magicalAbilityDatabase.ContainsKey(id) ? magicalAbilityDatabase[id].Data : default,
-               3 => consumableDatabase.ContainsKey(id) ? consumableDatabase[id].Data : default,
+               1 => physicalAbilityDatabase.ContainsKey(id) ? physicalAbilityDatabase[id].itemData : default,
+               2 => magicalAbilityDatabase.ContainsKey(id) ? magicalAbilityDatabase[id].itemData : default,
+               3 => consumableDatabase.ContainsKey(id) ? consumableDatabase[id].itemData : default,
                _ => default
            };
        }
@@ -144,7 +158,7 @@ namespace SystemMiami
        }
        
        /// <summary>
-       /// Gets the data type of that ID(for sorting purposes)
+       /// Gets the itemData type of that ID(for sorting purposes)
        /// </summary>
        public ItemType GetDataType(int id)
        {

@@ -15,7 +15,7 @@ namespace SystemMiami.CombatSystem
         [SerializeField] private List<NewAbilitySO> physicalSOs;
         [SerializeField] private List<NewAbilitySO> magicalSOs;
         [SerializeField] private List<ConsumableSO> consumableSOs;
-
+       
         public override OverlayTile GetNewFocus()
         {
             Combatant targetPlayer = TurnManager.MGR.playerCharacter;
@@ -46,7 +46,7 @@ namespace SystemMiami.CombatSystem
 
         protected override void InitLoadout()
         {
-            Loadout = new(physicalSOs, magicalSOs, consumableSOs, this);
+            Loadout = new(_inventory, this);
         }
     }
 }

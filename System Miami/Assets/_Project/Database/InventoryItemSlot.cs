@@ -35,10 +35,10 @@ namespace SystemMiami
 
         public void UpdateSlot() 
         {
-            Data data = Database.Instance.GetData(itemID,itemType);
-            icon.sprite = data.Icon;
-            name.text = data.Name;
-            description.text = data.Description;
+            ItemData itemData = Database.MGR.GetDataWithType(itemID,itemType);
+            icon.sprite = itemData.Icon;
+            name.text = itemData.Name;
+            description.text = itemData.Description;
             
         }
         

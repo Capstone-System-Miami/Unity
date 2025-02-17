@@ -105,7 +105,7 @@ namespace SystemMiami
                 return;
             }
 
-            // Create a little data packet to send to the GAME.MGR
+            // Create a little itemData packet to send to the GAME.MGR
             _dungeonData = CurrentPreset.GetData(_excludedStyles);
 
             log.warn($"DungeonData being stored:\n {_dungeonData}");

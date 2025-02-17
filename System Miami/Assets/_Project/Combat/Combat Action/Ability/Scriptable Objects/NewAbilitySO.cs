@@ -1,5 +1,6 @@
 ﻿using SystemMiami.AbilitySystem;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace SystemMiami.CombatRefactor
 {
@@ -10,7 +11,7 @@ namespace SystemMiami.CombatRefactor
         public AbilityType AbilityType;
         public float ResourceCost;
         public int CooldownTurns;
-        public Data Data;
+        [FormerlySerializedAs("Data")] public ItemData itemData;
 
         
     }

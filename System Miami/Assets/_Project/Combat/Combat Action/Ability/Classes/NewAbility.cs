@@ -24,7 +24,7 @@ namespace SystemMiami.CombatRefactor
 
         protected NewAbility(NewAbilitySO preset, Combatant user, Resource targetResource)
             : base(
-                  preset.Icon,
+                  preset.Icon, preset.itemData.ID,
                   preset.Actions.ToList(),
                   preset.OverrideController,
                   user)
