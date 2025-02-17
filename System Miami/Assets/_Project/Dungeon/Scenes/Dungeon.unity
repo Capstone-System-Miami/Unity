@@ -781,9 +781,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
-          m_MethodName: Highlight
+        - m_Target: {fileID: 205865070}
+          m_TargetAssemblyTypeName: SystemMiami.ui.AbilitySlot, Assembly-CSharp
+          m_MethodName: SetPoupOnEnter
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -792,7 +792,7 @@ MonoBehaviour:
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
-          m_CallState: 0
+          m_CallState: 2
         - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
           m_MethodName: Highlight
@@ -869,9 +869,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
-          m_MethodName: UnHighlight
+        - m_Target: {fileID: 205865070}
+          m_TargetAssemblyTypeName: SystemMiami.ui.AbilitySlot, Assembly-CSharp
+          m_MethodName: SetPoupOnExit
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -880,7 +880,7 @@ MonoBehaviour:
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
-          m_CallState: 0
+          m_CallState: 2
         - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
           m_MethodName: UnHighlight
@@ -2334,9 +2334,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
-          m_MethodName: Highlight
+        - m_Target: {fileID: 373434554}
+          m_TargetAssemblyTypeName: SystemMiami.ui.AbilitySlot, Assembly-CSharp
+          m_MethodName: SetPoupOnEnter
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -2345,7 +2345,7 @@ MonoBehaviour:
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
-          m_CallState: 0
+          m_CallState: 2
         - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
           m_MethodName: Highlight
@@ -2422,9 +2422,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
-          m_MethodName: UnHighlight
+        - m_Target: {fileID: 373434554}
+          m_TargetAssemblyTypeName: SystemMiami.ui.AbilitySlot, Assembly-CSharp
+          m_MethodName: SetPoupOnExit
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -2433,7 +2433,7 @@ MonoBehaviour:
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
-          m_CallState: 0
+          m_CallState: 2
         - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
           m_MethodName: UnHighlight
@@ -3378,7 +3378,7 @@ GameObject:
   m_Component:
   - component: {fileID: 583478255}
   m_Layer: 5
-  m_Name: Ability housing panel
+  m_Name: Ability housing panel UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4040,6 +4040,85 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!1 &683775826
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 683775827}
+  - component: {fileID: 683775829}
+  - component: {fileID: 683775828}
+  m_Layer: 5
+  m_Name: ItemName
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &683775827
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 683775826}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1080186544}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: 1.1499786, y: 43.027}
+  m_SizeDelta: {x: -2.3000474, y: 38.8563}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &683775828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 683775826}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 30
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 3
+    m_MaxSize: 40
+    m_Alignment: 0
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 1
+    m_VerticalOverflow: 1
+    m_LineSpacing: 1
+  m_Text: New Text
+--- !u!222 &683775829
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 683775826}
+  m_CullTransparentMesh: 1
 --- !u!1001 &688736611
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4359,9 +4438,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
-          m_MethodName: Highlight
+        - m_Target: {fileID: 727794587}
+          m_TargetAssemblyTypeName: SystemMiami.ui.AbilitySlot, Assembly-CSharp
+          m_MethodName: SetPoupOnEnter
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -4370,7 +4449,7 @@ MonoBehaviour:
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
-          m_CallState: 0
+          m_CallState: 2
         - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
           m_MethodName: Highlight
@@ -4447,9 +4526,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
-          m_MethodName: UnHighlight
+        - m_Target: {fileID: 727794587}
+          m_TargetAssemblyTypeName: SystemMiami.ui.AbilitySlot, Assembly-CSharp
+          m_MethodName: SetPoupOnExit
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -4458,7 +4537,7 @@ MonoBehaviour:
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
-          m_CallState: 0
+          m_CallState: 2
         - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
           m_MethodName: UnHighlight
@@ -4856,9 +4935,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
-          m_MethodName: Highlight
+        - m_Target: {fileID: 791803162}
+          m_TargetAssemblyTypeName: SystemMiami.ui.AbilitySlot, Assembly-CSharp
+          m_MethodName: SetPoupOnEnter
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -4867,7 +4946,7 @@ MonoBehaviour:
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
-          m_CallState: 0
+          m_CallState: 2
         - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
           m_MethodName: Highlight
@@ -4944,9 +5023,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
-          m_MethodName: UnHighlight
+        - m_Target: {fileID: 791803162}
+          m_TargetAssemblyTypeName: SystemMiami.ui.AbilitySlot, Assembly-CSharp
+          m_MethodName: SetPoupOnExit
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -4955,7 +5034,7 @@ MonoBehaviour:
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
-          m_CallState: 0
+          m_CallState: 2
         - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
           m_MethodName: UnHighlight
@@ -5935,6 +6014,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1080186544}
   - {fileID: 583478255}
   - {fileID: 1502159482}
   - {fileID: 1015997033}
@@ -6021,6 +6101,85 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &933768424
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 933768425}
+  - component: {fileID: 933768427}
+  - component: {fileID: 933768426}
+  m_Layer: 5
+  m_Name: DescriptionName
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &933768425
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 933768424}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1080186544}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: 1.1499786, y: -16.749}
+  m_SizeDelta: {x: -2.3, y: 91.414}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &933768426
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 933768424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 25
+    m_FontStyle: 0
+    m_BestFit: 1
+    m_MinSize: 2
+    m_MaxSize: 40
+    m_Alignment: 0
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: New Text
+--- !u!222 &933768427
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 933768424}
+  m_CullTransparentMesh: 1
 --- !u!1 &940210179
 GameObject:
   m_ObjectHideFlags: 0
@@ -6576,6 +6735,83 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!1 &1080186543
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1080186544}
+  - component: {fileID: 1080186546}
+  - component: {fileID: 1080186545}
+  m_Layer: 5
+  m_Name: Panel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1080186544
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1080186543}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 683775827}
+  - {fileID: 933768425}
+  m_Father: {fileID: 920479673}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -1294, y: 112.46}
+  m_SizeDelta: {x: 244.50146, y: 124.91095}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1080186545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1080186543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1080186546
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1080186543}
+  m_CullTransparentMesh: 1
 --- !u!1 &1111824855
 GameObject:
   m_ObjectHideFlags: 0
@@ -7631,6 +7867,55 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1280498720
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1280498722}
+  - component: {fileID: 1280498721}
+  m_Layer: 0
+  m_Name: PopUPManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1280498721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1280498720}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49d8de2c7424edd42b1324d48069a692, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Popup: {fileID: 1080186544}
+  ActualAbility: {fileID: 0}
+  DescriptionText: {fileID: 933768426}
+  offset: {x: -30, y: 0}
+  ItemName: {fileID: 683775828}
+--- !u!4 &1280498722
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1280498720}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1290769829
 GameObject:
   m_ObjectHideFlags: 0
@@ -8012,9 +8297,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
-          m_MethodName: Highlight
+        - m_Target: {fileID: 1329946940}
+          m_TargetAssemblyTypeName: SystemMiami.ui.AbilitySlot, Assembly-CSharp
+          m_MethodName: SetPoupOnEnter
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -8023,7 +8308,7 @@ MonoBehaviour:
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
-          m_CallState: 0
+          m_CallState: 2
         - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
           m_MethodName: Highlight
@@ -8100,9 +8385,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
-          m_MethodName: UnHighlight
+        - m_Target: {fileID: 1329946940}
+          m_TargetAssemblyTypeName: SystemMiami.ui.AbilitySlot, Assembly-CSharp
+          m_MethodName: SetPoupOnExit
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -8111,7 +8396,7 @@ MonoBehaviour:
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
-          m_CallState: 0
+          m_CallState: 2
         - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
           m_MethodName: UnHighlight
@@ -8686,9 +8971,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
-          m_MethodName: Highlight
+        - m_Target: {fileID: 1473418680}
+          m_TargetAssemblyTypeName: SystemMiami.ui.AbilitySlot, Assembly-CSharp
+          m_MethodName: SetPoupOnEnter
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -8697,7 +8982,7 @@ MonoBehaviour:
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
-          m_CallState: 0
+          m_CallState: 2
         - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
           m_MethodName: Highlight
@@ -8774,9 +9059,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
-          m_MethodName: UnHighlight
+        - m_Target: {fileID: 1473418680}
+          m_TargetAssemblyTypeName: SystemMiami.ui.AbilitySlot, Assembly-CSharp
+          m_MethodName: SetPoupOnExit
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -8785,7 +9070,7 @@ MonoBehaviour:
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
-          m_CallState: 0
+          m_CallState: 2
         - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
           m_MethodName: UnHighlight
@@ -9853,9 +10138,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
-          m_MethodName: Highlight
+        - m_Target: {fileID: 1767102074}
+          m_TargetAssemblyTypeName: SystemMiami.ui.AbilitySlot, Assembly-CSharp
+          m_MethodName: SetPoupOnEnter
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -9864,7 +10149,7 @@ MonoBehaviour:
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
-          m_CallState: 0
+          m_CallState: 2
         - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
           m_MethodName: Highlight
@@ -9941,9 +10226,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
-          m_MethodName: UnHighlight
+        - m_Target: {fileID: 1767102074}
+          m_TargetAssemblyTypeName: SystemMiami.ui.AbilitySlot, Assembly-CSharp
+          m_MethodName: SetPoupOnExit
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -9952,7 +10237,7 @@ MonoBehaviour:
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
-          m_CallState: 0
+          m_CallState: 2
         - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
           m_MethodName: UnHighlight
@@ -10180,9 +10465,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
-          m_MethodName: Highlight
+        - m_Target: {fileID: 1772423748}
+          m_TargetAssemblyTypeName: SystemMiami.ui.AbilitySlot, Assembly-CSharp
+          m_MethodName: SetPoupOnEnter
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -10191,7 +10476,7 @@ MonoBehaviour:
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
-          m_CallState: 0
+          m_CallState: 2
         - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
           m_MethodName: Highlight
@@ -10268,9 +10553,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
-          m_MethodName: UnHighlight
+        - m_Target: {fileID: 1772423748}
+          m_TargetAssemblyTypeName: SystemMiami.ui.AbilitySlot, Assembly-CSharp
+          m_MethodName: SetPoupOnExit
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -10279,7 +10564,7 @@ MonoBehaviour:
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
-          m_CallState: 0
+          m_CallState: 2
         - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
           m_MethodName: UnHighlight
@@ -11217,9 +11502,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
-          m_MethodName: Highlight
+        - m_Target: {fileID: 1854342546}
+          m_TargetAssemblyTypeName: SystemMiami.ui.AbilitySlot, Assembly-CSharp
+          m_MethodName: SetPoupOnEnter
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -11228,7 +11513,7 @@ MonoBehaviour:
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
-          m_CallState: 0
+          m_CallState: 2
         - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
           m_MethodName: Highlight
@@ -11305,9 +11590,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
-          m_MethodName: UnHighlight
+        - m_Target: {fileID: 1854342546}
+          m_TargetAssemblyTypeName: SystemMiami.ui.AbilitySlot, Assembly-CSharp
+          m_MethodName: SetPoupOnExit
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -11316,7 +11601,7 @@ MonoBehaviour:
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
-          m_CallState: 0
+          m_CallState: 2
         - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
           m_MethodName: UnHighlight
@@ -12054,9 +12339,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
-          m_MethodName: Highlight
+        - m_Target: {fileID: 1949055389}
+          m_TargetAssemblyTypeName: SystemMiami.ui.AbilitySlot, Assembly-CSharp
+          m_MethodName: SetPoupOnEnter
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -12065,7 +12350,7 @@ MonoBehaviour:
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
-          m_CallState: 0
+          m_CallState: 2
         - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
           m_MethodName: Highlight
@@ -12142,9 +12427,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
-          m_MethodName: UnHighlight
+        - m_Target: {fileID: 1949055389}
+          m_TargetAssemblyTypeName: SystemMiami.ui.AbilitySlot, Assembly-CSharp
+          m_MethodName: SetPoupOnExit
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -12153,7 +12438,7 @@ MonoBehaviour:
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
-          m_CallState: 0
+          m_CallState: 2
         - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
           m_MethodName: UnHighlight
@@ -12378,7 +12663,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 1028.78, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1963413518
@@ -12572,9 +12857,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
-          m_MethodName: Highlight
+        - m_Target: {fileID: 1976640456}
+          m_TargetAssemblyTypeName: SystemMiami.ui.AbilitySlot, Assembly-CSharp
+          m_MethodName: SetPoupOnEnter
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -12583,7 +12868,7 @@ MonoBehaviour:
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
-          m_CallState: 0
+          m_CallState: 2
         - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
           m_MethodName: Highlight
@@ -12660,9 +12945,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
-          m_MethodName: UnHighlight
+        - m_Target: {fileID: 1976640456}
+          m_TargetAssemblyTypeName: SystemMiami.ui.AbilitySlot, Assembly-CSharp
+          m_MethodName: SetPoupOnExit
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -12671,7 +12956,7 @@ MonoBehaviour:
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
-          m_CallState: 0
+          m_CallState: 2
         - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
           m_MethodName: UnHighlight
@@ -13638,9 +13923,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
-          m_MethodName: Highlight
+        - m_Target: {fileID: 2091607326}
+          m_TargetAssemblyTypeName: SystemMiami.ui.AbilitySlot, Assembly-CSharp
+          m_MethodName: SetPoupOnEnter
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -13649,7 +13934,7 @@ MonoBehaviour:
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
-          m_CallState: 0
+          m_CallState: 2
         - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
           m_MethodName: Highlight
@@ -13726,9 +14011,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
-          m_MethodName: UnHighlight
+        - m_Target: {fileID: 1976640456}
+          m_TargetAssemblyTypeName: SystemMiami.ui.AbilitySlot, Assembly-CSharp
+          m_MethodName: SetPoupOnExit
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -13737,7 +14022,7 @@ MonoBehaviour:
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
-          m_CallState: 0
+          m_CallState: 2
         - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: SystemMiami.UI.SelectableSprite, Assembly-CSharp
           m_MethodName: UnHighlight
@@ -15374,6 +15659,7 @@ SceneRoots:
   - {fileID: 1598169456}
   - {fileID: 1910545386}
   - {fileID: 1937259266}
+  - {fileID: 1280498722}
   - {fileID: 1290769832}
   - {fileID: 1864204983674309662}
   - {fileID: 1865162774}

@@ -52,6 +52,8 @@ namespace SystemMiami.AbilitySystem
         public CombatSubaction[] Actions { get { return _actions; } }
         public bool IsBusy { get; private set; }
 
+        [TextArea]public string Description;
+
        // [SerializeField] AbilityDirections animDirs;
 
        // protected AnimationClipOverrides clipOverrides;

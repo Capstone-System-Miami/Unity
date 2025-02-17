@@ -106,5 +106,15 @@ namespace SystemMiami.ui
 
             newStateAllFields(SelectionState.DISABLED);
         }
+
+        public void SetPoupOnEnter()
+        {
+            PopUpHandler.Instance?.SetPopupAblility(Ability);
+        }
+
+        public void SetPoupOnExit()
+        {
+            PopUpHandler.Instance?.SetPopupAblility();
+        }
     }
 }
