@@ -112,7 +112,7 @@ namespace SystemMiami.CombatRefactor
 
         public void SetPoupOnEnter()
         {
-            PopUpHandler.Instance?.SetPopupAblility(Ability);
+            PopUpHandler.Instance?.SetPopupAblility(_combatAction);
         }
 
         public void SetPoupOnExit()

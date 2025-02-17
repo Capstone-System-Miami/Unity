@@ -4,19 +4,19 @@ using SystemMiami.AbilitySystem;
 using UnityEditor.Timeline;
 using UnityEngine;
 using UnityEngine.UI;
-
+using SystemMiami.CombatRefactor;
 namespace SystemMiami
 {
     public class PopUpHandler : MonoBehaviour
     {
         public static PopUpHandler Instance;
         public RectTransform Popup;
-        public Ability ActualAbility;
+        public CombatAction AssignedCombatAction;
         public Text DescriptionText;
         public Vector2 offset;
         public Text ItemName;
 
-        private bool OnShown => ActualAbility != null;
+        private bool OnShown => AssignedCombatAction != null;
 
         private void Awake()
         {
@@ -38,9 +38,9 @@ namespace SystemMiami
             }
         }
 
-        public void SetPopupAblility(Ability ability)
+        public void SetPopupAblility(CombatAction combatAction)
         {
-            ActualAbility = ability;
+            AssignedCombatAction = combatAction;
             Popup.gameObject.SetActive(OnShown);
             BindText();
 
@@ -69,15 +69,15 @@ namespace SystemMiami
 
         private void BindText()
         {
-            if (ActualAbility == null)
+            if (AssignedCombatAction == null)
             {
                 DescriptionText.text = string.Empty;
                 ItemName.text = string.Empty;
                 return;
             }
 
-            DescriptionText.text = ActualAbility.Description;
-            ItemName.text = ActualAbility.name;
+           /* DescriptionText.text = AssignedCombatAction.Description;
+            ItemName.text = AssignedCombatAction.name;*/
         }
 
     }
