@@ -95,6 +95,7 @@ namespace SystemMiami.CombatRefactor
             newStateAllFields(SelectionState.DISABLED);
         }
 
+
         private void newStateAllFields(SelectionState state)
         {
             /*  _background.NewState(state);
@@ -107,6 +108,17 @@ namespace SystemMiami.CombatRefactor
 
               _name.NewState(state);
               _nameBKG.NewState(state); */
+        }
+
+        public void SetPoupOnEnter()
+        {
+            PopUpHandler.Instance?.SetPopupAblility(_combatAction);
+        }
+
+        public void SetPoupOnExit()
+        {
+            PopUpHandler.Instance?.SetPopupAblility();
+
         }
     }
 }
