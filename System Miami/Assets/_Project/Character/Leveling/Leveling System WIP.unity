@@ -276,7 +276,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75d4ddb520eab9b46ab9a0125793d0f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  level: 10
+  level: 1
   currentXP: 0
   xpToNextLevel: 100
   str: 3
@@ -284,56 +284,6 @@ MonoBehaviour:
   dex: 3
   inte: 3
   wis: 3
---- !u!1 &976033064
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 976033066}
-  - component: {fileID: 976033065}
-  m_Layer: 0
-  m_Name: Enemy
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &976033065
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 976033064}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 500b85fdfd1605946a22cf87d99c9137, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _difficulty: 0
-  str: 1
-  con: 1
-  dex: 1
-  inte: 1
-  wis: 1
---- !u!4 &976033066
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 976033064}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.06764525, y: -0.4372634, z: 0.005463313}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1115758459
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -400,4 +350,3 @@ SceneRoots:
   m_Roots:
   - {fileID: 493245994}
   - {fileID: 1115758459}
-  - {fileID: 976033066}

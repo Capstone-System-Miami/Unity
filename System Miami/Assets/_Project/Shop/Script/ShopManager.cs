@@ -1,105 +1,69 @@
+using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
-namespace SystemMiami.Shop
+public class ShopManager : MonoBehaviour
 {
-    public class ShopManager : MonoBehaviour
+    public int coins;
+    public TMP_Text coinUI;
+    public ShopItemSO[] Items;
+    public GameObject[] shopPanelGO;
+    public ShopTemplate[] shopPanels;
+    public Button[] myPurchaseBtns;
+
+    void Start()
     {
-        /// <summary>
-        /// TODO: this variable will eventually be removed, and the player's
-        /// currency amount will be checked instead.
-        /// </summary>
-        public int coins;
+        for (int i = 0; i < Items.Length; i++)
+            shopPanelGO[i].SetActive(true);
+        coinUI.text = "Coins: " + coins.ToString();
+        LoadPanels();
+        CheckPurchaseable();
+    }
 
-        public TMP_Text coinUI;
-        public ShopItemSlot[] slots;
+    void Update()
+    {
+        
+    }
 
-        public ShopItemSO[] ShopItemSOs;
-        public EquipmentExampleSO[] EquipmentExampleSOs;
+    public void AddCoins()
+    {
+        coins++;
+        coinUI.text = "Coins: " + coins.ToString();
+        CheckPurchaseable();
+    }
 
-        private List<IShopItem> ShopItems = new();
-
-        void Start()
+    public void CheckPurchaseable()
+    {
+        for(int i = 0; i < Items.Length;i++)
         {
-
-            LoadTestArrays();
-
-            for (int i = 0; i < ShopItems.Count; i++)
-                slots[i].gameObject.SetActive(true);
-
-            FillSlots();
-        }
-
-        void Update()
-        {
-            CheckPurchaseable();
-            coinUI.text = "Coins: " + coins.ToString();
-        }
-
-        /// <summary>
-        /// TODO: this method will eventually be removed, and the player's
-        /// currency amount will be checked instead.
-        /// </summary>
-        public void AddCoins()
-        {
-            coins++;
-        }
-
-        public void CheckPurchaseable()
-        {
-            for (int i = 0; i < slots.Length; i++)
-            {
-                if (slots[i].gameObject.activeSelf == false)
-                    continue;
-
-                if (slots[i].ItemIsPurchaseable(coins))
-                    slots[i].EnableButton();
-                else
-                    slots[i].DisableButton();
-            }
-        }
-
-        public void PurchaseItem(int slotNumber)
-        {
-            coins = coins - ShopItems[slotNumber].GetCost();
-
-            Debug.Log("You bought: " + ShopItems[slotNumber].GetTitle());
-        }
-
-        public void Add(IShopItem item)
-        {
-            ShopItems.Add(item);
-        }
-
-        public void Add(List<IShopItem> items)
-        {
-            ShopItems.AddRange(items);
-        }
-
-        public void FillSlots()
-        {
-            for (int i = 0; i < ShopItems.Count; i++)
-            {
-                slots[i].Fill(ShopItems[i]);
-            }
-        }
-
-        /// <summary>
-        /// A testing-only function to load test arrays into our
-        /// list of IShopItems
-        /// </summary>
-        private void LoadTestArrays()
-        {
-            for(int i = 0; i < ShopItemSOs.Length; i++)
-            {
-                Add(ShopItemSOs[i]);
-            }
-
-            for (int i = 0; i < EquipmentExampleSOs.Length; i++)
-            {
-                Add(EquipmentExampleSOs[i]);
-            }
+            if (coins >= Items[i].baseCost)
+                myPurchaseBtns[i].interactable = true;
+            else
+                myPurchaseBtns[i].interactable = false;
         }
     }
+
+    public void PurchaseItem(int btnNo)
+    {
+        if (coins >= Items[btnNo].baseCost)
+        {
+            coins = coins - Items[btnNo].baseCost;
+            coinUI.text = "Coins: " + coins.ToString();
+            CheckPurchaseable();
+            Debug.Log("You bought: " + Items[btnNo].title);
+        }
+    }
+
+    public void LoadPanels()
+    {
+        for (int i = 0; i < Items.Length; i++)
+        {
+            shopPanels[i].titleTxt.text = Items[i].title;
+            shopPanels[i].descriptionTxt.text = Items[i].description;
+            shopPanels[i].costTxt.text = "Coins: " + Items[i].baseCost.ToString();
+        }
+    }
+
 }
