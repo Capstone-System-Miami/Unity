@@ -1,5 +1,6 @@
 using SystemMiami.CombatRefactor;
 using SystemMiami.Management;
+using TMPro;
 using UnityEngine;
 
 namespace SystemMiami.ui
@@ -7,7 +8,8 @@ namespace SystemMiami.ui
     public class ActionQuickslot : MonoBehaviour
     {
         [SerializeField] private SelectableSprite _icon; 
-       
+        public TextMeshProUGUI popupTextName;
+        public TextMeshProUGUI popupTextDescription;
         
         private CombatAction _combatAction;
         private SelectionState _selectionState = SelectionState.UNSELECTED;
@@ -83,6 +85,22 @@ namespace SystemMiami.ui
             
             _icon.NewState(state);
             
+        }
+
+        public void UpdateText()
+        {
+            int id = _combatAction.ID;
+            ItemData data = Database.MGR.GetDataWithJustID(id);
+            popupTextName.text = data.Name;
+            popupTextDescription.text = data.Description;
+            
+            
+        }
+        public void UpdateTextToNull()
+        {
+            
+            popupTextName.text = "";
+            popupTextDescription.text = "";
         }
     }
 }
