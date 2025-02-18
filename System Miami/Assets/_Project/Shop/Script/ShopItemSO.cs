@@ -2,11 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "shopMenu", menuName = "Scriptable Objects/New Shop Item", order = 3)]
-public class ShopItemSO : ScriptableObject
+namespace SystemMiami.Shop
 {
-  public string title;
-  public string description;
-  public int baseCost;
- }
+    [CreateAssetMenu(fileName = "shopMenu", menuName = "Scriptable Objects/New Shop Item", order = 3)]
+    public class ShopItemSO : ScriptableObject, IShopItem
+    {
+        public string title;
+        public string description;
+        public int baseCost;
 
+        public string GetTitle()
+        {
+            return title;
+        }
+
+        public string GetDescription()
+        {
+            return description;
+        }
+
+        public int GetCost()
+        {
+            return baseCost;
+        }
+    }
+}
