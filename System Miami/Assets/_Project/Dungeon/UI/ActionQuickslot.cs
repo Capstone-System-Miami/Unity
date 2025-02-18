@@ -1,106 +1,123 @@
-using SystemMiami.CombatRefactor;
+// Author: Layla Hoey
+using System;
 using SystemMiami.Management;
-using TMPro;
+using SystemMiami.ui;
 using UnityEngine;
 
-namespace SystemMiami.ui
+namespace SystemMiami.CombatRefactor
 {
     public class ActionQuickslot : MonoBehaviour
     {
-        [SerializeField] private SelectableSprite _icon; 
-        public TextMeshProUGUI popupTextName;
-        public TextMeshProUGUI popupTextDescription;
-        
+        /* [Header("Background Panel")]
+         [SerializeField] private SelectableSprite _background;
+
+         [Header("Number")]
+         [SerializeField] private SelectableText _number;
+         [SerializeField] private SelectableSprite _numberBKG;
+        */
+        [Header("Icon")]
+        [SerializeField] private SelectableSprite _icon;
+        /* [SerializeField] private SelectableSprite _iconBKG; */
+
+        /* [Header("Name")]
+         [SerializeField] private SelectableText _name;
+         [SerializeField] private SelectableSprite _nameBKG; */
+
         private CombatAction _combatAction;
-        private SelectionState _selectionState = SelectionState.UNSELECTED;
 
-        /// <summary>
-        /// The real combat object (AbilityPhysical, AbilityMagical, or Consumable).
-        /// </summary>
-        public CombatAction CombatAction => _combatAction;
+        private int _index;
+        private Type _type;
+        private SelectionState _selectionState;
 
-        /// <summary>
-        /// Assign a CombatAction object to this slot and update the UI from it.
-        /// </summary>
-        public void Fill(CombatAction action)
+        public CombatAction CombatAction { get { return _combatAction; } }
+        public int Index { get { return _index; } }
+        public Type Type { get { return _type; } }
+
+        public SelectionState State { get { return _selectionState; } }
+
+        public void Initialize(Type type, int index)
         {
-            _combatAction = action;
-            if (_combatAction == null)
-            {
-                Clear();
-                return;
-            }
- 
-           ItemData data = Database.MGR.GetDataWithJustID(action.ID);
-            var iconSprite = data.Icon;
-            if (iconSprite != null)
-            {
-                _icon.SetAllSprites(iconSprite);
-            }
+            _index = index;
+            _type = type;
 
-            
+            // Set every string in the selectable text
+            // so it won't change depending on
+            // mouse over, clicking, etc.
+            /* _number.SetAllMessages((_index + 1).ToString()); */
+
+            DisableSelection();
         }
 
-        /// <summary>
-        ///  remove the CombatAction and disable the slot.
-        /// </summary>
-        public void Clear()
+        public void Fill(CombatAction combatAction)
         {
-            _combatAction = null;
-            _icon.SetAllSprites(null);
-            
+            _combatAction = combatAction;
+
+            // This also won't change for now, but
+            // we have the option to later, depending on
+            // what the artists cook up UI-wise.
+            _icon.SetAllSprites(_combatAction.Icon);
+
+            /*  _name.SetAllMessages(_ability.name); */
+
+            _type = combatAction.GetType();
         }
 
-        /// <summary>
-        /// Called by a UI Button event or UnityEvent on click.
-        /// </summary>
         public void Click()
         {
-            // Notify the UI Manager
             UI.MGR.ClickSlot(this);
         }
 
         public void Select()
         {
-            if (_selectionState == SelectionState.DISABLED) return;
-            _selectionState = SelectionState.SELECTED;
-            UpdateVisualState(SelectionState.SELECTED);
+            if (_selectionState == SelectionState.DISABLED) { return; }
+
+            newStateAllFields(SelectionState.SELECTED);
         }
 
         public void Deselect()
         {
-            if (_selectionState == SelectionState.DISABLED) return;
+            if (_selectionState == SelectionState.DISABLED) { return; }
+
+            newStateAllFields(SelectionState.UNSELECTED);
+        }
+
+        public void EnableSelection()
+        {
             _selectionState = SelectionState.UNSELECTED;
-            UpdateVisualState(SelectionState.UNSELECTED);
+
+            newStateAllFields(SelectionState.UNSELECTED);
         }
 
         public void DisableSelection()
         {
             _selectionState = SelectionState.DISABLED;
-            UpdateVisualState(SelectionState.DISABLED);
+
+            newStateAllFields(SelectionState.DISABLED);
         }
 
-        private void UpdateVisualState(SelectionState state)
+        private void newStateAllFields(SelectionState state)
         {
-            
+            /*  _background.NewState(state);
+
+              _number.NewState(state);
+              _numberBKG.NewState(state); */
+
             _icon.NewState(state);
-            
+            /*  _iconBKG.NewState(state); 
+
+              _name.NewState(state);
+              _nameBKG.NewState(state); */
         }
 
-        public void UpdateText()
+        public void SetPoupOnEnter()
         {
-            int id = _combatAction.ID;
-            ItemData data = Database.MGR.GetDataWithJustID(id);
-            popupTextName.text = data.Name;
-            popupTextDescription.text = data.Description;
-            
-            
+            PopUpHandler.Instance?.SetPopupAblility(_combatAction);
         }
-        public void UpdateTextToNull()
+
+        public void SetPoupOnExit()
         {
-            
-            popupTextName.text = "";
-            popupTextDescription.text = "";
+            PopUpHandler.Instance?.SetPopupAblility();
+
         }
     }
 }
