@@ -11,12 +11,12 @@ namespace SystemMiami
     {
         public static PopUpHandler Instance;
         public RectTransform Popup;
-        public CombatAction AssignedCombatAction;
+        public ItemData AssignedCombatAction;
         public Text DescriptionText;
         public Vector2 offset;
         public Text ItemName;
 
-        private bool OnShown => AssignedCombatAction != null;
+       // private bool OnShown => Popup.gameObject.activeSelf;
 
         private void Awake()
         {
@@ -32,29 +32,33 @@ namespace SystemMiami
 
         private void Update()
         {
-            if (OnShown)
+            if (Popup.gameObject.activeSelf)
             {
                 SetPopupPosition();
             }
         }
 
-        public void SetPopupAblility(CombatAction combatAction)
+        public void SetPopupAblility(ItemData itemData)
         {
-            AssignedCombatAction = combatAction;
-            Popup.gameObject.SetActive(OnShown);
-            BindText();
+            
+                AssignedCombatAction = itemData;
+                Popup.gameObject.SetActive(true);
+                BindText();
+            
 
         }
 
 
         public void SetPopupAblility()
         {
-            SetPopupAblility(null);
+            
+            Popup.gameObject.SetActive(false);
 
         }
 
         private void SetPopupPosition()
         {
+            
              Vector2 Mouseposition = Input.mousePosition;
              Popup.position = Mouseposition + offset + new Vector2(Popup.rect.width, Popup.rect.height) / 2f;
              
@@ -69,15 +73,8 @@ namespace SystemMiami
 
         private void BindText()
         {
-            if (AssignedCombatAction == null)
-            {
-                DescriptionText.text = string.Empty;
-                ItemName.text = string.Empty;
-                return;
-            }
-
-           /* DescriptionText.text = AssignedCombatAction.Description;
-            ItemName.text = AssignedCombatAction.name;*/
+            DescriptionText.text = AssignedCombatAction.Description;
+            ItemName.text = AssignedCombatAction.Name;
         }
 
     }

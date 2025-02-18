@@ -624,8 +624,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _icon: {fileID: 155863256}
-  popupTextName: {fileID: 0}
-  popupTextDescription: {fileID: 0}
 --- !u!114 &155863256
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1497,7 +1495,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &350213011
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1967,8 +1965,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _icon: {fileID: 393520766}
-  popupTextName: {fileID: 0}
-  popupTextDescription: {fileID: 0}
 --- !u!114 &393520766
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2304,7 +2300,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &449147902
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2535,8 +2531,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _icon: {fileID: 478603863}
-  popupTextName: {fileID: 0}
-  popupTextDescription: {fileID: 0}
 --- !u!114 &478603863
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3056,7 +3050,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d62599e4110cf5a4f97d022079cd73b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  popupText: {fileID: 0}
 --- !u!1 &589096605
 GameObject:
   m_ObjectHideFlags: 0
@@ -3568,8 +3561,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _icon: {fileID: 741116220}
-  popupTextName: {fileID: 0}
-  popupTextDescription: {fileID: 0}
 --- !u!114 &741116220
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4811,8 +4802,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _icon: {fileID: 963164561}
-  popupTextName: {fileID: 0}
-  popupTextDescription: {fileID: 0}
 --- !u!114 &963164561
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5349,8 +5338,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _icon: {fileID: 1196496521}
-  popupTextName: {fileID: 0}
-  popupTextDescription: {fileID: 0}
 --- !u!114 &1196496521
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5534,8 +5521,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _icon: {fileID: 1215954267}
-  popupTextName: {fileID: 0}
-  popupTextDescription: {fileID: 0}
 --- !u!114 &1215954267
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6385,8 +6370,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _icon: {fileID: 1436198279}
-  popupTextName: {fileID: 0}
-  popupTextDescription: {fileID: 0}
 --- !u!114 &1436198279
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7058,8 +7041,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _icon: {fileID: 1669744394}
-  popupTextName: {fileID: 0}
-  popupTextDescription: {fileID: 0}
 --- !u!114 &1669744394
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8342,8 +8323,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _icon: {fileID: 1965308209}
-  popupTextName: {fileID: 0}
-  popupTextDescription: {fileID: 0}
 --- !u!114 &1965308209
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8527,8 +8506,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _icon: {fileID: 1972513957}
-  popupTextName: {fileID: 0}
-  popupTextDescription: {fileID: 0}
 --- !u!114 &1972513957
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8803,8 +8780,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _icon: {fileID: 2014657098}
-  popupTextName: {fileID: 0}
-  popupTextDescription: {fileID: 0}
 --- !u!114 &2014657098
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8879,6 +8854,55 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3894879432528455639, guid: 2519c83f8276d0a47b6c1bf1c22169d2, type: 3}
   m_PrefabInstance: {fileID: 1787106193}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2020177047
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2020177049}
+  - component: {fileID: 2020177048}
+  m_Layer: 0
+  m_Name: PopupManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2020177048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2020177047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49d8de2c7424edd42b1324d48069a692, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Popup: {fileID: 5253607576408592780}
+  AssignedCombatAction: 0
+  DescriptionText: {fileID: 7058314808775729815}
+  offset: {x: -30, y: 0}
+  ItemName: {fileID: 3971718204096858350}
+--- !u!4 &2020177049
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2020177047}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 395.11713, y: 258.399, z: -3.4276967}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!224 &2060289384 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3894879432528455639, guid: 2519c83f8276d0a47b6c1bf1c22169d2, type: 3}
@@ -9120,7 +9144,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2102558305
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9813,6 +9837,7 @@ RectTransform:
   - {fileID: 6285498330884235481}
   - {fileID: 3740592217246534734}
   - {fileID: 949974933058345393}
+  - {fileID: 5253607576408592780}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -9872,6 +9897,14 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!222 &1358137479839552132
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8509260205545084000}
+  m_CullTransparentMesh: 1
 --- !u!224 &1430572890507380017
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10106,7 +10139,7 @@ MonoBehaviour:
           m_CallState: 2
         - m_Target: {fileID: 1764805393817703010}
           m_TargetAssemblyTypeName: SystemMiami.ui.ActionQuickslot, Assembly-CSharp
-          m_MethodName: UpdateText
+          m_MethodName: SetPopupOnEnter
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -10134,7 +10167,7 @@ MonoBehaviour:
           m_CallState: 2
         - m_Target: {fileID: 1764805393817703010}
           m_TargetAssemblyTypeName: SystemMiami.ui.ActionQuickslot, Assembly-CSharp
-          m_MethodName: UpdateTextToNull
+          m_MethodName: SetPopupOnExit
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -10173,8 +10206,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _icon: {fileID: 2947138584267448399}
-  popupTextName: {fileID: 2102558307}
-  popupTextDescription: {fileID: 449147902}
 --- !u!222 &1792486633875539315
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -10425,6 +10456,14 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!222 &2385502133308979027
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8478636777077664901}
+  m_CullTransparentMesh: 1
 --- !u!1 &2487899862648149524
 GameObject:
   m_ObjectHideFlags: 0
@@ -10731,6 +10770,25 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 'Label:'
+--- !u!224 &2991307014104586939
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8478636777077664901}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5253607576408592780}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: 1.1499786, y: -16.749}
+  m_SizeDelta: {x: -2.3, y: 91.414}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2997545395677482418
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10955,6 +11013,25 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!224 &3480664048002683546
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8509260205545084000}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5253607576408592780}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: 1.1499786, y: 43.027}
+  m_SizeDelta: {x: -2.3000474, y: 38.8563}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &3484177042865103407
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11102,6 +11179,58 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7907244220982477498}
   m_CullTransparentMesh: 1
+--- !u!1 &3870307147573191106
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5253607576408592780}
+  - component: {fileID: 8121612363552909171}
+  - component: {fileID: 6953992650781117609}
+  m_Layer: 5
+  m_Name: Panel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &3971718204096858350
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8509260205545084000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 30
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 3
+    m_MaxSize: 40
+    m_Alignment: 0
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 1
+    m_VerticalOverflow: 1
+    m_LineSpacing: 1
+  m_Text: New Text
 --- !u!1 &3977928891580837106
 GameObject:
   m_ObjectHideFlags: 0
@@ -11949,6 +12078,27 @@ MonoBehaviour:
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
   m_PresetInfoIsWorld: 0
+--- !u!224 &5253607576408592780
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3870307147573191106}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 2.1286032, y: 2.1286032, z: 2.1286032}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 3480664048002683546}
+  - {fileID: 2991307014104586939}
+  m_Father: {fileID: 1333543219089217391}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -3714.4126, y: -294.8967}
+  m_SizeDelta: {x: 244.50146, y: 124.91095}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &5348992707074435545
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12232,8 +12382,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _icon: {fileID: 4939774242246588412}
-  popupTextName: {fileID: 2102558307}
-  popupTextDescription: {fileID: 449147902}
 --- !u!114 &5853204951439456926
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12263,18 +12411,6 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-        - m_Target: {fileID: 5853204951439456925}
-          m_TargetAssemblyTypeName: SystemMiami.ui.ActionQuickslot, Assembly-CSharp
-          m_MethodName: UpdateText
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
   - eventID: 1
     callback:
       m_PersistentCalls:
@@ -12282,18 +12418,6 @@ MonoBehaviour:
         - m_Target: {fileID: 4939774242246588412}
           m_TargetAssemblyTypeName: SystemMiami.ui.SelectableSprite, Assembly-CSharp
           m_MethodName: UnHighlight
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 5853204951439456925}
-          m_TargetAssemblyTypeName: SystemMiami.ui.ActionQuickslot, Assembly-CSharp
-          m_MethodName: UpdateTextToNull
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -12884,6 +13008,70 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &6953992650781117609
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3870307147573191106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!114 &7058314808775729815
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8478636777077664901}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 25
+    m_FontStyle: 0
+    m_BestFit: 1
+    m_MinSize: 2
+    m_MaxSize: 40
+    m_Alignment: 0
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: New Text
 --- !u!224 &7071215705189262369
 RectTransform:
   m_ObjectHideFlags: 0
@@ -13568,8 +13756,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _icon: {fileID: 1000248228375298355}
-  popupTextName: {fileID: 2102558307}
-  popupTextDescription: {fileID: 449147902}
 --- !u!114 &8120511402937536702
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13599,18 +13785,6 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-        - m_Target: {fileID: 8120511402937536701}
-          m_TargetAssemblyTypeName: SystemMiami.ui.ActionQuickslot, Assembly-CSharp
-          m_MethodName: UpdateText
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
   - eventID: 1
     callback:
       m_PersistentCalls:
@@ -13618,18 +13792,6 @@ MonoBehaviour:
         - m_Target: {fileID: 1000248228375298355}
           m_TargetAssemblyTypeName: SystemMiami.ui.SelectableSprite, Assembly-CSharp
           m_MethodName: UnHighlight
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 8120511402937536701}
-          m_TargetAssemblyTypeName: SystemMiami.ui.ActionQuickslot, Assembly-CSharp
-          m_MethodName: UpdateTextToNull
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -13655,6 +13817,14 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+--- !u!222 &8121612363552909171
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3870307147573191106}
+  m_CullTransparentMesh: 1
 --- !u!114 &8141681975196464334
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13959,8 +14129,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _icon: {fileID: 8210666264326031060}
-  popupTextName: {fileID: 2102558307}
-  popupTextDescription: {fileID: 449147902}
 --- !u!114 &8464887755796011774
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13990,18 +14158,6 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-        - m_Target: {fileID: 8464887755796011773}
-          m_TargetAssemblyTypeName: SystemMiami.ui.ActionQuickslot, Assembly-CSharp
-          m_MethodName: UpdateText
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
   - eventID: 1
     callback:
       m_PersistentCalls:
@@ -14009,18 +14165,6 @@ MonoBehaviour:
         - m_Target: {fileID: 8210666264326031060}
           m_TargetAssemblyTypeName: SystemMiami.ui.SelectableSprite, Assembly-CSharp
           m_MethodName: 
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 8464887755796011773}
-          m_TargetAssemblyTypeName: SystemMiami.ui.ActionQuickslot, Assembly-CSharp
-          m_MethodName: UpdateTextToNull
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -14046,6 +14190,42 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+--- !u!1 &8478636777077664901
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2991307014104586939}
+  - component: {fileID: 2385502133308979027}
+  - component: {fileID: 7058314808775729815}
+  m_Layer: 5
+  m_Name: DescriptionName
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &8509260205545084000
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3480664048002683546}
+  - component: {fileID: 1358137479839552132}
+  - component: {fileID: 3971718204096858350}
+  m_Layer: 5
+  m_Name: ItemName
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!224 &8518516951615372347
 RectTransform:
   m_ObjectHideFlags: 0
@@ -14174,8 +14354,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _icon: {fileID: 6527874541034628046}
-  popupTextName: {fileID: 2102558307}
-  popupTextDescription: {fileID: 449147902}
 --- !u!114 &8651124250315867138
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14205,18 +14383,6 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-        - m_Target: {fileID: 8651124250315867137}
-          m_TargetAssemblyTypeName: SystemMiami.ui.ActionQuickslot, Assembly-CSharp
-          m_MethodName: UpdateText
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
   - eventID: 1
     callback:
       m_PersistentCalls:
@@ -14224,18 +14390,6 @@ MonoBehaviour:
         - m_Target: {fileID: 6527874541034628046}
           m_TargetAssemblyTypeName: SystemMiami.ui.SelectableSprite, Assembly-CSharp
           m_MethodName: Highlight
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 8651124250315867137}
-          m_TargetAssemblyTypeName: SystemMiami.ui.ActionQuickslot, Assembly-CSharp
-          m_MethodName: UpdateTextToNull
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -14584,8 +14738,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _icon: {fileID: 4285581051537023475}
-  popupTextName: {fileID: 2102558307}
-  popupTextDescription: {fileID: 449147902}
 --- !u!114 &9216651532420205712
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14615,18 +14767,6 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-        - m_Target: {fileID: 9216651532420205711}
-          m_TargetAssemblyTypeName: SystemMiami.ui.ActionQuickslot, Assembly-CSharp
-          m_MethodName: UpdateText
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
   - eventID: 1
     callback:
       m_PersistentCalls:
@@ -14634,18 +14774,6 @@ MonoBehaviour:
         - m_Target: {fileID: 4285581051537023475}
           m_TargetAssemblyTypeName: SystemMiami.ui.SelectableSprite, Assembly-CSharp
           m_MethodName: UnHighlight
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 9216651532420205711}
-          m_TargetAssemblyTypeName: SystemMiami.ui.ActionQuickslot, Assembly-CSharp
-          m_MethodName: UpdateTextToNull
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -14693,3 +14821,4 @@ SceneRoots:
   - {fileID: 921401563}
   - {fileID: 7393733846590992622}
   - {fileID: 1333543219089217391}
+  - {fileID: 2020177049}
