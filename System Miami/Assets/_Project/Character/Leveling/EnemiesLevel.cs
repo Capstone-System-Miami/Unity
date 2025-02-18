@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using SystemMiami.CombatSystem;
 using UnityEngine;
+using SystemMiami.Dungeons;
 
 namespace SystemMiami
 {
     public class EnemiesLevel : MonoBehaviour
     {
-        public Difficulty _difficulty;
-        PlayerLevel _playerLevel; //to call Player Level Script
+        public DifficultyLevel _difficulty;
         int playerCurrentLevel; //to Set Player Level
         int enemyLevel; //Enemy Level;
         int levelRange; //use to set the range between the player can enemy levels
@@ -20,34 +21,28 @@ namespace SystemMiami
         public int inte = 1; // intelligence
         public int wis = 1; // wisdom
 
-        // Start is called before the first frame update
-        void Start()
+        public void Initialize(DifficultyLevel difficulty, int playerLevel)
         {
-            _playerLevel = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerLevel>(); // Look for player to read level
-            playerCurrentLevel = _playerLevel.level;
-            EnemyLevel();
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
+            playerCurrentLevel = playerLevel;
+            SetEnemyLevel(difficulty);
         }
         
-        void EnemyLevel()
+        private void SetEnemyLevel(DifficultyLevel difficulty)
         {
+            _difficulty = difficulty;
+
             //Check Player Level to set EnemyLevel
             switch (_difficulty)
             {
-                case Difficulty.Easy: // Dungeon Diffiulty & New GDD makes it looks like it's linear if not I will fix
+                case DifficultyLevel.EASY: // Dungeon Diffiulty & New GDD makes it looks like it's linear if not I will fix
                     levelRange = Random.Range(3, 5);
                     enemyLevel = playerCurrentLevel - levelRange; // if player levels is 10 then enemies level should be (5 to 7) like in doc
                     break;
-                case Difficulty.Medium:
+                case DifficultyLevel.MEDIUM:
                     levelRange = Random.Range(0, 2);
                     enemyLevel = playerCurrentLevel - levelRange; // if player levels is 10 then enemies level should be (8 to 10) like in doc
                     break;
-                case Difficulty.Hard:
+                case DifficultyLevel.HARD:
                     levelRange = Random.Range(0, 3);
                     enemyLevel = playerCurrentLevel + levelRange; // if player levels is 10 then enemies level should be (10 to 13) like in doc
                     break;
@@ -56,10 +51,22 @@ namespace SystemMiami
             {
                 enemyLevel = 1;
             }
-            EnemyAttStat();
+
+            AttributeSet additionalAttributes = new(GenerateAttributes());
+
+            if (!TryGetComponent(out Attributes attributesComponent))
+            {
+                Debug.LogWarning($"No Enemy Combatant found on {this}", this);
+            }
+
+            // TODO: once there is a public method to add attribute sets
+            // to the attributes component, use it here
+            //attributesComponent.AddAttributes(additionalAttributes);
+
             Debug.Log("Enemy Level : " + enemyLevel);
         }
-        void EnemyAttStat() // Set enemy stat using leveling System
+
+        private int[] GenerateAttributes() // Set enemy stat using leveling System
         {
             for (int i = 0; i < enemyLevel - 1; i++) // does it for each level until it hits max
             {
@@ -90,13 +97,14 @@ namespace SystemMiami
                 }
                 
             }
+
+            return new int[] {
+                str,
+                con,
+                dex,
+                inte,
+                wis
+            };
         }
-    }
-    
-    public enum Difficulty //Might have to be move to a dungeon manager script I have it here for now
-    {
-        Easy,
-        Medium,
-        Hard
     }
 }
