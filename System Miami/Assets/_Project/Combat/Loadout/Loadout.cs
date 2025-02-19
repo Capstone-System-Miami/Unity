@@ -17,7 +17,6 @@ namespace SystemMiami.CombatRefactor
         {
             this.user = user;
 
-          
             PhysicalAbilities = ConvertPhysical(inventory.QuickslotPhysicalAbilityIDs);
             MagicalAbilities  = ConvertMagical(inventory.QuickslotMagicalAbilityIDs);
             Consumables       = ConvertConsumable(inventory.QuickslotConsumableIDs);
