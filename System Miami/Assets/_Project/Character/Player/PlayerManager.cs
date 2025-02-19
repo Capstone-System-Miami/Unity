@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using SystemMiami.Management;
 using SystemMiami.CombatSystem;
+using System.Runtime.CompilerServices;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -95,6 +97,11 @@ namespace SystemMiami
             else if (scene.name.Contains(dungeonSceneName))
             {
                 EnterDungeon();
+            }
+            else
+            {
+                disableComponents(neighborhoodComponents);
+                disableComponents(dungeonComponents);
             }
         }
 

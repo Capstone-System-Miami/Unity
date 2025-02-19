@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 2231695680492015841}
   - component: {fileID: 7934506652684310896}
   - component: {fileID: -2226846941425345227}
+  - component: {fileID: 147198865295630718}
   m_Layer: 0
   m_Name: Slime
   m_TagString: Untagged
@@ -209,13 +210,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _colorTag: {r: 1, g: 0.28759372, b: 0.25943398, a: 1}
-  _printUItoConsole: 1
+  _printUItoConsole: 0
   _movementSpeed: 2
   idleController: {fileID: 22100000, guid: 64d619668d394e94e817be301561ae4e, type: 2}
   walkingController: {fileID: 22100000, guid: 64d619668d394e94e817be301561ae4e, type: 2}
+  _inventory: {fileID: 147198865295630718}
   detectionRadius: 3
   PlayerInRange: 0
   physicalSOs:
   - {fileID: 11400000, guid: e174f1a19bb73304693b9b27f86b75d4, type: 2}
   magicalSOs: []
   consumableSOs: []
+--- !u!114 &147198865295630718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5679960105606152641}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cd6b3ea2f86d184a88aec7980f17cc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  magicalAbilityIDs: 
+  physicalAbilityIDs: 
+  consumableIDs: 
+  equipmentModIDs: 
+  quickslotMagicalAbilityIDs: 
+  quickslotPhysicalAbilityIDs: 8b130000
+  quickslotConsumableIDs: 

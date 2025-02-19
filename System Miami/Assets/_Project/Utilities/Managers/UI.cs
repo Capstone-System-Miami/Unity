@@ -17,15 +17,10 @@ namespace SystemMiami.Management
         [SerializeField] private CombatActionBar magicalAbilitiesBar;
         [SerializeField] private CombatActionBar consumablesBar;
 
-
-        [Header("Player CombatAction Presets")]
-        // Eventually, these will move to the player's Inventory
-        // vvvvvvvvvvvvvvvvvvvvvvv
-        [SerializeField] private List<NewAbilitySO> physicalAbilitySOs;
-        [SerializeField] private List<NewAbilitySO> magicalAbilitySOs;
-        [SerializeField] private List<ConsumableSO> consumableSOs;
-
         public Action<Loadout, Combatant> CombatantLoadoutCreated;
+        
+
+       
 
         public void CreatePlayerLoadout(Combatant combatant)
         {
@@ -45,9 +40,7 @@ namespace SystemMiami.Management
         protected virtual void OnCreatePlayerLoadout(Combatant combatant)
         {
             Loadout combatantLoadout = new(
-                physicalAbilitySOs,
-                magicalAbilitySOs,
-                consumableSOs,
+                combatant._inventory,
                 combatant);
 
             if (combatant is PlayerCombatant)
@@ -65,21 +58,9 @@ namespace SystemMiami.Management
 
         private void FillLoadoutBars(Loadout loadout)
         {
-            List<CombatAction> convertedPhys
-                = loadout.PhysicalAbilities.Select(
-                    ability => (CombatAction)ability).ToList();
-
-            List<CombatAction> convertedMagical
-                = loadout.MagicalAbilities.Select(
-                    ability => (CombatAction)ability).ToList();
-
-            List<CombatAction> convertedConsumables
-                = loadout.Consumables.Select(
-                    ability => (CombatAction)ability).ToList();
-
-            physicalAbilitiesBar.FillWith(convertedPhys);
-            magicalAbilitiesBar.FillWith(convertedMagical);
-            consumablesBar.FillWith(convertedConsumables);
+            physicalAbilitiesBar.FillWith(loadout.PhysicalAbilities.Cast<CombatAction>().ToList());
+            magicalAbilitiesBar.FillWith(loadout.MagicalAbilities.Cast<CombatAction>().ToList());
+            consumablesBar.FillWith(loadout.Consumables.Cast<CombatAction>().ToList());
         }
     }
 }

@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 2947330204336433884}
   - component: {fileID: 5547647659155334040}
   - component: {fileID: 920910292413876716}
+  - component: {fileID: -7955896196183057924}
   m_Layer: 0
   m_Name: Orange Goblin
   m_TagString: Untagged
@@ -228,9 +229,29 @@ MonoBehaviour:
   _movementSpeed: 2.5
   idleController: {fileID: 22100000, guid: c9368eb5e05f3a2468f96ec549b0fa73, type: 2}
   walkingController: {fileID: 22100000, guid: 26b6afd75119173458d1ca841639984e, type: 2}
+  _inventory: {fileID: -7955896196183057924}
   detectionRadius: 4
   PlayerInRange: 0
   physicalSOs:
   - {fileID: 11400000, guid: 3c00588e6fc198640adfd59c9d3275cc, type: 2}
   magicalSOs: []
   consumableSOs: []
+--- !u!114 &-7955896196183057924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5985083666047915755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cd6b3ea2f86d184a88aec7980f17cc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  magicalAbilityIDs: 
+  physicalAbilityIDs: 
+  consumableIDs: 
+  equipmentModIDs: 
+  quickslotMagicalAbilityIDs: 
+  quickslotPhysicalAbilityIDs: 89130000
+  quickslotConsumableIDs: 

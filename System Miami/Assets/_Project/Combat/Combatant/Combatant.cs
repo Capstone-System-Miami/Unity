@@ -23,6 +23,8 @@ namespace SystemMiami.CombatSystem
         [Header("General Info")]
         [SerializeField] private Color _colorTag = Color.white;
 
+        
+        
         [Header("Settings"), Space(10)]
         [SerializeField] private bool _printUItoConsole;
         [SerializeField] private float _movementSpeed;
@@ -30,7 +32,7 @@ namespace SystemMiami.CombatSystem
         [Header("Animation")]
         [SerializeField] private AnimatorOverrideController idleController;
         [SerializeField] private AnimatorOverrideController walkingController;
-
+        
         #endregion Serialized Vars
 
 
@@ -76,6 +78,7 @@ namespace SystemMiami.CombatSystem
         public int ID { get; set; }
         public Color ColorTag { get { return _colorTag; } }
 
+        [SerializeField] public CombatSystem.Inventory _inventory;
         // State Machine
         public CombatantStateFactory Factory { get { return stateFactory; } }
         public CombatantState CurrentState

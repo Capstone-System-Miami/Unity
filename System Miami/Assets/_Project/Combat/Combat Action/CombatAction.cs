@@ -14,6 +14,8 @@ namespace SystemMiami.CombatRefactor
         public readonly Sprite Icon;
         public readonly AnimatorOverrideController OverrideController;
         public readonly Combatant User;
+        public readonly int ID;
+        public readonly ItemType type;
 
         public readonly List<CombatSubactionSO> Subactions = new();
         public readonly List<CombatSubactionSO> DirectionBasedSubactions = new();
@@ -35,11 +37,12 @@ namespace SystemMiami.CombatRefactor
         public event EventHandler<TargetingEventArgs> TargetingEvent;
 
         protected CombatAction(
-            Sprite icon,
+            Sprite icon,int ActionID,
             List<CombatSubactionSO> subactions,
             AnimatorOverrideController overrideController,
             Combatant user)
         {
+            ID = ActionID;
             Icon = icon;
             Subactions = subactions;
             OverrideController = overrideController;

@@ -16,8 +16,12 @@ namespace SystemMiami.CombatSystem
         public Color TargetedTileColor = Color.white;
         public Color TargetedCombatantColor = Color.white;
 
-        public PatternOriginType PatternOrigin { get { return _patternOrigin; } }
-       
+        public PatternOriginType PatternOrigin
+        {
+            get { return _patternOrigin; }
+            set => _patternOrigin = value;
+        }
+
         #region Public
         /// <summary>
         /// Method by which to return Targets.

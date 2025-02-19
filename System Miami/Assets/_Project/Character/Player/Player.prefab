@@ -431,6 +431,7 @@ GameObject:
   - component: {fileID: 6386089713510983124}
   - component: {fileID: 4261404639173623324}
   - component: {fileID: 137947715004459473}
+  - component: {fileID: 3561768479257745428}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -476,6 +477,7 @@ MonoBehaviour:
   - {fileID: 2944738270664453915}
   - {fileID: 5403784279387507798}
   - {fileID: 2705490712565707672}
+  - {fileID: 3561768479257745428}
   neighborhoodComponents:
   - {fileID: 8219263611542528465}
   - {fileID: 6386089713510983124}
@@ -769,4 +771,24 @@ MonoBehaviour:
   _movementSpeed: 2
   idleController: {fileID: 22100000, guid: decd93ce417d8f74fa9d4dc0cfe24f90, type: 2}
   walkingController: {fileID: 22100000, guid: fa6e08b1c92be634090b672d4f4f3230, type: 2}
+  _inventory: {fileID: 3561768479257745428}
   test: {fileID: 11400000, guid: 325584827e537574f87e9c204cceb703, type: 2}
+--- !u!114 &3561768479257745428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6453553769002132252}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1b0c98d0769de241821df7da7d8f2af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  magicalAbilityIDs: 
+  physicalAbilityIDs: 
+  consumableIDs: 
+  equipmentModIDs: 
+  quickslotMagicalAbilityIDs: 
+  quickslotPhysicalAbilityIDs: ea030000ee030000eb030000e8030000ed030000
+  quickslotConsumableIDs: b80b0000

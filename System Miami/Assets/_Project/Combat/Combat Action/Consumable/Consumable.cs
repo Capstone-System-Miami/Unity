@@ -31,7 +31,7 @@ namespace SystemMiami.CombatRefactor
 
         public Consumable(ConsumableSO preset, Combatant user)
             : base(
-                  preset.Icon,
+                  preset.Icon, preset.itemData.ID,
                   preset.Actions.ToList(),
                   preset.OverrideController,
                   user)

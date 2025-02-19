@@ -9,7 +9,7 @@ namespace SystemMiami.CombatSystem
     public class PlayerCombatant : Combatant
     {
         public NewAbilitySO test;
-
+        
         /// <summary>
         /// Checks for an overlay tile under the cursor.
         /// Returns null if no tile is found under the mouse.
