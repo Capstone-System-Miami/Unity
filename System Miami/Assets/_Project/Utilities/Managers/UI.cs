@@ -11,12 +11,16 @@ namespace SystemMiami.Management
 {
     public class UI : Singleton<UI>
     {
-        public Action<ActionQuickslot> SlotClicked;
+        [Header("Messages")]
+        [SerializeField] private TextBox inputPromptPanel;
 
+
+        [Header("Loadout UI")]
         [SerializeField] private CombatActionBar physicalAbilitiesBar;
         [SerializeField] private CombatActionBar magicalAbilitiesBar;
         [SerializeField] private CombatActionBar consumablesBar;
 
+        public Action<ActionQuickslot> SlotClicked;
         public Action<Loadout, Combatant> CombatantLoadoutCreated;
         
 
@@ -25,6 +29,20 @@ namespace SystemMiami.Management
         public void CreatePlayerLoadout(Combatant combatant)
         {
             OnCreatePlayerLoadout(combatant);
+        }
+
+        public void UpdateInputPrompt(string msg)
+        {
+            inputPromptPanel.ShowBackground();
+            inputPromptPanel.ShowForeground();
+            inputPromptPanel.SetForeground(msg);
+        }
+
+        public void ClearInputPrompt()
+        {
+            inputPromptPanel.SetForeground("");
+            inputPromptPanel.HideBackground();
+            inputPromptPanel.HideForeground();
         }
 
         public void ClickSlot(ActionQuickslot slot)

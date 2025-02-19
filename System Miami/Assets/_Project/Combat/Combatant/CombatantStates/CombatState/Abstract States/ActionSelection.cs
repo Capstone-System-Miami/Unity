@@ -26,12 +26,7 @@ namespace SystemMiami.CombatRefactor
             canEquip.Add(() => selectedCombatAction != null);
 
             /// Subscribe to FocusTile events.
-            combatant.FocusTileChanged += HandleFocusTileChanged;
-            
-            /// Update prompts
-            InputPrompts = 
-                "Select an action from your Loadout Menu.\n" +
-                "Or press Enter/Return to end your turn.\n";
+            combatant.FocusTileChanged += HandleFocusTileChanged;           
         }
 
         public override void MakeDecision()
