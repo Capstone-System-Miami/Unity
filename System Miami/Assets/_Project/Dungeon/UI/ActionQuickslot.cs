@@ -5,10 +5,12 @@ using UnityEngine;
 
 namespace SystemMiami.ui
 {
+    [RequireComponent(typeof(RectTransform))]
     public class ActionQuickslot : MonoBehaviour
     {
-        [SerializeField] private SelectableSprite _icon; 
-       
+        [SerializeField] private SelectableSprite _icon;
+
+        private RectTransform rt;
         private CombatAction _combatAction;
         private SelectionState _selectionState = SelectionState.UNSELECTED;
 
@@ -16,6 +18,13 @@ namespace SystemMiami.ui
         /// The real combat object (AbilityPhysical, AbilityMagical, or Consumable).
         /// </summary>
         public CombatAction CombatAction => _combatAction;
+
+        public RectTransform RT => rt;
+
+        private void Awake()
+        {
+            rt = GetComponent<RectTransform>();
+        }
 
         /// <summary>
         /// Assign a CombatAction object to this slot and update the UI from it.
@@ -29,14 +38,12 @@ namespace SystemMiami.ui
                 return;
             }
  
-           ItemData data = Database.MGR.GetDataWithJustID(action.ID);
-            var iconSprite = data.Icon;
+            ItemData data = Database.MGR.GetDataWithJustID(action.ID);
+            Sprite iconSprite = data.Icon;
             if (iconSprite != null)
             {
                 _icon.SetAllSprites(iconSprite);
             }
-
-            
         }
 
         /// <summary>
@@ -80,22 +87,20 @@ namespace SystemMiami.ui
 
         private void UpdateVisualState(SelectionState state)
         {
-            
             _icon.NewState(state);
-            
         }
 
         public void SetPopupOnEnter()
         {
+            if (_combatAction == null) { return; }
+
             ItemData itemData = Database.MGR.GetDataWithJustID(_combatAction.ID);
-            PopUpHandler.Instance?.SetPopupAblility(itemData);
+            PopUpHandler.MGR?.SetPopupAblility(itemData, this);
         }
 
         public void SetPopupOnExit()
         {
-            PopUpHandler.Instance?.SetPopupAblility();
-          
-
+            PopUpHandler.MGR?.SetPopupAblility();
         }
     }
 }

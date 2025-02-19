@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using SystemMiami.AbilitySystem;
@@ -10,7 +9,7 @@ using UnityEngine;
 
 namespace SystemMiami
 {
-   
+
     public class Database : Singleton<Database>
     {
       
@@ -35,8 +34,6 @@ namespace SystemMiami
         [ContextMenu("Load All Abilities & Consumables")]
         private void LoadAllSOsInProject()
         {
-            
-           
             string[] newAbilityGuids = AssetDatabase.FindAssets("t:NewAbilitySO");
             var allAbilities = new List<NewAbilitySO>();
 
@@ -62,12 +59,9 @@ namespace SystemMiami
                     case AbilityType.MAGICAL:
                         magicalAbilityEntries.Add(ability);
                         break;
-
-                    
                 }
             }
 
-            
             string[] consumableGuids = AssetDatabase.FindAssets("t:ConsumableSO");
             var allConsumables = new List<ConsumableSO>();
 
@@ -102,18 +96,51 @@ namespace SystemMiami
        
 
        
-       public ItemData GetDataWithType(int id, ItemType type)
+       public ItemData GetRandomDataOfType(ItemType type)
        {
-           int IDType = id / 1000;
-           
-           return type switch
-           {
-               
-               ItemType.PhysicalAbility => physicalAbilityDatabase.ContainsKey(id) ? physicalAbilityDatabase[id].itemData : default,
-               ItemType.MagicalAbility => magicalAbilityDatabase.ContainsKey(id) ? magicalAbilityDatabase[id].itemData : default,
-               ItemType.Consumable => consumableDatabase.ContainsKey(id) ? consumableDatabase[id].itemData : default,
-               _ => default
-           };
+            List<int> entryIndices = new();
+            int randomIndex = 0;
+
+            switch (type)
+            {
+                default:
+                case ItemType.PhysicalAbility:
+                    foreach (int id in physicalAbilityDatabase.Keys)
+                    {
+                        entryIndices.Add(id);
+                    }
+
+                    randomIndex = Random.Range(0, entryIndices.Count);
+                    return GetDataWithJustID(entryIndices[randomIndex]);
+
+                case ItemType.MagicalAbility:
+                    foreach (int id in magicalAbilityDatabase.Keys)
+                    {
+                        entryIndices.Add(id);
+                    }
+
+                    randomIndex = Random.Range(0, entryIndices.Count);
+                    return GetDataWithJustID(entryIndices[randomIndex]);
+
+                case ItemType.Consumable:
+                   foreach (int id in consumableDatabase.Keys)
+                   {
+                       entryIndices.Add(id);
+                   }
+
+                    randomIndex = Random.Range(0, entryIndices.Count);
+                    return GetDataWithJustID(entryIndices[randomIndex]);
+           }
+
+
+           // Lee old code
+           //return type switch
+           //{
+           //    ItemType.PhysicalAbility => physicalAbilityDatabase.ContainsKey(id) ? physicalAbilityDatabase[id].itemData : default,
+           //    ItemType.MagicalAbility => magicalAbilityDatabase.ContainsKey(id) ? magicalAbilityDatabase[id].itemData : default,
+           //    ItemType.Consumable => consumableDatabase.ContainsKey(id) ? consumableDatabase[id].itemData : default,
+           //    _ => default
+           //};
        }
        
        public ItemData GetDataWithJustID(int id)
@@ -122,7 +149,6 @@ namespace SystemMiami
            
            return IDType switch
            {
-               
                1 => physicalAbilityDatabase.ContainsKey(id) ? physicalAbilityDatabase[id].itemData : default,
                2 => magicalAbilityDatabase.ContainsKey(id) ? magicalAbilityDatabase[id].itemData : default,
                3 => consumableDatabase.ContainsKey(id) ? consumableDatabase[id].itemData : default,

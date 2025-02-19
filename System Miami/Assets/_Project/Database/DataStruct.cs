@@ -33,7 +33,7 @@ namespace SystemMiami
     
     public enum ItemType
     {
-        PhysicalAbility,
+        PhysicalAbility = 1,
         MagicalAbility,
         Consumable,
         EquipmentMod

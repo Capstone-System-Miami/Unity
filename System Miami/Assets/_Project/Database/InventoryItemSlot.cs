@@ -35,7 +35,7 @@ namespace SystemMiami
 
         public void UpdateSlot() 
         {
-            ItemData itemData = Database.MGR.GetDataWithType(itemID,itemType);
+            ItemData itemData = Database.MGR.GetRandomDataOfType(itemType);
             icon.sprite = itemData.Icon;
             name.text = itemData.Name;
             description.text = itemData.Description;
