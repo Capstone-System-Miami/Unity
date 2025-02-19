@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 2947330204336433884}
   - component: {fileID: 5547647659155334040}
   - component: {fileID: 4434390765391053569}
+  - component: {fileID: 6083187466875687617}
   m_Layer: 0
   m_Name: Purple Goblin
   m_TagString: Untagged
@@ -228,9 +229,29 @@ MonoBehaviour:
   _movementSpeed: 3
   idleController: {fileID: 22100000, guid: a6d3a932dec6afc4687e43a71b39551c, type: 2}
   walkingController: {fileID: 22100000, guid: 4830c6627c303eb42bc46b1162ea514f, type: 2}
+  _inventory: {fileID: 6083187466875687617}
   detectionRadius: 5
   PlayerInRange: 0
   physicalSOs:
   - {fileID: 11400000, guid: a38d5318836002c44906ddc5808316d0, type: 2}
   magicalSOs: []
   consumableSOs: []
+--- !u!114 &6083187466875687617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5985083666047915755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cd6b3ea2f86d184a88aec7980f17cc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  magicalAbilityIDs: 
+  physicalAbilityIDs: 
+  consumableIDs: 
+  equipmentModIDs: 
+  quickslotMagicalAbilityIDs: 
+  quickslotPhysicalAbilityIDs: 8a130000
+  quickslotConsumableIDs: 

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace SystemMiami.CombatRefactor
 {
@@ -7,5 +8,6 @@ namespace SystemMiami.CombatRefactor
     {
         [Space(20)]
         public int Uses;
+        [FormerlySerializedAs("Data")] public ItemData itemData;
     }
 }

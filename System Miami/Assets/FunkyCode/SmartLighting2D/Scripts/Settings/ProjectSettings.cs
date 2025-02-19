@@ -2,7 +2,7 @@
 
 namespace FunkyCode.LightingSettings
 {
-    [CreateAssetMenu(fileName = "Data", menuName = "Light 2D/Project", order = 2)]
+    [CreateAssetMenu(fileName = "ItemData", menuName = "Light 2D/Project", order = 2)]
 
     public class ProjectSettings : ScriptableObject
 	{
