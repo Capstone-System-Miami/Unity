@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using SystemMiami.Dungeons;
 using UnityEngine;
+using SystemMiami.Utilities;
 
 namespace SystemMiami
 {
@@ -18,9 +19,9 @@ namespace SystemMiami
         [SerializeField] float orthoSizeMed = 6f;
         [SerializeField] float orthoSizeHard = 7f;
 
-        [SerializeField] float yOffsetEasy = 1f;
-        [SerializeField] float yOffsetMed = 1.5f;
-        [SerializeField] float yOffsetHard = 2f;
+        [SerializeField] float yOffsetEasy = -1f;
+        [SerializeField] float yOffsetMed = -1.5f;
+        [SerializeField] float yOffsetHard = -2f;
 
         private Dictionary<DifficultyLevel, float> orthoSize = new();
         private Dictionary<DifficultyLevel, float> yOffset = new();
@@ -44,10 +45,9 @@ namespace SystemMiami
 
         private void Start()
         {
-            Vector2 mapCenter = (Vector2)MapManager.MGR.CenterPos;
-            Vector3 offset = new Vector3(0f, yOffset[DifficultyLevel.MEDIUM], -10);
+            // TODO: figure out how to position the camera at the center.
 
-            Camera.main.transform.position = (Vector3)mapCenter + offset;
+            // Set orthoSize to medium by default.
             Camera.main.orthographicSize = orthoSize[DifficultyLevel.MEDIUM];
         }
     }
