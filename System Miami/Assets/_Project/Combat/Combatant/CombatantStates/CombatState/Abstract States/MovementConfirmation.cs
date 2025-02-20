@@ -25,11 +25,6 @@ namespace SystemMiami.CombatRefactor
             /// Preview the path to the selected tile.
             path.DrawArrows();
             path.HighlightValidMoves(Color.cyan);
-
-            InputPrompts =
-                "Hover over a tile to preview a path to it.\n" +
-                "Click to lock your path.\n" +
-                "(You will still be able to change your mind)\n";
         }
 
         public override void MakeDecision()

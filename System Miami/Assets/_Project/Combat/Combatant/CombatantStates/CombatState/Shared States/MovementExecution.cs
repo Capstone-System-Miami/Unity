@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using SystemMiami.CombatSystem;
+using SystemMiami.Management;
 using SystemMiami.Utilities;
 using UnityEngine;
 
@@ -49,8 +50,10 @@ namespace SystemMiami.CombatRefactor
             combatant.Animator.runtimeAnimatorController
                 = combatant.AnimControllerWalking;
 
-            InputPrompts = 
+            InputPrompts =
                 "Executing Movement.\n";
+
+            UI.MGR.ClearInputPrompt();
         }
 
         public override void Update()

@@ -1,4 +1,5 @@
 using SystemMiami.CombatSystem;
+using SystemMiami.Management;
 using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
@@ -12,8 +13,10 @@ namespace SystemMiami.CombatRefactor
         {
             base.OnEnter();
             InputPrompts =
-                $"{combatant.name} Turn Start!\n" +
-                $"Press {KeyCode.Return} to begin.";
+                $"Turn Start!\n\n" +
+                $"Press Enter to begin.";
+
+            UI.MGR.UpdateInputPrompt(InputPrompts);
         }
 
         protected override bool ProceedRequested()

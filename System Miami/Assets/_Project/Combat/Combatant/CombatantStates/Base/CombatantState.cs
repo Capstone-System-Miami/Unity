@@ -46,9 +46,6 @@ namespace SystemMiami.CombatRefactor
         /// </summary>
         public virtual void OnEnter()
         {
-            Debug.Log(
-                $"{combatant.name} is entering " +
-                $"a state: {this.GetType()}");
         }
 
         /// <summary>
