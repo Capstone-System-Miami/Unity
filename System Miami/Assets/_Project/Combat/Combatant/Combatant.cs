@@ -192,6 +192,7 @@ namespace SystemMiami.CombatSystem
         private void OnDisable()
         {
             UI.MGR.CombatantLoadoutCreated -= HandleLoadoutCreated;
+            currentState = null;
         }
 
         protected virtual void Start()
@@ -215,6 +216,14 @@ namespace SystemMiami.CombatSystem
 
         #region Construction
         //============================================================
+        public void InitAll()
+        {
+            InitResources();
+            InitLoadout();
+            InitDirection();
+            InitStateMachine();
+        }
+
         private void InitComponents()
         {
             _stats = GetComponent<Stats>();
