@@ -17,7 +17,7 @@ namespace SystemMiami.CombatRefactor
                 $"Hover over a tile to preview movement.\n\n" +
                 $"Click to lock in your path,\n" +
                 $"(You will still be able to change your mind)\n\n" +
-                $"Or press Tab to skip Movement and select an Action\n";
+                $"Or press Tab to skip Movement and select an Action";
 
             UI.MGR.UpdateInputPrompt(InputPrompts);
         }

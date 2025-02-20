@@ -14,10 +14,16 @@ namespace SystemMiami.CombatRefactor
         {
             base.OnEnter();
 
+            // It still feels clunky to have to use the
+            // Database to get the name of the action.
+            string actionName = Database.MGR.GetDataWithJustID(combatAction.ID).Name;
+
             InputPrompts =
-                $"Press Enter to confirm your targets,\n" +
-                $"and attack with {Database.MGR.GetDataWithJustID(combatAction.ID).Name}\n\n" +
-                $"or Right Click to select new targets.";
+                $"(NOT IMPLEMENTED) Hover over a target to " +
+                $"preview {actionName}'s effects.\n\n" +
+                $"Press Enter to confirm your targets\n" +
+                $"and use {actionName}\n\n" +
+                $"Or Right Click to select new targets.";
 
             UI.MGR.UpdateInputPrompt(InputPrompts);
         }

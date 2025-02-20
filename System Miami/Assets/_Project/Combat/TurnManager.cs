@@ -94,6 +94,8 @@ namespace SystemMiami
                         $"through the MapManager, but it failed.");
                     return;
                 }
+
+                playerCharacter.InitAll();
             }
 
             if (GAME.MGR.TryGetEnemies(out enemyPrefabs))

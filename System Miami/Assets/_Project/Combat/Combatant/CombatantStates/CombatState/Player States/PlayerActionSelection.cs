@@ -20,7 +20,7 @@ namespace SystemMiami.CombatRefactor
             /// Update prompts
             InputPrompts =
                 "Select an action from your Loadout Menu.\n\n" +
-                "Or press Enter to end your turn.";
+                "Or press Tab to skip Actions and end your turn.";
 
             UI.MGR.UpdateInputPrompt(InputPrompts);
 
@@ -53,7 +53,6 @@ namespace SystemMiami.CombatRefactor
         {
             if (slotBeenClicked)
             {
-                Debug.LogWarning("Made it to equip request");
                 slotBeenClicked = false;
                 return true;
             }
@@ -63,7 +62,7 @@ namespace SystemMiami.CombatRefactor
 
         protected override bool SkipPhaseRequested()
         {
-            return Input.GetKeyDown(KeyCode.Q);
+            return Input.GetKeyDown(KeyCode.Tab);
         }
     }
 }
