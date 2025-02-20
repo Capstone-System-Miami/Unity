@@ -34,6 +34,7 @@ namespace SystemMiami
         private GameObject overlayContainer;
 
         public BoundsInt Bounds { get { return bounds; } }
+        public Dungeon Dungeon { get { return dungeon; } }
 
         protected override void Awake()
         {
