@@ -16,6 +16,7 @@ namespace SystemMiami
         public string Name;
         public string Description;
         [FormerlySerializedAs("dataType")] public ItemType itemType;
+        public int Price;
        
        public ItemData (int id, Sprite icon, string name, string description, ItemType itemType)
         {
@@ -24,6 +25,7 @@ namespace SystemMiami
             Name = name;
             Description = description;
             this.itemType = itemType;
+            Price = 0;
         }
     }
 
