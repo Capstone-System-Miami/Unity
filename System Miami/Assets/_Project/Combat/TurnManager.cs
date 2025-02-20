@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using SystemMiami.CombatSystem;
+using SystemMiami.CombatRefactor;
 using SystemMiami.Management;
 using SystemMiami.Utilities;
 using UnityEngine;
@@ -45,13 +46,9 @@ namespace SystemMiami
         {
             get
             {
-                if (CurrentTurnOwner == null)
-                    { return false; }
+                if (CurrentTurnOwner == null) { return false; }
 
-                if (CurrentTurnOwner.Controller == null)
-                    { return false; }
-
-                return CurrentTurnOwner.Controller is PlayerController;
+                return CurrentTurnOwner is PlayerCombatant;
             }
         }
 
@@ -83,12 +80,22 @@ namespace SystemMiami
                 {
                     if (!MapManager.MGR.map.TryGetValue((Vector2Int.zero), out charTile))
                     {
-                        Debug.LogError("Player Placement failed.");
+                        Debug.LogError(
+                            $"{this} failed to find a tile " +
+                            $"to place the player on.");
                         return;
                     }
                 }
 
-                charTile.PlaceCombatant(playerCharacter);
+                if (!MapManager.MGR.TryPlaceOnTile(playerCharacter, charTile))
+                {
+                    Debug.LogError(
+                        $"{this} tried to place {playerCharacter} " +
+                        $"through the MapManager, but it failed.");
+                    return;
+                }
+
+                playerCharacter.InitAll();
             }
 
             if (GAME.MGR.TryGetEnemies(out enemyPrefabs))
@@ -112,7 +119,7 @@ namespace SystemMiami
             if (CurrentTurnOwner == null)
                 { return; }
 
-            Debug.Log($"Current Turn Owner: {CurrentTurnOwner.name}");
+            //Debug.Log($"Current Turn Owner: {CurrentTurnOwner.name}");
         }
         //===============================
         #endregion // ^Unity Methods^
@@ -126,24 +133,46 @@ namespace SystemMiami
         /// </summary>
         private IEnumerator TurnSequence()
         {
-            while (!IsGameOver)
+            bool combatantsReady = true;
+
+            do
             {
+                combatantsReady = true;
                 foreach (Combatant combatant in combatants)
                 {
-                    if (combatant == null)
-                    { continue; }
-
-                    if (combatant.Controller == null)
+                    if (!combatant.ReadyToStart)
                     {
-                        Debug.LogWarning($"CombatantController not found in {combatant} on {combatant.name}");
-                        continue;
+                        combatantsReady = false;
+                        break;
                     }
+                }
+                Debug.Log("IN");
+                yield return null;
+            } while (!combatantsReady);
+
+            Debug.Log("OUT");
+
+            while (!IsGameOver)
+            {
+                // Remove null items.
+                // These nulls can occur when
+                // combatants die.
+                combatants.RemoveAll(combatant => combatant == null);
+
+                foreach (Combatant combatant in combatants)
+                {
+                    if (combatant == null) { continue; }
+
+                    // TODO this is a werid way of
+                    // 'forcing' a state switch, as
+                    // states should control their own
+                    // transitions. Consider converting
+                    // this to a request or something.
+                    combatant.CurrentState.SwitchState(combatant.Factory.TurnStart());
 
                     CurrentTurnOwner = combatant;
-                    combatant.Controller.StartTurn();
-
                     yield return new WaitForEndOfFrame();
-                    yield return new WaitUntil(() => !combatant.Controller.IsMyTurn);
+                    yield return new WaitUntil(() => !combatant.IsMyTurn);
                 }
 
                 yield return null;
@@ -161,7 +190,7 @@ namespace SystemMiami
             for (int i = 0; i < numberOfEnemies; i++)
             {
                 // Find a random unblocked tile to place the enemy
-                OverlayTile spawnTile = MapManager.MGR.GetRandomUnblockedTile();
+                OverlayTile spawnTile = MapManager.MGR.GetRandomValidTile();
 
                 if (spawnTile == null)
                 {
@@ -176,7 +205,7 @@ namespace SystemMiami
         {
             for (int i = 0; i < prefabs.Count; i++)
             {
-                OverlayTile spawnTile = MapManager.MGR.GetRandomUnblockedTile();
+                OverlayTile spawnTile = MapManager.MGR.GetRandomValidTile();
 
                 if (spawnTile == null)
                 {
@@ -207,7 +236,13 @@ namespace SystemMiami
             enemyCombatant.name = newName;
 
             // Position enemy on the tile
-            spawnTile.PlaceCombatant(enemyCombatant);
+            if (!MapManager.MGR.TryPlaceOnTile(enemyCombatant, spawnTile))
+            {
+                Debug.LogError($"" +
+                    $"{this} couldn't place " +
+                    $"{enemyCombatant.gameObject} " +
+                    $"on {spawnTile.gameObject}");
+            }
 
             // Add to enemy list
             enemyCharacters.Add(enemyCombatant);

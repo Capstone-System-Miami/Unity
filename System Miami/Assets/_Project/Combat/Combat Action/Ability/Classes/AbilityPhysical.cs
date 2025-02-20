@@ -6,9 +6,9 @@ namespace SystemMiami.CombatRefactor
     {
         public AbilityPhysical(NewAbilitySO preset, Combatant user)
             : base(
-                  preset,
-                  user,
-                  user.Stamina)
+                preset,
+                user,
+                user.Stamina)
         { }
     }
 }

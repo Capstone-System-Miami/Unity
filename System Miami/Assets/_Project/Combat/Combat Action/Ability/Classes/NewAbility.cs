@@ -1,5 +1,8 @@
 using System.Collections;
+using System.Linq;
 using SystemMiami.CombatSystem;
+using SystemMiami.Utilities;
+using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
 {
@@ -21,29 +24,14 @@ namespace SystemMiami.CombatRefactor
 
         protected NewAbility(NewAbilitySO preset, Combatant user, Resource targetResource)
             : base(
-                  preset.Icon,
-                  preset.Actions,
+                  preset.Icon, preset.itemData.ID,
+                  preset.Actions.ToList(),
                   preset.OverrideController,
                   user)
         {
             this.ResourceCost = preset.ResourceCost;
             this.CooldownTurns = preset.CooldownTurns;
             this.targetResource = targetResource;
-        }
-
-        // TODO:
-        // (layla question)
-        // Does this need to be an IEnumerator?
-        // It feels like it could just be a System.Action
-        // or other delegate type
-        public override IEnumerator Use()
-        {
-            targetResource.Lose(ResourceCost);
-            yield return null;
-
-            performActions();
-
-            startCooldown();
         }
 
         public void ReduceCooldown()
@@ -54,6 +42,15 @@ namespace SystemMiami.CombatRefactor
             }
         }
 
+        protected override void PreExecution()
+        {
+            targetResource.Lose(ResourceCost);
+        }
+
+        protected override void PostExecution()
+        {
+            startCooldown();
+        }
         private void startCooldown()
         {
             cooldownRemaining = CooldownTurns;

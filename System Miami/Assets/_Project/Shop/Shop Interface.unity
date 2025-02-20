@@ -250,6 +250,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 8438237525600368636, guid: 0cef0bd8a0b2dc841b8db869128aae72, type: 3}
+      propertyPath: button
+      value: 
+      objectReference: {fileID: 1664747765}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -631,6 +635,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 8438237525600368636, guid: 0cef0bd8a0b2dc841b8db869128aae72, type: 3}
+      propertyPath: button
+      value: 
+      objectReference: {fileID: 726250969}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -764,6 +772,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 8438237525600368636, guid: 0cef0bd8a0b2dc841b8db869128aae72, type: 3}
+      propertyPath: button
+      value: 
+      objectReference: {fileID: 1829431215}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -897,6 +909,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 8438237525600368636, guid: 0cef0bd8a0b2dc841b8db869128aae72, type: 3}
+      propertyPath: button
+      value: 
+      objectReference: {fileID: 681622518}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1110,10 +1126,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -1434,6 +1450,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 8438237525600368636, guid: 0cef0bd8a0b2dc841b8db869128aae72, type: 3}
+      propertyPath: button
+      value: 
+      objectReference: {fileID: 452475502}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2336,6 +2356,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 8438237525600368636, guid: 0cef0bd8a0b2dc841b8db869128aae72, type: 3}
+      propertyPath: button
+      value: 
+      objectReference: {fileID: 382286434}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2469,6 +2493,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 8438237525600368636, guid: 0cef0bd8a0b2dc841b8db869128aae72, type: 3}
+      propertyPath: button
+      value: 
+      objectReference: {fileID: 1415583223}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2613,6 +2641,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 8438237525600368636, guid: 0cef0bd8a0b2dc841b8db869128aae72, type: 3}
+      propertyPath: button
+      value: 
+      objectReference: {fileID: 993373968}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2744,8 +2776,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   coins: 0
   coinUI: {fileID: 1631367333}
-  Items: []
-  shopPanelGO:
+  slotGO:
   - {fileID: 1003147298}
   - {fileID: 1891458821}
   - {fileID: 393662735}
@@ -2757,7 +2788,7 @@ MonoBehaviour:
   - {fileID: 170113595}
   - {fileID: 1554395466}
   - {fileID: 1606838989}
-  shopPanels:
+  slots:
   - {fileID: 2064074441}
   - {fileID: 1891458822}
   - {fileID: 1981598192}
@@ -2769,18 +2800,14 @@ MonoBehaviour:
   - {fileID: 1082212391}
   - {fileID: 1554395467}
   - {fileID: 1606838990}
-  myPurchaseBtns:
-  - {fileID: 726250969}
-  - {fileID: 681622518}
-  - {fileID: 1664747765}
-  - {fileID: 900532862}
-  - {fileID: 382286434}
-  - {fileID: 993373968}
-  - {fileID: 452475502}
-  - {fileID: 1829431215}
-  - {fileID: 1415583223}
-  - {fileID: 2126789478}
-  - {fileID: 1510647898}
+  ShopItemSOs:
+  - {fileID: 11400000, guid: ddb75039a27708a4ea9fcdba36f63562, type: 2}
+  - {fileID: 11400000, guid: d0d1bb15753672f4d96c45338f54a189, type: 2}
+  - {fileID: 11400000, guid: ad6d021bc31a91140926c3328695e87f, type: 2}
+  - {fileID: 11400000, guid: e096f2df0a49e594fa15e83c88a9d666, type: 2}
+  - {fileID: 11400000, guid: 29b45a7a5864bad41b436ce9e1fbad30, type: 2}
+  EquipmentExampleSOs:
+  - {fileID: 11400000, guid: d806ea974faad484b86528b1d64331fe, type: 2}
 --- !u!224 &1981598191 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5094874411893789007, guid: 0cef0bd8a0b2dc841b8db869128aae72, type: 3}
@@ -2925,6 +2952,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 8438237525600368636, guid: 0cef0bd8a0b2dc841b8db869128aae72, type: 3}
+      propertyPath: button
+      value: 
+      objectReference: {fileID: 2126789478}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3058,6 +3089,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 8438237525600368636, guid: 0cef0bd8a0b2dc841b8db869128aae72, type: 3}
+      propertyPath: button
+      value: 
+      objectReference: {fileID: 900532862}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3218,6 +3253,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 8438237525600368636, guid: 0cef0bd8a0b2dc841b8db869128aae72, type: 3}
+      propertyPath: button
+      value: 
+      objectReference: {fileID: 1510647898}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace SystemMiami
 {
-    public class DrawArrows : Singleton<DrawArrows>
+    public class ArrowDrawer : Singleton<ArrowDrawer>
     {
         public GameObject arrowPrefab;
         public List<GameObject> arrows;
@@ -18,21 +18,6 @@ namespace SystemMiami
 
             arrows = new List<GameObject>();
             previousPath = new List<OverlayTile>();
-        }
-
-        private void OnEnable()
-        {
-            TurnManager.MGR.NewTurnPhase += onNewTurnPhase;
-        }
-
-        private void OnDisable()
-        {
-            TurnManager.MGR.NewTurnPhase -= onNewTurnPhase;
-        }
-
-        private void onNewTurnPhase(Phase newPhase)
-        {
-            RemoveArrows();
         }
 
         public void DrawPath(List<OverlayTile> path)
@@ -63,12 +48,12 @@ namespace SystemMiami
                 arrow.SetTileData(currentTile, prev, next);
 
                 arrows.Add(arrowGo);
-                //todo arrows after path                
+                //todo arrows after path
             }
             
         }
 
-        private void RemoveArrows()
+        public void RemoveArrows()
         {
             foreach (GameObject arrow in arrows)
             {

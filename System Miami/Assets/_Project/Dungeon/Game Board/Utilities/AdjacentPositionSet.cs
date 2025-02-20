@@ -7,73 +7,78 @@ using UnityEngine;
 
 namespace SystemMiami.CombatSystem
 {
-
-    // Take the moveDirection that something is facing,
+    // Take the direction that something is facing,
     // and translate their local adjacent positions
-    // into the static/unchanging positions on the Board/Map
+    // into static/unchanging positions on the Board/Map
     public class AdjacentPositionSet
     {
-        private Dictionary<TileDir, Vector2Int> _directionsRelativeToMap;
-        private Dictionary<TileDir, Vector2Int> _positionsRelativeToMap;
-        private Dictionary<TileDir, Vector2Int> _directionsRelativeToSelf;
-        private List<TileDir> rotatedDirs;
-        public Dictionary<TileDir, Vector2Int> AdjacentPositions { get; private set; }
-        public Dictionary<TileDir, Vector2Int> AdjacentDirectionVecs { get; private set; }
-        public bool IsReady { get; private set; }
+        public readonly Dictionary<TileDir, Vector2Int>
+            BoardDirectionVectors = new();
+
+        public readonly Dictionary<TileDir, Vector2Int>
+            AdjacentBoardPositions = new();
 
         // Constructors
-        public AdjacentPositionSet(DirectionalInfo info)
+        public AdjacentPositionSet(DirectionContext info)
         {
-            // Initialize local directions to default set of directions.
-            _directionsRelativeToSelf = DirectionHelper.MapDirectionsByEnum;
-
             // Find the map directions by rotating an amount of
-            // ticks equivalent to the enumerated moveDirection
+            // ticks equivalent to the enumerated direction
             // of the incoming object.
-            _directionsRelativeToMap = getRotatedVectors(_directionsRelativeToSelf, (int)info.DirectionName);
+            BoardDirectionVectors = GetRotatedVectors((int)info.BoardDirection);
             //DirectionHelper.Print(_directionsRelativeToMap, "Map directions");
             
             // Get adjacent map positions by adding the map position of the
             // incoming object to the directions
-            _positionsRelativeToMap = new Dictionary<TileDir, Vector2Int>();
-            foreach(TileDir direction in _directionsRelativeToMap.Keys)
+            foreach(TileDir direction in BoardDirectionVectors.Keys)
             {
-                _positionsRelativeToMap[direction] = _directionsRelativeToMap[direction] + info.MapPositionA;
+                AdjacentBoardPositions[direction] = BoardDirectionVectors[direction] + info.TilePositionA;
             }
 
-            AdjacentPositions = _positionsRelativeToMap;
-            AdjacentDirectionVecs = _directionsRelativeToMap;
-
             //DirectionHelper.Print(AdjacentPositions, "Adjacent");
-            IsReady = true;
         }
 
         /// <summary>
-        /// Rotates a set of local positions by a
-        /// number of quarter turns.
-        /// (One clockwise quarter turn from forward
-        /// means your new forward is topRight)
+        /// Rotates a set of standard local positions by
+        /// a number of quarter turns.
+        /// 
+        /// <para>
+        /// - Ex. 1 | 1 clockwise turn from board-forward
+        /// means the value at returnedDict[FORWARD_C]
+        /// will be the same value found at
+        /// BoardDirectionVecByEnum[FORWARD_R]</para>
+        /// 
+        /// <para>
+        /// - Ex. 2 | 6 clockwise turns from board-forward
+        /// means the value at returnedDict[FORWARD_C]
+        /// will be the same value found at
+        /// BoardDirectionVecByEnum[BACKWARD_L]</para>
         /// </summary>
-        /// <param name="originalVectors">
-        /// The set of 8 positions to be shitfed
-        /// </param>
-        /// <param name="quarterTurns">
+        /// 
+        /// <param name="clockwiseQuarterTurns">
         /// The amount of times to shift by 45 degrees
-        /// <returns></returns>
-        private Dictionary<TileDir, Vector2Int> getRotatedVectors(Dictionary<TileDir, Vector2Int> originalVectors, int quarterTurns)
+        /// </param>
+        private Dictionary<TileDir, Vector2Int> GetRotatedVectors(int clockwiseQuarterTurns)
         {
-            Dictionary<TileDir, Vector2Int> result = new Dictionary<TileDir, Vector2Int>();
+            // Copy of the standard dictionary
+            // of directions is stored to
+            // represent our original
+            // 'local' directions
+            Dictionary<TileDir, Vector2Int>
+                localDirs = new(DirectionHelper.BoardDirectionVecByEnum);
+
+            Dictionary<TileDir, Vector2Int>
+                result = new();
 
             // Should always be 8
             int directionCount = Enum.GetValues(typeof(TileDir)).Length;
 
             int leftIndex = 0;
-            int rightIndex = quarterTurns;
+            int rightIndex = clockwiseQuarterTurns;
             int catchBeginning = 0;
 
-            int total = 0;
+            int iterations = 0;
             const int LIMIT = 10; // ( while loops are scary ¯\_( )_/¯ )
-            while (leftIndex < directionCount && total++ <= LIMIT)
+            while (leftIndex < directionCount && iterations++ <= LIMIT)
             {
                 // At leftIndex == 0, centered is forward center.
                 // Increment the indexer after we read it.
@@ -98,7 +103,7 @@ namespace SystemMiami.CombatSystem
 
                 //Debug.Log($"local pos {centered} is now original pos {shifted}");
                 // Result set to the shifted position.
-                result[centered] = originalVectors[shifted];
+                result[centered] = localDirs[shifted];
             }
             return result;
         }

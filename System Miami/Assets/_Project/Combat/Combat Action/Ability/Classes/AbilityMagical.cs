@@ -6,9 +6,9 @@ namespace SystemMiami.CombatRefactor
     {
         public AbilityMagical(NewAbilitySO preset, Combatant user)
             : base(
-                  preset,
-                  user,
-                  user.Mana)
+                preset,
+                user,
+                user.Mana)
         { }
     }
 }
