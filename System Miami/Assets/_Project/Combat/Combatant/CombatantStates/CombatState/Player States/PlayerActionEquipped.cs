@@ -19,6 +19,15 @@ namespace SystemMiami
         {
             base.OnEnter();
 
+            InputPrompts =
+                $"{Database.MGR.GetDataWithJustID(selectedCombatAction.ID).Name} equipped.\n\n" +
+                $"Hover over a tile to aim,\n\n" +
+                $"Click to lock your targets\n" +
+                $"(You will still be able to change your mind),\n\n" +
+                $"Or Right Click to select a different Action.";
+
+            UI.MGR.UpdateInputPrompt(InputPrompts);
+
             UI.MGR.SlotClicked += HandleSlotClicked;
         }
 

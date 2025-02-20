@@ -35,11 +35,6 @@ namespace SystemMiami.CombatRefactor
             combatant.FocusTileChanged += HandleFocusTileChanged;
 
             selectedCombatAction.Equip();
-
-            InputPrompts =
-                "Hover over a tile to aim.\n" +
-                "Click to lock your targets.\n" +
-                "(You will still be able to change your mind)\n";
         }
 
         public override void Update()

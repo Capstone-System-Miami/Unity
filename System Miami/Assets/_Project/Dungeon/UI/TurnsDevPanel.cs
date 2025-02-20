@@ -16,9 +16,6 @@ namespace SystemMiami
         [SerializeField] private LabeledField _phaseField;
         [SerializeField] private Color _movementColor;
         [SerializeField] private Color _actionColor;
-
-        [SerializeField] TextBox _promptsBox;
-        [SerializeField] private Color _promptsTextColor = Color.white;
         #endregion
 
         #region Private
@@ -60,16 +57,6 @@ namespace SystemMiami
 
             updateCombatantPanel();
             updatePhasePanel();
-
-            if (turnOwner is PlayerCombatant)
-            {
-                enablePrompts();
-                updatePromptsPanel();
-            }
-            else
-            {
-                disablePrompts();
-            }
         }
         #endregion
 
@@ -95,32 +82,6 @@ namespace SystemMiami
 
             _phaseField.Value.SetForeground($"{turnOwner.CurrentPhase}");
             _phaseField.Value.SetForeground(phaseColor);
-        }
-
-        private void updatePromptsPanel()
-        {
-            _promptsBox.SetForeground(_promptToDisplay);
-            _promptsBox.SetForeground(_promptsTextColor);
-        }
-
-        private void enablePrompts()
-        {
-            if (_promptsEnabled) { return; }
-
-            _promptsBox.ShowBackground();
-            _promptsBox.ShowForeground();
-
-            _promptsEnabled = true;
-        }
-
-        private void disablePrompts()
-        {
-            if (!_promptsEnabled) { return; }
-
-            _promptsBox.HideBackground();
-            _promptsBox.HideForeground();
-
-            _promptsEnabled = false;
         }
         #endregion
     }

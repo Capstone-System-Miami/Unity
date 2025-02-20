@@ -17,6 +17,13 @@ namespace SystemMiami.CombatRefactor
         {
             base.OnEnter();
 
+            /// Update prompts
+            InputPrompts =
+                "Select an action from your Loadout Menu.\n\n" +
+                "Or press Enter to end your turn.";
+
+            UI.MGR.UpdateInputPrompt(InputPrompts);
+
             UI.MGR.SlotClicked += HandleSlotClick;
         }
 

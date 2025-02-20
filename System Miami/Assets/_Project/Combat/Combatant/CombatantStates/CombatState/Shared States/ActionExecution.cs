@@ -1,5 +1,6 @@
 using System.Collections;
 using SystemMiami.CombatSystem;
+using SystemMiami.Management;
 using SystemMiami.Utilities;
 using UnityEngine;
 
@@ -30,6 +31,8 @@ namespace SystemMiami.CombatRefactor
 
             InputPrompts =
                 "Executing Action.";
+
+            UI.MGR.ClearInputPrompt();
         }
 
         public override void Update()

@@ -1,4 +1,5 @@
 using SystemMiami.CombatSystem;
+using SystemMiami.Management;
 using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
@@ -7,6 +8,17 @@ namespace SystemMiami.CombatRefactor
     {
         public PlayerTurnEnd(Combatant combatant)
             : base(combatant) { }
+
+        public override void OnEnter()
+        {
+            base.OnEnter();
+
+            InputPrompts = 
+                $"Turn Over.\n\n" +
+                $"Press Enter to proceed.";
+
+            UI.MGR.UpdateInputPrompt(InputPrompts);
+        }
 
         protected override bool Proceed()
         {
