@@ -17,7 +17,7 @@ public class Quest : ScriptableObject
     private int killsMade = 0;
 
     [Header("Rewards")]
-    public int rewardGold;
+    public int rewardCredits;
     public int rewardXP;
 
     public bool IsCompleted => killsMade >= killsRequired;
@@ -42,9 +42,9 @@ public class Quest : ScriptableObject
         if (player != null)
         {
             player.GainXP(rewardXP); // Give XP
-            player.AddGold(rewardGold); // Give Gold
+            player.AddCredits(rewardCredits); // Give Credits
         }
 
-        Debug.Log($"Quest Completed: {questTitle} | Reward: {rewardGold} Gold, {rewardXP} XP");
+        Debug.Log($"Quest Completed: {questTitle} | Reward: {rewardCredits} Credits, {rewardXP} XP");
     }
 }

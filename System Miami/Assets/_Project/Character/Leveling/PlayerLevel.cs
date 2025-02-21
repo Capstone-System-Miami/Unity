@@ -11,7 +11,7 @@ namespace SystemMiami
         public int level = 1;
         public int currentXP = 0;
         public int xpToNextLevel = 100;
-        public int gold = 0; //  Gold currency
+        public int credits = 0;
 
         public int str = 3; // Strength
         public int con = 3; // Constitution
@@ -30,7 +30,7 @@ namespace SystemMiami
             if (Input.GetKeyDown(KeyCode.Keypad3)) { GainXP(20); }
             if (Input.GetKeyDown(KeyCode.Keypad4)) { GainXP(30); }
             if (Input.GetKeyDown(KeyCode.Keypad5)) { GainXP(50); }
-            if (Input.GetKeyDown(KeyCode.G)) { AddGold(100); } //  Test adding gold
+            if (Input.GetKeyDown(KeyCode.G)) { AddCredits(100); } //  Test adding gold
         }
 
         // Gain XP from any source (quests, combat, etc.)
@@ -46,10 +46,10 @@ namespace SystemMiami
         }
 
         // Gain Gold from quests and other sources
-        public void AddGold(int amount)
+        public void AddCredits(int amount)
         {
-            gold += amount;
-            Debug.Log($"Gained {amount} Gold! Current Gold: {gold}");
+            credits += amount;
+            Debug.Log($"Gained {amount} Gold! Current Gold: {credits}");
         }
 
         void LevelUp()
