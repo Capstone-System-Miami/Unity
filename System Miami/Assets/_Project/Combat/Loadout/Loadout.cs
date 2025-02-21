@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using SystemMiami.CombatSystem;
+using SystemMiami.InventorySystem;
 using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
@@ -13,7 +14,7 @@ namespace SystemMiami.CombatRefactor
         private Combatant user;
 
       
-        public Loadout(CombatSystem.Inventory inventory, Combatant user)
+        public Loadout(Inventory inventory, Combatant user)
         {
             this.user = user;
 

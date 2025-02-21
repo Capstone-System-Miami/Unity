@@ -3,6 +3,7 @@
 
 using UnityEngine;
 using SystemMiami;
+using SystemMiami.InventorySystem;
 
 [CreateAssetMenu(fileName = "NewQuest", menuName = "Quest System/Quest")]
 public class Quest : ScriptableObject
@@ -36,15 +37,26 @@ public class Quest : ScriptableObject
         killsMade = 0;
     }
 
+    /// <summary>
+    /// Grants rewards to the player
+    /// TODO: there has to be a better way than FindObjectOfType to get these
+    /// components. Can we have the player pass this info to the NPC when they
+    /// start or finish a Quest?
+    /// </summary>
     public void GrantRewards()
     {
-        PlayerLevel player = FindObjectOfType<PlayerLevel>();
-        if (player != null)
+        PlayerLevel playerLevel = FindObjectOfType<PlayerLevel>();
+        Inventory playerInventory = FindObjectOfType<Inventory>();
+
+        if (playerLevel != null)
         {
-            player.GainXP(rewardXP); // Give XP
-            player.AddCredits(rewardCredits); // Give Credits
+            playerLevel.GainXP(rewardXP); // Give XP
         }
 
+        if (playerInventory != null)
+        {
+            playerInventory.AddCredits(rewardCredits); // Give Credits
+        }
         Debug.Log($"Quest Completed: {questTitle} | Reward: {rewardCredits} Credits, {rewardXP} XP");
     }
 }

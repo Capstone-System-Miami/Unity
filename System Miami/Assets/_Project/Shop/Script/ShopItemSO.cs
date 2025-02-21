@@ -10,6 +10,7 @@ namespace SystemMiami.Shop
         public string title;
         public string description;
         public int baseCost;
+        public int ID; // this is a dummy bc the database requires it.
 
         public string GetTitle()
         {
@@ -24,6 +25,11 @@ namespace SystemMiami.Shop
         public int GetCost()
         {
             return baseCost;
+        }
+
+        public int GetDatabaseID()
+        {
+            return ID;
         }
     }
 }

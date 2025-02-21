@@ -5,6 +5,7 @@ using SystemMiami.AbilitySystem;
 using SystemMiami.CombatRefactor;
 using SystemMiami.Management;
 using SystemMiami.Utilities;
+using SystemMiami.InventorySystem;
 using UnityEngine.Animations;
 using UnityEngine;
 
@@ -78,7 +79,7 @@ namespace SystemMiami.CombatSystem
         public int ID { get; set; }
         public Color ColorTag { get { return _colorTag; } }
 
-        [SerializeField] public CombatSystem.Inventory _inventory;
+        [SerializeField] public Inventory _inventory;
         // State Machine
         public CombatantStateFactory Factory { get { return stateFactory; } }
         public CombatantState CurrentState

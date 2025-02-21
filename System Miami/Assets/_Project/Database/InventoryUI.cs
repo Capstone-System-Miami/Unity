@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using System.Collections.Generic;
 
-namespace SystemMiami.CombatSystem
+namespace SystemMiami.InventorySystem
 {
     public class InventoryUI : MonoBehaviour
     {
