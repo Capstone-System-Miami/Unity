@@ -10,15 +10,15 @@ namespace SystemMiami
     {
         public int level = 1;
         public int currentXP = 0;
-        public int xpToNextLevel = 100;
+        public int cumulativeXP = 0;
+        public int xpToNext = 0;
 
-        public int str = 3; // Strength
-        public int con = 3; // Constitution
-        public int dex = 3; // Dexterity
-        public int inte = 3; // Intelligence
-        public int wis = 3; // Wisdom
+        [SerializeField] private int baseXPPerLevel = 100;
+        [SerializeField] private int additionalXPPerLevel = 50;
 
         private int statSelector;
+
+        public event System.Action<int> LevelUp;
 
         void Update()
         {
@@ -34,34 +34,57 @@ namespace SystemMiami
         // Gain XP from any source (quests, combat, etc.)
         public void GainXP(int amount)
         {
-            currentXP += amount;
-            Debug.Log($"Gained {amount} XP! Current XP: {currentXP}/{xpToNextLevel}");
+            int remainderXP = 0;
 
-            while (currentXP >= xpToNextLevel)
+            currentXP += amount;
+            
+            remainderXP = currentXP - xpToNext;
+
+            if (remainderXP >= 0)
             {
-                LevelUp();
+                OnLevelUp();
             }
+
+            GainXP(remainderXP);
         }
 
-        void LevelUp()
+        /// <summary>
+        /// Get the XP required for the player to gain a level.
+        /// </summary>
+        /// <param name="newTargetLevel"></param>
+        /// <returns></returns>
+        public int GetXPToNextLevel(int currentLevel)
         {
-            currentXP -= xpToNextLevel;
+            return baseXPPerLevel + (additionalXPPerLevel * currentLevel);
+        }
+
+        /// <summary>
+        /// Get the total XP the player will need in order to cross the Level
+        /// threshold required to get to the specified level
+        /// </summary>
+        /// <param name="levelThreshold"></param>
+        /// <returns></returns>
+        public int GetXPtoThreshold(int levelThreshold)
+        {
+            int runningTotal = 0;
+
+            for (int i = 0; i < levelThreshold; i++)
+            {
+                runningTotal += GetXPToNextLevel(i);
+            }
+
+            return runningTotal;
+        }
+
+        protected virtual void OnLevelUp()
+        {
             level++;
-            xpToNextLevel += 50; // Increase XP requirement for next level
+            currentXP = 0;
+            xpToNext = GetXPtoThreshold(level + 1);
+
             Debug.Log($"Leveled up! New level: {level}");
 
-            for (int i = 0; i < 2; i++) // Random stat boost on level-up
-            {
-                statSelector = Random.Range(1, 6);
-                switch (statSelector)
-                {
-                    case 1: str++; Debug.Log($"Strength increased: {str}"); break;
-                    case 2: con++; Debug.Log($"Constitution increased: {con}"); break;
-                    case 3: dex++; Debug.Log($"Dexterity increased: {dex}"); break;
-                    case 4: inte++; Debug.Log($"Intelligence increased: {inte}"); break;
-                    case 5: wis++; Debug.Log($"Wisdom increased: {wis}"); break;
-                }
-            }
+            LevelUp?.Invoke(level);
         }
     }
 }
