@@ -8,27 +8,24 @@ namespace SystemMiami
 {
     public class PlayerLevel : MonoBehaviour
     {
-        public int level = 1;
-        public int currentXP = 0;
-        public int cumulativeXP = 0;
-        public int xpToNext = 0;
 
         [SerializeField] private int baseXPPerLevel = 100;
         [SerializeField] private int additionalXPPerLevel = 50;
 
-        private int statSelector;
+        private int level = 0;
+        private int currentXP = 0;
+        private int xpToNextTotal => GetXPtoNextLevel(level);
+        private int xpToNextRemaining = 0;
+
+        public int CurrentLevel { get { return level; } }
+        public int CurrentXP { get { return currentXP; } }
+        public int XPtoNextRemaining { get { return  xpToNextRemaining; } }
 
         public event System.Action<int> LevelUp;
 
-        void Update()
+        private void Start()
         {
-            // Testing XP and Gold gain manually
-            if (Input.GetKeyDown(KeyCode.Keypad0)) { GainXP(1); }
-            if (Input.GetKeyDown(KeyCode.Keypad1)) { GainXP(5); }
-            if (Input.GetKeyDown(KeyCode.Keypad2)) { GainXP(10); }
-            if (Input.GetKeyDown(KeyCode.Keypad3)) { GainXP(20); }
-            if (Input.GetKeyDown(KeyCode.Keypad4)) { GainXP(30); }
-            if (Input.GetKeyDown(KeyCode.Keypad5)) { GainXP(50); }
+            RecalculateXPtoNextRemaining();
         }
 
         // Gain XP from any source (quests, combat, etc.)
@@ -37,15 +34,20 @@ namespace SystemMiami
             int remainderXP = 0;
 
             currentXP += amount;
-            
-            remainderXP = currentXP - xpToNext;
 
-            if (remainderXP >= 0)
+            xpToNextRemaining -= amount;
+            
+            remainderXP = currentXP - xpToNextTotal;
+
+            if (remainderXP > 0)
+            {
+                OnLevelUp();
+                GainXP(remainderXP);
+            }
+            else if (remainderXP == 0)
             {
                 OnLevelUp();
             }
-
-            GainXP(remainderXP);
         }
 
         /// <summary>
@@ -53,7 +55,7 @@ namespace SystemMiami
         /// </summary>
         /// <param name="newTargetLevel"></param>
         /// <returns></returns>
-        public int GetXPToNextLevel(int currentLevel)
+        public int GetXPtoNextLevel(int currentLevel)
         {
             return baseXPPerLevel + (additionalXPPerLevel * currentLevel);
         }
@@ -70,7 +72,7 @@ namespace SystemMiami
 
             for (int i = 0; i < levelThreshold; i++)
             {
-                runningTotal += GetXPToNextLevel(i);
+                runningTotal += GetXPtoNextLevel(i);
             }
 
             return runningTotal;
@@ -80,11 +82,15 @@ namespace SystemMiami
         {
             level++;
             currentXP = 0;
-            xpToNext = GetXPtoThreshold(level + 1);
-
+            RecalculateXPtoNextRemaining();
             Debug.Log($"Leveled up! New level: {level}");
 
             LevelUp?.Invoke(level);
+        }
+
+        private void RecalculateXPtoNextRemaining()
+        {
+            xpToNextRemaining = xpToNextTotal;
         }
     }
 }

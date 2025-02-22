@@ -9,8 +9,8 @@ namespace SystemMiami
 {
     public class Attributes : MonoBehaviour
     {
-    #region VARS
-    //===============================
+        #region VARS
+        //===============================
 
         [SerializeField] public CharacterClassType _characterClass;
         [SerializeField] private AttributeSetSO[] _baseAttributes;
@@ -25,7 +25,6 @@ namespace SystemMiami
         [SerializeField] private int _wisdom;
         [SerializeField] private int _intelligence;
 
-
         // Our current & confirmed attributes.
         private AttributeSet _current = new AttributeSet();
 
@@ -35,10 +34,10 @@ namespace SystemMiami
         // A preview of what our new attributes would be if we confirmed the upgrades.
         private AttributeSet _preview = new AttributeSet();
 
-        private List<StatusEffect> _statusEffects = new List<StatusEffect>();
-
+        [SerializeField] private int attributePointsPerLevel;
         // TODO: deserialize after testing
         [SerializeField, Space(10)] private bool _upgradeMode;
+        private int attributePointsAvailable;
 
         [Header("Testing/Driver")]
         [Space(5)]
@@ -50,19 +49,22 @@ namespace SystemMiami
         public bool trigger_AddUpgrade;
         public bool trigger_ConfirmUpgrades;
 
-    //===============================
-    #endregion // ^vars^
+        //===============================
+        #endregion // ^vars^
 
-    #region PRIVATE METHODS
-    //===============================
 
-        private void Awake()
+        #region PUBLIC METHODS
+        //===============================
+
+        public void SetClass(CharacterClassType characterClass)
         {
+            _characterClass = characterClass;
+
             AttributeSet classBaseAttributes = new AttributeSet(_baseAttributes[(int)_characterClass]);
-            initializeWith(classBaseAttributes);
+            InitializeWith(classBaseAttributes);
         }
 
-        private void initializeWith(AttributeSet baseAttributes)
+        public void InitializeWith(AttributeSet baseAttributes)
         {
             _strength = baseAttributes.Get(AttributeType.STRENGTH);
             _dexterity = baseAttributes.Get(AttributeType.DEXTERITY);
@@ -73,19 +75,112 @@ namespace SystemMiami
             updateVals(false);
         }
 
+        /// <summary>
+        /// Returns the value of the specified attribute
+        /// </summary>
+        public int GetAttribute(AttributeType type)
+        {
+            // If upgrade mode show preview
+            return _upgradeMode ? _preview.Get(type) : _current.Get(type);
+        }
+
+        public AttributeSet GetSet()
+        {
+            return _upgradeMode ? _preview : _current;
+        }
+
+        public void EnterUpgradeMode()
+        {
+            _upgradeMode = true;
+        }
+
+        public void LeaveUpgradeMode()
+        {
+            _upgradeMode = false;
+            CancelUpgrades();
+        }
+
+        /// <summary>
+        /// Adds an amount of points to an attribute in the
+        /// stored _upgrades dict
+        /// </summary>
+        public void AddToUpgrades(AttributeType type, int amount)
+        {
+            // If the upgrade we're trying to add would bring us
+            // under the min or over the max
+            if (_preview.Get(type) + amount < _minValue || _preview.Get(type) > _maxValue)
+            {
+                // TODO: send this to UI.
+                // Could also refactor to be bool TryAddToUpgrades(...)
+                // and handle the validation from whatever calls this fn.
+                print($"Invalid Selection");
+            }
+
+            _upgrades.Set(type, (_upgrades.Get(type) + amount));
+        }
+
+        /// <summary>
+        /// Adds the stored upgrades to our current attributes.
+        /// </summary>
+        public void ConfirmUpgrades()
+        {
+            _current = _preview;
+
+            // Clear the upgrades
+            _upgrades = new AttributeSet();
+
+            // Update the inspector vals
+            updateVals(true);
+        }
+
+        public void CancelUpgrades()
+        {
+            _upgrades = new AttributeSet();
+        }
+        //===============================
+        #endregion // ^public^
+
+
+        #region PRIVATE METHODS
+        //===============================
+
+        private void Awake()
+        {
+            AttributeSet classBaseAttributes = new AttributeSet(_baseAttributes[(int)_characterClass]);
+            InitializeWith(classBaseAttributes);
+        }
+
+        private void OnEnable()
+        {
+            if (TryGetComponent(out PlayerLevel playerLevel))
+            {
+                playerLevel.LevelUp += HandleLevelUp;
+                return;
+            }           
+        }
+
+
+        private void OnDisable()
+        {
+            if (TryGetComponent(out PlayerLevel playerLevel))
+            {
+                playerLevel.LevelUp -= HandleLevelUp;
+                return;
+            }
+        }
+
         private void Update()
         {
             updatePreview();
 
             if (trigger_EnterUpgradeMode)
             {
-                _upgradeMode = true;    
+                EnterUpgradeMode();
             }
 
             if (trigger_LeaveUpgradeMode)
             {
-                _upgradeMode = false;
-                CancelUpgrades();
+                LeaveUpgradeMode();
             }
 
             if (_upgradeMode)
@@ -102,6 +197,11 @@ namespace SystemMiami
             }
 
             resetTriggers();
+        }
+
+        private void HandleLevelUp(int newLevel)
+        {
+            attributePointsAvailable += attributePointsPerLevel;
         }
 
         /// <summary>
@@ -157,72 +257,7 @@ namespace SystemMiami
             }
         }
 
-    //===============================
-    #endregion // ^private^
-
-    #region PUBLIC METHODS
-    //===============================
-
-        public void SetClass(CharacterClassType characterClass)
-        {
-            _characterClass = characterClass;
-
-            AttributeSet classBaseAttributes = new AttributeSet(_baseAttributes[(int)_characterClass]);
-            initializeWith(classBaseAttributes);
-        }
-
-        /// <summary>
-        /// Returns the value of the specified attribute
-        /// </summary>
-        public int GetAttribute(AttributeType type)
-        {
-            // If upgrade mode show preview
-            return _upgradeMode ? _preview.Get(type) : _current.Get(type);
-        }
-
-        public AttributeSet GetSet()
-        {
-            return _upgradeMode ? _preview : _current;
-        }
-
-        /// <summary>
-        /// Adds an amount of points to an attribute in the
-        /// stored _upgrades dict
-        /// </summary>
-        public void AddToUpgrades(AttributeType type, int amount)
-        {
-            // If the upgrade we're trying to add would bring us
-            // under the min or over the max
-            if (_preview.Get(type) + amount < _minValue || _preview.Get(type) > _maxValue)
-            {
-                // TODO: send this to UI.
-                // Could also refactor to be bool TryAddToUpgrades(...)
-                // and handle the validation from whatever calls this fn.
-                print ($"Invalid Selection");
-            }
-
-            _upgrades.Set(type, (_upgrades.Get(type) + amount) );            
-        }
-
-        /// <summary>
-        /// Adds the stored upgrades to our current attributes.
-        /// </summary>
-        public void ConfirmUpgrades()
-        {
-            _current = _preview;
-
-            // Clear the upgrades
-            _upgrades = new AttributeSet();
-
-            // Update the inspector vals
-            updateVals(true);
-        }
-
-        public void CancelUpgrades()
-        {
-            _upgrades = new AttributeSet();
-        }
-    //===============================
-    #endregion // ^public^
+        //===============================
+        #endregion // ^private^
     }
 }
