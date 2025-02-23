@@ -19,11 +19,20 @@ namespace SystemMiami
 
         public AttributeSet(AttributeSetSO scriptable)
         {
-            _dict[AttributeType.STRENGTH] = scriptable.Strength;
-            _dict[AttributeType.DEXTERITY] = scriptable.Dexterity;
-            _dict[AttributeType.CONSTITUTION] = scriptable.Constitution;
-            _dict[AttributeType.WISDOM] = scriptable.Wisdom;
-            _dict[AttributeType.INTELLIGENCE] = scriptable.Intelligence;
+            _dict[AttributeType.STRENGTH]       = scriptable.Strength;
+            _dict[AttributeType.DEXTERITY]      = scriptable.Dexterity;
+            _dict[AttributeType.CONSTITUTION]   = scriptable.Constitution;
+            _dict[AttributeType.WISDOM]         = scriptable.Wisdom;
+            _dict[AttributeType.INTELLIGENCE]   = scriptable.Intelligence;
+        }
+
+        public AttributeSet(AttributeSet toCopy)
+        {
+            _dict[AttributeType.STRENGTH]       = toCopy._dict[AttributeType.STRENGTH];
+            _dict[AttributeType.DEXTERITY]      = toCopy._dict[AttributeType.DEXTERITY];
+            _dict[AttributeType.CONSTITUTION]   = toCopy._dict[AttributeType.CONSTITUTION];
+            _dict[AttributeType.WISDOM]         = toCopy._dict[AttributeType.WISDOM];
+            _dict[AttributeType.INTELLIGENCE]   = toCopy._dict[AttributeType.INTELLIGENCE];
         }
 
         public AttributeSet(int[] vals)
