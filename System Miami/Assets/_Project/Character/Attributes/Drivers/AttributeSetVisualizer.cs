@@ -1,0 +1,63 @@
+using System.Collections.Generic;
+using SystemMiami.Utilities;
+using Unity.VisualScripting;
+using UnityEngine;
+
+namespace SystemMiami
+{
+    public class AttributeSetVisualizer : MonoBehaviour
+    {
+        [SerializeField] private dbug log;
+
+        [Space(10)]
+        [SerializeField] private List<LabeledField> fields = new();
+
+        private AttributeSet attributeSet;
+
+        private void Awake()
+        {
+            if (fields == null)
+            {
+                log.error($"Fields list was null.");
+                return;
+            }
+
+            if (fields.Count != CharacterEnums.ATTRIBUTE_COUNT)
+            {
+                log.error($"Wrong number of fields in the fields list." +
+                    $"Ensure that the number of fields is equivalent" +
+                    $"to the number of Attribute types.");
+                return;
+            }
+        }
+
+        private void Start()
+        {
+            SetLabels();
+        }
+
+        public void Assign(AttributeSet attributeSet)
+        {
+            this.attributeSet = attributeSet;
+            SetValues();
+        }
+
+        private void SetLabels()
+        {
+            for (int i = 0; i < fields.Count; i++)
+            {
+                fields[i].Label.SetForeground(
+                    CharacterEnums.ATTRIBUTE_NAMES[i] );
+            }
+        }
+
+        private void SetValues()
+        {
+            for (int i = 0; i < fields.Count; i++)
+            {
+                fields[i].Value.SetForeground(
+                    $"{attributeSet.Get((AttributeType)i)}" );
+            }
+        }
+    }
+}

@@ -28,6 +28,10 @@ namespace SystemMiami
         // For any current status effects
         private Dictionary<StatSet, int> _statusEffects = new();
 
+
+        public StatSet BeforeEffectsCopy { get { return new(_beforeEffects); } }
+        public StatSet AfterEffectsCopy { get { return new(_afterEffects); } }
+
         //===============================
         #endregion // ^vars^
 
@@ -41,13 +45,13 @@ namespace SystemMiami
 
         private void Start()
         {
-            _beforeEffects = new StatSet(_attributes.GetSet(), _statData);
+            _beforeEffects = new StatSet(_attributes.GetAttributeSet(), _statData);
             updateEffects();
         }
 
         private void Update()
         {
-            _beforeEffects = new StatSet(_attributes.GetSet(), _statData);
+            _beforeEffects = new StatSet(_attributes.GetAttributeSet(), _statData);
             updateEffects();
             if (_printReports) { print($"{name} stat: \n" +
                                         $"{getStatsReport()}"); }

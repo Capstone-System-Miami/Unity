@@ -25,19 +25,29 @@ namespace SystemMiami
         [SerializeField] private int _wisdom;
         [SerializeField] private int _intelligence;
 
+        // Base Attributes of out selected class
+        private AttributeSet _base = new();
+
         // Our current & confirmed attributes.
-        private AttributeSet _current = new AttributeSet();
+        private AttributeSet _current = new();
 
         // The upgrades being decided on.
-        private AttributeSet _upgrades = new AttributeSet();
+        private AttributeSet _upgrades = new();
 
         // A preview of what our new attributes would be if we confirmed the upgrades.
-        private AttributeSet _preview = new AttributeSet();
+        private AttributeSet _preview = new();
 
         [SerializeField] private int attributePointsPerLevel;
         // TODO: deserialize after testing
         [SerializeField, Space(10)] private bool _upgradeMode;
-        private int attributePointsAvailable;
+
+        public int TotalPointsAvailable { get; private set; }
+        public int UpgradeCost { get; private set; }
+        public int PointsRemaining { get => TotalPointsAvailable - UpgradeCost; }
+        public AttributeSet CurrentCopy { get => new(_current); }
+        public AttributeSet UpgradesCopy { get => new(_upgrades); }
+        public AttributeSet PreviewCopy { get => new(_preview); }
+
 
         [Header("Testing/Driver")]
         [Space(5)]
@@ -60,8 +70,8 @@ namespace SystemMiami
         {
             _characterClass = characterClass;
 
-            AttributeSet classBaseAttributes = new AttributeSet(_baseAttributes[(int)_characterClass]);
-            InitializeWith(classBaseAttributes);
+            _base = new(_baseAttributes[(int)_characterClass]);
+            InitializeWith(_base);
         }
 
         public void InitializeWith(AttributeSet baseAttributes)
@@ -84,7 +94,7 @@ namespace SystemMiami
             return _upgradeMode ? _preview.Get(type) : _current.Get(type);
         }
 
-        public AttributeSet GetSet()
+        public AttributeSet GetAttributeSet()
         {
             return _upgradeMode ? _preview : _current;
         }
@@ -97,26 +107,49 @@ namespace SystemMiami
         public void LeaveUpgradeMode()
         {
             _upgradeMode = false;
-            CancelUpgrades();
+            ResetUpgrades();
         }
 
         /// <summary>
-        /// Adds an amount of points to an attribute in the
-        /// stored _upgrades dict
+        /// Tries to add an amount of points to an attribute in the
+        /// stored _upgrades dict.
         /// </summary>
-        public void AddToUpgrades(AttributeType type, int amount)
+        /// <param name="type">The target attribtue</param>
+        /// <param name="amount">The amount of points to add</param>
+        /// <param name="failMsg">If failed, the reason why.</param>
+        /// <returns>
+        /// A bool representing whether the addition succeded or failed.</returns>
+        public bool TryAddToUpgrades(AttributeType type, int amount, out string failMsg)
         {
-            // If the upgrade we're trying to add would bring us
-            // under the min or over the max
-            if (_preview.Get(type) + amount < _minValue || _preview.Get(type) > _maxValue)
+            failMsg = "";
+
+            if (!_upgradeMode)
             {
-                // TODO: send this to UI.
-                // Could also refactor to be bool TryAddToUpgrades(...)
-                // and handle the validation from whatever calls this fn.
-                print($"Invalid Selection");
+                failMsg = $"Not in upgrade mode.";
+                return false;
+            }
+            else if (_preview.Get(type) + amount < _current.Get(type))
+            {
+                failMsg = $"Invalid Selection.\n" +
+                    $"{type} would be under existing values after upgrade.\n" +
+                    $"This selection would essentially mean a respec.";
+                return false;
+            }
+            else if (_preview.Get(type) > _maxValue)
+            {
+                failMsg = $"Invalid Selection.\n" +
+                    $"{type} would be over maximum value after upgrade.";
+                return false;
+            }
+            else if (PointsRemaining < amount)
+            {
+                failMsg = $"Not enough available points for this upgrade.";
+                return false;
             }
 
             _upgrades.Set(type, (_upgrades.Get(type) + amount));
+            UpgradeCost += amount;
+            return true;
         }
 
         /// <summary>
@@ -124,17 +157,27 @@ namespace SystemMiami
         /// </summary>
         public void ConfirmUpgrades()
         {
-            _current = _preview;
+            if (!_upgradeMode) { return; }
 
-            // Clear the upgrades
-            _upgrades = new AttributeSet();
+            _upgradeMode = false;
+
+            _current = new(_preview);
+
+            // Unused points becomes the new total
+            TotalPointsAvailable = PointsRemaining;
+
+            ResetUpgrades();
 
             // Update the inspector vals
             updateVals(true);
         }
 
-        public void CancelUpgrades()
+        public void ResetUpgrades()
         {
+            // Clear Upgrade cost
+            UpgradeCost = 0;
+
+            // Clear Upgrade set
             _upgrades = new AttributeSet();
         }
         //===============================
@@ -192,7 +235,10 @@ namespace SystemMiami
                 
                 if (trigger_AddUpgrade)
                 {
-                    AddToUpgrades(upgradeType, upgradeAmt);
+                    if (!TryAddToUpgrades(upgradeType, upgradeAmt, out string failMsg))
+                    {
+                        Debug.LogWarning(failMsg);
+                    }
                 }
             }
 
@@ -201,7 +247,7 @@ namespace SystemMiami
 
         private void HandleLevelUp(int newLevel)
         {
-            attributePointsAvailable += attributePointsPerLevel;
+            TotalPointsAvailable += attributePointsPerLevel;
         }
 
         /// <summary>

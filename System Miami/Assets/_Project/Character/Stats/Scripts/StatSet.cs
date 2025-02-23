@@ -43,6 +43,19 @@ namespace SystemMiami
             _dict[StatType.SPEED]           = statSet.Speed;
         }
 
+        public StatSet(StatSet toCopy)
+        {
+            _dict[StatType.PHYSICAL_PWR]    = toCopy._dict[StatType.PHYSICAL_PWR];
+            _dict[StatType.MAGICAL_PWR]     = toCopy._dict[StatType.MAGICAL_PWR];
+            _dict[StatType.PHYSICAL_SLOTS]  = toCopy._dict[StatType.PHYSICAL_SLOTS];
+            _dict[StatType.MAGICAL_SLOTS]   = toCopy._dict[StatType.MAGICAL_SLOTS];
+            _dict[StatType.STAMINA]         = toCopy._dict[StatType.STAMINA];
+            _dict[StatType.MANA]            = toCopy._dict[StatType.MANA];
+            _dict[StatType.MAX_HEALTH]      = toCopy._dict[StatType.MAX_HEALTH];    
+            _dict[StatType.DMG_RDX]         = toCopy._dict[StatType.DMG_RDX];
+            _dict[StatType.SPEED]           = toCopy._dict[StatType.SPEED];
+        }
+
         #region SETTERS/FORMULAS
         private void setPhysicalPower(int strength, StatData statData)
         {
