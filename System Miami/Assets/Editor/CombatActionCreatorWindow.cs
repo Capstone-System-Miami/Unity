@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
-
+using System.Runtime.Remoting.Messaging;
 using SystemMiami;
 using SystemMiami.AbilitySystem;
 using SystemMiami.CombatRefactor;
@@ -41,7 +41,7 @@ public class CombatActionCreatorWindow : EditorWindow
         public Dictionary<string, string> subactionFieldValues = new Dictionary<string, string>();
     }
 
-
+    [Header("Abiliy Creation")]
     private string _abilityName = "New Ability";
     private string _abilityDescription = "";
     private Sprite _abilityIcon;
@@ -53,17 +53,32 @@ public class CombatActionCreatorWindow : EditorWindow
     private int _abilitySubactionCount = 0;
     private List<SubactionCreationInfo> _abilitySubactions = new List<SubactionCreationInfo>();
 
-
+    [Header("Consumable Creation")]
     private string _consumableName = "New Consumable";
     private string _consumableDescription = "";
     private Sprite _consumableIcon;
     private int _uses;
     private AnimatorOverrideController _consumableAnimator;
     private bool isEnemyAbility;
+    private int price;
     
     private int _consumableSubactionCount = 0;
     private List<SubactionCreationInfo> _consumableSubactions = new List<SubactionCreationInfo>();
 
+    [Header("Equipment Mod Creation")]
+    private string _equipmentModName = "New Equipment Mod";
+    private string _equipmentModDescription = "";
+    private Sprite _equipmentModIcon;
+    private StatSetSO _equipmentModStatSet;
+    private float _equipmentModPhysicalPower;
+    private float _equipmentModMagicalPower;
+    private float _equipmentModPhysicalSlots;
+    private float _equipmentModMagicalSlots;
+    private float _equipmentModStamina;
+    private float _equipmentModMana;
+    private float _equipmentModMaxHealth;
+    private float _equipmentModDamageRDX;
+    private float _equipmentModSpeed;
 
     [MenuItem("Window/Combat Action Creator")]
     public static void ShowWindow()
@@ -126,6 +141,7 @@ public class CombatActionCreatorWindow : EditorWindow
         EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
         EditorGUILayout.Space(10);
         DrawConsumableSection();
+        DrawEquipmentModSection();
     }
 
     private void DrawAbilitySection()
@@ -203,6 +219,7 @@ public class CombatActionCreatorWindow : EditorWindow
             (Sprite)EditorGUILayout.ObjectField("Icon (ItemData.Icon)", _consumableIcon, typeof(Sprite), false);
 
         _uses = EditorGUILayout.IntField("Uses", _uses);
+        price = EditorGUILayout.IntField("Price", price);
         _consumableAnimator = (AnimatorOverrideController)EditorGUILayout.ObjectField(
             "Animator Override",
             _consumableAnimator,
@@ -255,6 +272,33 @@ public class CombatActionCreatorWindow : EditorWindow
         }
     }
 
+    private void DrawEquipmentModSection()
+    {
+        EditorGUILayout.LabelField("Create a New Equipment Mod", EditorStyles.boldLabel);
+
+        _equipmentModName = EditorGUILayout.TextField("Name (ItemData.Name)", _equipmentModName);
+        _equipmentModDescription = EditorGUILayout.TextField("Description (ItemData.Description)", _equipmentModDescription);
+        _equipmentModIcon = (Sprite)EditorGUILayout.ObjectField("Icon (ItemData.Icon)", _equipmentModIcon, typeof(Sprite), false);
+        price = EditorGUILayout.IntField("Price", price);
+       
+
+       
+        _equipmentModPhysicalPower = EditorGUILayout.FloatField("Physical Power", _equipmentModPhysicalPower);
+        _equipmentModMagicalPower = EditorGUILayout.FloatField("Magical Power", _equipmentModMagicalPower);
+        _equipmentModPhysicalSlots = EditorGUILayout.FloatField("Physical Slots", _equipmentModPhysicalSlots);
+        _equipmentModMagicalSlots = EditorGUILayout.FloatField("Magical Slots", _equipmentModMagicalSlots);
+        _equipmentModStamina      = EditorGUILayout.FloatField("Stamina", _equipmentModStamina);
+        _equipmentModMana         = EditorGUILayout.FloatField("Mana", _equipmentModMana);
+        _equipmentModMaxHealth    = EditorGUILayout.FloatField("Max Health", _equipmentModMaxHealth);
+        _equipmentModDamageRDX    = EditorGUILayout.FloatField("Damage RDX", _equipmentModDamageRDX);
+        _equipmentModSpeed        = EditorGUILayout.FloatField("Speed", _equipmentModSpeed);
+        // ───────────────────────────
+
+        if (GUILayout.Button("Create Equipment Mod"))
+        {
+            CreateEquipmentMod();
+        }
+    }
     /// <summary>
     /// Draws public fields  for the selected subaction type
     /// and stores/retrieves them in/from subactionFieldValues in SubactionCreationInfo.
@@ -458,9 +502,11 @@ public class CombatActionCreatorWindow : EditorWindow
         newConsumable.itemData.Description = _consumableDescription;
         newConsumable.itemData.Icon = _consumableIcon;
         newConsumable.itemData.itemType = ItemType.Consumable;
+        newConsumable.itemData.Price = price;
 
         newConsumable.Icon = _consumableIcon;
         newConsumable.Uses = _uses;
+        
         newConsumable.OverrideController = _consumableAnimator;
 
         if (newConsumable.itemData.ID == 0)
@@ -494,6 +540,79 @@ public class CombatActionCreatorWindow : EditorWindow
         Debug.Log($"Created new Consumable '{_consumableName}' with ID: {newConsumable.itemData.ID}");
     }
 
+    private void CreateEquipmentMod()
+{
+    if (_idDatabase == null)
+    {
+        Debug.LogError("GlobalIDDatabase is not assigned. Please assign one in the window.");
+        return;
+    }
+
+    string modPath = EditorUtility.SaveFilePanelInProject(
+        "Save New Equipment Mod",
+        _equipmentModName + ".asset",
+        "asset",
+        "Choose a location for your new Equipment Mod"
+    );
+    if (string.IsNullOrEmpty(modPath)) return;
+
+    
+    EquipmentModSO newMod = ScriptableObject.CreateInstance<EquipmentModSO>();
+    newMod.name = _equipmentModName;
+
+    // Fill out the ItemData
+    newMod.itemData.Name = _equipmentModName;
+    newMod.itemData.Description = _equipmentModDescription;
+    newMod.itemData.Icon = _equipmentModIcon;
+    newMod.itemData.itemType = ItemType.EquipmentMod;
+    newMod.itemData.Price = price;
+
+    // Assign a unique ID if it's still 0
+    if (newMod.itemData.ID == 0)
+    {
+        newMod.itemData.ID = _idDatabase.nextEquipmentModID;
+        _idDatabase.nextEquipmentModID++;
+    }
+
+    // 2) Create a new StatSetSO asset to hold the user-input stats
+    StatSetSO statSetAsset = ScriptableObject.CreateInstance<StatSetSO>();
+    statSetAsset.name = _equipmentModName + "_Stats";
+
+    // Fill the StatSetSO from the UI input
+    statSetAsset.PhysicalPower   = _equipmentModPhysicalPower;
+    statSetAsset.MagicalPower    = _equipmentModMagicalPower;
+    statSetAsset.PhysicalSlots   = _equipmentModPhysicalSlots;
+    statSetAsset.MagicalSlots    = _equipmentModMagicalSlots;
+    statSetAsset.Stamina         = _equipmentModStamina;
+    statSetAsset.Mana            = _equipmentModMana;
+    statSetAsset.MaxHealth       = _equipmentModMaxHealth;
+    statSetAsset.DamageRDX       = _equipmentModDamageRDX;
+    statSetAsset.Speed           = _equipmentModSpeed;
+
+    // Save the new StatSetSO in the same folder as the EquipmentMod
+    string folderPath = Path.GetDirectoryName(modPath);
+    string statAssetPath = AssetDatabase.GenerateUniqueAssetPath(
+        Path.Combine(folderPath, statSetAsset.name + ".asset")
+    );
+    AssetDatabase.CreateAsset(statSetAsset, statAssetPath);
+
+    
+    newMod.StatBonus = statSetAsset;
+
+    
+    AssetDatabase.CreateAsset(newMod, modPath);
+
+    // Mark the ID database as dirty ;)
+    EditorUtility.SetDirty(_idDatabase);
+
+    
+    AssetDatabase.SaveAssets();
+    AssetDatabase.Refresh();
+    EditorUtility.FocusProjectWindow();
+    Selection.activeObject = newMod;
+
+    Debug.Log($"Created new Equipment Mod '{_equipmentModName}' with ID: {newMod.itemData.ID}");
+}
 
     private CombatSubactionSO CreateSubactionWithPattern(SubactionCreationInfo info, string folderPath)
     {

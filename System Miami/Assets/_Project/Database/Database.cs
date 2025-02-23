@@ -6,6 +6,7 @@ using SystemMiami.CombatSystem;
 using SystemMiami.Management;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace SystemMiami
 {
@@ -18,15 +19,14 @@ namespace SystemMiami
        [SerializeField] private List<ConsumableSO> consumableEntries = new();
        [SerializeField] private List<NewAbilitySO> enemyPhysicalAbilityEntries = new();
        [SerializeField] private List<NewAbilitySO> enemyMagicalAbilityEntries = new();
-      
-      // [SerializeField] private List<EquipmentModDatabaseEntry> equipmentEntries = new();
+       [FormerlySerializedAs("equipmentEntries")] [SerializeField] private List<EquipmentModSO> equipmentModEntries = new();
 
        private Dictionary<int, NewAbilitySO> physicalAbilityDatabase;
        private Dictionary<int, NewAbilitySO> magicalAbilityDatabase;
        private Dictionary<int, ConsumableSO> consumableDatabase;
        private Dictionary<int, NewAbilitySO> enemyPhysicalAbilityDatabase;
        private Dictionary<int, NewAbilitySO> enemyMagicalAbilityDatabase;
-      // private Dictionary<int, EquipmentModDatabaseEntry> equipmentModDatabase;
+       private Dictionary<int, EquipmentModSO> equipmentModDatabase;
        
        private void OnEnable()
        {
@@ -98,7 +98,15 @@ namespace SystemMiami
             }
 
             consumableEntries = allConsumables;
-
+            string[] guids = AssetDatabase.FindAssets("t:EquipmentModSO");
+            var results = new List<EquipmentModSO>();
+            foreach (string guid in guids)
+            {
+                var path = AssetDatabase.GUIDToAssetPath(guid);
+                var modSo = AssetDatabase.LoadAssetAtPath<EquipmentModSO>(path);
+                if (modSo != null) results.Add(modSo);
+            }
+            equipmentModEntries = results;
             // ================ 4) Mark the asset as dirty ================
             EditorUtility.SetDirty(this);
             optional: AssetDatabase.SaveAssets();
@@ -127,7 +135,7 @@ namespace SystemMiami
            consumableDatabase = consumableEntries.ToDictionary(entry => entry.itemData.ID);
            enemyPhysicalAbilityDatabase = enemyPhysicalAbilityEntries.ToDictionary(entry => entry.itemData.ID);
            enemyMagicalAbilityDatabase = enemyMagicalAbilityEntries.ToDictionary(entry => entry.itemData.ID);
-           //TODO equipmentModDatabase = equipmentEntries.ToDictionary(entry => entry.ID);
+           equipmentModDatabase = equipmentModEntries.ToDictionary(entry => entry.itemData.ID);
        }
        
 
@@ -166,6 +174,14 @@ namespace SystemMiami
 
                     randomIndex = Random.Range(0, entryIndices.Count);
                     return GetDataWithJustID(entryIndices[randomIndex]);
+                case ItemType.EquipmentMod:
+                    foreach (int id in equipmentModDatabase.Keys)
+                    {
+                        entryIndices.Add(id);
+                    }
+
+                    randomIndex = Random.Range(0, entryIndices.Count);
+                    return GetDataWithJustID(entryIndices[randomIndex]);
            }
 
 
@@ -188,6 +204,7 @@ namespace SystemMiami
                1 => physicalAbilityDatabase.ContainsKey(id) ? physicalAbilityDatabase[id].itemData : default,
                2 => magicalAbilityDatabase.ContainsKey(id) ? magicalAbilityDatabase[id].itemData : default,
                3 => consumableDatabase.ContainsKey(id) ? consumableDatabase[id].itemData : default,
+               4 => equipmentModDatabase.ContainsKey(id) ? equipmentModDatabase[id].itemData : default,
                _ => default
            };
        }
@@ -232,6 +249,17 @@ namespace SystemMiami
        }
        
        /// <summary>
+       /// Retrieves an EquipmentModSO from the dictionary by ID.
+       /// Returns null if not found. 
+       /// </summary>
+       public EquipmentModSO GetEquipmentMod(int modID)
+       {
+           //don't love the way I did this but it works for now
+           equipmentModDatabase.TryGetValue(modID, out var modSo);
+           return modSo;
+       }
+       
+       /// <summary>
        /// Gets the itemData type of that ID(for sorting purposes)
        /// </summary>
        public ItemType GetDataType(int id)
@@ -239,6 +267,7 @@ namespace SystemMiami
            if (physicalAbilityDatabase.ContainsKey(id)) return ItemType.PhysicalAbility;
            if (magicalAbilityDatabase.ContainsKey(id)) return ItemType.MagicalAbility;
            if (consumableDatabase.ContainsKey(id)) return ItemType.Consumable;
+           if (equipmentModDatabase.ContainsKey(id)) return ItemType.EquipmentMod;
            return ItemType.Consumable; //fallback
        }
 
