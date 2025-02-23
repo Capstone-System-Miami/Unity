@@ -59,7 +59,8 @@ public class CombatActionCreatorWindow : EditorWindow
     private Sprite _consumableIcon;
     private int _uses;
     private AnimatorOverrideController _consumableAnimator;
-
+    private bool isEnemyAbility;
+    
     private int _consumableSubactionCount = 0;
     private List<SubactionCreationInfo> _consumableSubactions = new List<SubactionCreationInfo>();
 
@@ -138,6 +139,7 @@ public class CombatActionCreatorWindow : EditorWindow
         _abilityType = (AbilityType)EditorGUILayout.EnumPopup("Ability Type", _abilityType);
         _resourceCost = EditorGUILayout.FloatField("Resource Cost", _resourceCost);
         _cooldownTurns = EditorGUILayout.IntField("Cooldown Turns", _cooldownTurns);
+        isEnemyAbility = EditorGUILayout.Toggle("Is Enemy Ability", isEnemyAbility);
         _abilityAnimator = (AnimatorOverrideController)EditorGUILayout.ObjectField(
             "Animator Override",
             _abilityAnimator,
@@ -381,7 +383,7 @@ public class CombatActionCreatorWindow : EditorWindow
         newAbility.itemData.Description = _abilityDescription;
         newAbility.itemData.Icon = _abilityIcon;
         newAbility.itemData.itemType = ItemType.PhysicalAbility;
-
+        newAbility.isEnemyAbility = isEnemyAbility;
 
         newAbility.Icon = _abilityIcon;
         newAbility.AbilityType = _abilityType;
@@ -390,15 +392,20 @@ public class CombatActionCreatorWindow : EditorWindow
         newAbility.OverrideController = _abilityAnimator;
 
 
-        if (newAbility.itemData.ID == 0 && newAbility.AbilityType == AbilityType.PHYSICAL)
+        if (newAbility.itemData.ID == 0 && newAbility.AbilityType == AbilityType.PHYSICAL && !newAbility.isEnemyAbility)
         {
             newAbility.itemData.ID = _idDatabase.nextPhysicalAbilityID;
             _idDatabase.nextPhysicalAbilityID++;
         }
-        else if (newAbility.itemData.ID == 0 && newAbility.AbilityType == AbilityType.MAGICAL)
+        else if (newAbility.itemData.ID == 0 && newAbility.AbilityType == AbilityType.MAGICAL  && !newAbility.isEnemyAbility)
         {
             newAbility.itemData.ID = _idDatabase.nextMagicalAbilityID;
             _idDatabase.nextMagicalAbilityID++;
+        }
+        else if (newAbility.itemData.ID == 0 && newAbility.isEnemyAbility)
+        {
+            newAbility.itemData.ID = _idDatabase.nextEnemyAbilityID;
+            _idDatabase.nextEnemyAbilityID++;
         }
 
 
