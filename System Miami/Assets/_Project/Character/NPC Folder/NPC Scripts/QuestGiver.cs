@@ -1,8 +1,7 @@
 using UnityEngine;
-using TMPro; // Required for TextMeshPro components
-using System.Collections.Generic; // For using List<T>
+using TMPro; 
 
-[System.Serializable] // Make this class serializable for the Inspector
+[System.Serializable] 
 public class Quest
 {
     public string questName;
@@ -11,176 +10,134 @@ public class Quest
     public int objectiveGoal = 5; // How many enemies to defeat
     public int rewardEXP;
     public int rewardCurrency;
-
-    public int objectiveCount = 0; // How many have been defeated
-    public bool isQuestCompleted = false; // Whether the quest is completed
 }
 
 public class QuestGiver : MonoBehaviour
 {
     public Quest[] allPossibleQuests; // Array of possible quests
-    private List<Quest> activeQuests = new List<Quest>(); // List of active quests the player is working on
+    private Quest selectedQuest; // The current quest assigned to the player
 
-    // UI References
-    public GameObject questEntryPrefab; // Prefab for quest entry UI (Assign in inspector)
-    public Transform questListParent; // Parent object to hold all quest entries (assign the content of a ScrollView here)
-    public GameObject descriptionPanel; // Panel for background behind text
+   
+    public TMP_Text questNameText; 
+    public TMP_Text questDescriptionText; 
+    public TMP_Text progressText; 
+    public TMP_Text rewardText; 
+    public GameObject descriptionPanel; 
 
-    // References to TMP_Text for the UI elements
-    public TMP_Text questNameText; // TextMeshPro component for the quest name
-    public TMP_Text questDescriptionText; // TextMeshPro component for the quest description
-    public TMP_Text progressText; // TextMeshPro component for quest progress
-    public TMP_Text rewardText; // TextMeshPro component for quest reward
-
+    private int objectiveCount = 0; // How many enemies have been defeated
     private int currentDescriptionIndex = 0; // Index to track which line of text is shown
+    private bool isQuestAccepted = false;
+    private bool isQuestCompleted = false;
 
     void Start()
     {
         // Initially disable the quest UI
-        if (questListParent != null) questListParent.gameObject.SetActive(false);
-        if (descriptionPanel != null) descriptionPanel.SetActive(false);
         if (questNameText != null) questNameText.gameObject.SetActive(false);
         if (questDescriptionText != null) questDescriptionText.gameObject.SetActive(false);
         if (progressText != null) progressText.gameObject.SetActive(false);
         if (rewardText != null) rewardText.gameObject.SetActive(false);
+        if (descriptionPanel != null) descriptionPanel.SetActive(false);
     }
 
     // Call this method when the player interacts with the quest giver
     public void TalkToQuestGiver()
     {
         // Randomly select a quest from all possible quests
-        Quest newQuest = allPossibleQuests[Random.Range(0, allPossibleQuests.Length)];
+        selectedQuest = allPossibleQuests[Random.Range(0, allPossibleQuests.Length)];
 
-        // Add the new quest to active quests list if not already present
-        if (!activeQuests.Contains(newQuest))
-        {
-            activeQuests.Add(newQuest);
-            Debug.Log($"New quest added: {newQuest.questName}");
-        }
+        // Start the quest and reset progress
+        isQuestAccepted = true;
+        isQuestCompleted = false;
+        objectiveCount = 0;
+        currentDescriptionIndex = 0; // Start at the first line of description
+        Debug.Log($"Quest Started: {selectedQuest.questName}\n{selectedQuest.questDescriptionLines[0]}");
 
-        // Enable the quest UI and update the UI for all active quests
         UpdateUI();
     }
 
     public void EnemyDefeated(GameObject enemy)
     {
-        // Check each active quest to see if it needs updating
-        foreach (Quest quest in activeQuests)
+        if (!isQuestAccepted || isQuestCompleted)
+            return;
+
+        if (enemy.CompareTag(selectedQuest.targetEnemyTag)) // Check if the defeated enemy has the correct tag
         {
-            if (quest.isQuestCompleted) continue;
+            objectiveCount++;
+            Debug.Log($"Progress: {objectiveCount}/{selectedQuest.objectiveGoal}");
 
-            if (enemy.CompareTag(quest.targetEnemyTag)) // Check if the defeated enemy has the correct tag
+            // Update UI progress
+            UpdateProgressUI();
+
+            if (objectiveCount >= selectedQuest.objectiveGoal)
             {
-                quest.objectiveCount++;
-                Debug.Log($"Progress: {quest.objectiveCount}/{quest.objectiveGoal} for {quest.questName}");
-
-                // Update UI progress for this quest
-                UpdateQuestProgressUI();
-
-                if (quest.objectiveCount >= quest.objectiveGoal)
-                {
-                    CompleteQuest(quest);
-                }
+                CompleteQuest();
             }
         }
     }
 
-    private void CompleteQuest(Quest quest)
+    private void CompleteQuest()
     {
-        if (!quest.isQuestCompleted)
+        if (!isQuestCompleted)
         {
-            quest.isQuestCompleted = true;
-            Debug.Log($"Congratulations! You completed {quest.questName}. Reward: {quest.rewardEXP} EXP, {quest.rewardCurrency} Currency.");
+            isQuestCompleted = true;
+            Debug.Log($"Congratulations! You completed {selectedQuest.questName}. Reward: {selectedQuest.rewardEXP} EXP, {selectedQuest.rewardCurrency} Currency.");
 
-            // Update UI to show rewards for this quest
-            UpdateQuestRewardUI(quest);
+            // Update UI to show rewards
+            UpdateRewardUI();
+
+            //  add logic to give rewards to the player
         }
     }
 
-    // Helper method to update all UI elements at once for multiple quests
+    // Helper method to update all UI elements at once
     private void UpdateUI()
     {
-        if (questListParent != null)
+        if (questNameText != null) questNameText.gameObject.SetActive(true);
+        if (questDescriptionText != null) questDescriptionText.gameObject.SetActive(true);
+        if (progressText != null) progressText.gameObject.SetActive(true);
+        if (rewardText != null) rewardText.gameObject.SetActive(true);
+        if (descriptionPanel != null) descriptionPanel.SetActive(true);
+
+        // Update the quest UI elements
+        questNameText.text = selectedQuest.questName;
+        questDescriptionText.text = selectedQuest.questDescriptionLines[currentDescriptionIndex];
+        UpdateProgressUI();
+    }
+
+    // Helper method to update progress UI
+    private void UpdateProgressUI()
+    {
+        if (progressText != null)
+            progressText.text = $"Defeat {objectiveCount}/{selectedQuest.objectiveGoal} {selectedQuest.targetEnemyTag}s";
+    }
+
+    // Helper method to update reward UI
+    private void UpdateRewardUI()
+    {
+        if (rewardText != null)
+            rewardText.text = $"Reward: {selectedQuest.rewardEXP} EXP, {selectedQuest.rewardCurrency} Currency";
+    }
+
+    // Method to show the next line of the quest description
+    public void ShowNextLine()
+    {
+        if (currentDescriptionIndex < selectedQuest.questDescriptionLines.Length - 1)
         {
-            questListParent.gameObject.SetActive(true); // Enable the quest list UI container
-
-            // Clear previous UI elements
-            foreach (Transform child in questListParent)
-            {
-                Destroy(child.gameObject); // Destroy any existing quest entries
-            }
-
-            // Loop through all active quests and create a UI entry for each one
-            foreach (Quest quest in activeQuests)
-            {
-                GameObject questEntry = Instantiate(questEntryPrefab, questListParent);
-                QuestEntryUI questEntryUI = questEntry.GetComponent<QuestEntryUI>();
-
-                if (questEntryUI != null)
-                {
-                    // Set the quest information
-                    questEntryUI.SetQuestInfo(quest);
-                }
-            }
+            currentDescriptionIndex++;
+            questDescriptionText.text = selectedQuest.questDescriptionLines[currentDescriptionIndex];
+        }
+        else
+        {
+            Debug.Log("You have read all the lines of the quest description.");
         }
     }
 
-    // Helper method to update progress UI for each quest
-    private void UpdateQuestProgressUI()
+    void Update()
     {
-        foreach (Transform child in questListParent)
+        // Use either key press or button to progress
+        if (Input.GetKeyDown(KeyCode.Space)) // Press Space to go to next line
         {
-            QuestEntryUI questEntryUI = child.GetComponent<QuestEntryUI>();
-            if (questEntryUI != null)
-            {
-                questEntryUI.UpdateProgress();
-            }
+            ShowNextLine();
         }
-    }
-
-    // Helper method to update reward UI for each quest
-    private void UpdateQuestRewardUI(Quest quest)
-    {
-        foreach (Transform child in questListParent)
-        {
-            QuestEntryUI questEntryUI = child.GetComponent<QuestEntryUI>();
-            if (questEntryUI != null && questEntryUI.quest == quest)
-            {
-                questEntryUI.UpdateReward();
-            }
-        }
-    }
-}
-
-public class QuestEntryUI : MonoBehaviour
-{
-    // TMP_Text components for the quest name, description, progress, and reward
-    public TMP_Text questNameText;
-    public TMP_Text questDescriptionText;
-    public TMP_Text progressText;
-    public TMP_Text rewardText;
-
-    public Quest quest;
-
-    // Set quest information for UI
-    public void SetQuestInfo(Quest quest)
-    {
-        this.quest = quest;
-        questNameText.text = quest.questName;
-        questDescriptionText.text = quest.questDescriptionLines[0]; // Set the first description line
-        progressText.text = $"Progress: {quest.objectiveCount}/{quest.objectiveGoal}";
-        rewardText.text = $"Reward: {quest.rewardEXP} EXP, {quest.rewardCurrency} Currency";
-    }
-
-    // Update progress for this quest
-    public void UpdateProgress()
-    {
-        progressText.text = $"Progress: {quest.objectiveCount}/{quest.objectiveGoal}";
-    }
-
-    // Update reward for this quest
-    public void UpdateReward()
-    {
-        rewardText.text = $"Reward: {quest.rewardEXP} EXP, {quest.rewardCurrency} Currency";
     }
 }
