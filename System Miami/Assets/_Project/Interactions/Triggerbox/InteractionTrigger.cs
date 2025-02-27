@@ -14,11 +14,11 @@ namespace SystemMiami
         [SerializeField] private UnityEvent OnExit;
         [SerializeField] private string _promptAction;
 
-        private NPC npc; // Reference to NPC script
+        // private NPCQuestGiver npc; // Reference to NPC script
 
         private void Start()
         {
-            npc = GetComponent<NPC>(); // Check if NPC script is attached
+           // npc = GetComponent<NPCQuestGiver>(); // Check if NPC script is attached
         }
 
         public virtual void PlayerEnter()
@@ -30,10 +30,10 @@ namespace SystemMiami
         {
             OnInteract?.Invoke();
 
-            if (npc != null)
-            {
-                npc.StartDialogue(); // Trigger NPC dialogue
-            }
+            // if (npc != null)
+            //{
+                // npc.StartDialogue(); // Trigger NPC dialogue
+           // }
         }
 
         public virtual void PlayerExit()
