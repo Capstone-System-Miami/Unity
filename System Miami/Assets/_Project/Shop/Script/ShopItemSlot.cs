@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
@@ -11,7 +9,6 @@ namespace SystemMiami.Shop
         public TMP_Text titleTxt;
         public TMP_Text descriptionTxt;
         public TMP_Text costTxt;
-
         public Button button;
 
         private IShopItem item;
@@ -26,15 +23,13 @@ namespace SystemMiami.Shop
 
         public bool ItemIsPurchaseable(int playerCurrency)
         {
+            if (item == null)
+            {
+                Debug.LogWarning("Item is null.");
+                return false;
+            }
+
             return playerCurrency >= item.GetCost();
-        }
-
-        /// <summary>
-        /// TODO: Maybe destroys the item, moves the item, etc.
-        /// </summary>
-        public void PurchaseItem()
-        {
-
         }
 
         public void EnableButton()

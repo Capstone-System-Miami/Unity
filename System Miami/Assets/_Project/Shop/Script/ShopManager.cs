@@ -6,15 +6,9 @@ namespace SystemMiami.Shop
 {
     public class ShopManager : MonoBehaviour
     {
-        /// <summary>
-        /// TODO: this variable will eventually be removed, and the player's
-        /// currency amount will be checked instead.
-        /// </summary>
         public int coins;
-
         public TMP_Text coinUI;
         public ShopItemSlot[] slots;
-
         public ShopItemSO[] ShopItemSOs;
         public EquipmentExampleSO[] EquipmentExampleSOs;
 
@@ -22,10 +16,9 @@ namespace SystemMiami.Shop
 
         void Start()
         {
-
             LoadTestArrays();
 
-            for (int i = 0; i < ShopItems.Count; i++)
+            for (int i = 0; i < ShopItems.Count && i < slots.Length; i++)
                 slots[i].gameObject.SetActive(true);
 
             FillSlots();
@@ -34,13 +27,9 @@ namespace SystemMiami.Shop
         void Update()
         {
             CheckPurchaseable();
-            coinUI.text = "Coins: " + coins.ToString();
+            coinUI.text = "Coins: " + coins;
         }
 
-        /// <summary>
-        /// TODO: this method will eventually be removed, and the player's
-        /// currency amount will be checked instead.
-        /// </summary>
         public void AddCoins()
         {
             coins++;
@@ -50,7 +39,7 @@ namespace SystemMiami.Shop
         {
             for (int i = 0; i < slots.Length; i++)
             {
-                if (slots[i].gameObject.activeSelf == false)
+                if (!slots[i].gameObject.activeSelf)
                     continue;
 
                 if (slots[i].ItemIsPurchaseable(coins))
@@ -62,8 +51,13 @@ namespace SystemMiami.Shop
 
         public void PurchaseItem(int slotNumber)
         {
-            coins = coins - ShopItems[slotNumber].GetCost();
+            if (slotNumber < 0 || slotNumber >= ShopItems.Count)
+            {
+                Debug.LogWarning("Invalid slot number.");
+                return;
+            }
 
+            coins -= ShopItems[slotNumber].GetCost();
             Debug.Log("You bought: " + ShopItems[slotNumber].GetTitle());
         }
 
@@ -79,26 +73,30 @@ namespace SystemMiami.Shop
 
         public void FillSlots()
         {
-            for (int i = 0; i < ShopItems.Count; i++)
+            for (int i = 0; i < ShopItems.Count && i < slots.Length; i++)
             {
                 slots[i].Fill(ShopItems[i]);
             }
         }
 
-        /// <summary>
-        /// A testing-only function to load test arrays into our
-        /// list of IShopItems
-        /// </summary>
+        public void LoadSlots()
+        {
+            for (int i = 0; i < ShopItemSOs.Length && i < slots.Length; i++)
+            {
+                slots[i].Fill(ShopItemSOs[i]);
+            }
+        }
+
         private void LoadTestArrays()
         {
-            for(int i = 0; i < ShopItemSOs.Length; i++)
+            foreach (var item in ShopItemSOs)
             {
-                Add(ShopItemSOs[i]);
+                Add(item);
             }
 
-            for (int i = 0; i < EquipmentExampleSOs.Length; i++)
+            foreach (var item in EquipmentExampleSOs)
             {
-                Add(EquipmentExampleSOs[i]);
+                Add(item);
             }
         }
     }
