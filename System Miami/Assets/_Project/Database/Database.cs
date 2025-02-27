@@ -270,6 +270,28 @@ namespace SystemMiami
            if (equipmentModDatabase.ContainsKey(id)) return ItemType.EquipmentMod;
            return ItemType.Consumable; //fallback
        }
+       
+       /// <summary>
+       /// Retrieve all item IDs from the list that match (minLvl <= playerLvl <= maxLvl).
+       /// </summary>
+       public List<ItemData> FilterByLevel(List<int> itemIDs)
+       {
+           int playerLevel = FindObjectOfType<PlayerLevel>().CurrentLevel;
+           List<ItemData> filtered = new List<ItemData>();
+           foreach (int id in itemIDs)
+           {
+               ItemData data = GetDataWithJustID(id);
+              //data.ID == 0 if not found
+               if (data.ID != 0 &&
+                   data.MinLevel <= playerLevel &&
+                   data.MaxLevel >= playerLevel)
+               {
+                   filtered.Add(data);
+               }
+           }
+           return filtered;
+       }
+
 
     }
 }

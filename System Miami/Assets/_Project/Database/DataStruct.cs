@@ -9,7 +9,7 @@ namespace SystemMiami
     [System.Serializable]
     public struct ItemData
     {  
-        public static readonly ItemData Empty = new ItemData(0, null, "", "", ItemType.PhysicalAbility);
+        public static readonly ItemData Empty = new ItemData(0, null, "", "", ItemType.PhysicalAbility,Rarity.Common, 0, 0);
         
         public int ID;
         public Sprite Icon;
@@ -17,15 +17,23 @@ namespace SystemMiami
         public string Description;
         [FormerlySerializedAs("dataType")] public ItemType itemType;
         public int Price;
+        public int MinLevel;
+        public int MaxLevel;
+        public Rarity rarity;
        
-       public ItemData (int id, Sprite icon, string name, string description, ItemType itemType)
+       public ItemData (int id, Sprite icon, string name, string description, ItemType itemType,Rarity rarity, int minLevel, int maxLevel)
         {
             ID = id;
             Icon = icon;
             Name = name;
             Description = description;
             this.itemType = itemType;
+            int min = minLevel;
+            int max = maxLevel;
             Price = 0;
+            MinLevel = 0;
+            MaxLevel = 0;
+            this.rarity = Rarity.Common;
         }
     }
 
@@ -39,5 +47,13 @@ namespace SystemMiami
         MagicalAbility,
         Consumable,
         EquipmentMod
+    }
+    
+    public enum Rarity
+    {
+        Common,
+        Uncommon,
+        Rare,
+        Legendary
     }
 }
