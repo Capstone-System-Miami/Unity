@@ -5,17 +5,17 @@ using UnityEngine.UI;
 
 public class MonsterDropdownController : MonoBehaviour
 {
-    public TMP_Dropdown monsterDropdown;
-    public Image monsterPreviewImage;
-    public TextMeshProUGUI mobCountText;
+    public TMP_Dropdown monsterDropdown; // Dropdown menu
+    public Image monsterPreviewImage;   // Preview image
+    public TextMeshProUGUI mobCountText; // Mob count text
 
-    public List<MonsterData> monsters = new List<MonsterData>();
+    public List<MonsterData> monsters = new List<MonsterData>(); // Monster list
 
     void Start()
     {
         PopulateDropdown();
         monsterDropdown.onValueChanged.AddListener(UpdateMonsterUI);
-        UpdateMobCount(); // Ensure the counter is updated at the start
+        UpdateMonsterUI(0); // Set first monster preview
     }
 
     void PopulateDropdown()
@@ -29,13 +29,16 @@ public class MonsterDropdownController : MonoBehaviour
         }
 
         monsterDropdown.AddOptions(monsterNames);
-        UpdateMonsterUI(0); // Set first monster as default
     }
 
     void UpdateMonsterUI(int index)
     {
         MonsterData selectedMonster = monsters[index];
+
+        // Update preview image
         monsterPreviewImage.sprite = selectedMonster.monsterSprite;
+
+        // Update mob count dynamically
         UpdateMobCount();
     }
 
@@ -43,14 +46,12 @@ public class MonsterDropdownController : MonoBehaviour
     {
         string selectedMonsterName = monsters[monsterDropdown.value].monsterName;
 
-        // Find all active enemies with the "Goblin" tag (assuming all goblins use a common tag)
         GameObject[] allGoblins = GameObject.FindGameObjectsWithTag("Goblin");
 
-        // Count only those that match the selected monster name
         int count = 0;
         foreach (GameObject goblin in allGoblins)
         {
-            if (goblin.name.Contains(selectedMonsterName)) // Checks if name contains "Goblin", "Orange Goblin", etc.
+            if (goblin.name.StartsWith(selectedMonsterName))
             {
                 count++;
             }
