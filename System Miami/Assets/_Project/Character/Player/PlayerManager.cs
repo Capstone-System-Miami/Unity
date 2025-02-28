@@ -202,6 +202,17 @@ namespace SystemMiami
             neighborhoodReturnPos = transform.position;
         }
         // ======================================
+        
+        /// <summary>
+        /// Utility method to get player's level.
+        /// 
+        /// </summary>
+        public int GetPlayerLevel()
+        {
+            PlayerLevel playerLevelscript = GetComponent<PlayerLevel>();
+            if (playerLevelscript == null) return 1;
+            return playerLevelscript.CurrentLevel; 
+        }
         #endregion
     }
 }

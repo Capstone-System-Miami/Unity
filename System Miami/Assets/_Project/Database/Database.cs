@@ -28,92 +28,14 @@ namespace SystemMiami
        private Dictionary<int, NewAbilitySO> enemyMagicalAbilityDatabase;
        private Dictionary<int, EquipmentModSO> equipmentModDatabase;
        
+       
+       
        private void OnEnable()
        {
            Initialize();
        }
 
-       #if UNITY_EDITOR
-        [ContextMenu("Load All Abilities & Consumables")]
-        private void LoadAllSOsInProject()
-        {
-            string[] newAbilityGuids = AssetDatabase.FindAssets("t:NewAbilitySO");
-            var allAbilities = new List<NewAbilitySO>();
-
-            foreach (string guid in newAbilityGuids)
-            {
-                string path = AssetDatabase.GUIDToAssetPath(guid);
-                var ability = AssetDatabase.LoadAssetAtPath<NewAbilitySO>(path);
-                if (ability != null)
-                {
-                    allAbilities.Add(ability);
-                }
-            }
-            physicalAbilityEntries.Clear();
-            magicalAbilityEntries.Clear();
-            enemyPhysicalAbilityEntries.Clear();
-            enemyMagicalAbilityEntries.Clear();
-            foreach (var ability in allAbilities)
-            {
-                switch (ability.AbilityType)
-                {
-                    case AbilityType.PHYSICAL:
-                        if (ability.isEnemyAbility)
-                        {
-                            enemyPhysicalAbilityEntries.Add(ability);
-                        }
-                        else
-                        {
-                            physicalAbilityEntries.Add(ability);
-                            
-                        }
-                       
-                        break;
-
-                    case AbilityType.MAGICAL:
-                        if (ability.isEnemyAbility)
-                        {
-                            enemyMagicalAbilityEntries.Add(ability);
-                        }
-                        else
-                        {
-                            magicalAbilityEntries.Add(ability);
-                            
-                        }
-                        break;
-                }
-            }
-
-            string[] consumableGuids = AssetDatabase.FindAssets("t:ConsumableSO");
-            var allConsumables = new List<ConsumableSO>();
-
-            foreach (string guid in consumableGuids)
-            {
-                string path = AssetDatabase.GUIDToAssetPath(guid);
-                var consumable = AssetDatabase.LoadAssetAtPath<ConsumableSO>(path);
-                if (consumable != null)
-                {
-                    allConsumables.Add(consumable);
-                }
-            }
-
-            consumableEntries = allConsumables;
-            string[] guids = AssetDatabase.FindAssets("t:EquipmentModSO");
-            var results = new List<EquipmentModSO>();
-            foreach (string guid in guids)
-            {
-                var path = AssetDatabase.GUIDToAssetPath(guid);
-                var modSo = AssetDatabase.LoadAssetAtPath<EquipmentModSO>(path);
-                if (modSo != null) results.Add(modSo);
-            }
-            equipmentModEntries = results;
-            // ================ 4) Mark the asset as dirty ================
-            EditorUtility.SetDirty(this);
-            optional: AssetDatabase.SaveAssets();
-
-            Debug.Log("Database updated with all NewAbilitySO and ConsumableSO assets in the project.");
-        }
-#endif
+    
        
        public void Initialize()
        {
@@ -137,9 +59,28 @@ namespace SystemMiami
            enemyMagicalAbilityDatabase = enemyMagicalAbilityEntries.ToDictionary(entry => entry.itemData.ID);
            equipmentModDatabase = equipmentModEntries.ToDictionary(entry => entry.itemData.ID);
        }
-       
 
-       
+
+       public List <ItemData> GetAll(ItemType type)
+       {
+           List<ItemData> result = new();
+           
+           switch (type)
+           {
+               default:
+               case ItemType.PhysicalAbility:
+                   result = physicalAbilityEntries.Select(so => so.itemData).ToList();
+                   break;
+               case ItemType.MagicalAbility:
+                   result = magicalAbilityEntries.Select(so => so.itemData).ToList();
+                   break;
+               case ItemType.Consumable:
+                   result = consumableEntries.Select(so => so.itemData).ToList();
+                   break;
+               
+           }
+           return result;
+       }
        public ItemData GetRandomDataOfType(ItemType type)
        {
             List<int> entryIndices = new();
@@ -291,7 +232,108 @@ namespace SystemMiami
            }
            return filtered;
        }
+       
+       public List<ItemData> FilterByLevel(List<ItemData> itemData)
+       {
+           int playerLevel = FindObjectOfType<PlayerLevel>().CurrentLevel;
+           List<ItemData> filtered = new List<ItemData>();
+           foreach (ItemData data in itemData)
+           {
+              
+               //data.ID == 0 if not found
+               if (data.ID != 0 &&
+                   data.MinLevel <= playerLevel &&
+                   data.MaxLevel >= playerLevel)
+               {
+                   Debug.Log($"Before {filtered.Count} {data.ID}");
+                   filtered.Add(data);
+                   Debug.Log($"After {filtered.Count} {data.ID}");
+               }
+           }
+         
+         return filtered;
+       }
 
+   #if UNITY_EDITOR
+        [ContextMenu("Load All Abilities & Consumables")]
+        private void LoadAllSOsInProject()
+        {
+            string[] newAbilityGuids = AssetDatabase.FindAssets("t:NewAbilitySO");
+            var allAbilities = new List<NewAbilitySO>();
 
+            foreach (string guid in newAbilityGuids)
+            {
+                string path = AssetDatabase.GUIDToAssetPath(guid);
+                var ability = AssetDatabase.LoadAssetAtPath<NewAbilitySO>(path);
+                if (ability != null)
+                {
+                    allAbilities.Add(ability);
+                }
+            }
+            physicalAbilityEntries.Clear();
+            magicalAbilityEntries.Clear();
+            enemyPhysicalAbilityEntries.Clear();
+            enemyMagicalAbilityEntries.Clear();
+            foreach (var ability in allAbilities)
+            {
+                switch (ability.AbilityType)
+                {
+                    case AbilityType.PHYSICAL:
+                        if (ability.isEnemyAbility)
+                        {
+                            enemyPhysicalAbilityEntries.Add(ability);
+                        }
+                        else
+                        {
+                            physicalAbilityEntries.Add(ability);
+                            
+                        }
+                       
+                        break;
+
+                    case AbilityType.MAGICAL:
+                        if (ability.isEnemyAbility)
+                        {
+                            enemyMagicalAbilityEntries.Add(ability);
+                        }
+                        else
+                        {
+                            magicalAbilityEntries.Add(ability);
+                            
+                        }
+                        break;
+                }
+            }
+
+            string[] consumableGuids = AssetDatabase.FindAssets("t:ConsumableSO");
+            var allConsumables = new List<ConsumableSO>();
+
+            foreach (string guid in consumableGuids)
+            {
+                string path = AssetDatabase.GUIDToAssetPath(guid);
+                var consumable = AssetDatabase.LoadAssetAtPath<ConsumableSO>(path);
+                if (consumable != null)
+                {
+                    allConsumables.Add(consumable);
+                }
+            }
+
+            consumableEntries = allConsumables;
+            string[] guids = AssetDatabase.FindAssets("t:EquipmentModSO");
+            var results = new List<EquipmentModSO>();
+            foreach (string guid in guids)
+            {
+                var path = AssetDatabase.GUIDToAssetPath(guid);
+                var modSo = AssetDatabase.LoadAssetAtPath<EquipmentModSO>(path);
+                if (modSo != null) results.Add(modSo);
+            }
+            equipmentModEntries = results;
+            // ================ 4) Mark the asset as dirty ================
+            EditorUtility.SetDirty(this);
+            optional: AssetDatabase.SaveAssets();
+
+            Debug.Log("Database updated with all NewAbilitySO and ConsumableSO assets in the project.");
+        }
+#endif
     }
 }

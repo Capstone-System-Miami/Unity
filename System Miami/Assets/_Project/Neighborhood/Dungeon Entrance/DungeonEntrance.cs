@@ -23,7 +23,7 @@ namespace SystemMiami
         // ======================================
 
         private DungeonPreset _currentPreset;
-        private DungeonData _dungeonData;
+        [SerializeField]private DungeonData _dungeonData;
         private Material _material;
 
         //=======================================

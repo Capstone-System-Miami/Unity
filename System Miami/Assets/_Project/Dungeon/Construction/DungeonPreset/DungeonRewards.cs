@@ -1,5 +1,8 @@
 using System.Collections.Generic;
+using SystemMiami.Utilities;
 using UnityEngine;
+using UnityEngine.Serialization;
+
 
 namespace SystemMiami.Dungeons
 {
@@ -41,11 +44,29 @@ namespace SystemMiami.Dungeons
         [SerializeField] private bool _includeConsumables = true;
         [SerializeField] private bool _includeEquipmentMods = true;
 
+        
         [Header("Available IDs (pulled from Database)")]
-        [SerializeField] private List<int> _abilityIDs = new();         // e.g. Physical or Magical
-        [SerializeField] private List<int> _consumableIDs = new();
-        [SerializeField] private List<int> _equipmentModIDs = new();
+        [SerializeField] public List<ItemData> _abilityItemDatas = new();         // e.g. Physical or Magical
+        [SerializeField] public List<ItemData> _consumableItemDatas = new();
+        [SerializeField] public List<ItemData> _equipmentItemDatas = new();
 
+        private List<ItemData> rewards;
+
+        public dbug log;
+
+        public void Initialize()
+        {
+            _abilityItemDatas.Clear();
+            _consumableItemDatas.Clear();
+            _equipmentItemDatas.Clear();
+            rewards = new List<ItemData>();
+            
+            _abilityItemDatas = Database.MGR.GetAll(ItemType.MagicalAbility);
+            _abilityItemDatas.AddRange(Database.MGR.GetAll(ItemType.PhysicalAbility));
+            _consumableItemDatas = Database.MGR.GetAll(ItemType.Consumable);
+            _equipmentItemDatas = Database.MGR.GetAll(ItemType.EquipmentMod);
+        }
+        
         /// <summary>
         /// Generates a list of ItemData rewards based on:
         /// - The dungeon difficulty
@@ -54,8 +75,8 @@ namespace SystemMiami.Dungeons
         /// </summary>
         public List<ItemData> GenerateRewards(DifficultyLevel dungeonDifficulty)
         {
-           
-            int playerLevel = GetPlayerLevel();
+           Debug.Log("Generate Rewards");
+            int playerLevel = PlayerManager.MGR.GetPlayerLevel();
 
             //  Determine the final distribution method
             RewardDistributionMethod finalMethod = _defaultDistributionMethod;
@@ -72,6 +93,7 @@ namespace SystemMiami.Dungeons
                     case DifficultyLevel.HARD:
                         finalMethod = _hardMethod;
                         break;
+                     
                 }
             }
 
@@ -80,43 +102,48 @@ namespace SystemMiami.Dungeons
 
             switch (finalMethod)
             {
+                   
                 case RewardDistributionMethod.OneOfEach:
+                 
                     if (_includeAbilities)
-                        TryAddRandomItem(result, _abilityIDs, playerLevel, dungeonDifficulty);
+                        TryAddRandomItem( _abilityItemDatas, playerLevel, dungeonDifficulty);
                     if (_includeConsumables)
-                        TryAddRandomItem(result, _consumableIDs, playerLevel, dungeonDifficulty);
+                        TryAddRandomItem( _consumableItemDatas, playerLevel, dungeonDifficulty);
                     if (_includeEquipmentMods)
-                        TryAddRandomItem(result, _equipmentModIDs, playerLevel, dungeonDifficulty);
+                        TryAddRandomItem( _equipmentItemDatas, playerLevel, dungeonDifficulty);
                     break;
 
                 case RewardDistributionMethod.OneOfOneType:
                 {
                     // Collect which lists are enabled
-                    var candidateLists = CollectEnabledIDLists();
+                    
+                    List<List<ItemData>> candidateLists = CollectEnabledIDLists();
+                   Debug.Log($"Candidate Count {candidateLists.Count} {candidateLists[0].Count} {candidateLists[1].Count} {candidateLists[2].Count}");
                     if (candidateLists.Count > 0)
                     {
                         // Pick 1 random category from the enabled ones
                         int randomTypeIndex = Random.Range(0, candidateLists.Count);
-                        TryAddRandomItem(result, candidateLists[randomTypeIndex], playerLevel, dungeonDifficulty);
+                        TryAddRandomItem( candidateLists[randomTypeIndex], playerLevel, dungeonDifficulty);
                     }
                     break;
                 }
                 case RewardDistributionMethod.TwoTypes:
                 {
-                    var candidateLists = CollectEnabledIDLists();
+                    List<List<ItemData>> candidateLists = CollectEnabledIDLists();
+                  
                     if (candidateLists.Count > 1)
                     {
                         // Shuffle to pick 2 random distinct types
                         Shuffle(candidateLists);
                         // TryAddRandomItem from the first 2
-                        TryAddRandomItem(result, candidateLists[0], playerLevel, dungeonDifficulty);
-                        TryAddRandomItem(result, candidateLists[1], playerLevel, dungeonDifficulty);
+                        TryAddRandomItem( candidateLists[0], playerLevel, dungeonDifficulty);
+                        TryAddRandomItem(candidateLists[1], playerLevel, dungeonDifficulty);
                     }
                     break;
                 }
             }
 
-            return result;
+            return rewards;
         }
 
         /// <summary>
@@ -125,24 +152,28 @@ namespace SystemMiami.Dungeons
         /// Adds it to result (if any valid is found).
         /// </summary>
         private void TryAddRandomItem(
-            List<ItemData> result,
-            List<int> candidateIDs,
+            List<ItemData> candidateData,
             int playerLevel,
             DifficultyLevel difficulty
         )
         {
-            var validItems = FilterByDifficultyAndLevel(candidateIDs, playerLevel, difficulty);
-            if (validItems.Count == 0) return; 
-            
+            List<ItemData> validItems = FilterByDifficultyAndLevel(candidateData, playerLevel, difficulty);
+            if (validItems.Count == 0)
+            {
+                log.warn($"No valid items found for difficulty {difficulty}!");
+                return;
+            }
+
             int randomIndex = Random.Range(0, validItems.Count);
-            result.Add(validItems[randomIndex]);
+            
+            rewards.Add(validItems[randomIndex]);
         }
 
         /// <summary>
         /// Filters the IDs to only those whose (MinLevel <= playerLvl <= MaxLevel),
         /// factoring in difficulty offsets.
         /// </summary>
-        private List<ItemData> FilterByDifficultyAndLevel(List<int> itemIDs, int playerLevel, DifficultyLevel difficulty)
+        private List<ItemData> FilterByDifficultyAndLevel(List<ItemData> itemData, int playerLevel, DifficultyLevel difficulty)
         {
             // Decide level offsets based on difficulty
             int minOffset = 0;
@@ -163,38 +194,37 @@ namespace SystemMiami.Dungeons
                     break;
             }
 
-            var filtered = new List<ItemData>();
-            foreach (int id in itemIDs)
+            List<ItemData> filtered = new();
+           
+            foreach (ItemData data in itemData)
             {
-                ItemData data = Database.MGR.GetDataWithJustID(id);
+               
                 if (data.ID == 0) 
                     continue; // Not found or invalid in DB
 
                 // Adjust the item’s min/max by the offsets for this difficulty
                 int adjustedMin = data.MinLevel + minOffset;
                 int adjustedMax = data.MaxLevel + maxOffset;
-
+                 
                 // Ensure we don’t clamp below 1 or do something unintended
-                if (adjustedMin < 1) adjustedMin = 1;
+                if (adjustedMin < 0) adjustedMin = 0;
                 
-                // Does the player's level fit in the adjusted range?
-                if (playerLevel >= adjustedMin && playerLevel <= adjustedMax)
-                {
-                    filtered.Add(data);
-                }
+               log.warn($"Before {filtered.Count} {data.ID}");
+               filtered.Add(data);
+               log.warn($"After {filtered.Count} {data.ID}");
             }
-            return filtered;
+            return Database.MGR.FilterByLevel(filtered);
         }
 
         /// <summary>
         /// Collects whichever ID lists are enabled (Abilities, Consumables, EquipmentMods).
         /// </summary>
-        private List<List<int>> CollectEnabledIDLists()
+        private List<List<ItemData>> CollectEnabledIDLists()
         {
-            var results = new List<List<int>>();
-            if (_includeAbilities) results.Add(_abilityIDs);
-            if (_includeConsumables) results.Add(_consumableIDs);
-            if (_includeEquipmentMods) results.Add(_equipmentModIDs);
+            var results = new List<List<ItemData>>();
+            if (_includeAbilities) results.Add(_abilityItemDatas);
+            if (_includeConsumables) results.Add(_consumableItemDatas);
+            if (_includeEquipmentMods) results.Add(_equipmentItemDatas);
             return results;
         }
 
@@ -210,17 +240,6 @@ namespace SystemMiami.Dungeons
             }
         }
 
-        /// <summary>
-        /// Utility method to get player's level. //feel like this should be moved to a mgr
-        /// 
-        /// </summary>
-        private int GetPlayerLevel()
-        {
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            if (player == null) return 1;
-            PlayerLevel playerLevelscript = player.GetComponent<PlayerLevel>();
-            if (playerLevelscript == null) return 1;
-            return playerLevelscript.CurrentLevel; 
-        }
+        
     }
 }

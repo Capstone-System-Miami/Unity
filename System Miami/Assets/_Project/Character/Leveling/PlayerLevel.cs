@@ -4,6 +4,10 @@
 
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 namespace SystemMiami
 {
     public class PlayerLevel : MonoBehaviour
@@ -12,12 +16,12 @@ namespace SystemMiami
         [SerializeField] private int baseXPPerLevel = 100;
         [SerializeField] private int additionalXPPerLevel = 50;
 
-        private int level = 0;
+        [SerializeField, ReadOnly]private int level = 0;
         private int currentXP = 0;
         private int xpToNextTotal => GetXPtoNextLevel(level);
         private int xpToNextRemaining = 0;
-
-        public int CurrentLevel { get { return level; } }
+        
+        public int CurrentLevel => level;
         public int CurrentXP { get { return currentXP; } }
         public int XPtoNextRemaining { get { return  xpToNextRemaining; } }
 
@@ -93,4 +97,20 @@ namespace SystemMiami
             xpToNextRemaining = xpToNextTotal;
         }
     }
+#if UNITY_EDITOR
+    [CustomPropertyDrawer(typeof(ReadOnlyAttribute))]
+    public class ReadOnlyDrawer : PropertyDrawer
+    {
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        {
+            GUI.enabled = false;
+            EditorGUI.PropertyField(position, property, label, true);
+            GUI.enabled = true;
+        }
+    }
+
+    public class ReadOnlyAttribute : PropertyAttribute
+    {
+    }
+#endif
 }

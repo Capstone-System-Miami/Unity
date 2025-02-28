@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using SystemMiami.AbilitySystem;
 using UnityEngine;
 using SystemMiami.LeeInventory;
-
+#if UNITY_EDITOR
+using UnityEditor; 
+#endif
 namespace SystemMiami.Dungeons
 {
     public enum DifficultyLevel { EASY, MEDIUM, HARD }
@@ -37,8 +39,7 @@ namespace SystemMiami.Dungeons
         [Space(5), SerializeField] private Pool<GameObject> _enemyPool;
 
         [Header("Rewards")]
-        [Space(5), SerializeField] private Pool<Outdated.Ability> _abilityRewards;
-        [Space(5), SerializeField] private Pool<LeeInventory.OutdatedOrDuplicates.ItemData> _itemRewards;
+        [SerializeField] private DungeonRewards _rewards;
 
         [Space(5)]
         [SerializeField] private int _minXP;
@@ -52,12 +53,16 @@ namespace SystemMiami.Dungeons
             GameObject prefab = getPrefab(excludedStyles);
 
             List<GameObject> enemies = _enemyPool.GetNewList();
+            
+            _rewards.Initialize();
+            
+            List<ItemData> itemRewards = _rewards.GenerateRewards(_difficulty);
+            Debug.LogWarning($"Dungeon Preset {name} generated rewards: {itemRewards.Count}");
+            
+            
+            DungeonData data = new DungeonData(prefab, enemies, itemRewards);
 
-            List<Outdated.Ability> abilities = _abilityRewards.GetNewList();
-
-            List<LeeInventory.OutdatedOrDuplicates.ItemData> items = _itemRewards.GetNewList();
-
-            return new DungeonData(prefab, enemies, abilities, items);
+            return data;
         }
 
         /// <summary>
@@ -148,5 +153,7 @@ namespace SystemMiami.Dungeons
 
             return golist[0];
         }
+        
+       
     }
 }
