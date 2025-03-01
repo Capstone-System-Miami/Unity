@@ -12,10 +12,17 @@ namespace SystemMiami
         [Space(10)]
         [SerializeField] private List<LabeledField> fields = new();
 
-        private AttributeSet attributeSet;
+        [SerializeField] private AttributeSet attributeSet;
 
-        private void Awake()
+        private void OnEnable()
         {
+            if (attributeSet == null)
+            {
+                attributeSet = PlayerManager.MGR.GetComponent<Attributes>().CurrentCopy;
+                Assign(attributeSet);
+                log.error($"NOT WORKING YIPPEEE");
+                return;
+            }
             if (fields == null)
             {
                 log.error($"Fields list was null.");
@@ -55,8 +62,12 @@ namespace SystemMiami
         {
             for (int i = 0; i < fields.Count; i++)
             {
+                string msg = $"{attributeSet.Get((AttributeType)i)}";
                 fields[i].Value.SetForeground(
                     $"{attributeSet.Get((AttributeType)i)}" );
+                log.error($"insidesetvalues{msg}");
+                return;
+
             }
         }
     }
