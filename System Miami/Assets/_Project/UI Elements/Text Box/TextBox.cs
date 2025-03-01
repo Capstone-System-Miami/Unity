@@ -1,64 +1,131 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+
+
 
 namespace SystemMiami
 {
     public class TextBox : MonoBehaviour
     {
-        [SerializeField] private Image _background;
+        [SerializeField] private UnityEngine.UI.Image _background;
 
         [SerializeField] private Text _text;
+        [SerializeField] private TextMeshProUGUI _TextMeshPro;
+
 
         public void ShowBackground()
         {
-            _background.enabled = true;
+            if (_background != null)
+            {
+                _background.enabled = true;
+            }
+            
         }
 
         public void HideBackground()
         {
-            _background.enabled = false;
+            if (_background != null)
+            {
+                _background.enabled = false;
+            }
+            
         }
 
         public void SetBackground(Sprite sprite)
         {
-            _background.sprite = sprite;
+            if (_background != null)
+            {
+                _background.sprite = sprite;
+            }
+            
         }
 
         public void SetBackground(Color color)
         {
-            _background.color = color;
+            if (_background != null)
+            {
+                _background.color = color;
+            }
+            
         }
 
         public void SetBackground(Sprite sprite, Color color)
         {
-            _background.sprite = sprite;
-            _background.color = color;
+            if (_background != null)
+            {
+                _background.sprite = sprite;
+                _background.color = color;
+            }
+            
         }
 
         public void ShowForeground()
         {
-            _text.enabled = true;
+            if (_text != null)
+            {
+                _text.enabled = true;
+            }
+            else if (_TextMeshPro != null)
+            {
+                _TextMeshPro.enabled = true;
+            }
+            
         }
 
         public void HideForeground()
         {
-            _text.enabled = false;
+            if (_text != null)
+            {
+                _text.enabled = false;
+            }
+            else if (_TextMeshPro != null)
+            {
+                _TextMeshPro.enabled = false;
+            }
+            
         }
 
         public void SetForeground(string text)
         {
-            _text.text = text;
+            if (_text != null)
+            {
+                _text.text = text;
+            }
+            else if (_TextMeshPro != null)
+            {
+                _TextMeshPro.text = text;
+            }
+            
         }
 
         public void SetForeground(Color color)
         {
-            _text.color = color;
+            if (_text != null)
+            {
+                
+                _text.color = color;
+            }
+            else if(_TextMeshPro != null)
+            {
+                _TextMeshPro.color = color;
+            }
+
         }
 
         public void SetForeground(string text, Color color)
         {
-            _text.text = text;
-            _text.color = color;
+            if (_text != null)
+            {
+                _text.text = text;
+                _text.color = color;
+            }
+            else if(_TextMeshPro != null)
+            {
+                _TextMeshPro.text = text;
+                _TextMeshPro.color = color;
+            }
+           
         }
     }
 }

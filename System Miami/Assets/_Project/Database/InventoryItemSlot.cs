@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace SystemMiami
+namespace  SystemMiami
 {
     public class InventoryItemSlot : MonoBehaviour
     {
@@ -12,7 +12,7 @@ namespace SystemMiami
         [SerializeField] ItemType itemType;
         
         public Image icon;
-        public Text name;
+        public Text Label;
         public Text description;
 
         private void Awake()
@@ -22,7 +22,7 @@ namespace SystemMiami
             var textComponents = GetComponentsInChildren<Text>();
             if (textComponents.Length >= 2)
             {
-                name = textComponents[0]; // Assume the first Text is for name
+                Label = textComponents[0]; // Assume the first Text is for Label
                 description = textComponents[1]; // Assume the second Text is for description
                 // Adjust order above based on actual hierarchy
             }
@@ -37,7 +37,7 @@ namespace SystemMiami
         {
             ItemData itemData = Database.MGR.GetRandomDataOfType(itemType);
             icon.sprite = itemData.Icon;
-            name.text = itemData.Name;
+            Label.text = itemData.Name;
             description.text = itemData.Description;
             
         }
@@ -46,7 +46,7 @@ namespace SystemMiami
         {
             itemID = -1;
             icon.sprite = null;
-            name.text = "";
+            Label.text = "";
             description.text = "";
         }
     }

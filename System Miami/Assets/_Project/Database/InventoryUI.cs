@@ -6,6 +6,7 @@ namespace SystemMiami.InventorySystem
 {
     public class InventoryUI : MonoBehaviour
     {
+
         [Header("References")]
         [SerializeField] private Inventory inventory;
         [SerializeField] private List<InventoryItemSlot> inventorySlots;
@@ -22,6 +23,15 @@ namespace SystemMiami.InventorySystem
 
         public void RefreshUI()
         {
+            if (inventorySlots == null)
+            {
+                return;
+
+            }
+            if (inventorySlots.Count == 0 ) 
+            {
+                return;
+            }
             //for now just add everything to one list and display them on one panel but TODO sort them out into different
             //panels and lists based on type
             

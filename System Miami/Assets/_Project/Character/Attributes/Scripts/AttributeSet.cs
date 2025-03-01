@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace SystemMiami
 {
+    [System.Serializable]
     public class AttributeSet
     {
         private Dictionary<AttributeType, int> _dict = new Dictionary<AttributeType, int>();
