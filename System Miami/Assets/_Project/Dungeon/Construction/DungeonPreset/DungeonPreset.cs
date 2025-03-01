@@ -158,7 +158,7 @@ namespace SystemMiami.Dungeons
         public void AdjustEXPRewards(int requiredLevel, int totalDungeons, float easySpawnChance, float mediumSpawnChance, float hardSpawnChance)
         {
             // Get total XP required for the level
-            int xpRequired = FindObjectOfType<PlayerLevel>().GetTotalXPRequired(requiredLevel);
+            int xpRequired = PlayerManager.MGR.GetComponent<PlayerLevel>().GetTotalXPRequired(requiredLevel);
 
             // Average number of each dungeon type that will spawn
             int expectedEasy = Mathf.RoundToInt(totalDungeons * easySpawnChance);

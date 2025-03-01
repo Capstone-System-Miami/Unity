@@ -71,7 +71,7 @@ namespace SystemMiami.Management
 
         protected virtual void OnSlotClicked(ActionQuickslot slot)
         {
-            SlotClicked.Invoke(slot);
+            SlotClicked?.Invoke(slot);
         }
 
         private void FillLoadoutBars(Loadout loadout)

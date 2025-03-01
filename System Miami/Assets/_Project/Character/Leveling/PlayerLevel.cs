@@ -16,9 +16,9 @@ namespace SystemMiami
         [SerializeField] private int baseXPPerLevel = 100;
         [SerializeField] private int additionalXPPerLevel = 50;
 
-        [SerializeField, ReadOnly]private int level = 0;
-        private int currentXP = 0;
-        private int xpToNextTotal => GetXPtoNextLevel(level);
+        [SerializeField, ReadOnly] private int level = 0;
+        [SerializeField, ReadOnly] private int currentXP = 0;
+        private int XpToNextTotal => GetXPtoNextLevel(level);
         private int xpToNextRemaining = 0;
         
         public int CurrentLevel => level;
@@ -41,7 +41,7 @@ namespace SystemMiami
 
             xpToNextRemaining -= amount;
             
-            remainderXP = currentXP - xpToNextTotal;
+            remainderXP = currentXP - XpToNextTotal;
 
             if (remainderXP > 0)
             {
@@ -94,7 +94,7 @@ namespace SystemMiami
 
         private void RecalculateXPtoNextRemaining()
         {
-            xpToNextRemaining = xpToNextTotal;
+            xpToNextRemaining = XpToNextTotal;
         }
         
         public int GetTotalXPRequired(int targetLevel)
