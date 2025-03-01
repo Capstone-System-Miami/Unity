@@ -28,6 +28,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
 
     [Header("Player Settings")]
     [SerializeField] private GameObject playerPrefab; // The player prefab to instantiate in the scene.
+    [field:SerializeField] public int InterSectionLevelRequirement { get; private set; }
     
     // List to keep track of instantiated street GameObjects.
     private List<GameObject> streetObjects = new List<GameObject>();
@@ -384,7 +385,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
                     $"Error occured at iteration {i}.");
                 continue;
             }
-
+            int requiredLevel = InterSectionLevelRequirement;
             DungeonPreset preset = GetRandomPreset();
 
             if (i < streetData.dungeonEntranceDifficulties.Count)
@@ -398,6 +399,11 @@ public class IntersectionManager : Singleton<IntersectionManager>
                 streetData.dungeonEntranceDifficulties.Add(preset.Difficulty);
             }
 
+            int totalDungeons = dungeonEntrances.Length;
+            float easySpawnChance = 0.5f;
+            float mediumSpawnChance = 0.3f;
+            float hardSpawnChance = 0.2f;
+            preset.AdjustEXPRewards(requiredLevel, totalDungeons, easySpawnChance, mediumSpawnChance, hardSpawnChance);
             dungeonEntrance.ApplyNewPreset(preset);
         }
     }
@@ -586,4 +592,8 @@ public class IntersectionManager : Singleton<IntersectionManager>
         public GameObject streetInstance = null; // Reference to the instantiated street GameObject in the scene.
         public List<DifficultyLevel> dungeonEntranceDifficulties = new List<DifficultyLevel>(); // List of difficulties for DungeonEntrances.
     }
+
+    
+      
+    
 }

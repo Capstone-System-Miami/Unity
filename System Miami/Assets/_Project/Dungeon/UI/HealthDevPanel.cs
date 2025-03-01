@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using SystemMiami.CombatSystem;
 using SystemMiami.Management;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -47,8 +49,11 @@ namespace SystemMiami
         {
             if (_combatant == deadCombatant)
             {
+                
                 SetDead();
             }
+
+           
         }
 
         public void SetCombatant(Combatant enemy, int index)

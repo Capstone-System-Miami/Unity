@@ -98,7 +98,7 @@ namespace SystemMiami.CombatRefactor
             Debug.Log(
                 "Cleaning up CombatAction after execution.",
                 User);
-
+            if (this == null) return; 
             Unequip();
             ExecutionStarted = false;
             ExecutionFinished = false;
@@ -319,6 +319,7 @@ namespace SystemMiami.CombatRefactor
 
         private void UnTarget(TargetSet targets)
         {
+            if (targets == null ) return;
             OnTargetingEvent(TargetingEventType.CANCELLED);
             targets?.all?.ForEach(target =>
             {

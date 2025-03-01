@@ -130,6 +130,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3561768479257745428, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
+      propertyPath: quickslotMagicalAbilityIDs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3561768479257745428, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
+      propertyPath: quickslotPhysicalAbilityIDs.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3561768479257745428, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
+      propertyPath: quickslotMagicalAbilityIDs.Array.data[0]
+      value: 2001
+      objectReference: {fileID: 0}
+    - target: {fileID: 3561768479257745428, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
+      propertyPath: quickslotPhysicalAbilityIDs.Array.data[5]
+      value: 1013
+      objectReference: {fileID: 0}
     - target: {fileID: 4306299752331093467, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -201,6 +217,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseXPPerLevel: 100
   additionalXPPerLevel: 50
+  level: 0
 --- !u!1 &533926307
 GameObject:
   m_ObjectHideFlags: 0
@@ -1045,6 +1062,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: magicalAbilityEntries.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
       propertyPath: equipmentModEntries.Array.data[0]
       value: 
       objectReference: {fileID: 11400000, guid: ffddc80f69938db4ea64e900218acbc6, type: 2}
@@ -1052,6 +1073,10 @@ PrefabInstance:
       propertyPath: physicalAbilityEntries.Array.size
       value: 11
       objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: magicalAbilityEntries.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: af60bd88b18a4db46823a30c90c1ff51, type: 2}
     - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
       propertyPath: physicalAbilityEntries.Array.data[0]
       value: 
@@ -1094,6 +1119,10 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: 573382dc8d082d14fbdc5c942cc4947d, type: 2}
     - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
       propertyPath: physicalAbilityEntries.Array.data[10]
+      value: 
+      objectReference: {fileID: 11400000, guid: 325584827e537574f87e9c204cceb703, type: 2}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: physicalAbilityEntries.Array.data[11]
       value: 
       objectReference: {fileID: 11400000, guid: 325584827e537574f87e9c204cceb703, type: 2}
     - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
@@ -1199,6 +1228,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3ac68e114586ecf429cfaf34d8ff63f7, type: 2}
   - {fileID: 11400000, guid: ad458d592988c3749b0b654a882b084d, type: 2}
   playerPrefab: {fileID: 6453553769002132252, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
+  <InterSectionLevelRequirement>k__BackingField: 5
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

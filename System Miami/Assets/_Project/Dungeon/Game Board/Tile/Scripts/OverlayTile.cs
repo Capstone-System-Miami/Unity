@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SystemMiami.CombatRefactor;
 using SystemMiami.CombatSystem;
+using SystemMiami.Management;
 using UnityEngine;
 
 namespace SystemMiami
@@ -21,7 +22,7 @@ namespace SystemMiami
         public int G;
 
         /// <summary>
-        /// TODO ???
+        /// Heuristic
         /// </summary>
         public int H;
 
@@ -118,11 +119,26 @@ namespace SystemMiami
 
         #region UNITY
         // ==================================
+       
+
+       
+       
 
         private void Awake()
         {
             _renderer = GetComponent<SpriteRenderer>();
             _targetColor = new StructSwitcher<Color>(_defaultColor);
+            
+        }
+        
+        private void OnEnable()
+        {
+            GAME.MGR.CombatantDeath += HandleCombatantDeath;
+        }
+
+        private void OnDisable()
+        {
+            GAME.MGR.CombatantDeath -= HandleCombatantDeath;
         }
 
         private void Start()
@@ -232,6 +248,15 @@ namespace SystemMiami
 
             occupant.PositionTile = null;
             occupant = null;
+        }
+        
+        private void HandleCombatantDeath(Combatant obj)
+        {
+            if (obj == CurrentCombatant)
+            {
+                ClearOccupant();
+                UnHighlight();
+            }
         }
 
         public List<ISubactionCommand> TargetedBy { get; set; } = new();
@@ -373,6 +398,8 @@ namespace SystemMiami
             // Alpha set to 0 means transparent.
             return new Color(1, 1, 1, 0);
         }
+        
+        
 
     }
 }

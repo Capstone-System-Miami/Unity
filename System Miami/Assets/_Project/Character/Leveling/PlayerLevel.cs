@@ -96,7 +96,19 @@ namespace SystemMiami
         {
             xpToNextRemaining = xpToNextTotal;
         }
+        
+        public int GetTotalXPRequired(int targetLevel)
+        {
+            int totalXP = 0;
+            for (int i = 0; i < targetLevel; i++)
+            {
+                totalXP += GetXPtoNextLevel(i);
+            }
+            return totalXP;
+        }
     }
+   
+    
 #if UNITY_EDITOR
     [CustomPropertyDrawer(typeof(ReadOnlyAttribute))]
     public class ReadOnlyDrawer : PropertyDrawer

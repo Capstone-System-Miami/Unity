@@ -39,8 +39,10 @@ namespace SystemMiami
         public GameObject enemyPrefab;
         public GameObject bossPrefab; // TODO: Assign boss prefab
         public List<GameObject> enemyPrefabs = new();
-
+        public int enemiesRemaining;
         public int numberOfEnemies = 3;
+        
+        public event Action DungeonCleared; 
 
         public bool IsPlayerTurn
         {
@@ -67,11 +69,17 @@ namespace SystemMiami
             }
         }
 
+       
+
         #region Unity Methods
         //===============================
-
+        private void OnEnable()
+        {
+            GAME.MGR.CombatantDeath += OnCombatantDeath;
+        }
         private void Start()
         {
+           
             if (playerCharacter != null)
             {
                 Vector3Int charTilePos = Coordinates.ScreenToIso(playerCharacter.transform.position, 0);
@@ -119,7 +127,13 @@ namespace SystemMiami
             if (CurrentTurnOwner == null)
                 { return; }
 
+           
             //Debug.Log($"Current Turn Owner: {CurrentTurnOwner.name}");
+        }
+
+        private void OnDisable()    
+        {
+           GAME.MGR.CombatantDeath -= OnCombatantDeath;
         }
         //===============================
         #endregion // ^Unity Methods^
@@ -133,8 +147,9 @@ namespace SystemMiami
         /// </summary>
         private IEnumerator TurnSequence()
         {
+            
             bool combatantsReady = true;
-
+           
             do
             {
                 combatantsReady = true;
@@ -151,7 +166,7 @@ namespace SystemMiami
             } while (!combatantsReady);
 
             Debug.Log("OUT");
-
+            enemiesRemaining = enemyCharacters.Count;
             while (!IsGameOver)
             {
                 // Remove null items.
@@ -248,6 +263,17 @@ namespace SystemMiami
             enemyCharacters.Add(enemyCombatant);
 
             Debug.Log($"Spawning {enemyCombatant}");
+        }
+
+        public void OnCombatantDeath(Combatant combatant)
+        {
+            Debug.Log("Combatant Death called" + combatant.name + " has died");
+            if (--enemiesRemaining == 0)
+            {
+                DungeonCleared?.Invoke();
+            }
+            
+            
         }
         //===============================
         #endregion // ^Spawning^

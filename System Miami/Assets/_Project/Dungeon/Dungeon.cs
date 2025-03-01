@@ -42,6 +42,7 @@ namespace SystemMiami.Dungeons
         /// when the Neighborhood is generated.
         public Style Style { get { return _style; } }
 
+        public DungeonRewards Rewards;
         public BlockHeight BoardTilesHeight { get { return _boardTilesHeight; } }
 
         public GameObject GameBoard { get { return _gameBoard; } }

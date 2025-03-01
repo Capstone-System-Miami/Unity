@@ -206,6 +206,7 @@ namespace SystemMiami.CombatSystem
 
         private void Update()
         {
+            if(this == null) return;
             UpdateResources();
 
             CurrentState.Update();
@@ -411,6 +412,7 @@ namespace SystemMiami.CombatSystem
 
         public void UnHighlight()
         {
+            if(_renderer == null) return;
             //print($"{name} is no longer highlighted");
             _renderer.color = _defaultColor;
         }
@@ -444,6 +446,7 @@ namespace SystemMiami.CombatSystem
             Debug.Log(
                 $"{gameObject.name} took {amount} damage,\n" +
                 $"its Health is now {Health.Get()}");
+           
         }
         #endregion IDamageReciever
 
@@ -579,11 +582,16 @@ namespace SystemMiami.CombatSystem
 
         public void HandleTargetingEvent(object sender, TargetingEventArgs args)
         {
-            Debug.Log($"Trying to process a TargetingEvent of type {args.EventType}", gameObject);
-            if (this is not ITargetable me) { return; }
-
+            if(this == null) return;
+           // Debug.Log($"Trying to process a TargetingEvent of type {args.EventType}", gameObject);
+           if (this is not ITargetable me) { return; }
+            
+          
+            if(sender == null) return;
+            
             switch (args.EventType)
             {
+                
                 case TargetingEventType.CANCELLED:
                     UnHighlight();
                     me.PreviewOff();
@@ -627,6 +635,7 @@ namespace SystemMiami.CombatSystem
 
         public void PreviewOff()
         {
+            if (this == null) return;
             Debug.Log(
                 $"{gameObject.name} wants to STOP" +
                 $"displaying a preivew.");

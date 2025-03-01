@@ -408,6 +408,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c50cd799e0e54ab429a3ccc7874ea72d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &104641307
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 104641309}
+  - component: {fileID: 104641308}
+  m_Layer: 0
+  m_Name: DungeonComplete
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &104641308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 104641307}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 940e495f349b8c04089da532e1c19c77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerInventory: {fileID: 0}
+  playerLevel: {fileID: 0}
+--- !u!4 &104641309
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 104641307}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.9777672, y: -1.9005753, z: 0.05968572}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &119022254
 GameObject:
   m_ObjectHideFlags: 0
@@ -9106,6 +9152,9 @@ MonoBehaviour:
     Description: 
     itemType: 0
     Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   DescriptionText: {fileID: 7058314808775729815}
   offset: {x: 0, y: 0}
   ItemName: {fileID: 3971718204096858350}
@@ -15030,3 +15079,4 @@ SceneRoots:
   - {fileID: 921401563}
   - {fileID: 7393733846590992622}
   - {fileID: 1333543219089217391}
+  - {fileID: 104641309}
