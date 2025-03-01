@@ -31,8 +31,8 @@ namespace SystemMiami.CombatSystem
         [SerializeField] private float _movementSpeed;
 
         [Header("Animation")]
-        [SerializeField] private AnimatorOverrideController idleController;
-        [SerializeField] private AnimatorOverrideController walkingController;
+        [SerializeField] protected AnimatorOverrideController idleController;
+        [SerializeField] protected AnimatorOverrideController walkingController;
         
         #endregion Serialized Vars
 

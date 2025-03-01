@@ -1,5 +1,7 @@
 ﻿// Authors: Layla Hoey, Lee St Louis
+using System;
 using System.Linq;
+using SystemMiami.Animation;
 using SystemMiami.CombatRefactor;
 using SystemMiami.Management;
 using UnityEngine;
@@ -37,6 +39,12 @@ namespace SystemMiami.CombatSystem
         protected override void InitLoadout()
         {
             UI.MGR.CreatePlayerLoadout(this);
+        }
+
+        public void SetAnimSet(StandardAnimSet playerAnimSet)
+        {
+            idleController = playerAnimSet.idle;
+            walkingController = playerAnimSet.walking;
         }
 
         /// <summary>
