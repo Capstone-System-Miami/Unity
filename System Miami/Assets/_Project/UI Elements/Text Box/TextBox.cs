@@ -11,8 +11,7 @@ namespace SystemMiami
         [SerializeField] private UnityEngine.UI.Image _background;
 
         [SerializeField] private Text _text;
-        [SerializeField] private TextMeshProUGUI _TextMeshPro;
-
+        [SerializeField] private TMP_Text _TextMeshPro;
 
         public void ShowBackground()
         {
