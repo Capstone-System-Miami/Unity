@@ -1,11 +1,9 @@
+// Authors: Layla
 using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
-using Unity.VisualScripting;
 
-namespace SystemMiami
+namespace SystemMiami.Utilities
 {
-    [System.Serializable]
     public class Cycler<T> where T : class, ICycleable
     {
         private readonly List<T> elements = new();
@@ -16,7 +14,7 @@ namespace SystemMiami
         private T currentElement;
 
         public Cycler()
-            : this( new(), false, false )
+            : this(new(), false, false)
         { }
 
         public Cycler(List<T> elements, bool wrapStart, bool wrapEnd)
@@ -42,30 +40,23 @@ namespace SystemMiami
         {
             get
             {
-                if (!Elements.Any()) { return false; }
-
-                return currentElement != Elements[currentIndex];
+                return Elements.Any() && currentElement != Elements[currentIndex];
             }
         }
 
         public T CurrentElement { get { return currentElement; } }
 
-        //private void OnEnable()
-        //{
-        //    GAME.MGR.Pause += HandlePause;
-        //    GAME.MGR.Resume += HandleResume;
-        //}
-
-        //private void OnDisable()
-        //{
-        //    GAME.MGR.Pause -= HandlePause;
-        //    GAME.MGR.Resume -= HandleResume;
-        //}
-
-        private void Update()
+        public void BeginCycle()
         {
+            currentIndex = 0;
             UpdateCurrentElement();
-            ActivateCurrentElement();
+        }
+
+        public void EndCycle()
+        {
+            currentIndex = 0;
+            currentElement = null;
+            Elements.ForEach(element => element.CycleAway());
         }
 
         public void NextElement()
@@ -83,6 +74,8 @@ namespace SystemMiami
                     EndCycle();
                 }
             }
+
+            CycleToCurrentElement();
         }
 
         public void PrevElement()
@@ -100,18 +93,15 @@ namespace SystemMiami
                     currentIndex = 0;
                 }
             }
+
+            CycleToCurrentElement();
         }
 
-        public void BeginCycle()
+        private void CycleToCurrentElement()
         {
-            currentIndex = 0;
-        }
-
-        public void EndCycle()
-        {
-            currentIndex = 0;
-            currentElement = null;
-            Elements.ForEach(element => element.CycleAway());
+            currentElement?.CycleAway();
+            UpdateCurrentElement();
+            currentElement?.CycleTo();
         }
 
         private void UpdateCurrentElement()
@@ -119,21 +109,6 @@ namespace SystemMiami
             if (!Elements.Any()) { return; }
 
             currentElement = Elements[currentIndex];
-        }
-
-        private void ActivateCurrentElement()
-        {
-            foreach (T element in Elements)
-            {
-                if (element == currentElement)
-                {
-                    element.CycleTo();
-                }
-                else
-                {
-                    element.CycleAway();
-                }                
-            }
         }
 
         private void WrapIndex()
@@ -147,17 +122,5 @@ namespace SystemMiami
                 currentIndex = 0;
             }
         }
-
-        //private void HandlePause()
-        //{
-        //    Button[] buttons = GetComponentsInChildren<Button>();
-        //    buttons.ToList().ForEach(button => button.interactable = false);
-        //}
-
-        //private void HandleResume()
-        //{
-        //    Button[] buttons = GetComponentsInChildren<Button>();
-        //    buttons.ToList().ForEach(button => button.interactable = true);
-        //}
     }
 }

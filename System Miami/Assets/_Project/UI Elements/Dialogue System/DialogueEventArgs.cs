@@ -1,6 +1,5 @@
-using UnityEngine;
+// Authors: Layla
 using System;
-using System.Collections.Generic;
 
 namespace SystemMiami.ui
 {

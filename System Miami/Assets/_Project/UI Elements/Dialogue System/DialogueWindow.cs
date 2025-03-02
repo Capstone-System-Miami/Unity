@@ -1,13 +1,12 @@
+// Authors: Layla
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.UI;
-using SystemMiami.CombatRefactor;
 using System;
 using SystemMiami.Management;
-using SystemMiami.ui;
 
-namespace SystemMiami
+namespace SystemMiami.ui
 {
     public class DialogueWindow : MonoBehaviour
     {
@@ -96,11 +95,35 @@ namespace SystemMiami
 
         public void OpenWindow()
         {
-            OpenWindow(allowCloseEarly, header, messages.ToArray());
+            OpenWindow(wrapStart, wrapEnd, allowCloseEarly, header, messages.ToArray());
         }
 
-        public void OpenWindow(bool allowCloseEarly, string header, string[] messages)
+        public void OpenWindow(
+            bool wrapStart,
+            bool wrapEnd,
+            bool allowCloseEarly,
+            string header,
+            string[] messages)
         {
+            header = useExplicitMessages ? explicitHeader : header;
+            messages = useExplicitMessages ? explicitMessageList.ToArray() : messages;
+
+            if (header == null || header.Length == 0)
+            {
+                header = $"BeginCycle() called w/o header set";
+            }
+
+            if (messages.Length == 0)
+            {
+                messages = new string[]
+                {
+                    $"error",
+                    $"no messages set at the time ",
+                    $"that BeginCycle() was called.",
+                    $"(hi)",
+                };
+            }
+
             UI.MGR.StartDialogue(this, wrapStart, wrapEnd, allowCloseEarly, header, messages);
         }
 
@@ -168,8 +191,9 @@ namespace SystemMiami
         public void ClearMessages()
         {
             messageIndex = 0;
-            messages.Clear();
+
             header = "";
+            messages.Clear();
             currentMessage = "";
         }
 
@@ -234,28 +258,6 @@ namespace SystemMiami
         {
             backgroundPanel.enabled = true;
             messageField.Show();
-
-            if (useExplicitMessages)
-            {
-                header = explicitHeader;
-                messages = explicitMessageList;
-            }
-
-            if (header == null || header.Length == 0)
-            {
-                header = $"BeginCycle() called w/o header set";
-            }
-            
-            if (messages.Count == 0)
-            {
-                messages = new List<string>
-                {
-                    $"error",
-                    $"no messages set at the time ",
-                    $"that BeginCycle() was called.",
-                    $"(hi)",
-                };
-            }
 
             IsRunning = true;
             BeenToLast = false;
