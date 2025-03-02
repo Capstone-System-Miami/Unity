@@ -22,9 +22,9 @@ namespace SystemMiami.Management
 
         public Action<ActionQuickslot> SlotClicked;
         public Action<Loadout, Combatant> CombatantLoadoutCreated;
-        
 
-       
+        public event EventHandler<DialogueEventArgs> DialogueStarted;
+        public event EventHandler DialogueFinished;
 
         public void CreatePlayerLoadout(Combatant combatant)
         {
@@ -55,6 +55,36 @@ namespace SystemMiami.Management
             OnSlotClicked(slot);
         }
 
+        public void StartDialogue(
+            object client,
+            bool wrapStart,
+            bool wrapEnd,
+            bool allowCloseEarly,
+            string header,
+            string[] messages)
+        {
+            DialogueEventArgs args = new(
+                client,
+                wrapStart,
+                wrapEnd,
+                allowCloseEarly,
+                header,
+                messages
+            );
+
+            OnDialogueStarted(args);
+        }
+
+        public void StartDialogue(DialogueEventArgs args)
+        {
+            OnDialogueStarted(args);
+        }
+
+        public void FinishDialogue()
+        {
+            OnDialogueFinished();
+        }
+
         protected virtual void OnCreatePlayerLoadout(Combatant combatant)
         {
             Loadout combatantLoadout = new(
@@ -72,6 +102,16 @@ namespace SystemMiami.Management
         protected virtual void OnSlotClicked(ActionQuickslot slot)
         {
             SlotClicked?.Invoke(slot);
+        }
+
+        protected virtual void OnDialogueStarted(DialogueEventArgs args)
+        {
+            DialogueStarted?.Invoke(this, args);
+        }
+
+        protected virtual void OnDialogueFinished()
+        {
+            DialogueFinished?.Invoke(this, EventArgs.Empty);
         }
 
         private void FillLoadoutBars(Loadout loadout)
