@@ -26,6 +26,8 @@ namespace SystemMiami.Management
         public event EventHandler<DialogueEventArgs> DialogueStarted;
         public event EventHandler DialogueFinished;
 
+        [field: SerializeField, ReadOnly] public GameObject CurrentClient { get; private set; }
+
         public void CreatePlayerLoadout(Combatant combatant)
         {
             OnCreatePlayerLoadout(combatant);
@@ -106,6 +108,8 @@ namespace SystemMiami.Management
 
         protected virtual void OnDialogueStarted(DialogueEventArgs args)
         {
+            CurrentClient = (args.client as MonoBehaviour)?.gameObject;
+
             DialogueStarted?.Invoke(this, args);
         }
 

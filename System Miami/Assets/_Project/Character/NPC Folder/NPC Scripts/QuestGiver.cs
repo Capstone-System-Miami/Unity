@@ -18,11 +18,11 @@ public class QuestGiver : MonoBehaviour
     private Quest selectedQuest; // The current quest assigned to the player
 
    
-    public TMP_Text questNameText; 
-    public TMP_Text questDescriptionText; 
-    public TMP_Text progressText; 
-    public TMP_Text rewardText; 
-    public GameObject descriptionPanel; 
+    public TMP_Text questNameText;
+    public TMP_Text questDescriptionText;
+    public TMP_Text progressText;
+    public TMP_Text rewardText;
+    public GameObject descriptionPanel;
 
     private int objectiveCount = 0; // How many enemies have been defeated
     private int currentDescriptionIndex = 0; // Index to track which line of text is shown
