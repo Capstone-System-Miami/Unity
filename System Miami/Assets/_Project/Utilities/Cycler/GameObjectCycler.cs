@@ -6,7 +6,7 @@ using SystemMiami.Management;
 
 namespace SystemMiami.Utilities
 {
-    public class GameObjectCycler : MonoBehaviour
+    public class GameObjectCycler<T> : MonoBehaviour where T : class
     {
         [Header("Elements")]
         [SerializeField] private List<GameObject> gameObjects = new();

@@ -65,7 +65,6 @@ namespace SystemMiami
                 string msg = $"{attributeSet.Get((AttributeType)i)}";
                 fields[i].Value.SetForeground(
                     $"{attributeSet.Get((AttributeType)i)}" );
-                return;
 
             }
         }

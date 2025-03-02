@@ -8,10 +8,12 @@ namespace SystemMiami
 {
     public class TextBox : MonoBehaviour
     {
-        [SerializeField] private UnityEngine.UI.Image _background;
+        [SerializeField] private Image _background;
 
         [SerializeField] private Text _text;
         [SerializeField] private TMP_Text _TextMeshPro;
+
+        [SerializeField] bool _useTMP;
 
         public void ShowBackground()
         {
@@ -61,51 +63,56 @@ namespace SystemMiami
 
         public void ShowForeground()
         {
-            if (_text != null)
+            if (!_useTMP && _text != null)
             {
                 _text.enabled = true;
             }
-            else if (_TextMeshPro != null)
+            else if (_useTMP && _TextMeshPro != null)
             {
                 _TextMeshPro.enabled = true;
-            }
-            
+            }            
         }
 
         public void HideForeground()
         {
-            if (_text != null)
+            if (!_useTMP && _text != null)
             {
                 _text.enabled = false;
             }
-            else if (_TextMeshPro != null)
+            else if (_useTMP && _TextMeshPro != null)
             {
                 _TextMeshPro.enabled = false;
-            }
-            
+            }            
         }
 
         public void SetForeground(string text)
         {
-            if (_text != null)
+            string msg = $"Setting {name}'s text to {text} in SetForground()";
+
+            if (!_useTMP && _text != null)
             {
+                msg += "\nUnityEngine.UI Text was not null";
+
                 _text.text = text;
             }
-            else if (_TextMeshPro != null)
+            else if (_useTMP && _TextMeshPro != null)
             {
+                msg += "\nTMP_Text was not null";
+
                 _TextMeshPro.text = text;
             }
             
+            Debug.Log(msg);
         }
 
         public void SetForeground(Color color)
         {
-            if (_text != null)
+            if (!_useTMP && _text != null)
             {
                 
                 _text.color = color;
             }
-            else if(_TextMeshPro != null)
+            else if(_useTMP && _TextMeshPro != null)
             {
                 _TextMeshPro.color = color;
             }
@@ -114,12 +121,12 @@ namespace SystemMiami
 
         public void SetForeground(string text, Color color)
         {
-            if (_text != null)
+            if (!_useTMP && _text != null)
             {
                 _text.text = text;
                 _text.color = color;
             }
-            else if(_TextMeshPro != null)
+            else if(_useTMP && _TextMeshPro != null)
             {
                 _TextMeshPro.text = text;
                 _TextMeshPro.color = color;
