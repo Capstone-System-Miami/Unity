@@ -24,6 +24,7 @@ namespace SystemMiami.CombatSystem
         
         public HealCommand(ITargetable healReciever, float amount)
         {
+            this.reciever = healReciever;
             this.amount = amount;
         }
 
