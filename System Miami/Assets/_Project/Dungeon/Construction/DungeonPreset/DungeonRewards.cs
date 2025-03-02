@@ -44,6 +44,16 @@ namespace SystemMiami.Dungeons
         [SerializeField] private bool _includeConsumables = true;
         [SerializeField] private bool _includeEquipmentMods = true;
 
+        [Header("Credit reward ranges")] 
+        private int easyMinCredit = 7;
+        private int easyMaxCredit = 10;
+       
+        private int mediumMinCredit = 10;
+        private int mediumMaxCredit = 14;
+       
+        private int hardMinCredit = 14;
+        private int hardMaxCredit = 20;
+
         
         [Header("Available IDs (pulled from Database)")]
         [SerializeField] public List<ItemData> _abilityItemDatas = new();         // e.g. Physical or Magical
@@ -73,7 +83,7 @@ namespace SystemMiami.Dungeons
         /// - The player's level
         /// - The distribution method (which can be overridden by difficulty)
         /// </summary>
-        public List<ItemData> GenerateRewards(DifficultyLevel dungeonDifficulty)
+        public List<ItemData> GenerateItemRewards(DifficultyLevel dungeonDifficulty)
         {
            Debug.Log("Generate Rewards");
             int playerLevel = PlayerManager.MGR.GetPlayerLevel();
@@ -146,6 +156,48 @@ namespace SystemMiami.Dungeons
             return rewards;
         }
 
+
+       
+        public int GenerateExpReward(DifficultyLevel dungeonDifficulty)
+        {
+            int expReward = 0;
+            switch (dungeonDifficulty)
+            {
+                case DifficultyLevel.EASY:
+                    expReward = IntersectionManager.MGR.easyDungeonReward[Random.Range(0, IntersectionManager.MGR.easyDungeonReward.Count -1)];
+                    break;
+                case DifficultyLevel.MEDIUM:
+                    expReward = IntersectionManager.MGR.mediumDungeonReward[Random.Range(0, IntersectionManager.MGR.mediumDungeonReward.Count -1)];
+                    break;
+                case DifficultyLevel.HARD:
+                    expReward = IntersectionManager.MGR.hardDungeonReward[Random.Range(0, IntersectionManager.MGR.hardDungeonReward.Count -1)];
+                    break;
+            }
+            
+            return expReward;
+        }
+
+        public int GenerateCreditReward(DifficultyLevel dungeonDifficulty)
+        {
+            int creditReward = 0;
+            int playerLevel = PlayerManager.MGR.GetPlayerLevel();
+            switch (dungeonDifficulty)
+            {
+                case DifficultyLevel.EASY:
+                    
+                    creditReward = playerLevel > 0 ?  playerLevel * Random.Range(easyMinCredit, easyMaxCredit) : Random.Range(easyMinCredit, easyMaxCredit) ;
+                    break;
+                case DifficultyLevel.MEDIUM:
+                    creditReward = playerLevel > 0 ?  playerLevel * Random.Range(mediumMinCredit, mediumMaxCredit) : Random.Range(mediumMinCredit, mediumMaxCredit) ;
+                    break;
+                case DifficultyLevel.HARD:
+                    creditReward = playerLevel > 0 ?  playerLevel * Random.Range(hardMinCredit, hardMaxCredit) : Random.Range(hardMinCredit, hardMaxCredit) ;
+                    break;
+            }
+            
+            return creditReward;
+        }
+
         /// <summary>
         /// Attempts to pick a random item from the candidateIDs, 
         /// filtered by difficulty-based level offsets. 
@@ -216,6 +268,8 @@ namespace SystemMiami.Dungeons
             return Database.MGR.FilterByLevel(filtered);
         }
 
+        
+
         /// <summary>
         /// Collects whichever ID lists are enabled (Abilities, Consumables, EquipmentMods).
         /// </summary>
@@ -240,6 +294,7 @@ namespace SystemMiami.Dungeons
             }
         }
 
+        
         
     }
 }

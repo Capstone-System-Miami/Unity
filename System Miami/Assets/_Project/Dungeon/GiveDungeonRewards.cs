@@ -35,6 +35,11 @@ namespace SystemMiami
             {
                 playerLevel.GainXP(exp);
             }
+
+            if (GAME.MGR.TryGetCredit(out int credit))
+            {
+                playerInventory.AddCredits(credit);
+            }
             
            
         }

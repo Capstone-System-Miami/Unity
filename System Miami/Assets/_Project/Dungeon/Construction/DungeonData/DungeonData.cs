@@ -16,6 +16,7 @@ namespace SystemMiami
         public List<ItemData> ItemRewards;
 
         public int EXPToGive;
+        public int Credits;
       //  public List<Outdated.Ability> AbilityRewards;
        // public List<LeeInventory.OutdatedOrDuplicates.ItemData> ItemRewards;
 
@@ -24,18 +25,20 @@ namespace SystemMiami
         private string[] _abilityInfo;
        private string[] _itemInfo;
 
-        public DungeonData() : this( null, new(), new List<ItemData>(),0 ) { }
+        public DungeonData() : this( null, new(), new List<ItemData>(),0,0 ) { }
 
         public DungeonData(
             GameObject prefab,
             List<GameObject> enemies,
-            List<ItemData> itemRewards,int expToGive
+            List<ItemData> itemRewards,int expToGive,
+            int credits
         )
         {
             Prefab = prefab;
             Enemies = enemies;
             ItemRewards = itemRewards;
             EXPToGive = expToGive;
+            Credits = credits;
 
             _prefabInfo = $"Prefab: {Prefab}";
 

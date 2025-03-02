@@ -1,8 +1,11 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using SystemMiami;
 using SystemMiami.Management;
 using SystemMiami.Dungeons;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 //Made By Antony (Layla edited)
 
@@ -10,8 +13,9 @@ using UnityEngine;
 public class IntersectionManager : Singleton<IntersectionManager>
 {
     // Serialized fields allow these private variables to be set in the Unity Editor.
-    [Header("Street Generation Settings")]
-    [SerializeField] private IntersectionPool[] streetPools; // Array of StreetPools, which contain prefabs for different street types.
+    [Header("Street Generation Settings")] [SerializeField]
+    private IntersectionPool[] streetPools; // Array of StreetPools, which contain prefabs for different street types.
+
     [SerializeField] private int maxStreets; // Maximum number of streets to generate.
     [SerializeField] private int minStreets; // Minimum number of streets to generate.
     [SerializeField] private int streetWidth; // The width of each street in world units.
@@ -19,56 +23,80 @@ public class IntersectionManager : Singleton<IntersectionManager>
     [SerializeField] private int gridSizeX; // The width of the street grid.
     [SerializeField] private int gridSizeY; // The height of the street grid.
     [SerializeField] private int maxExits = 4; // Maximum number of exits per street.
-    [SerializeField] private int maxStreetsToConnect = 4; // Maximum number of streets that can be connected from one street.
-    
+
+    [SerializeField]
+    private int maxStreetsToConnect = 4; // Maximum number of streets that can be connected from one street.
+
     // List to pull from when assigning difficulty to entrances.
     // These will be passed to DungeonEntrances, which will
     // construct themselves based on the information in the presets.
     [SerializeField] private List<DungeonPreset> dungeonEntrancePresets = new();
 
-    [Header("Player Settings")]
-    [SerializeField] private GameObject playerPrefab; // The player prefab to instantiate in the scene.
-    [field:SerializeField] public int InterSectionLevelRequirement { get; private set; }
-    
+    [Header("Player Settings")] [SerializeField]
+    private GameObject playerPrefab; // The player prefab to instantiate in the scene.
+
+    [field: SerializeField] public int NeighborhoodLevelRequirement { get; private set; }
+
     // List to keep track of instantiated street GameObjects.
     private List<GameObject> streetObjects = new List<GameObject>();
+
     // Queue used for breadth-first street generation.
     private Queue<Vector2Int> streetQueue = new Queue<Vector2Int>();
+
     // Dictionary mapping StreetTypes to their corresponding StreetPools.
     private Dictionary<IntersectionType, IntersectionPool> streetPoolDictionary;
+
     // 2D array representing the grid of streets.
     private StreetData[,] streetGrid;
+
     // Counter for the number of streets generated.
     private int streetCount;
+
     // Flag to indicate if the street generation is complete.
     private bool generationComplete = false;
 
+    [SerializeField] private List<DungeonEntrance> allEntrances = new();
+    List<DungeonEntrance> easyDungeons = new List<DungeonEntrance>();
+    List<DungeonEntrance> mediumDungeons = new List<DungeonEntrance>();
+    List<DungeonEntrance> hardDungeons = new List<DungeonEntrance>();
+    
+    public List<int> easyDungeonReward = new List<int>();
+    public List<int> mediumDungeonReward = new List<int>();
+    public List<int> hardDungeonReward = new List<int>();
+    
+   
+    public event Action GenerationComplete;
+
     // Possible directions to check for neighboring streets (up, down, right, left).
-    private Vector2Int[] directions = {
-        new Vector2Int(0, 1),  // Up
+    private Vector2Int[] directions =
+    {
+        new Vector2Int(0, 1), // Up
         new Vector2Int(0, -1), // Down
-        new Vector2Int(1, 0),  // Right
-        new Vector2Int(-1, 0)  // Left
+        new Vector2Int(1, 0), // Right
+        new Vector2Int(-1, 0) // Left
     };
 
     // Mapping from moveDirection vectors to ExitDirection enums.
-    private Dictionary<Vector2Int, ExitDirection> dirToExit = new Dictionary<Vector2Int, ExitDirection> {
+    private Dictionary<Vector2Int, ExitDirection> dirToExit = new Dictionary<Vector2Int, ExitDirection>
+    {
         { new Vector2Int(0, 1), ExitDirection.North }, // Up corresponds to North exit.
         { new Vector2Int(0, -1), ExitDirection.South }, // Down corresponds to South exit.
         { new Vector2Int(1, 0), ExitDirection.East }, // Right corresponds to East exit.
         { new Vector2Int(-1, 0), ExitDirection.West } // Left corresponds to West exit.
     };
-    
+
     // Mapping from moveDirection vectors to the opposite ExitDirection enums.
-    private Dictionary<Vector2Int, ExitDirection> dirToOppositeExit = new Dictionary<Vector2Int, ExitDirection> {
+    private Dictionary<Vector2Int, ExitDirection> dirToOppositeExit = new Dictionary<Vector2Int, ExitDirection>
+    {
         { new Vector2Int(0, 1), ExitDirection.South }, // Up's opposite is South.
         { new Vector2Int(0, -1), ExitDirection.North }, // Down's opposite is North.
         { new Vector2Int(1, 0), ExitDirection.West }, // Right's opposite is West.
         { new Vector2Int(-1, 0), ExitDirection.East } // Left's opposite is East.
     };
-    
+
     // Mapping from ExitDirection enums to moveDirection vectors.
-    private Dictionary<ExitDirection, Vector2Int> exitToDir = new Dictionary<ExitDirection, Vector2Int> {
+    private Dictionary<ExitDirection, Vector2Int> exitToDir = new Dictionary<ExitDirection, Vector2Int>
+    {
         { ExitDirection.North, new Vector2Int(0, 1) }, // North exit corresponds to Up.
         { ExitDirection.South, new Vector2Int(0, -1) }, // South exit corresponds to Down.
         { ExitDirection.East, new Vector2Int(1, 0) }, // East exit corresponds to Right.
@@ -77,8 +105,10 @@ public class IntersectionManager : Singleton<IntersectionManager>
 
     // The index in the grid where the street generation starts.
     private Vector2Int startingStreetIndex;
+
     // Reference to the first StreetData object generated.
     private StreetData firstStreetGenerated;
+
     // Reference to the last StreetData object generated.
     private StreetData lastStreetGenerated;
 
@@ -89,7 +119,8 @@ public class IntersectionManager : Singleton<IntersectionManager>
         playerPrefab = GameObject.Find("Player");
         InitializeStreetPoolDictionary(); // Prepare the dictionary mapping StreetTypes to StreetPools.
         InitializeStreetGrid(); // SetAll up the grid itemData structure for street generation.
-        StartStreetGenerationFromStreet(new Vector2Int(gridSizeX / 2, gridSizeY / 2)); // Begin street generation from the center of the grid.
+        StartStreetGenerationFromStreet(new Vector2Int(gridSizeX / 2,
+            gridSizeY / 2)); // Begin street generation from the center of the grid.
     }
 
     // Unity's Update method is called once per frame.
@@ -98,6 +129,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
         // If there are streets in the queue and generation is not complete, continue generating streets.
         if (streetQueue.Count > 0 && !generationComplete)
         {
+           
             // Dequeue a street index from the queue and attempt to generate a street there.
             TryGenerateStreet(streetQueue.Dequeue());
         }
@@ -111,8 +143,8 @@ public class IntersectionManager : Singleton<IntersectionManager>
         else if (!generationComplete)
         {
             generationComplete = true;
-            CleanupExits(); // Adjust exits to ensure consistency between connected streets.
-            LogGenerationResults(); // Output generation statistics to the console.
+            OnGenerationComplete();
+           
         }
 
         if (Input.GetKeyDown(KeyCode.Return))
@@ -162,7 +194,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
         streetQueue.Enqueue(streetIndex);
         // Mark the street as enqueued to prevent it from being enqueued again.
         streetGrid[streetIndex.x, streetIndex.y].enqueued = true;
-        
+
         // Spawn the player at the center of the grid.
         SpawnPlayer();
     }
@@ -171,22 +203,22 @@ public class IntersectionManager : Singleton<IntersectionManager>
     {
         // Instantiate the player prefab at the center of the grid.
         Vector3 playerPosition = GetPositionFromGridIndex(new Vector2Int(gridSizeX / 2, gridSizeY / 2));
-        playerPrefab.transform.position =  playerPosition;
-    }   
-    
+        playerPrefab.transform.position = playerPosition;
+    }
+
     // Attempt to generate a street at the specified grid index.
     private void TryGenerateStreet(Vector2Int streetIndex)
     {
         int x = streetIndex.x;
         int y = streetIndex.y;
-    
+
         // Check if the grid index is within the bounds of the grid.
         if (x < 0 || x >= gridSizeX || y < 0 || y >= gridSizeY) return;
-    
+
         StreetData currentStreet = streetGrid[x, y];
 
         if (currentStreet.hasStreet) return; // If a street already exists at this index, do nothing.
-    
+
         // Mark this grid cell as having a street.
         currentStreet.hasStreet = true;
         // List of directions where new streets can potentially be generated.
@@ -199,7 +231,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
             int ny = y + dir.y;
             // Skip if neighbor index is out of bounds.
             if (nx < 0 || nx >= gridSizeX || ny < 0 || ny >= gridSizeY) continue;
-    
+
             StreetData neighborStreet = streetGrid[nx, ny];
             if (neighborStreet.hasStreet && neighborStreet.exits.Contains(dirToOppositeExit[dir]))
             {
@@ -215,18 +247,20 @@ public class IntersectionManager : Singleton<IntersectionManager>
         }
 
         // Determine the maximum number of exits that can be created from this street.
-        int maxExits = Mathf.Min(maxStreets - streetCount, this.maxExits); // Limit exits by remaining streets to generate and the configured maxExits.
+        int maxExits =
+            Mathf.Min(maxStreets - streetCount,
+                this.maxExits); // Limit exits by remaining streets to generate and the configured maxExits.
         // Decide randomly how many exits to create, at least one, up to maxExits, but not exceeding available directions.
         int exitsToCreate = Mathf.Min(Random.Range(1, maxExits + 1), availableDirs.Count);
         // Randomize the order of available directions to add randomness to street generation.
         ShuffleList(availableDirs);
-    
+
         // Count how many streets are adjacent to this street already.
         int adjacentStreets = CountAdjacentStreets(streetIndex);
         // Limit the number of streets we can connect to based on maxStreetsToConnect and existing adjacent streets.
         int maxStreetsToConnect = Mathf.Min(this.maxStreetsToConnect - adjacentStreets, exitsToCreate);
         exitsToCreate = Mathf.Min(exitsToCreate, maxStreetsToConnect);
-    
+
         int exitsCreated = 0;
         // Loop through available directions and create exits, enqueueing new streets for generation.
         for (int i = 0; i < availableDirs.Count && exitsCreated < exitsToCreate; i++)
@@ -236,7 +270,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
             int ny = y + dir.y;
             // Skip if neighbor index is out of bounds.
             if (nx < 0 || nx >= gridSizeX || ny < 0 || ny >= gridSizeY) continue;
-    
+
             StreetData neighborStreet = streetGrid[nx, ny];
             // Check if we have not exceeded the maximum number of streets to generate.
             if (streetCount + streetQueue.Count < maxStreets)
@@ -251,6 +285,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
                     neighborStreet.enqueued = true;
                     streetQueue.Enqueue(new Vector2Int(nx, ny));
                 }
+
                 exitsCreated++;
             }
         }
@@ -316,7 +351,12 @@ public class IntersectionManager : Singleton<IntersectionManager>
         if (streetObjects.Contains(streetData.streetInstance))
         {
             streetObjects.Remove(streetData.streetInstance);
+           
         }
+        DungeonEntrance[] dataEntrances = streetData.streetInstance.GetComponentsInChildren<DungeonEntrance>();
+        DungeonEntrance firstEntrance = dataEntrances[0];
+        int firstEntranceIndex = allEntrances.IndexOf(firstEntrance);
+        allEntrances.RemoveRange(firstEntranceIndex, dataEntrances.Length - 1);
 
         // Destroy the old street instance.
         Destroy(streetData.streetInstance);
@@ -332,11 +372,12 @@ public class IntersectionManager : Singleton<IntersectionManager>
             return;
         }
 
-        InstantiateFromPool(streetData, pool);     
+        InstantiateFromPool(streetData, pool);
     }
 
     private void InstantiateFromPool(StreetData streetData, IntersectionPool pool)
     {
+
         // Randomly select a prefab from the pool.
         GameObject prefabToInstantiate = pool.streetPrefabs[Random.Range(0, pool.streetPrefabs.Length)];
 
@@ -365,8 +406,8 @@ public class IntersectionManager : Singleton<IntersectionManager>
     private void InitializeDungeonPresets(StreetData streetData)
     {
         GameObject instance = streetData.streetInstance;
-
         DungeonEntrance[] dungeonEntrances = instance.GetComponentsInChildren<DungeonEntrance>();
+        allEntrances.AddRange(dungeonEntrances);
 
         if (dungeonEntrances.Length != streetData.dungeonEntranceDifficulties.Count)
         {
@@ -385,7 +426,8 @@ public class IntersectionManager : Singleton<IntersectionManager>
                     $"Error occured at iteration {i}.");
                 continue;
             }
-            int requiredLevel = InterSectionLevelRequirement;
+
+            int requiredLevel = NeighborhoodLevelRequirement;
             DungeonPreset preset = GetRandomPreset();
 
             if (i < streetData.dungeonEntranceDifficulties.Count)
@@ -400,10 +442,8 @@ public class IntersectionManager : Singleton<IntersectionManager>
             }
 
             int totalDungeons = dungeonEntrances.Length;
-            float easySpawnChance = 0.5f;
-            float mediumSpawnChance = 0.3f;
-            float hardSpawnChance = 0.2f;
-            preset.AdjustEXPRewards(requiredLevel, totalDungeons, easySpawnChance, mediumSpawnChance, hardSpawnChance);
+
+           
             dungeonEntrance.ApplyNewPreset(preset);
         }
     }
@@ -431,7 +471,10 @@ public class IntersectionManager : Singleton<IntersectionManager>
     {
         foreach (var streetData in streetGrid)
         {
-            if (!streetData.hasStreet) { continue; }
+            if (!streetData.hasStreet)
+            {
+                continue;
+            }
 
             // Create a new set to hold exits that are valid (i.e., actually connected to neighboring streets).
             HashSet<ExitDirection> validExits = new HashSet<ExitDirection>();
@@ -459,7 +502,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
             streetData.exits = validExits;
 
             ReplaceStreet(streetData); // Update the street prefab to reflect valid exits
-            
+
         }
     }
 
@@ -480,7 +523,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
 
         // Reset grid
         InitializeStreetGrid();
-    
+
         // Restart street generation from the center of the grid.
         StartStreetGenerationFromStreet(new Vector2Int(gridSizeX / 2, gridSizeY / 2));
     }
@@ -506,7 +549,8 @@ public class IntersectionManager : Singleton<IntersectionManager>
             {
                 Gizmos.color = gizmoColor;
                 // Draw a wireframe cube at each grid cell position to represent the grid.
-                Gizmos.DrawWireCube(GetPositionFromGridIndex(new Vector2Int(x, y)), new Vector3(streetWidth, streetHeight, 0));
+                Gizmos.DrawWireCube(GetPositionFromGridIndex(new Vector2Int(x, y)),
+                    new Vector3(streetWidth, streetHeight, 0));
             }
         }
     }
@@ -517,7 +561,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
         int x = streetIndex.x;
         int y = streetIndex.y;
         int count = 0;
-    
+
         // Check each moveDirection for neighboring streets.
         foreach (Vector2Int dir in directions)
         {
@@ -528,7 +572,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
             // If the neighbor has a street, increment the count.
             if (streetGrid[nx, ny].hasStreet) count++;
         }
-    
+
         return count;
     }
 
@@ -541,6 +585,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
         {
             combinedExits |= exit;
         }
+
         // Cast the combined exits to a IntersectionType (assumes IntersectionType is defined to match combinations of ExitDirection).
         return (IntersectionType)combinedExits;
     }
@@ -553,6 +598,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
         {
             Debug.Log($"First Street Generated: Index {firstStreetGenerated.gridIndex}");
         }
+
         if (lastStreetGenerated != null)
         {
             Debug.Log($"Last Street Generated: Index {lastStreetGenerated.gridIndex}");
@@ -588,12 +634,73 @@ public class IntersectionManager : Singleton<IntersectionManager>
         public Vector2Int gridIndex; // The grid coordinates of this street.
         public bool hasStreet = false; // Whether a street has been generated at this grid location.
         public bool enqueued = false; // Whether this grid location has been added to the generation queue.
-        public HashSet<ExitDirection> exits = new HashSet<ExitDirection>(); // The exits (directions) this street connects to.
+
+        public HashSet<ExitDirection>
+            exits = new HashSet<ExitDirection>(); // The exits (directions) this street connects to.
+
         public GameObject streetInstance = null; // Reference to the instantiated street GameObject in the scene.
-        public List<DifficultyLevel> dungeonEntranceDifficulties = new List<DifficultyLevel>(); // List of difficulties for DungeonEntrances.
+
+        public List<DifficultyLevel>
+            dungeonEntranceDifficulties = new List<DifficultyLevel>(); // List of difficulties for DungeonEntrances.
     }
 
+    public List<int> SetEXPReward(List<DungeonEntrance> entrances)
+    {
+        int xpRequired = PlayerManager.MGR.GetComponent<PlayerLevel>()
+            .GetTotalXPRequired(NeighborhoodLevelRequirement);
+        //expBank
+        //dungeons take from bank
+        //when last dungeon has taken from bank, if remainder == positive add avg + 1 to each dungeon
+
+        int bank = xpRequired;
+
+      
+        List<int> expReward = new List<int>();
+       
+         for (int i = 0; i < entrances.Count; i++)
+         {
+             int exp = bank/entrances.Count;
+             expReward.Add(exp);
+
+         }
+      
+        return expReward;
+
+    }
+    
+    private void OnGenerationComplete()
+    {
+        CleanupExits(); // Adjust exits to ensure consistency between connected streets.
+        SetEntranceLists();
+        easyDungeonReward = SetEXPReward(easyDungeons);
+        mediumDungeonReward = SetEXPReward(mediumDungeons);
+        hardDungeonReward = SetEXPReward(hardDungeons);
+        LogGenerationResults(); // Output generation statistics to the console.
+        GenerationComplete?.Invoke();
+    }
+
+    public void SetEntranceLists()
+    {
+        easyDungeons = allEntrances.Where(entrance => entrance.CurrentPreset.Difficulty == DifficultyLevel.EASY)
+            .ToList();
+        mediumDungeons = allEntrances.Where(entrance => entrance.CurrentPreset.Difficulty == DifficultyLevel.MEDIUM)
+            .ToList();
+        hardDungeons = allEntrances.Where(entrance => entrance.CurrentPreset.Difficulty == DifficultyLevel.HARD)
+            .ToList();
+    }
+
+
+   
+
+}
+
+
+
+
+
+
+    
     
       
     
-}
+

@@ -1,4 +1,6 @@
 /// Layla, Antony
+
+using System;
 using System.Collections.Generic;
 using SystemMiami.Dungeons;
 using SystemMiami.Management;
@@ -14,7 +16,7 @@ namespace SystemMiami
         // ======================================
         [SerializeField] private dbug log;
         [SerializeField] private List<Dungeons.Style> _excludedStyles = new();
-
+       
         //=======================================
         #endregion // SERIALIZED
 
@@ -25,6 +27,7 @@ namespace SystemMiami
         private DungeonPreset _currentPreset;
         [SerializeField]private DungeonData _dungeonData;
         private Material _material;
+       
 
         //=======================================
         #endregion // PRIVATE VARS
@@ -38,6 +41,20 @@ namespace SystemMiami
         //=======================================
         #endregion // PROPERTIES
 
+        private void OnEnable()
+        {
+            IntersectionManager.MGR.GenerationComplete += HandleGenerationComplete;
+        }
+
+        private void OnDisable()
+        {
+            IntersectionManager.MGR.GenerationComplete -= HandleGenerationComplete;
+        }
+
+        private void HandleGenerationComplete()
+        {
+            applyStoredPreset();
+        }
 
         #region PUBLIC METHODS
         // ======================================
@@ -64,7 +81,7 @@ namespace SystemMiami
 
             _currentPreset = preset;
 
-            applyStoredPreset();
+            //applyStoredPreset();
         }
 
         public void TurnOffDungeonColor()
@@ -105,7 +122,7 @@ namespace SystemMiami
                 return;
             }
 
-            // Create a little itemData packet to send to the GAME.MGR
+            // Create a little Data packet to send to the GAME.MGR
             _dungeonData = CurrentPreset.GetData(_excludedStyles);
 
             log.warn($"DungeonData being stored:\n {_dungeonData}");

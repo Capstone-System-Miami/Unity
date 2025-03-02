@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using SystemMiami.AbilitySystem;
 using UnityEngine;
 using SystemMiami.LeeInventory;
+using SystemMiami.Outdated;
+using UnityEditor.U2D.Animation;
 #if UNITY_EDITOR
 using UnityEditor; 
 #endif
@@ -41,12 +43,9 @@ namespace SystemMiami.Dungeons
         [Header("Rewards")]
         [SerializeField] private DungeonRewards _rewards;
 
-        [Space(5)]
-        [SerializeField] private int _minXP;
-        [SerializeField] private int _maxXP;
+      
 
-        [SerializeField] private int _minSkillPoints;
-        [SerializeField] private int _maxSkillPoints;
+       
 
         public DungeonData GetData(List<Style> excludedStyles)
         {
@@ -56,12 +55,13 @@ namespace SystemMiami.Dungeons
             
             _rewards.Initialize();
             
-            List<ItemData> itemRewards = _rewards.GenerateRewards(_difficulty);
+            List<ItemData> itemRewards = _rewards.GenerateItemRewards(_difficulty);
             Debug.LogWarning($"Dungeon Preset {name} generated rewards: {itemRewards.Count}");
             
-            int EXPToGive = Random.Range(_minXP, _maxXP);
+            int EXPToGive = _rewards.GenerateExpReward(_difficulty);
+            int creditsToGive = _rewards.GenerateCreditReward(_difficulty);
             
-            DungeonData data = new DungeonData(prefab, enemies, itemRewards,EXPToGive);
+            DungeonData data = new DungeonData(prefab, enemies, itemRewards,EXPToGive,creditsToGive);
 
             return data;
         }
@@ -155,44 +155,9 @@ namespace SystemMiami.Dungeons
             return golist[0];
         }
         
-        public void AdjustEXPRewards(int requiredLevel, int totalDungeons, float easySpawnChance, float mediumSpawnChance, float hardSpawnChance)
+        public void AdjustEXPRewards(int requiredLevel, int totalDungeons)
         {
-            // Get total XP required for the level
-            int xpRequired = PlayerManager.MGR.GetComponent<PlayerLevel>().GetTotalXPRequired(requiredLevel);
-
-            // Average number of each dungeon type that will spawn
-            int expectedEasy = Mathf.RoundToInt(totalDungeons * easySpawnChance);
-            int expectedMedium = Mathf.RoundToInt(totalDungeons * mediumSpawnChance);
-            int expectedHard = Mathf.RoundToInt(totalDungeons * hardSpawnChance);
-
-            // Ensure at least 1 of each type to prevent divide by zero
-            expectedEasy = Mathf.Max(1, expectedEasy);
-            expectedMedium = Mathf.Max(1, expectedMedium);
-            expectedHard = Mathf.Max(1, expectedHard);
-
-            // Calculate XP allocation per dungeon type
-            float avgEasyEXP = xpRequired / (float)expectedEasy;
-            float avgMediumEXP = xpRequired / (float)expectedMedium;
-            float avgHardEXP = xpRequired / (float)expectedHard;
-
-            // Set min/max EXP based on average values with some randomness
-            if (_difficulty == DifficultyLevel.EASY)
-            {
-                _minXP = Mathf.Max(5, Mathf.FloorToInt(avgEasyEXP * 0.8f)); // 80% of average
-                _maxXP = Mathf.CeilToInt(avgEasyEXP * 1.2f); // 120% of average
-            }
-            else if (_difficulty == DifficultyLevel.MEDIUM)
-            {
-                _minXP = Mathf.Max(10, Mathf.FloorToInt(avgMediumEXP * 0.8f));
-                _maxXP = Mathf.CeilToInt(avgMediumEXP * 1.2f);
-            }
-            else if (_difficulty == DifficultyLevel.HARD)
-            {
-                _minXP = Mathf.Max(20, Mathf.FloorToInt(avgHardEXP * 0.8f));
-                _maxXP = Mathf.CeilToInt(avgHardEXP * 1.2f);
-            }
-
-            Debug.Log($"Adjusted EXP for {_difficulty} Dungeons: MinXP = {_minXP}, MaxXP = {_maxXP}");
+           
         }
        
     }
