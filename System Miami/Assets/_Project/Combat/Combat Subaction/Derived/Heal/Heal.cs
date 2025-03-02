@@ -1,4 +1,6 @@
 // Authors: Layla Hoey
+
+using SystemMiami.CombatRefactor;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem
@@ -9,7 +11,7 @@ namespace SystemMiami.CombatSystem
     {
         [SerializeField] private float healAmount;
 
-        public override ISubactionCommand GenerateCommand(ITargetable target)
+        public override ISubactionCommand GenerateCommand(ITargetable target, CombatAction action)
         {
             return new HealCommand(target, healAmount);
         }

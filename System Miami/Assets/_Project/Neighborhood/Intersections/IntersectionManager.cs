@@ -354,9 +354,12 @@ public class IntersectionManager : Singleton<IntersectionManager>
            
         }
         DungeonEntrance[] dataEntrances = streetData.streetInstance.GetComponentsInChildren<DungeonEntrance>();
-        DungeonEntrance firstEntrance = dataEntrances[0];
-        int firstEntranceIndex = allEntrances.IndexOf(firstEntrance);
-        allEntrances.RemoveRange(firstEntranceIndex, dataEntrances.Length - 1);
+        if (dataEntrances.Length > 0) 
+        {
+            DungeonEntrance firstEntrance = dataEntrances[0];
+            int firstEntranceIndex = allEntrances.IndexOf(firstEntrance);
+            allEntrances.RemoveRange(firstEntranceIndex, dataEntrances.Length - 1);
+        }
 
         // Destroy the old street instance.
         Destroy(streetData.streetInstance);

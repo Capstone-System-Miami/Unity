@@ -1,5 +1,6 @@
 ﻿// Authors: Layla Hoey
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace SystemMiami
 {
@@ -49,6 +50,19 @@ namespace SystemMiami
             }
         }
 
+        public static AttributeSet operator +(AttributeSet a, AttributeSet b)
+        {
+            int[] newAttributeVals = new []
+            {
+                a.Get(AttributeType.STRENGTH) + b.Get(AttributeType.STRENGTH),
+                a.Get(AttributeType.DEXTERITY) + b.Get(AttributeType.DEXTERITY),
+                a.Get(AttributeType.CONSTITUTION) + b.Get(AttributeType.CONSTITUTION),
+                a.Get(AttributeType.WISDOM) + b.Get(AttributeType.WISDOM),
+                a.Get(AttributeType.INTELLIGENCE) + b.Get(AttributeType.INTELLIGENCE)
+            };
+            return new(newAttributeVals);
+        }
+
         private void zero(ref int[] incoming)
         {
             incoming = new int[CharacterEnums.ATTRIBUTE_COUNT];
@@ -57,6 +71,7 @@ namespace SystemMiami
             {
                 incoming[i] = 0;
             }
+            Debug.Log("Zeroed array");
         }
 
         public int Get(AttributeType attr)

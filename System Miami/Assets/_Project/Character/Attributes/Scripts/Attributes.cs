@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using SystemMiami.CombatSystem;
+using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
@@ -81,8 +82,30 @@ namespace SystemMiami
             _constitution = baseAttributes.Get(AttributeType.CONSTITUTION);
             _wisdom = baseAttributes.Get(AttributeType.WISDOM);
             _intelligence = baseAttributes.Get(AttributeType.INTELLIGENCE);
-
+            Debug.LogError($"Added {baseAttributes.Get(AttributeType.STRENGTH)} to {name}'s strength. in InitializeWith");
             updateVals(false);
+        }
+        
+        public void AddAttributeSet(AttributeSet additionalAttributes)
+        {
+           
+                List<AttributeType> allTypes = new();
+                allTypes.Add(AttributeType.WISDOM);
+                allTypes.Add(AttributeType.STRENGTH);
+                allTypes.Add(AttributeType.INTELLIGENCE);
+                allTypes.Add(AttributeType.DEXTERITY);
+                allTypes.Add(AttributeType.CONSTITUTION);
+
+                foreach (AttributeType type in allTypes)
+                {
+                    _current.Set(type, (_current.Get(type) + additionalAttributes.Get(type)));
+                }
+            updateVals(true);
+            
+            
+           
+            Debug.LogError($"Added {additionalAttributes.Get(AttributeType.STRENGTH)} to {name}'s strength. in AddAttributeSet");
+           
         }
 
         /// <summary>

@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 7934506652684310896}
   - component: {fileID: -2226846941425345227}
   - component: {fileID: 147198865295630718}
+  - component: {fileID: 4317126869047771008}
   m_Layer: 0
   m_Name: Slime
   m_TagString: Untagged
@@ -143,6 +144,7 @@ MonoBehaviour:
   _constitution: 0
   _wisdom: 0
   _intelligence: 0
+  attributePointsPerLevel: 0
   _upgradeMode: 0
   upgradeType: 0
   upgradeAmt: 0
@@ -163,7 +165,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _printReports: 0
-  _statData: {fileID: 11400000, guid: bba75fed3304a4d408c878a265698e2d, type: 2}
+  _statData: {fileID: 11400000, guid: 62534ca4834665d4bb699431b1ef9d22, type: 2}
 --- !u!95 &2231695680492015841
 Animator:
   serializedVersion: 5
@@ -240,3 +242,22 @@ MonoBehaviour:
   quickslotMagicalAbilityIDs: 
   quickslotPhysicalAbilityIDs: 8b130000
   quickslotConsumableIDs: 
+  credits: 0
+--- !u!114 &4317126869047771008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5679960105606152641}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 500b85fdfd1605946a22cf87d99c9137, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _difficulty: 0
+  str: 1
+  con: 1
+  dex: 1
+  inte: 1
+  wis: 1

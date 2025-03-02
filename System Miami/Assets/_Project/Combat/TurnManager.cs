@@ -236,11 +236,15 @@ namespace SystemMiami
             // Instantiate enemy
             GameObject enemyGO = Instantiate(prefab);
             Combatant enemyCombatant = enemyGO.GetComponent<Combatant>();
+            
+            
             if (enemyCombatant == null)
             {
                 enemyCombatant = enemyGO.AddComponent<Combatant>();
             }
-
+            
+            
+            
             // Set enemy ID
             enemyCombatant.ID = id;
 

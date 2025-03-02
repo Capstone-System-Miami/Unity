@@ -151,7 +151,7 @@ namespace SystemMiami.Dungeons
                 Debug.LogWarning( warning );
                 return _prefabPool.DefaultPrefab;
             }
-
+            dungeon.DifficultyLevel = _difficulty;
             return golist[0];
         }
         
