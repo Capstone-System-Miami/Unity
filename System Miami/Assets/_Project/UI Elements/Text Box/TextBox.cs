@@ -102,7 +102,7 @@ namespace SystemMiami
                 _TextMeshPro.text = text;
             }
             
-            Debug.Log(msg);
+            Debug.Log(msg, this);
         }
 
         public void SetForeground(Color color)

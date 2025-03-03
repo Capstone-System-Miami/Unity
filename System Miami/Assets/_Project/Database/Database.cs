@@ -20,6 +20,7 @@ namespace SystemMiami
        [SerializeField] private List<NewAbilitySO> enemyPhysicalAbilityEntries = new();
        [SerializeField] private List<NewAbilitySO> enemyMagicalAbilityEntries = new();
        [FormerlySerializedAs("equipmentEntries")] [SerializeField] private List<EquipmentModSO> equipmentModEntries = new();
+       
 
        private Dictionary<int, NewAbilitySO> physicalAbilityDatabase;
        private Dictionary<int, NewAbilitySO> magicalAbilityDatabase;
@@ -27,6 +28,8 @@ namespace SystemMiami
        private Dictionary<int, NewAbilitySO> enemyPhysicalAbilityDatabase;
        private Dictionary<int, NewAbilitySO> enemyMagicalAbilityDatabase;
        private Dictionary<int, EquipmentModSO> equipmentModDatabase;
+       
+       
        
        
        
@@ -81,6 +84,9 @@ namespace SystemMiami
            }
            return result;
        }
+
+       
+       
        public ItemData GetRandomDataOfType(ItemType type)
        {
             List<int> entryIndices = new();
@@ -155,6 +161,7 @@ namespace SystemMiami
        /// Create an instance of a CombatAction (AbilityPhysical, AbilityMagical, or Consumable)
        /// based on the given ID. 
        /// </summary>
+       
        public CombatAction CreateInstance(int id, Combatant user)
        {
            // Check if it's an ability
@@ -245,9 +252,9 @@ namespace SystemMiami
                    data.MinLevel <= playerLevel &&
                    data.MaxLevel >= playerLevel)
                {
-                   Debug.Log($"Before {filtered.Count} {data.ID}");
+                  // Debug.Log($"Before {filtered.Count} {data.ID}");
                    filtered.Add(data);
-                   Debug.Log($"After {filtered.Count} {data.ID}");
+                  // Debug.Log($"After {filtered.Count} {data.ID}");
                }
            }
          
