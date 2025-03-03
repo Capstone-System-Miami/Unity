@@ -8,12 +8,18 @@ namespace SystemMiami
     public class PopUpHandler : Singleton<PopUpHandler>
     {
         public RectTransform Popup;
-        public ItemData AssignedCombatAction;
-        public Text DescriptionText;
-        public Vector2 offset;
         public Text ItemName;
+        public Text DescriptionText;
 
-       // private bool OnShown => Popup.gameObject.activeSelf;
+        public ItemData CurrentItemData;
+        public Vector2 offset;
+
+        // UNITY
+        private void Start()
+        {
+            Popup.SetAsLastSibling();
+            Popup.gameObject.SetActive(false);
+        }
 
         private void Update()
         {
@@ -23,26 +29,38 @@ namespace SystemMiami
             }
         }
 
-        public void SetPopupAblility(ItemData itemData, ActionQuickslot slot)
+        // PUBLIC
+        public void OpenPopup(ItemData itemData, ActionQuickslot slot)
         {
-            AssignedCombatAction = itemData;
+            OpenPopup(itemData, slot.RT);
+        }
+
+        public void OpenPopup(ItemData itemData, InventoryItemSlot slot)
+        {
+            OpenPopup(itemData, slot.RT);
+        }
+
+        public void OpenPopup(ItemData itemData, RectTransform rt)
+        {
+            CurrentItemData = itemData;
 
             // Turn on the popup
             Popup.gameObject.SetActive(true);
 
             // Set parent to the slot
-            Popup.SetParent(slot.transform, false);
+            Popup.SetParent(rt, false);
 
             // Set position to the position of the slot plus an offset of 1.5
             // times the height of the slot.
-            Popup.anchoredPosition = Vector2.zero + new Vector2(0, slot.RT.sizeDelta.y * 1.5f);
+            // TODO: check if this needs a specific anchor config
+            // (either the popup, the parent rectTransform, or both)
+            Popup.anchoredPosition = Vector2.zero + new Vector2(0, rt.sizeDelta.y * 1.5f);
 
             // Set the text in the popup
             BindText();
         }
 
-
-        public void SetPopupAblility()
+        public void ClosePopup()
         {
             // Set parent to this manager
             Popup.SetParent(transform, false);
@@ -51,22 +69,17 @@ namespace SystemMiami
             Popup.gameObject.SetActive(false);
         }
 
+        // PRIVATE
         private void SetPopupPosition()
         {
             //Vector2 Mouseposition = Input.mousePosition;
             //Popup.position = Mouseposition /*+ offset */+ (new Vector2(Popup.sizeDelta.x, Popup.sizeDelta.y) / 2f);
         }
 
-        private void Start()
-        {
-            Popup.SetAsLastSibling();
-            Popup.gameObject.SetActive(false);
-        }
-
         private void BindText()
         {
-            DescriptionText.text = AssignedCombatAction.Description;
-            ItemName.text = AssignedCombatAction.Name;
+            DescriptionText.text = CurrentItemData.Description;
+            ItemName.text = CurrentItemData.Name;
         }
 
     }

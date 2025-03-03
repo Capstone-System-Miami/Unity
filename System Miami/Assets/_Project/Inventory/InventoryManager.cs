@@ -6,7 +6,7 @@ namespace SystemMiami.LeeInventory
 {
     public class InventoryManager : Singleton<InventoryManager>
     {
-        public InventorySlot[] slots;
+        public InventorySlots[] slots;
 
         protected override void Awake()
         {
@@ -15,7 +15,7 @@ namespace SystemMiami.LeeInventory
 
         public void Add(OutdatedOrDuplicates.Item item)
         {
-            foreach (InventorySlot slot in slots)
+            foreach (InventorySlots slot in slots)
             {
                 if (slot.item == null)
                 {

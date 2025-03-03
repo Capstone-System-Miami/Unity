@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 using SystemMiami.CombatSystem;
+using SystemMiami.Outdated;
 
 namespace SystemMiami.InventorySystem
 {
@@ -21,9 +22,23 @@ namespace SystemMiami.InventorySystem
         public List<int> MagicalAbilityIDs { get => magicalAbilityIDs; private set => magicalAbilityIDs = value; }
         public List<int> PhysicalAbilityIDs { get => physicalAbilityIDs; private set => physicalAbilityIDs = value; }
         public List<int> ConsumableIDs { get => consumableIDs; private set => consumableIDs = value; }
+
         public List<int> QuickslotMagicalAbilityIDs { get => quickslotMagicalAbilityIDs; private set => quickslotMagicalAbilityIDs = value; }
         public List<int> QuickslotPhysicalAbilityIDs { get => quickslotPhysicalAbilityIDs; private set => quickslotPhysicalAbilityIDs = value; }
         public List<int> QuickslotConsumableIDs { get => quickslotConsumableIDs; private set => quickslotConsumableIDs = value; }
+
+        public List<int> AllValidInventoryItems
+        {
+            get
+            {
+                List<int> allIDs = new();
+                allIDs.AddRange(MagicalAbilityIDs);
+                allIDs.AddRange(PhysicalAbilityIDs);
+                allIDs.AddRange(ConsumableIDs);
+
+                return allIDs ?? new();
+            }
+        }
 
         public int Credits { get => credits; private set => credits = value; }
 
