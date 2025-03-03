@@ -109,8 +109,6 @@ namespace SystemMiami.ui
 
         private void UpdateSize()
         {
-            Vector2 result;
-
             DimensionInfo currentDimInfo = Constraint switch
             {
                 GridConstraint.COL  => new (

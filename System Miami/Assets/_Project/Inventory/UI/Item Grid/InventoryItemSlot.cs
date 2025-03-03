@@ -31,7 +31,7 @@ namespace SystemMiami
         public RectTransform RT { get; private set; }
 
         [field: SerializeField, ReadOnly] bool IsEnabled;
-        [field: SerializeField, ReadOnly] private string currentItem;
+        [field: SerializeField, ReadOnly] private string currentItemStr;
 
         private void Awake()
         {
@@ -96,7 +96,7 @@ namespace SystemMiami
                 fallback.sprite = null;
             }
 
-            currentItem = "None";
+            currentItemStr = "None";
         }
 
         private void Refresh()
@@ -112,7 +112,7 @@ namespace SystemMiami
                 fallback.sprite = itemData.Icon;
             }
 
-            currentItem = itemData.Name;
+            currentItemStr = itemData.Name;
         }
 
         public void EnableInteraction()
@@ -127,8 +127,9 @@ namespace SystemMiami
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            PopUpHandler.MGR.OpenPopup(itemData, this);
+            if (itemData.failbit) { return; }
 
+            PopUpHandler.MGR.OpenPopup(itemData, this);
 
             if (!usingFallback)
             {
@@ -136,7 +137,6 @@ namespace SystemMiami
                     ? enabledColors.Highlighted
                     : disabledColors.Highlighted;
 
-                // could set a highlight color
                 spriteBox.SetBackground(toSet);
                 spriteBox.SetForeground(itemData.Icon);
             }
@@ -148,6 +148,8 @@ namespace SystemMiami
 
         public void OnPointerExit(PointerEventData eventData)
         {
+            if (itemData.failbit) { return; }
+
             Color toSet = IsEnabled
                     ? enabledColors.Unhighlighted
                     : disabledColors.Unhighlighted;

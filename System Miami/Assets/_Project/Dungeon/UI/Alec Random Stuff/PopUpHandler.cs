@@ -1,5 +1,6 @@
 using SystemMiami.Management;
 using SystemMiami.ui;
+using SystemMiami.Utilities;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,6 +8,8 @@ namespace SystemMiami
 {
     public class PopUpHandler : Singleton<PopUpHandler>
     {
+        [SerializeField] private dbug log;
+
         public RectTransform Popup;
         public Text ItemName;
         public Text DescriptionText;
@@ -14,11 +17,14 @@ namespace SystemMiami
         public ItemData CurrentItemData;
         public Vector2 offset;
 
+        private Canvas currentCanvas;
+
         // UNITY
         private void Start()
         {
             Popup.SetAsLastSibling();
             Popup.gameObject.SetActive(false);
+            SetCurrentCanvas();
         }
 
         private void Update()
@@ -56,15 +62,24 @@ namespace SystemMiami
                 // times the height of the slot.
                 // TODO: check if this needs a specific anchor config
                 // (either the popup, the parent rectTransform, or both)
+                // TODO: if it does, try to handle the math for every case.
                 Popup.anchoredPosition = Vector2.zero + new Vector2(0, rt.sizeDelta.y * 1.5f);
             }
             else
             {
-                Popup.position = 
-                    (Vector2)Camera.main.ScreenToWorldPoint(
-                        (Vector2)Camera.main.WorldToScreenPoint(rt.position)
-                        + new Vector2(0, rt.sizeDelta.y * 1.5f)
-                    );
+                Vector2 slotposScreen = (Vector2)Camera.main.WorldToScreenPoint(rt.position);
+
+                Canvas slotCanvas;
+                TryGetCanvasInParents(rt, out slotCanvas);
+
+                // TODO: This is really bad I have no idea why 100 works and I'm a little scared about it
+                Vector2 myPosScreen = new(slotposScreen.x, slotposScreen.y + (rt.rect.height * slotCanvas.scaleFactor) * 50);
+
+                Popup.position = (Vector2)Camera.main.ScreenToWorldPoint(myPosScreen);
+                    //(Vector2)Camera.main.ScreenToWorldPoint(
+                    //    slotposScreen
+                    //    + new Vector2(0, (rt.rect.height * currentCanvas.scaleFactor * 2.5f))
+                    //);
             }
 
 
@@ -74,8 +89,10 @@ namespace SystemMiami
 
         public void ClosePopup()
         {
-            // Set parent to this manager
-            Popup.SetParent(transform, false);
+            SetCurrentCanvas();
+
+            // Set parent to the canvas we found
+            Popup.SetParent(currentCanvas.transform, false);
 
             // Turn off the popup
             Popup.gameObject.SetActive(false);
@@ -94,5 +111,50 @@ namespace SystemMiami
             ItemName.text = CurrentItemData.Name;
         }
 
+
+        private void SetCurrentCanvas()
+        {
+            // Get the first canvas in a
+            // recursive search of the popup's parents.
+            if (Popup != null && TryGetCanvasInParents(Popup.transform, out Canvas existingPopupCanvas))
+            {
+                currentCanvas = existingPopupCanvas;
+            }
+            else if (TryGetCanvasInParents(transform, out Canvas thisParentCanvas))
+            {
+                currentCanvas = thisParentCanvas;
+            }
+            else
+            {
+                log.error(
+                    $"UI ERROR. Neither {name} nor {Popup.name} is on a canvas. " +
+                    $"Make sure {Popup.name} remains on a canvas at all times. " +
+                    $"Check the hierarchy in the scene, and also " +
+                    $"the {this} script");
+                return;
+            }
+        }
+
+        private bool TryGetCanvasInParents(Transform child, out Canvas canvas)
+        {
+            Transform searchTarget = child;
+
+            int maxDepth = 100;
+            int depth = 0;
+
+            while ( (++depth < maxDepth) && (searchTarget != null) )
+            {
+                // Update search target
+                searchTarget = searchTarget.parent;
+
+                if (searchTarget.TryGetComponent(out canvas))
+                {
+                    return true;
+                }
+            }
+
+            canvas = null;
+            return false;
+        }
     }
 }

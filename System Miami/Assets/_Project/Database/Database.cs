@@ -4,9 +4,12 @@ using SystemMiami.AbilitySystem;
 using SystemMiami.CombatRefactor;
 using SystemMiami.CombatSystem;
 using SystemMiami.Management;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Serialization;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace SystemMiami
 {
@@ -261,7 +264,7 @@ namespace SystemMiami
          return filtered;
        }
 
-   #if UNITY_EDITOR
+ #if UNITY_EDITOR
         [ContextMenu("Load All Abilities & Consumables")]
         private void LoadAllSOsInProject()
         {
