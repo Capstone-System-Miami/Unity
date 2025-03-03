@@ -61,4 +61,24 @@ namespace SystemMiami
             _foreground.color = color;
         }
     }
+
+    [System.Serializable]
+    public class HighlightColorSet
+    {
+        [SerializeField] private Color highlighted = Color.white;
+        [SerializeField] private Color unhighlighted = Color.white;
+
+        public Color Highlighted { get { return highlighted; } }
+        public Color Unhighlighted { get { return unhighlighted; } }
+
+        public HighlightColorSet()
+            : this (Color.white, Color.white)
+        { }
+
+        public HighlightColorSet(Color highlighted, Color unhighlighted)
+        {
+            this.highlighted = highlighted;
+            this.unhighlighted = unhighlighted;
+        }
+    }
 }

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace SystemMiami.LeeInventory
 {
-    public class InventorySlot : MonoBehaviour
+    public class InventorySlots : MonoBehaviour
     {
         public OutdatedOrDuplicates.Item item; // Reference to the item in the slot
 

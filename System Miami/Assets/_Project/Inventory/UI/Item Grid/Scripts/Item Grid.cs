@@ -138,13 +138,13 @@ namespace SystemMiami.ui
 
             float secondaryDimension = currentDimInfo.GetCurrentLength();
 
-            result = Constraint switch
+            RT.sizeDelta = Constraint switch
             {
                 GridConstraint.COL =>
-                    RT.sizeDelta = new Vector2 (RT.sizeDelta.x, secondaryDimension),
+                    new Vector2 (RT.sizeDelta.x, secondaryDimension),
 
                 GridConstraint.ROW =>
-                    RT.sizeDelta = new Vector2 (secondaryDimension, RT.sizeDelta.y),
+                    new Vector2 (secondaryDimension, RT.sizeDelta.y),
 
                 _ => Vector2.zero
             };
@@ -179,7 +179,7 @@ namespace SystemMiami.ui
             {
                 return
                     (numberOfElements * cellSize)
-                    + padding1 + padding2
+                    + padding1 /*+ padding2*/
                     + (spacing * numberOfSpaces);
             }
         }

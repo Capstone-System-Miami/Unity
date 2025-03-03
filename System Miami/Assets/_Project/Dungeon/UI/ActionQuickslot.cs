@@ -95,12 +95,12 @@ namespace SystemMiami.ui
             if (_combatAction == null) { return; }
 
             ItemData itemData = Database.MGR.GetDataWithJustID(_combatAction.ID);
-            PopUpHandler.MGR?.SetPopupAblility(itemData, this);
+            PopUpHandler.MGR?.OpenPopup(itemData, this);
         }
 
         public void SetPopupOnExit()
         {
-            PopUpHandler.MGR?.SetPopupAblility();
+            PopUpHandler.MGR?.ClosePopup();
         }
     }
 }

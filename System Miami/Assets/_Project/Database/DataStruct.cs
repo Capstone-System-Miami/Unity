@@ -8,8 +8,9 @@ namespace SystemMiami
 {
     [System.Serializable]
     public struct ItemData
-    {  
-        public static readonly ItemData Empty = new ItemData(0, null, "", "", ItemType.PhysicalAbility,Rarity.Common, 0, 0);
+    {
+        public static readonly ItemData FailedData = new(
+            0, null, "", "", 0, 0, 0, 0);
         
         public int ID;
         public Sprite Icon;
@@ -20,14 +21,31 @@ namespace SystemMiami
         public int MinLevel;
         public int MaxLevel;
         public Rarity rarity;
+
+        public readonly bool failbit;
        
-       public ItemData (int id, Sprite icon, string name, string description, ItemType itemType,Rarity rarity, int minLevel, int maxLevel)
+        public ItemData(
+            int id,
+            Sprite icon,
+            string name,
+            string description,
+            ItemType itemType,
+            Rarity rarity,
+            int minLevel,
+            int maxLevel)
         {
+            failbit = (id == 0);
+
             ID = id;
             Icon = icon;
             Name = name;
             Description = description;
             this.itemType = itemType;
+
+            // TODO:
+            // Is it intentional that none of these vvvv
+            // are getting assigned properly? Double check
+            // that this is the goal
             int min = minLevel;
             int max = maxLevel;
             Price = 0;
