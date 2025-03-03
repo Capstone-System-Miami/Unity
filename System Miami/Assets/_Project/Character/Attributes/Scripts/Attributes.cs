@@ -82,7 +82,6 @@ namespace SystemMiami
             _constitution = baseAttributes.Get(AttributeType.CONSTITUTION);
             _wisdom = baseAttributes.Get(AttributeType.WISDOM);
             _intelligence = baseAttributes.Get(AttributeType.INTELLIGENCE);
-            Debug.LogError($"Added {baseAttributes.Get(AttributeType.STRENGTH)} to {name}'s strength. in InitializeWith");
             updateVals(false);
         }
         
