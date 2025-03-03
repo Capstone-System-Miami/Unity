@@ -251,11 +251,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &546639722 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7401371384429190344, guid: 177addd4b0c985344aeedd87e85cdf65, type: 3}
-  m_PrefabInstance: {fileID: 971291379}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &765166752
 GameObject:
   m_ObjectHideFlags: 0
@@ -912,6 +907,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7542791501019009735, guid: 177addd4b0c985344aeedd87e85cdf65, type: 3}
+      propertyPath: m_Name
+      value: Main Panel
+      objectReference: {fileID: 0}
     - target: {fileID: 7642337909155851806, guid: 177addd4b0c985344aeedd87e85cdf65, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1037,7 +1036,9 @@ PrefabInstance:
       value: 960.49994
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 7401371384429190344, guid: 177addd4b0c985344aeedd87e85cdf65, type: 3}
+    - {fileID: 3025040106383791716, guid: 177addd4b0c985344aeedd87e85cdf65, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 177addd4b0c985344aeedd87e85cdf65, type: 3}
@@ -1299,7 +1300,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameObjectsToToggle:
-  - {fileID: 546639722}
+  - {fileID: 0}
   startActive: 0
   key: 27
   keyTrigger: 1
