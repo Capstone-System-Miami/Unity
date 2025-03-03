@@ -63,7 +63,6 @@ namespace SystemMiami.InventorySystem
         // until we run out of slots or IDs.
         private void FillSlots(List<int> ids)
         {
-
             int minCount = Mathf.Min(SlotCount, ids.Count);
 
             for (int i = 0; i < minCount; i++)
