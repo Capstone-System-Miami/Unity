@@ -32,29 +32,41 @@ namespace SystemMiami
         // PUBLIC
         public void OpenPopup(ItemData itemData, ActionQuickslot slot)
         {
-            OpenPopup(itemData, slot.RT);
+            OpenPopup(itemData, slot.RT, true);
         }
 
         public void OpenPopup(ItemData itemData, InventoryItemSlot slot)
         {
-            OpenPopup(itemData, slot.RT);
+            OpenPopup(itemData, slot.RT, false);
         }
 
-        public void OpenPopup(ItemData itemData, RectTransform rt)
+        public void OpenPopup(ItemData itemData, RectTransform rt, bool parentToSlot)
         {
             CurrentItemData = itemData;
 
             // Turn on the popup
             Popup.gameObject.SetActive(true);
 
-            // Set parent to the slot
-            Popup.SetParent(rt, false);
+            if (parentToSlot)
+            {
+                // Set parent to the slot
+                Popup.SetParent(rt, false);
 
-            // Set position to the position of the slot plus an offset of 1.5
-            // times the height of the slot.
-            // TODO: check if this needs a specific anchor config
-            // (either the popup, the parent rectTransform, or both)
-            Popup.anchoredPosition = Vector2.zero + new Vector2(0, rt.sizeDelta.y * 1.5f);
+                // Set position to the position of the slot plus an offset of 1.5
+                // times the height of the slot.
+                // TODO: check if this needs a specific anchor config
+                // (either the popup, the parent rectTransform, or both)
+                Popup.anchoredPosition = Vector2.zero + new Vector2(0, rt.sizeDelta.y * 1.5f);
+            }
+            else
+            {
+                Popup.position = 
+                    (Vector2)Camera.main.ScreenToWorldPoint(
+                        (Vector2)Camera.main.WorldToScreenPoint(rt.position)
+                        + new Vector2(0, rt.sizeDelta.y * 1.5f)
+                    );
+            }
+
 
             // Set the text in the popup
             BindText();

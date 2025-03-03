@@ -409,6 +409,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _background: {fileID: 7792619852648213592}
   _text: {fileID: 5098213614749605559}
+  _TextMeshPro: {fileID: 0}
+  _useTMP: 0
 --- !u!1 &6453553769002132252
 GameObject:
   m_ObjectHideFlags: 0
@@ -431,7 +433,8 @@ GameObject:
   - component: {fileID: 6386089713510983124}
   - component: {fileID: 4261404639173623324}
   - component: {fileID: 137947715004459473}
-  - component: {fileID: 3561768479257745428}
+  - component: {fileID: 18740023143509276}
+  - component: {fileID: 8518758834218037015}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -477,7 +480,8 @@ MonoBehaviour:
   - {fileID: 2944738270664453915}
   - {fileID: 5403784279387507798}
   - {fileID: 2705490712565707672}
-  - {fileID: 3561768479257745428}
+  - {fileID: 8518758834218037015}
+  - {fileID: 18740023143509276}
   neighborhoodComponents:
   - {fileID: 8219263611542528465}
   - {fileID: 6386089713510983124}
@@ -620,6 +624,7 @@ MonoBehaviour:
   _constitution: 0
   _wisdom: 0
   _intelligence: 0
+  attributePointsPerLevel: 0
   _upgradeMode: 0
   upgradeType: 0
   upgradeAmt: 0
@@ -706,7 +711,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ff9527698754fa46bd93bb2ff5a7b10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _debugMessages: 0
+  log:
+    showMessages: 1
   _interactKey: 101
   _promptBox: {fileID: 6499409498506360628}
 --- !u!61 &4261404639173623324
@@ -771,9 +777,9 @@ MonoBehaviour:
   _movementSpeed: 2
   idleController: {fileID: 22100000, guid: decd93ce417d8f74fa9d4dc0cfe24f90, type: 2}
   walkingController: {fileID: 22100000, guid: fa6e08b1c92be634090b672d4f4f3230, type: 2}
-  _inventory: {fileID: 3561768479257745428}
+  _inventory: {fileID: 18740023143509276}
   test: {fileID: 11400000, guid: 325584827e537574f87e9c204cceb703, type: 2}
---- !u!114 &3561768479257745428
+--- !u!114 &18740023143509276
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -785,10 +791,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1b0c98d0769de241821df7da7d8f2af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  magicalAbilityIDs: 
-  physicalAbilityIDs: 
-  consumableIDs: 
+  physicalAbilityIDs: ea030000ee030000eb030000e8030000ed030000
+  magicalAbilityIDs: 00000000
+  consumableIDs: b80b0000b80b0000
   equipmentModIDs: 
-  quickslotMagicalAbilityIDs: 
   quickslotPhysicalAbilityIDs: ea030000ee030000eb030000e8030000ed030000
-  quickslotConsumableIDs: b80b0000
+  quickslotMagicalAbilityIDs: 
+  quickslotConsumableIDs: 
+  credits: 0
+--- !u!114 &8518758834218037015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6453553769002132252}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75d4ddb520eab9b46ab9a0125793d0f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseXPPerLevel: 100
+  additionalXPPerLevel: 50
+  level: 0
+  currentXP: 0

@@ -27,7 +27,10 @@ namespace SystemMiami.InventorySystem
         {
             if (inventory == null)
             {
-                log.error("eff"); return;
+                log.error(
+                    $"inventory was null during {name}'s {this}.OnEnable(), " +
+                    $"so {name} did not subscribe to inventory's System.Action " +
+                    $"OnInventoryChanged."); return;
             }
             inventory.OnInventoryChanged += RefreshUI;
         }
