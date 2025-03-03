@@ -54,7 +54,9 @@ public class IntersectionManager : Singleton<IntersectionManager>
 
     // Flag to indicate if the street generation is complete.
     private bool generationComplete = false;
-
+    
+    
+    [Header("Dungeon Entrances")]
     [SerializeField] private List<DungeonEntrance> allEntrances = new();
     List<DungeonEntrance> easyDungeons = new List<DungeonEntrance>();
     List<DungeonEntrance> mediumDungeons = new List<DungeonEntrance>();
@@ -63,8 +65,23 @@ public class IntersectionManager : Singleton<IntersectionManager>
     public List<int> easyDungeonReward = new List<int>();
     public List<int> mediumDungeonReward = new List<int>();
     public List<int> hardDungeonReward = new List<int>();
+
+ 
+    [field: SerializeField]public List<NPCSpawner> allNPCs { get; private set; }
     
+    [Header("NPC Settings")]
+    [SerializeField] private GameObject npcPrefab;
+
    
+    
+    [Header("NPC Spawn Settings")]
+    [Range(0,1)]
+    [SerializeField] private float dialogueChance = 0.5f;
+    [Range(0,1)]
+    [SerializeField] private float questChance = 0.3f;
+    [Range(0,1)]
+    [SerializeField] private float shopChance = 0.2f;
+    public NPCInfoSO npcInfo;
     public event Action GenerationComplete;
 
     // Possible directions to check for neighboring streets (up, down, right, left).
@@ -121,6 +138,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
         InitializeStreetGrid(); // SetAll up the grid itemData structure for street generation.
         StartStreetGenerationFromStreet(new Vector2Int(gridSizeX / 2,
             gridSizeY / 2)); // Begin street generation from the center of the grid.
+        npcInfo.Initialize();
     }
 
     // Unity's Update method is called once per frame.
@@ -354,11 +372,20 @@ public class IntersectionManager : Singleton<IntersectionManager>
            
         }
         DungeonEntrance[] dataEntrances = streetData.streetInstance.GetComponentsInChildren<DungeonEntrance>();
+        
         if (dataEntrances.Length > 0) 
         {
             DungeonEntrance firstEntrance = dataEntrances[0];
             int firstEntranceIndex = allEntrances.IndexOf(firstEntrance);
             allEntrances.RemoveRange(firstEntranceIndex, dataEntrances.Length - 1);
+        }
+        NPCSpawner[] NPCs = streetData.streetInstance.GetComponentsInChildren<NPCSpawner>();
+        if (NPCs.Length > 0)
+        {
+            Debug.Log("Found NPCs");
+            NPCSpawner firstNPC = NPCs[0];
+            int firstNPCIndex = allNPCs.IndexOf(firstNPC);
+            allNPCs.RemoveRange(firstNPCIndex, NPCs.Length - 1);
         }
 
         // Destroy the old street instance.
@@ -400,6 +427,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
         streetObjects.Add(streetInstance);
 
         InitializeDungeonPresets(streetData);
+        InitializeNPCSpawners(streetData);
     }
 
     /// <summary>
@@ -410,7 +438,10 @@ public class IntersectionManager : Singleton<IntersectionManager>
     {
         GameObject instance = streetData.streetInstance;
         DungeonEntrance[] dungeonEntrances = instance.GetComponentsInChildren<DungeonEntrance>();
+       
         allEntrances.AddRange(dungeonEntrances);
+        
+        
 
         if (dungeonEntrances.Length != streetData.dungeonEntranceDifficulties.Count)
         {
@@ -449,6 +480,44 @@ public class IntersectionManager : Singleton<IntersectionManager>
            
             dungeonEntrance.ApplyNewPreset(preset);
         }
+    }
+
+    private void InitializeNPCSpawners(StreetData streetData)
+    {
+        GameObject instance = streetData.streetInstance;
+        NPCSpawner[] npcSpawners = instance.GetComponentsInChildren<NPCSpawner>();
+        allNPCs.AddRange(npcSpawners);
+
+        
+    }
+
+    public void SpawnNPCs()
+    {
+        
+        foreach(NPCSpawner spawner in allNPCs)
+        {
+            spawner.SpawnNPC(npcPrefab);
+            AssignRoles(spawner.npcPrefabInstance);
+        }
+       
+        
+    }
+
+    private void AssignRoles(GameObject spawnerNpcPrefab)
+    {
+        NPC npc = spawnerNpcPrefab.GetComponent<NPC>();
+     
+       float roll = Random.value;
+
+       if (roll < shopChance)
+       {
+          npc.Initialize(NPCType.ShopKeeper);
+       }
+       else if (roll < shopChance + questChance)
+       {
+         npc.Initialize(NPCType.QuestGiver);
+       }
+       
     }
 
     private DungeonPreset GetRandomPreset()
@@ -645,6 +714,8 @@ public class IntersectionManager : Singleton<IntersectionManager>
 
         public List<DifficultyLevel>
             dungeonEntranceDifficulties = new List<DifficultyLevel>(); // List of difficulties for DungeonEntrances.
+        
+        public List<NPCSpawner> npcSpawnerList = new List<NPCSpawner>();
     }
 
     public List<int> SetEXPReward(List<DungeonEntrance> entrances)
@@ -678,6 +749,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
         easyDungeonReward = SetEXPReward(easyDungeons);
         mediumDungeonReward = SetEXPReward(mediumDungeons);
         hardDungeonReward = SetEXPReward(hardDungeons);
+        SpawnNPCs();
         LogGenerationResults(); // Output generation statistics to the console.
         GenerationComplete?.Invoke();
     }
