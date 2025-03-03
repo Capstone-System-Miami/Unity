@@ -1,3 +1,4 @@
+using SystemMiami.CombatRefactor;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem
@@ -11,7 +12,7 @@ namespace SystemMiami.CombatSystem
         [SerializeField] float healPerTurn;
         [SerializeField] int durationTurns;
 
-        public override ISubactionCommand GenerateCommand(ITargetable target)
+        public override ISubactionCommand GenerateCommand(ITargetable target, CombatAction action)
         {
             return new StatusEffectCommand(
                 target,

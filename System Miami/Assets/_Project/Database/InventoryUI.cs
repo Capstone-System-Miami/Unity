@@ -6,12 +6,11 @@ namespace SystemMiami.InventorySystem
 {
     public class InventoryUI : MonoBehaviour
     {
-
         [Header("References")]
         [SerializeField] private Inventory inventory;
         [SerializeField] private List<InventoryItemSlot> inventorySlots;
 
-        private void OnEnable() 
+        private void OnEnable()
         {
             inventory.OnInventoryChanged += RefreshUI;
         }
@@ -57,8 +56,7 @@ namespace SystemMiami.InventorySystem
                 int id = allIDs[i];
                // ItemData itemData = Database.Instance.GetData(id);
                 inventorySlots[i].itemID = id;
-                inventorySlots[i].UpdateSlot();
-                
+                inventorySlots[i].UpdateSlot();                
             }
         }
 

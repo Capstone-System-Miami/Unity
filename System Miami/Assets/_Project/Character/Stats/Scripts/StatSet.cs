@@ -59,7 +59,7 @@ namespace SystemMiami
         #region SETTERS/FORMULAS
         private void setPhysicalPower(int strength, StatData statData)
         {
-            _dict[StatType.PHYSICAL_PWR] = strength * statData.EffectMultiplier;
+            _dict[StatType.PHYSICAL_PWR] = strength * statData.EffectMultiplier ;
         }
 
         private void setMagicalPower(int wisdom, StatData statData)

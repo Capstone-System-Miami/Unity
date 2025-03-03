@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using SystemMiami.CombatRefactor;
+using SystemMiami.Dungeons;
 using UnityEngine;
 
 // Authors: Layla Hoey, Lee St Louis
@@ -15,7 +16,15 @@ namespace SystemMiami.CombatSystem
         [SerializeField] private List<NewAbilitySO> physicalSOs;
         [SerializeField] private List<NewAbilitySO> magicalSOs;
         [SerializeField] private List<ConsumableSO> consumableSOs;
-       
+
+
+        protected override void Start()
+        {
+            base.Start();
+            int playerLevel = PlayerManager.MGR.GetPlayerLevel();
+            DifficultyLevel difficultyLevel = MapManager.MGR.Dungeon.DifficultyLevel;
+            GetComponent<EnemiesLevel>().Initialize(difficultyLevel, playerLevel);
+        }
         public override OverlayTile GetNewFocus()
         {
             Combatant targetPlayer = TurnManager.MGR.playerCharacter;

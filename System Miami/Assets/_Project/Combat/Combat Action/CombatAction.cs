@@ -332,8 +332,10 @@ namespace SystemMiami.CombatRefactor
 
         private void AssignCommands(ITargetable target)
         {
+           
+            
             Subactions.ForEach(subaction =>
-                target.TargetedBy.Add(subaction.GenerateCommand(target)));
+                target.TargetedBy.Add(subaction.GenerateCommand(target, this)));
         }
 
         private void ClearCommands(ITargetable target)

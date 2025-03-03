@@ -126,6 +126,18 @@ namespace SystemMiami.Management
             return true;
         }
 
+        public bool TryGetCredit(out int credit)
+        {
+            if (_dungeonData == null)
+            {
+                credit = 0;
+                return false;
+            }
+
+            credit = _dungeonData.Credits;
+            return true;
+        }
+
         public void GoToNeighborhood()
         {
             _dungeonData = null;

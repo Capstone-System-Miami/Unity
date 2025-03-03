@@ -32,6 +32,8 @@ namespace SystemMiami.Dungeons
 
         [SerializeField] private GameObject _overlayTileContainer;
 
+        [SerializeField,ReadOnly] public DifficultyLevel DifficultyLevel;
+
         /// <summary>
         /// The general style / vibe of the Dungeon.
         /// </summary>

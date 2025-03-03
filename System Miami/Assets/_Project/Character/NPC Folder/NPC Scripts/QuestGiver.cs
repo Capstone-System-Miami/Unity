@@ -1,28 +1,21 @@
+using System;
+using SystemMiami;
+using SystemMiami.Management;
+using SystemMiami.ui;
 using UnityEngine;
-using TMPro; 
+using TMPro;
+using UnityEngine.Serialization;
 
-[System.Serializable] 
-public class Quest
-{
-    public string questName;
-    public string[] questDescriptionLines; // Multiple lines of text for the quest description
-    public string targetEnemyTag = "Goblin"; // Tag to track
-    public int objectiveGoal = 5; // How many enemies to defeat
-    public int rewardEXP;
-    public int rewardCurrency;
-}
+
 
 public class QuestGiver : MonoBehaviour
 {
-    public Quest[] allPossibleQuests; // Array of possible quests
-    private Quest selectedQuest; // The current quest assigned to the player
-
+    public Quest assignedQuest; // Array of possible quests
+    public Quest selectedQuest; // The current quest assigned to the player
+    public string questNPCname;
+    
    
-    public TMP_Text questNameText; 
-    public TMP_Text questDescriptionText; 
-    public TMP_Text progressText; 
-    public TMP_Text rewardText; 
-    public GameObject descriptionPanel; 
+    public GameObject questPanel;
 
     private int objectiveCount = 0; // How many enemies have been defeated
     private int currentDescriptionIndex = 0; // Index to track which line of text is shown
@@ -31,27 +24,46 @@ public class QuestGiver : MonoBehaviour
 
     void Start()
     {
-        // Initially disable the quest UI
-        if (questNameText != null) questNameText.gameObject.SetActive(false);
-        if (questDescriptionText != null) questDescriptionText.gameObject.SetActive(false);
-        if (progressText != null) progressText.gameObject.SetActive(false);
-        if (rewardText != null) rewardText.gameObject.SetActive(false);
-        if (descriptionPanel != null) descriptionPanel.SetActive(false);
+        
+        
+        if (questPanel != null) questPanel.SetActive(false);
+        
     }
 
+    public void Initialize(NPCInfoSO npcInfoSo , string npcName, GameObject panelPrefab)
+    {
+        assignedQuest = npcInfoSo.GetQuest();
+        questNPCname = npcName;
+        questPanel = Instantiate(panelPrefab);
+        QuestPanel questPanelComponent = panelPrefab.GetComponent<QuestPanel>();
+        questPanelComponent.Initialize(assignedQuest);
+        questPanel.SetActive(false);
+        Debug.Log($"{npcName} assigned quest: {assignedQuest.questName}");
+   
+    }
+    
     // Call this method when the player interacts with the quest giver
     public void TalkToQuestGiver()
     {
-        // Randomly select a quest from all possible quests
-        selectedQuest = allPossibleQuests[Random.Range(0, allPossibleQuests.Length)];
+       
+        UI.MGR.StartDialogue(this,true,true,false,questNPCname,assignedQuest.questDialogue);
+        UI.MGR.DialogueFinished += HandleDialogueFinished;
 
+    }
+
+    private void HandleDialogueFinished(object sender, EventArgs args)
+    {
+        OpenQuestWindow();
+        UI.MGR.DialogueFinished -= HandleDialogueFinished;
+    }
+
+    public void OpenQuestWindow()
+    {
+        questPanel.SetActive(true);
         // Start the quest and reset progress
         isQuestAccepted = true;
         isQuestCompleted = false;
         objectiveCount = 0;
-        currentDescriptionIndex = 0; // Start at the first line of description
-        Debug.Log($"Quest Started: {selectedQuest.questName}\n{selectedQuest.questDescriptionLines[0]}");
-
         UpdateUI();
     }
 
@@ -81,10 +93,7 @@ public class QuestGiver : MonoBehaviour
         {
             isQuestCompleted = true;
             Debug.Log($"Congratulations! You completed {selectedQuest.questName}. Reward: {selectedQuest.rewardEXP} EXP, {selectedQuest.rewardCurrency} Currency.");
-
-            // Update UI to show rewards
-            UpdateRewardUI();
-
+            
             //  add logic to give rewards to the player
         }
     }
@@ -92,52 +101,21 @@ public class QuestGiver : MonoBehaviour
     // Helper method to update all UI elements at once
     private void UpdateUI()
     {
-        if (questNameText != null) questNameText.gameObject.SetActive(true);
-        if (questDescriptionText != null) questDescriptionText.gameObject.SetActive(true);
-        if (progressText != null) progressText.gameObject.SetActive(true);
-        if (rewardText != null) rewardText.gameObject.SetActive(true);
-        if (descriptionPanel != null) descriptionPanel.SetActive(true);
-
-        // Update the quest UI elements
-        questNameText.text = selectedQuest.questName;
-        questDescriptionText.text = selectedQuest.questDescriptionLines[currentDescriptionIndex];
+        
         UpdateProgressUI();
     }
 
     // Helper method to update progress UI
     private void UpdateProgressUI()
     {
-        if (progressText != null)
-            progressText.text = $"Defeat {objectiveCount}/{selectedQuest.objectiveGoal} {selectedQuest.targetEnemyTag}s";
+        //change actual quest prgress text
+        // if (progressText != null)
+        //     progressText.text = $"Defeat {objectiveCount}/{selectedQuest.objectiveGoal} {selectedQuest.targetEnemyTag}s";
     }
 
-    // Helper method to update reward UI
-    private void UpdateRewardUI()
-    {
-        if (rewardText != null)
-            rewardText.text = $"Reward: {selectedQuest.rewardEXP} EXP, {selectedQuest.rewardCurrency} Currency";
-    }
+   
 
-    // Method to show the next line of the quest description
-    public void ShowNextLine()
-    {
-        if (currentDescriptionIndex < selectedQuest.questDescriptionLines.Length - 1)
-        {
-            currentDescriptionIndex++;
-            questDescriptionText.text = selectedQuest.questDescriptionLines[currentDescriptionIndex];
-        }
-        else
-        {
-            Debug.Log("You have read all the lines of the quest description.");
-        }
-    }
+    
 
-    void Update()
-    {
-        // Use either key press or button to progress
-        if (Input.GetKeyDown(KeyCode.Space)) // Press Space to go to next line
-        {
-            ShowNextLine();
-        }
-    }
+    
 }
