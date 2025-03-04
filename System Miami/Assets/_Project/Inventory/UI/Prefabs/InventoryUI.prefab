@@ -281,7 +281,6 @@ GameObject:
   - component: {fileID: 3434309537735064132}
   - component: {fileID: 1718214466449659962}
   - component: {fileID: 563705858939911272}
-  - component: {fileID: 713954176405099677}
   m_Layer: 5
   m_Name: Physical Tab Button
   m_TagString: Untagged
@@ -390,97 +389,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b89db1262af3ce34d8c393a0e29e259a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ButtonSelectedEvent:
+  AdditionalOnPointerEnter:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1718214466449659962}
-        m_TargetAssemblyTypeName: SystemMiami.ui.SelectableSprite, Assembly-CSharp
-        m_MethodName: Select
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  ButtonDeselectedEvent:
+      m_Calls: []
+  AdditionalOnPointerExit:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1718214466449659962}
-        m_TargetAssemblyTypeName: SystemMiami.ui.SelectableSprite, Assembly-CSharp
-        m_MethodName: Deselect
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
---- !u!114 &713954176405099677
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1231243646356261250}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 0
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1718214466449659962}
-          m_TargetAssemblyTypeName: SystemMiami.ui.SelectableSprite, Assembly-CSharp
-          m_MethodName: Highlight
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-  - eventID: 1
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1718214466449659962}
-          m_TargetAssemblyTypeName: SystemMiami.ui.SelectableSprite, Assembly-CSharp
-          m_MethodName: UnHighlight
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-  - eventID: 4
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 563705858939911272}
-          m_TargetAssemblyTypeName: SystemMiami.BetterButton, Assembly-CSharp
-          m_MethodName: Click
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+      m_Calls: []
+  AdditionalOnPointerDown:
+    m_PersistentCalls:
+      m_Calls: []
+  AdditionalOnPointerUp:
+    m_PersistentCalls:
+      m_Calls: []
+  <isButtonEnabled>k__BackingField: 0
+  <isPointerHere>k__BackingField: 0
+  <isPointerDown>k__BackingField: 0
+  AdditionalOnButtonSelected:
+    m_PersistentCalls:
+      m_Calls: []
+  AdditionalOnButtonDeselected:
+    m_PersistentCalls:
+      m_Calls: []
+  <isSelected>k__BackingField: 0
 --- !u!1 &2012714340862684629
 GameObject:
   m_ObjectHideFlags: 0
@@ -705,7 +635,6 @@ GameObject:
   - component: {fileID: 4411429590191456588}
   - component: {fileID: 4881463738585069412}
   - component: {fileID: 4886244805983493335}
-  - component: {fileID: 773317078754767597}
   m_Layer: 5
   m_Name: Equipment Tab Button
   m_TagString: Untagged
@@ -814,97 +743,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b89db1262af3ce34d8c393a0e29e259a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ButtonSelectedEvent:
+  AdditionalOnPointerEnter:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4881463738585069412}
-        m_TargetAssemblyTypeName: SystemMiami.ui.SelectableSprite, Assembly-CSharp
-        m_MethodName: Select
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  ButtonDeselectedEvent:
+      m_Calls: []
+  AdditionalOnPointerExit:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4881463738585069412}
-        m_TargetAssemblyTypeName: SystemMiami.ui.SelectableSprite, Assembly-CSharp
-        m_MethodName: Deselect
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
---- !u!114 &773317078754767597
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2576238957600292514}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 0
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 4881463738585069412}
-          m_TargetAssemblyTypeName: SystemMiami.ui.SelectableSprite, Assembly-CSharp
-          m_MethodName: Highlight
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-  - eventID: 1
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 4881463738585069412}
-          m_TargetAssemblyTypeName: SystemMiami.ui.SelectableSprite, Assembly-CSharp
-          m_MethodName: UnHighlight
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-  - eventID: 4
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 4886244805983493335}
-          m_TargetAssemblyTypeName: SystemMiami.BetterButton, Assembly-CSharp
-          m_MethodName: Click
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+      m_Calls: []
+  AdditionalOnPointerDown:
+    m_PersistentCalls:
+      m_Calls: []
+  AdditionalOnPointerUp:
+    m_PersistentCalls:
+      m_Calls: []
+  <isButtonEnabled>k__BackingField: 0
+  <isPointerHere>k__BackingField: 0
+  <isPointerDown>k__BackingField: 0
+  AdditionalOnButtonSelected:
+    m_PersistentCalls:
+      m_Calls: []
+  AdditionalOnButtonDeselected:
+    m_PersistentCalls:
+      m_Calls: []
+  <isSelected>k__BackingField: 0
 --- !u!1 &2820685313763031401
 GameObject:
   m_ObjectHideFlags: 0
@@ -1149,7 +1009,6 @@ GameObject:
   - component: {fileID: 8953971619767135773}
   - component: {fileID: 3451661739263516857}
   - component: {fileID: 477275630678118304}
-  - component: {fileID: 6006258896744101982}
   m_Layer: 5
   m_Name: Consumable Tab Button
   m_TagString: Untagged
@@ -1258,97 +1117,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b89db1262af3ce34d8c393a0e29e259a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ButtonSelectedEvent:
+  AdditionalOnPointerEnter:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3451661739263516857}
-        m_TargetAssemblyTypeName: SystemMiami.ui.SelectableSprite, Assembly-CSharp
-        m_MethodName: Select
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  ButtonDeselectedEvent:
+      m_Calls: []
+  AdditionalOnPointerExit:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3451661739263516857}
-        m_TargetAssemblyTypeName: SystemMiami.ui.SelectableSprite, Assembly-CSharp
-        m_MethodName: Deselect
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
---- !u!114 &6006258896744101982
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3650548525663434808}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 0
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 3451661739263516857}
-          m_TargetAssemblyTypeName: SystemMiami.ui.SelectableSprite, Assembly-CSharp
-          m_MethodName: Highlight
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-  - eventID: 1
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 3451661739263516857}
-          m_TargetAssemblyTypeName: SystemMiami.ui.SelectableSprite, Assembly-CSharp
-          m_MethodName: UnHighlight
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-  - eventID: 4
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 477275630678118304}
-          m_TargetAssemblyTypeName: SystemMiami.BetterButton, Assembly-CSharp
-          m_MethodName: Click
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+      m_Calls: []
+  AdditionalOnPointerDown:
+    m_PersistentCalls:
+      m_Calls: []
+  AdditionalOnPointerUp:
+    m_PersistentCalls:
+      m_Calls: []
+  <isButtonEnabled>k__BackingField: 0
+  <isPointerHere>k__BackingField: 0
+  <isPointerDown>k__BackingField: 0
+  AdditionalOnButtonSelected:
+    m_PersistentCalls:
+      m_Calls: []
+  AdditionalOnButtonDeselected:
+    m_PersistentCalls:
+      m_Calls: []
+  <isSelected>k__BackingField: 0
 --- !u!1 &4358537796435008128
 GameObject:
   m_ObjectHideFlags: 0
@@ -2131,11 +1921,7 @@ MonoBehaviour:
       showMessages: 1
     button: {fileID: 4886244805983493335}
     itemGrid: {fileID: 1619750547354467697}
-  activeTab:
-    log:
-      showMessages: 1
-    button: {fileID: 0}
-    itemGrid: {fileID: 0}
+  activeTab: 
 --- !u!1 &7313652733483474258
 GameObject:
   m_ObjectHideFlags: 0
@@ -2377,7 +2163,6 @@ GameObject:
   - component: {fileID: 6708806226294093490}
   - component: {fileID: 2143964310197516119}
   - component: {fileID: 6834587509969419758}
-  - component: {fileID: 1510686738881466067}
   m_Layer: 5
   m_Name: Magical Tab Button
   m_TagString: Untagged
@@ -2486,97 +2271,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b89db1262af3ce34d8c393a0e29e259a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ButtonSelectedEvent:
+  AdditionalOnPointerEnter:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2143964310197516119}
-        m_TargetAssemblyTypeName: SystemMiami.ui.SelectableSprite, Assembly-CSharp
-        m_MethodName: Select
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  ButtonDeselectedEvent:
+      m_Calls: []
+  AdditionalOnPointerExit:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2143964310197516119}
-        m_TargetAssemblyTypeName: SystemMiami.ui.SelectableSprite, Assembly-CSharp
-        m_MethodName: Deselect
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
---- !u!114 &1510686738881466067
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8491703102108566788}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 0
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 2143964310197516119}
-          m_TargetAssemblyTypeName: SystemMiami.ui.SelectableSprite, Assembly-CSharp
-          m_MethodName: Highlight
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-  - eventID: 1
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 2143964310197516119}
-          m_TargetAssemblyTypeName: SystemMiami.ui.SelectableSprite, Assembly-CSharp
-          m_MethodName: UnHighlight
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-  - eventID: 4
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 6834587509969419758}
-          m_TargetAssemblyTypeName: SystemMiami.BetterButton, Assembly-CSharp
-          m_MethodName: Click
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+      m_Calls: []
+  AdditionalOnPointerDown:
+    m_PersistentCalls:
+      m_Calls: []
+  AdditionalOnPointerUp:
+    m_PersistentCalls:
+      m_Calls: []
+  <isButtonEnabled>k__BackingField: 0
+  <isPointerHere>k__BackingField: 0
+  <isPointerDown>k__BackingField: 0
+  AdditionalOnButtonSelected:
+    m_PersistentCalls:
+      m_Calls: []
+  AdditionalOnButtonDeselected:
+    m_PersistentCalls:
+      m_Calls: []
+  <isSelected>k__BackingField: 0
 --- !u!1 &9079022345876733456
 GameObject:
   m_ObjectHideFlags: 0
@@ -4058,7 +3774,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4753958532309079679, guid: 8c4f1e5655e27064e9c25d3877fecc98, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -1918.1268
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5027397366453585089, guid: 8c4f1e5655e27064e9c25d3877fecc98, type: 3}
       propertyPath: m_AnchorMax.y
@@ -4814,7 +4530,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7561359408071596833, guid: 8c4f1e5655e27064e9c25d3877fecc98, type: 3}
       propertyPath: m_Size
-      value: 0.20769231
+      value: 0.21302746
+      objectReference: {fileID: 0}
+    - target: {fileID: 7561359408071596833, guid: 8c4f1e5655e27064e9c25d3877fecc98, type: 3}
+      propertyPath: m_Value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7606052741272189562, guid: 8c4f1e5655e27064e9c25d3877fecc98, type: 3}
+      propertyPath: m_Value
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7647017601369236249, guid: 8c4f1e5655e27064e9c25d3877fecc98, type: 3}
       propertyPath: m_AnchorMax.y

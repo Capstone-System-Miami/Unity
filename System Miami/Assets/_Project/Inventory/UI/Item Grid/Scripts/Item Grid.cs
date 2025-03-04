@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using SystemMiami.LeeInventory;
 using SystemMiami.Utilities;
-using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UI;
@@ -34,6 +32,21 @@ namespace SystemMiami.ui
         /// <summary>
         /// This property is a Lazy Loader
         /// </summary>
+        public RectTransform RT
+        {
+            get
+            {
+                if (rectTransform == null)
+                {
+                    rectTransform = GetComponent<RectTransform>();
+                }
+                return rectTransform;
+            }
+        }
+
+        /// <summary>
+        /// This property is a Lazy Loader
+        /// </summary>
         private GridLayoutGroup GridLayoutGroup
         {
             get
@@ -43,21 +56,6 @@ namespace SystemMiami.ui
                     gridLayoutGroup = GetComponent<GridLayoutGroup>();
                 }
                 return gridLayoutGroup;
-            }
-        }
-
-        /// <summary>
-        /// This property is a Lazy Loader
-        /// </summary>
-        private RectTransform RT
-        {
-            get
-            {
-                if (rectTransform == null)
-                {
-                    rectTransform = GetComponent<RectTransform>();
-                }
-                return rectTransform;
             }
         }
 

@@ -1,7 +1,6 @@
 using SystemMiami.InventorySystem;
 using SystemMiami.ui;
 using SystemMiami.Utilities;
-using UnityEditor.UI;
 using UnityEngine;
 
 namespace SystemMiami
@@ -11,47 +10,41 @@ namespace SystemMiami
     {
         [SerializeField] private dbug log;
 
-        [Header("Internal Refs")]
-        [SerializeField] private SelectableButton button;
+        [SerializeField] private SingleSelectButton button;
         [SerializeField] private ItemGrid itemGrid;
 
         private InventoryUI inventoryUI;
-        private ItemType validItemType;
-        private int selectionIndex;
 
-        public SelectableButton Button { get { return button; } }
+
+        public SingleSelectButton Button { get { return button; } }
         public ItemGrid ItemGrid { get { return itemGrid; } }
+        public ItemType ValidItemType { get; private set; }
+
+        public bool IsSelected => (this as ISingleSelectable).Reference != null
+            ? (this as ISingleSelectable).Reference.CurrentSelection == this as ISingleSelectable
+            : false;
 
         public void Initialize(InventoryUI inventoryUI, ItemType itemType)
         {
             this.inventoryUI = inventoryUI;
-            validItemType = itemType;
+            ValidItemType = itemType;
             ItemGrid.Initialize(itemType);
         }
 
-        int ISingleSelectable.SelectionIndex
-        {
-            get { return selectionIndex; }
-            set { selectionIndex = value; }
-        }
+
+        // ISingleSelectable implementation
+        SingleSelector ISingleSelectable.Reference { get; set; }
+        int ISingleSelectable.SelectionIndex { get; set; }
 
         void ISelectable.Select()
         {
             itemGrid.gameObject.SetActive(true);
-            if (!button.IsSelected)
-            {
-                button.Select();
-            }
+            inventoryUI.activeGrid = ItemGrid;
         }
 
         void ISelectable.Deselect()
         {
             itemGrid.gameObject.SetActive(false);
-
-            if (button.IsSelected)
-            {
-                button.Deselect();
-            }
         }
     }
 }
