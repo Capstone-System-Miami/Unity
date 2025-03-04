@@ -1,4 +1,9 @@
+using System.Collections.Generic;
+using SystemMiami.LeeInventory;
+using SystemMiami.Utilities;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.UI;
 
 namespace SystemMiami.ui
@@ -7,15 +12,24 @@ namespace SystemMiami.ui
 
     public class ItemGrid : MonoBehaviour
     {
+        [SerializeField] private dbug log;
+
+        [Header("Settings")]
+        [SerializeField] private GameObject slotPrefab;
+
         [Header("InternalRefs")]
         [SerializeField] private GridLayoutGroup gridLayoutGroup;
         [SerializeField] private RectTransform rectTransform;
         [SerializeField] private CanvasScaler scaler;
 
+
         [field: SerializeField, ReadOnly] public int Cols { get; private set; }
         [field: SerializeField, ReadOnly] public int Rows { get; private set; }
-        [field: SerializeField, ReadOnly] public float ConstrainedProp { get; private set; }
-        [field: SerializeField, ReadOnly] public float SecondaryProp { get; private set; }
+        [field: SerializeField, ReadOnly] public int ConstrainedPropCount { get; private set; }
+        [field: SerializeField, ReadOnly] public int SecondaryPropCount { get; private set; }
+
+        [field: SerializeField, ReadOnly] public ItemType ItemType { get; private set; }
+        [field: SerializeField, ReadOnly] public List<InventoryItemSlot> Slots { get; private set; }
 
         /// <summary>
         /// This property is a Lazy Loader
@@ -54,6 +68,14 @@ namespace SystemMiami.ui
             _                                           => GridConstraint.NONE
         };
 
+        public int SlotCount
+        {
+            get
+            {
+                return GridLayoutGroup.transform.childCount;
+            }
+        }
+
         private void Start()
         {
         }
@@ -63,6 +85,51 @@ namespace SystemMiami.ui
             UpdateCounts();
             UpdateConstraints();
             UpdateSize();
+        }
+
+        public void Initialize(ItemType type)
+        {
+            ItemType = type;
+
+            Slots = new List<InventoryItemSlot>();
+            for (int i = 0; i < SlotCount; i++)
+            {
+                InventoryItemSlot slot = GridLayoutGroup.transform.GetChild(i).GetComponent<InventoryItemSlot>();
+
+                Assert.IsNotNull(slot);
+                Slots.Add(slot);
+            }
+        }
+
+        // Fill each slot with the corresponding item ID,
+        // until we run out of slots or IDs.
+        public void FillSlots(List<int> ids)
+        {
+            int minCount = Mathf.Min(SlotCount, ids.Count);
+
+            for (int i = 0; i < minCount; i++)
+            {
+                Assert.IsTrue(Slots != null);
+                Assert.IsTrue(Slots.Count > i);
+                Assert.IsTrue(ids != null);
+                Assert.IsTrue(ids.Count > i);
+                // ItemData itemData = Database.Instance.GetData(id);
+                if (!Slots[i].TryFill(ids[i]))
+                {
+                    log.error(
+                        $"{name} could not fill {Slots[i]}. SKIPPING");
+                    continue;
+                }
+            }
+        }
+
+        // Clear all slots so they don't display old itemData.
+        public void ClearSlots()
+        {
+            for (int i = 0; i < Slots.Count; i++)
+            {
+                Slots[i].ClearSlot();
+            }
         }
 
         private void UpdateCounts()
@@ -91,21 +158,19 @@ namespace SystemMiami.ui
             switch (Constraint)
             {
                 case GridConstraint.COL:
-                    ConstrainedProp = Cols;
-                    SecondaryProp = Rows;
+                    ConstrainedPropCount = Cols;
+                    SecondaryPropCount = Rows;
                     break;
                 case GridConstraint.ROW:
-                    ConstrainedProp = Rows;
-                    SecondaryProp = Cols;
+                    ConstrainedPropCount = Rows;
+                    SecondaryPropCount = Cols;
                     break;
                 default:
-                    ConstrainedProp = 0f;
-                    SecondaryProp = 0f;
+                    ConstrainedPropCount = 0;
+                    SecondaryPropCount = 0;
                     break;
             }
         }
-
-
 
         private void UpdateSize()
         {

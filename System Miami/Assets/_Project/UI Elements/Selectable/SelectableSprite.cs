@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace SystemMiami.ui
 {
-    public class SelectableSprite : MonoBehaviour
+    public class SelectableSprite : MonoBehaviour, ISelectable
     {
         [SerializeField] Image _image;
 
@@ -120,6 +120,30 @@ namespace SystemMiami.ui
         public void NewState(SelectionState state)
         {
             _selectionState = state;
+        }
+
+        public void Select()
+        {
+            if (_selectionState == SelectionState.DISABLED) { return; }
+
+            NewState(SelectionState.SELECTED);
+        }
+
+        public void Deselect()
+        {
+            if (_selectionState == SelectionState.DISABLED) { return; }
+
+            NewState(SelectionState.UNSELECTED);
+        }
+
+        public void EnableSelection()
+        {
+            Deselect();
+        }
+
+        public void DisableSelection()
+        {
+            NewState(SelectionState.DISABLED);
         }
     }
 }
