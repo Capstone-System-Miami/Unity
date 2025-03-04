@@ -5,7 +5,7 @@ namespace SystemMiami.Enums
     /// <summary>
     /// An enum of ISOMETRIC directions,
     /// starting from forward center,
-    /// ( i.e. coords (0, 1) )
+    /// ( i.e. board coords (0, 1) )
     /// moving clockwise.
     /// </summary>
     public enum TileDir
