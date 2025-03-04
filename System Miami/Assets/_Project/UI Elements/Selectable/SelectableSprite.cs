@@ -21,6 +21,8 @@ namespace SystemMiami.ui
         private Sprite _currentSprite;
         private Color _currentColor;
 
+        bool ISelectable.IsSelected => _selectionState == SelectionState.SELECTED;
+
         private void Start()
         {
             checkSprites();

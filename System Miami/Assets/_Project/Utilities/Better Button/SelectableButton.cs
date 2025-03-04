@@ -1,40 +1,45 @@
 ﻿using UnityEngine;
-using System;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 namespace SystemMiami
 {
     public class SelectableButton : BetterButton, ISelectable
     {
-        [SerializeField] private UnityEvent ButtonSelectedEvent;
-        [SerializeField] private UnityEvent ButtonDeselectedEvent;
+        [SerializeField] private UnityEvent AdditionalOnButtonSelected;
+        [SerializeField] private UnityEvent AdditionalOnButtonDeselected;
 
-        protected override Action ClickStrategy => IsSelected
-            ? OnButtonDeselected
-            : OnButtonSelected;
+        [field: SerializeField, ReadOnly] public virtual bool IsSelected { get; protected set; }
 
-        public bool IsSelected { get; protected set; }
-
-        protected virtual void OnButtonSelected()
+        public override void OnPointerDown(PointerEventData eventData)
         {
-            ButtonSelectedEvent.Invoke();
+            base.OnPointerDown(eventData);
+
+            Toggle();
         }
 
-        protected virtual void OnButtonDeselected()
+        public virtual void Select()
         {
-            ButtonDeselectedEvent.Invoke();
-        }
-
-        public void Select()
-        {
-            OnButtonSelected();
+            selectableSprite.Select();
             IsSelected = true;
         }
 
-        public void Deselect()
+        public virtual void Deselect()
         {
-            OnButtonDeselected();
+            selectableSprite.Deselect();
             IsSelected = false;
+        }
+
+        public virtual void Toggle()
+        {
+            if (IsSelected)
+            {
+                Deselect();
+            }
+            else
+            {
+                Select();
+            }
         }
     }
 }
