@@ -72,7 +72,7 @@ namespace SystemMiami
                 Canvas slotCanvas;
                 TryGetCanvasInParents(rt, out slotCanvas);
 
-                // TODO: This is really bad I have no idea why 100 works and I'm a little scared about it
+                // TODO: This is really bad I have no idea why 50 works and I'm a little scared about it
                 Vector2 myPosScreen = new(slotposScreen.x, slotposScreen.y + (rt.rect.height * slotCanvas.scaleFactor) * 50);
 
                 Popup.position = (Vector2)Camera.main.ScreenToWorldPoint(myPosScreen);

@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using System.Collections.Generic;
 using SystemMiami.Utilities;
+using SystemMiami.ui;
 
 namespace SystemMiami.InventorySystem
 {
@@ -9,9 +10,18 @@ namespace SystemMiami.InventorySystem
     {
         [SerializeField] private dbug log;
 
-        [Header("References")]
-        [SerializeField] private Inventory inventory;
-        [SerializeField] private List<InventoryItemSlot> inventorySlots = new();
+        [Header("External References")]
+        [SerializeField] private Inventory playerInventory;
+
+        [Header("Internal References")]
+        [SerializeField] private ItemGrid gridPhysical;
+        [SerializeField] private ItemGrid gridMagical;
+        [SerializeField] private ItemGrid gridConsumable;
+        [SerializeField] private ItemGrid gridEquipment;
+
+        [Header("Readonly")]
+        [SerializeField, ReadOnly] private ItemGrid activeGrid;
+        [SerializeField, ReadOnly] private List<InventoryItemSlot> inventorySlots = new();
 
         private int SlotCount
         {
@@ -25,14 +35,14 @@ namespace SystemMiami.InventorySystem
 
         private void OnEnable()
         {
-            if (inventory == null)
+            if (playerInventory == null)
             {
                 log.error(
                     $"inventory was null during {name}'s {this}.OnEnable(), " +
                     $"so {name} did not subscribe to inventory's System.Action " +
                     $"OnInventoryChanged."); return;
             }
-            inventory.OnInventoryChanged += RefreshUI;
+            playerInventory.OnInventoryChanged += RefreshUI;
         }
 
         private void Start()
@@ -50,7 +60,7 @@ namespace SystemMiami.InventorySystem
 
             ClearAllSlots();
 
-            FillSlots(inventory.AllValidInventoryItems);
+            FillSlots(playerInventory.AllValidInventoryItems);
         }
 
         // Clear all slots so they don't display old itemData.
@@ -82,7 +92,7 @@ namespace SystemMiami.InventorySystem
 
         private void OnDisable()
         {
-            inventory.OnInventoryChanged -= RefreshUI;
+            playerInventory.OnInventoryChanged -= RefreshUI;
         }
     }
 }
