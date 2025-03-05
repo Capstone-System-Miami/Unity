@@ -5,8 +5,7 @@ using UnityEngine.EventSystems;
 
 namespace SystemMiami
 {
-    [RequireComponent(
-        typeof(SelectableSprite))]
+    [RequireComponent(typeof(SelectableSprite))]
     public abstract class BetterButton : MonoBehaviour,
         IPointerEnterHandler, IPointerExitHandler,
         IPointerDownHandler, IPointerUpHandler
@@ -17,6 +16,7 @@ namespace SystemMiami
         [SerializeField] private UnityEvent AdditionalOnPointerUp;
 
         protected SelectableSprite selectableSprite;
+        //protected SelectableTMP text;
         [field: SerializeField, ReadOnly] public bool isButtonEnabled { get; protected set; }
         [field: SerializeField, ReadOnly] public bool isPointerHere { get; protected set; }
         [field: SerializeField, ReadOnly] public bool isPointerDown { get; protected set; }

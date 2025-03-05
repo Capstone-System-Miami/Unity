@@ -32,7 +32,6 @@ namespace SystemMiami
             {
                 _storedInteraction.Interact();
             }
-            log.error(_storedInteraction.ToString());
         }
 
         private void OnTriggerEnter2D(Collider2D collision)
