@@ -221,7 +221,7 @@ GameObject:
   - component: {fileID: 1248893916463322604}
   - component: {fileID: 8004474242131011201}
   m_Layer: 5
-  m_Name: Equipment
+  m_Name: Equipment Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1086,6 +1086,7 @@ GameObject:
   - component: {fileID: 7434970433022422960}
   - component: {fileID: 8483944419771452801}
   - component: {fileID: 8000863576061156790}
+  - component: {fileID: 8492630718797251021}
   m_Layer: 5
   m_Name: Label
   m_TagString: Untagged
@@ -1151,6 +1152,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &8492630718797251021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2018682699874235740}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09bd404cac430924ebc0520ad57d0b01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _background: {fileID: 8000863576061156790}
+  _text: {fileID: 0}
+  _TextMeshPro: {fileID: 1031637632054919198}
+  _useTMP: 1
 --- !u!1 &2129807834775184314
 GameObject:
   m_ObjectHideFlags: 0
@@ -1916,15 +1933,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 68
-  m_fontSizeBase: 68
+  m_fontSize: 65
+  m_fontSizeBase: 65
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 1
   m_fontSizeMax: 300
   m_fontStyle: 0
   m_HorizontalAlignment: 32
-  m_VerticalAlignment: 4096
+  m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0

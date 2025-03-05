@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace SystemMiami.ui
 {
-    public class SelectableText : MonoBehaviour
+    public class SelectableText : MonoBehaviour, ISelectable
     {
         [SerializeField] Text _text;
         [SerializeField] HighlightableClassSet<string> _unselectedMessages;
@@ -15,13 +15,26 @@ namespace SystemMiami.ui
         [SerializeField] HighlightableStructSet<Color> _selectedColors = new HighlightableStructSet<Color>(Color.grey);
         [SerializeField] HighlightableStructSet<Color> _disabledColors = new HighlightableStructSet<Color>(Color.white);
 
-        private SelectionState _selectionState;
-        private bool _isHighlighted;
+        [SerializeField] protected bool useTextFromComponent;
 
-        private string _currentText;
-        private Color _currentColor;
+        protected SelectionState _selectionState;
+        protected bool _isHighlighted;
 
-        private void Update()
+        protected string _currentText;
+        protected Color _currentColor;
+
+        public bool IsSelected => _selectionState == SelectionState.SELECTED;
+
+        private void Start()
+        {
+            if (useTextFromComponent)
+            {
+                _currentText = getStringFromComponent();
+                _currentColor = getColorFromComponent();
+            }
+        }
+
+        protected virtual void Update()
         {
             _currentText = getCurrentText();
             _currentColor = getCurrentColor();
@@ -36,8 +49,53 @@ namespace SystemMiami.ui
                 _text.color = _currentColor;
             }
         }
+        public void Highlight()
+        {
+            _isHighlighted = true;
+        }
 
-        private string getCurrentText()
+        public void UnHighlight()
+        {
+            _isHighlighted = false;
+        }
+        public void NewState(SelectionState state)
+        {
+            _selectionState = state;
+        }
+
+        public void Select()
+        {
+            if (_selectionState == SelectionState.DISABLED) { return; }
+            NewState(SelectionState.SELECTED);
+        }
+
+        public void Deselect()
+        {
+            if (_selectionState == SelectionState.DISABLED) { return; }
+            NewState(SelectionState.UNSELECTED);
+        }
+
+        public void EnableSelection()
+        {
+            Deselect();
+        }
+
+        public void DisableSelection()
+        {
+            NewState(SelectionState.DISABLED);
+        }
+
+        protected virtual string getStringFromComponent()
+        {
+            return _text.text ?? string.Empty;
+        }
+
+        protected virtual Color getColorFromComponent()
+        {
+            return _text.color;
+        }
+
+        protected virtual string getCurrentText()
         {
             if (_isHighlighted)
             {
@@ -61,7 +119,7 @@ namespace SystemMiami.ui
             }
         }
 
-        private Color getCurrentColor()
+        protected virtual Color getCurrentColor()
         {
             if (_isHighlighted)
             {
@@ -92,18 +150,5 @@ namespace SystemMiami.ui
             _disabledMessages = new HighlightableClassSet<string>(text);
         }
 
-        public void Highlight()
-        {
-            _isHighlighted = true;
-        }
-
-        public void UnHighlight()
-        {
-            _isHighlighted = false;
-        }
-        public void NewState(SelectionState state)
-        {
-            _selectionState = state;
-        }
     }
 }
