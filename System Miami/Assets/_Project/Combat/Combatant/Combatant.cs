@@ -5,6 +5,7 @@ using SystemMiami.AbilitySystem;
 using SystemMiami.CombatRefactor;
 using SystemMiami.Management;
 using SystemMiami.Utilities;
+using SystemMiami.InventorySystem;
 using UnityEngine.Animations;
 using UnityEngine;
 
@@ -30,8 +31,8 @@ namespace SystemMiami.CombatSystem
         [SerializeField] private float _movementSpeed;
 
         [Header("Animation")]
-        [SerializeField] private AnimatorOverrideController idleController;
-        [SerializeField] private AnimatorOverrideController walkingController;
+        [SerializeField] protected AnimatorOverrideController idleController;
+        [SerializeField] protected AnimatorOverrideController walkingController;
         
         #endregion Serialized Vars
 
@@ -51,7 +52,7 @@ namespace SystemMiami.CombatSystem
         private Stats _stats;
         private bool isDamageable = true;
         private bool isHealable = true;
-        private bool isMovable = true;   
+        private bool isMovable = true;
         private bool isStunned = false;
         private bool isInvisible = false;
         private float _endOfTurnDamage;
@@ -78,7 +79,7 @@ namespace SystemMiami.CombatSystem
         public int ID { get; set; }
         public Color ColorTag { get { return _colorTag; } }
 
-        [SerializeField] public CombatSystem.Inventory _inventory;
+        [SerializeField] public Inventory _inventory;
         // State Machine
         public CombatantStateFactory Factory { get { return stateFactory; } }
         public CombatantState CurrentState
@@ -205,6 +206,7 @@ namespace SystemMiami.CombatSystem
 
         private void Update()
         {
+            if(this == null) return;
             UpdateResources();
 
             CurrentState.Update();
@@ -410,6 +412,7 @@ namespace SystemMiami.CombatSystem
 
         public void UnHighlight()
         {
+            if(_renderer == null) return;
             //print($"{name} is no longer highlighted");
             _renderer.color = _defaultColor;
         }
@@ -443,6 +446,7 @@ namespace SystemMiami.CombatSystem
             Debug.Log(
                 $"{gameObject.name} took {amount} damage,\n" +
                 $"its Health is now {Health.Get()}");
+           
         }
         #endregion IDamageReciever
 
@@ -456,12 +460,12 @@ namespace SystemMiami.CombatSystem
 
         public void PreviewHeal(float amount)
         {
-            throw new NotImplementedException();
+            // preview heal
         }
 
         public void ReceiveHeal(float amount)
         {
-            throw new NotImplementedException();
+            Health.Gain(amount);
         }
         #endregion IHealReceiver
 
@@ -578,11 +582,16 @@ namespace SystemMiami.CombatSystem
 
         public void HandleTargetingEvent(object sender, TargetingEventArgs args)
         {
-            Debug.Log($"Trying to process a TargetingEvent of type {args.EventType}", gameObject);
-            if (this is not ITargetable me) { return; }
-
+            if(this == null) return;
+           // Debug.Log($"Trying to process a TargetingEvent of type {args.EventType}", gameObject);
+           if (this is not ITargetable me) { return; }
+            
+          
+            if(sender == null) return;
+            
             switch (args.EventType)
             {
+                
                 case TargetingEventType.CANCELLED:
                     UnHighlight();
                     me.PreviewOff();
@@ -626,6 +635,7 @@ namespace SystemMiami.CombatSystem
 
         public void PreviewOff()
         {
+            if (this == null) return;
             Debug.Log(
                 $"{gameObject.name} wants to STOP" +
                 $"displaying a preivew.");

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using SystemMiami.CombatSystem;
+using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
@@ -9,8 +10,8 @@ namespace SystemMiami
 {
     public class Attributes : MonoBehaviour
     {
-    #region VARS
-    //===============================
+        #region VARS
+        //===============================
 
         [SerializeField] public CharacterClassType _characterClass;
         [SerializeField] private AttributeSetSO[] _baseAttributes;
@@ -25,20 +26,29 @@ namespace SystemMiami
         [SerializeField] private int _wisdom;
         [SerializeField] private int _intelligence;
 
+        // Base Attributes of out selected class
+        private AttributeSet _base = new();
 
         // Our current & confirmed attributes.
-        private AttributeSet _current = new AttributeSet();
+        private AttributeSet _current = new();
 
         // The upgrades being decided on.
-        private AttributeSet _upgrades = new AttributeSet();
+        private AttributeSet _upgrades = new();
 
         // A preview of what our new attributes would be if we confirmed the upgrades.
-        private AttributeSet _preview = new AttributeSet();
+        private AttributeSet _preview = new();
 
-        private List<StatusEffect> _statusEffects = new List<StatusEffect>();
-
+        [SerializeField] private int attributePointsPerLevel;
         // TODO: deserialize after testing
         [SerializeField, Space(10)] private bool _upgradeMode;
+
+        public int TotalPointsAvailable { get; private set; }
+        public int UpgradeCost { get; private set; }
+        public int PointsRemaining { get => TotalPointsAvailable - UpgradeCost; }
+        public AttributeSet CurrentCopy { get => new(_current); }
+        public AttributeSet UpgradesCopy { get => new(_upgrades); }
+        public AttributeSet PreviewCopy { get => new(_preview); }
+
 
         [Header("Testing/Driver")]
         [Space(5)]
@@ -50,27 +60,178 @@ namespace SystemMiami
         public bool trigger_AddUpgrade;
         public bool trigger_ConfirmUpgrades;
 
-    //===============================
-    #endregion // ^vars^
+        //===============================
+        #endregion // ^vars^
 
-    #region PRIVATE METHODS
-    //===============================
 
-        private void Awake()
+        #region PUBLIC METHODS
+        //===============================
+
+        public void SetClass(CharacterClassType characterClass)
         {
-            AttributeSet classBaseAttributes = new AttributeSet(_baseAttributes[(int)_characterClass]);
-            initializeWith(classBaseAttributes);
+            _characterClass = characterClass;
+
+            _base = new(_baseAttributes[(int)_characterClass]);
+            InitializeWith(_base);
         }
 
-        private void initializeWith(AttributeSet baseAttributes)
+        public void InitializeWith(AttributeSet baseAttributes)
         {
             _strength = baseAttributes.Get(AttributeType.STRENGTH);
             _dexterity = baseAttributes.Get(AttributeType.DEXTERITY);
             _constitution = baseAttributes.Get(AttributeType.CONSTITUTION);
             _wisdom = baseAttributes.Get(AttributeType.WISDOM);
             _intelligence = baseAttributes.Get(AttributeType.INTELLIGENCE);
-
             updateVals(false);
+        }
+        
+        public void AddAttributeSet(AttributeSet additionalAttributes)
+        {
+           
+                List<AttributeType> allTypes = new();
+                allTypes.Add(AttributeType.WISDOM);
+                allTypes.Add(AttributeType.STRENGTH);
+                allTypes.Add(AttributeType.INTELLIGENCE);
+                allTypes.Add(AttributeType.DEXTERITY);
+                allTypes.Add(AttributeType.CONSTITUTION);
+
+                foreach (AttributeType type in allTypes)
+                {
+                    _current.Set(type, (_current.Get(type) + additionalAttributes.Get(type)));
+                }
+            updateVals(true);
+            
+            
+           
+            Debug.LogError($"Added {additionalAttributes.Get(AttributeType.STRENGTH)} to {name}'s strength. in AddAttributeSet");
+           
+        }
+
+        /// <summary>
+        /// Returns the value of the specified attribute
+        /// </summary>
+        public int GetAttribute(AttributeType type)
+        {
+            // If upgrade mode show preview
+            return _upgradeMode ? _preview.Get(type) : _current.Get(type);
+        }
+
+        public AttributeSet GetAttributeSet()
+        {
+            return _upgradeMode ? _preview : _current;
+        }
+
+        public void EnterUpgradeMode()
+        {
+            _upgradeMode = true;
+        }
+
+        public void LeaveUpgradeMode()
+        {
+            _upgradeMode = false;
+            ResetUpgrades();
+        }
+
+        /// <summary>
+        /// Tries to add an amount of points to an attribute in the
+        /// stored _upgrades dict.
+        /// </summary>
+        /// <param name="type">The target attribtue</param>
+        /// <param name="amount">The amount of points to add</param>
+        /// <param name="failMsg">If failed, the reason why.</param>
+        /// <returns>
+        /// A bool representing whether the addition succeded or failed.</returns>
+        public bool TryAddToUpgrades(AttributeType type, int amount, out string failMsg)
+        {
+            failMsg = "";
+
+            if (!_upgradeMode)
+            {
+                failMsg = $"Not in upgrade mode.";
+                return false;
+            }
+            else if (_preview.Get(type) + amount < _current.Get(type))
+            {
+                failMsg = $"Invalid Selection.\n" +
+                    $"{type} would be under existing values after upgrade.\n" +
+                    $"This selection would essentially mean a respec.";
+                return false;
+            }
+            else if (_preview.Get(type) > _maxValue)
+            {
+                failMsg = $"Invalid Selection.\n" +
+                    $"{type} would be over maximum value after upgrade.";
+                return false;
+            }
+            else if (PointsRemaining < amount)
+            {
+                failMsg = $"Not enough available points for this upgrade.";
+                return false;
+            }
+
+            _upgrades.Set(type, (_upgrades.Get(type) + amount));
+            UpgradeCost += amount;
+            return true;
+        }
+
+        /// <summary>
+        /// Adds the stored upgrades to our current attributes.
+        /// </summary>
+        public void ConfirmUpgrades()
+        {
+            if (!_upgradeMode) { return; }
+
+            _upgradeMode = false;
+
+            _current = new(_preview);
+
+            // Unused points becomes the new total
+            TotalPointsAvailable = PointsRemaining;
+
+            ResetUpgrades();
+
+            // Update the inspector vals
+            updateVals(true);
+        }
+
+        public void ResetUpgrades()
+        {
+            // Clear Upgrade cost
+            UpgradeCost = 0;
+
+            // Clear Upgrade set
+            _upgrades = new AttributeSet();
+        }
+        //===============================
+        #endregion // ^public^
+
+
+        #region PRIVATE METHODS
+        //===============================
+
+        private void Awake()
+        {
+            AttributeSet classBaseAttributes = new AttributeSet(_baseAttributes[(int)_characterClass]);
+            InitializeWith(classBaseAttributes);
+        }
+
+        private void OnEnable()
+        {
+            if (TryGetComponent(out PlayerLevel playerLevel))
+            {
+                playerLevel.LevelUp += HandleLevelUp;
+                return;
+            }           
+        }
+
+
+        private void OnDisable()
+        {
+            if (TryGetComponent(out PlayerLevel playerLevel))
+            {
+                playerLevel.LevelUp -= HandleLevelUp;
+                return;
+            }
         }
 
         private void Update()
@@ -79,13 +240,12 @@ namespace SystemMiami
 
             if (trigger_EnterUpgradeMode)
             {
-                _upgradeMode = true;    
+                EnterUpgradeMode();
             }
 
             if (trigger_LeaveUpgradeMode)
             {
-                _upgradeMode = false;
-                CancelUpgrades();
+                LeaveUpgradeMode();
             }
 
             if (_upgradeMode)
@@ -97,11 +257,19 @@ namespace SystemMiami
                 
                 if (trigger_AddUpgrade)
                 {
-                    AddToUpgrades(upgradeType, upgradeAmt);
+                    if (!TryAddToUpgrades(upgradeType, upgradeAmt, out string failMsg))
+                    {
+                        Debug.LogWarning(failMsg);
+                    }
                 }
             }
 
             resetTriggers();
+        }
+
+        private void HandleLevelUp(int newLevel)
+        {
+            TotalPointsAvailable += attributePointsPerLevel;
         }
 
         /// <summary>
@@ -157,72 +325,7 @@ namespace SystemMiami
             }
         }
 
-    //===============================
-    #endregion // ^private^
-
-    #region PUBLIC METHODS
-    //===============================
-
-        public void SetClass(CharacterClassType characterClass)
-        {
-            _characterClass = characterClass;
-
-            AttributeSet classBaseAttributes = new AttributeSet(_baseAttributes[(int)_characterClass]);
-            initializeWith(classBaseAttributes);
-        }
-
-        /// <summary>
-        /// Returns the value of the specified attribute
-        /// </summary>
-        public int GetAttribute(AttributeType type)
-        {
-            // If upgrade mode show preview
-            return _upgradeMode ? _preview.Get(type) : _current.Get(type);
-        }
-
-        public AttributeSet GetSet()
-        {
-            return _upgradeMode ? _preview : _current;
-        }
-
-        /// <summary>
-        /// Adds an amount of points to an attribute in the
-        /// stored _upgrades dict
-        /// </summary>
-        public void AddToUpgrades(AttributeType type, int amount)
-        {
-            // If the upgrade we're trying to add would bring us
-            // under the min or over the max
-            if (_preview.Get(type) + amount < _minValue || _preview.Get(type) > _maxValue)
-            {
-                // TODO: send this to UI.
-                // Could also refactor to be bool TryAddToUpgrades(...)
-                // and handle the validation from whatever calls this fn.
-                print ($"Invalid Selection");
-            }
-
-            _upgrades.Set(type, (_upgrades.Get(type) + amount) );            
-        }
-
-        /// <summary>
-        /// Adds the stored upgrades to our current attributes.
-        /// </summary>
-        public void ConfirmUpgrades()
-        {
-            _current = _preview;
-
-            // Clear the upgrades
-            _upgrades = new AttributeSet();
-
-            // Update the inspector vals
-            updateVals(true);
-        }
-
-        public void CancelUpgrades()
-        {
-            _upgrades = new AttributeSet();
-        }
-    //===============================
-    #endregion // ^public^
+        //===============================
+        #endregion // ^private^
     }
 }

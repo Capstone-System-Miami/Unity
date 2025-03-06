@@ -1,97 +1,145 @@
-using System.Collections;
-using System.Collections.Generic;
+// Author: Andrew, Daylan
+
+// Modified to add the EXP + Gold quest reward (Starts on line 37) - Johnny Sosa
+
 using UnityEngine;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace SystemMiami
 {
     public class PlayerLevel : MonoBehaviour
     {
-        public int level = 1;
-        public int currentXP = 0;
-        public int xpToNextLevel = 100;
+        [SerializeField] private int baseXPPerLevel = 100;
+        [SerializeField] private int additionalXPPerLevel = 50;
 
-        public int str = 3; // strength
-        public int con = 3; // constitution
-        public int dex = 3; // dexterity
-        public int inte = 3; // intelligence
-        public int wis = 3; // wisdom
+        [SerializeField, ReadOnly] private int level = 0;
+        [SerializeField, ReadOnly] private int currentXP = 0;
 
-        private int statSelector;
+        [Header("Debugging")]
+        [SerializeField] private bool debugMode = false;
+        [SerializeField] private KeyCode debug_GainExpKey;
+        [SerializeField] private int debug_amountToGain = 50;
 
-        void Update()
+        private int XpToNextTotal => GetXPtoNextLevel(level);
+        private int xpToNextRemaining = 0;
+        
+        public int CurrentLevel => level;
+        public int CurrentXP { get { return currentXP; } }
+        public int XPtoNextRemaining { get { return  xpToNextRemaining; } }
+
+        public event System.Action<int> LevelUp;
+
+        private void Start()
         {
-            // Gain XP when the player presses the one of the kaypads
-            if (Input.GetKeyDown(KeyCode.Keypad0))
+            RecalculateXPtoNextRemaining();
+        }
+
+        private void Update()
+        {
+            if (debugMode && Input.GetKeyDown(debug_GainExpKey))
             {
-                GainXP(1); // Gain 1 XP
-            }
-            if (Input.GetKeyDown(KeyCode.Keypad1))
-            {
-                GainXP(5); // Gain 5 XP
-            }
-            if (Input.GetKeyDown(KeyCode.Keypad2))
-            {
-                GainXP(10); // Gain 10 XP
-            }
-            if (Input.GetKeyDown(KeyCode.Keypad3))
-            {
-                GainXP(20); // Gain 20 XP
-            }
-            if (Input.GetKeyDown(KeyCode.Keypad4))
-            {
-                GainXP(30); // Gain 30 XP
-            }
-            if (Input.GetKeyDown(KeyCode.Keypad5))
-            {
-                GainXP(50); // Gain 50 XP
+                DEBUG_GainEXP();
             }
         }
 
+        // Gain XP from any source (quests, combat, etc.)
         public void GainXP(int amount)
         {
-            currentXP += amount;
-            Debug.Log("Gained XP: " + amount);
+            int remainderXP = 0;
 
-            // Check if the player has enough XP to level up
-            while (currentXP >= xpToNextLevel)
+            currentXP += amount;
+
+            xpToNextRemaining -= amount;
+            
+            remainderXP = currentXP - XpToNextTotal;
+
+            if (remainderXP > 0)
             {
-                LevelUp();
+                OnLevelUp();
+                GainXP(remainderXP);
+            }
+            else if (remainderXP == 0)
+            {
+                OnLevelUp();
             }
         }
 
-        void LevelUp()
+        /// <summary>
+        /// Get the XP required for the player to gain a level.
+        /// </summary>
+        /// <param name="newTargetLevel"></param>
+        /// <returns></returns>
+        public int GetXPtoNextLevel(int currentLevel)
         {
-            currentXP -= xpToNextLevel;
-            level++;
-            Debug.Log("Leveled up! New level: " + level);
+            return baseXPPerLevel + (additionalXPPerLevel * currentLevel);
+        }
 
-            for (int i = 0; i < 2; i++)
+        /// <summary>
+        /// Get the total XP the player will need in order to cross the Level
+        /// threshold required to get to the specified level
+        /// </summary>
+        /// <param name="levelThreshold"></param>
+        /// <returns></returns>
+        public int GetXPtoThreshold(int levelThreshold)
+        {
+            int runningTotal = 0;
+
+            for (int i = 0; i < levelThreshold; i++)
             {
-                statSelector = Random.Range(1, 6);
-                switch (statSelector)
-                {
-                    case 1:
-                        str++;
-                        print("strength level: " + str);
-                        break;
-                    case 2:
-                        con++;
-                        print("Constitution level: " + con);
-                        break;
-                    case 3:
-                        dex++;
-                        print("Dexterity level: " + dex);
-                        break;
-                    case 4:
-                        inte++;
-                        print("Intelligence level: " + inte);
-                        break;
-                    case 5:
-                        wis++;
-                        print("Wisdom level: " + wis);
-                        break;
-                }
+                runningTotal += GetXPtoNextLevel(i);
             }
+
+            return runningTotal;
+        }
+
+        protected virtual void OnLevelUp()
+        {
+            level++;
+            currentXP = 0;
+            RecalculateXPtoNextRemaining();
+            Debug.Log($"Leveled up! New level: {level}");
+
+            LevelUp?.Invoke(level);
+        }
+
+        private void RecalculateXPtoNextRemaining()
+        {
+            xpToNextRemaining = XpToNextTotal;
+        }
+        
+        public int GetTotalXPRequired(int targetLevel)
+        {
+            int totalXP = 0;
+            for (int i = 0; i < targetLevel; i++)
+            {
+                totalXP += GetXPtoNextLevel(i);
+            }
+            return totalXP;
+        }
+
+        private void DEBUG_GainEXP()
+        {
+            GainXP(debug_amountToGain);
         }
     }
+   
+    
+    public class ReadOnlyAttribute : PropertyAttribute
+    {
+    }
+#if UNITY_EDITOR
+    [CustomPropertyDrawer(typeof(ReadOnlyAttribute))]
+    public class ReadOnlyDrawer : PropertyDrawer
+    {
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        {
+            GUI.enabled = false;
+            EditorGUI.PropertyField(position, property, label, true);
+            GUI.enabled = true;
+        }
+    }
+#endif
 }

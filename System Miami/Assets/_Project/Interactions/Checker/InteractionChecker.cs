@@ -1,11 +1,13 @@
 // Author: Layla Hoey, Andrew
+
+using SystemMiami.Utilities;
 using UnityEngine;
 
 namespace SystemMiami
 {
     public class InteractionChecker : MonoBehaviour
     {
-        [SerializeField] private bool _debugMessages;
+        [SerializeField] private dbug log;
 
         [SerializeField] private KeyCode _interactKey;
 
@@ -34,8 +36,8 @@ namespace SystemMiami
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            if (_debugMessages)
-                { print("enter called"); }
+            
+                 log.print("enter called"); 
 
             // InParent will search for it in the collision first,
             // then loop up through parents until it finds one
@@ -43,8 +45,8 @@ namespace SystemMiami
             
             if (collidedInteraction == null)
             {
-                if (_debugMessages)
-                    { print($"Entering { collision.name }, but it is not an interactable object"); }
+                
+                    log.print($"Entering { collision.name }, but it is not an interactable object"); 
 
                 return;
             }
@@ -59,7 +61,7 @@ namespace SystemMiami
 
         private void OnTriggerExit2D(Collider2D collision)
         {
-            if (_debugMessages) { print("exit called"); }
+            log.print("exit called"); 
 
             // InParent will search for it in the collision first,
             // then loop up through parents until it finds one
@@ -67,8 +69,8 @@ namespace SystemMiami
 
             if (collidedInteraction == null)
             {
-                if (_debugMessages)
-                { print($"Leaving {collision.name}, but it is not an interactable object"); }
+               
+                    log.print($"leaving { collision.name }, but it is not an interactable object");
 
                 return;
             }

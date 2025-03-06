@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace SystemMiami.Shop
@@ -10,6 +8,7 @@ namespace SystemMiami.Shop
         public string title;
         public string description;
         public int baseCost;
+        public int ID;
 
         public string GetTitle()
         {
@@ -24,6 +23,11 @@ namespace SystemMiami.Shop
         public int GetCost()
         {
             return baseCost;
+        }
+
+        public int GetDatabaseID()
+        {
+            return ID;
         }
     }
 }

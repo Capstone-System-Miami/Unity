@@ -45,20 +45,223 @@ MonoBehaviour:
     - _isDefault: 1
       _elementPrefab: {fileID: 5679960105606152641, guid: ea6a1a0b9017fda40b8e6da4c145a98e, type: 3}
       _maxCount: 5
-  _abilityRewards:
-    _minCount: 0
-    _maxCount: 1
-    _elements:
-    - _isDefault: 1
-      _elementPrefab: {fileID: 11400000, guid: cfc9ccad38ef16c41bd2eda7877e8a30, type: 2}
-      _maxCount: 1
-  _itemRewards:
-    _minCount: 0
-    _maxCount: 1
-    _elements:
-    - _isDefault: 1
-      _elementPrefab: {fileID: 11400000, guid: 5350b8ff3471e9d418fddb750e4f8be4, type: 2}
-      _maxCount: 1
+  _rewards:
+    _overrideByDifficulty: 1
+    _defaultDistributionMethod: 1
+    _easyMethod: 1
+    _mediumMethod: 2
+    _hardMethod: 0
+    _easyMinLevelOffset: -2
+    _easyMaxLevelOffset: -1
+    _mediumMinLevelOffset: 0
+    _mediumMaxLevelOffset: 0
+    _hardMinLevelOffset: 1
+    _hardMaxLevelOffset: 2
+    _includeAbilities: 1
+    _includeConsumables: 1
+    _includeEquipmentMods: 1
+    _abilityItemDatas:
+    - ID: 1002
+      Icon: {fileID: 1560907362, guid: f3c637fbed5451e4c85c7195e80a0954, type: 3}
+      Name: Fire Up
+      Description: Rally yourself, increasing Strength by 25% for 2 turns
+      itemType: 0
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 0
+      rarity: 0
+    - ID: 1006
+      Icon: {fileID: 21300306, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
+      Name: Flaming Blade
+      Description: A high-damage fireball that burns the enemy for 2 turns
+      itemType: 0
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 0
+      rarity: 0
+    - ID: 1003
+      Icon: {fileID: -811106580, guid: e395485de996e754d9b1dd212fd50f3d, type: 3}
+      Name: Merciless Blows
+      Description: Deals moderate damage to target & nearby tiles
+      itemType: 0
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 0
+      rarity: 0
+    - ID: 1000
+      Icon: {fileID: 1560907362, guid: f3c637fbed5451e4c85c7195e80a0954, type: 3}
+      Name: Power Strike
+      Description: 'Deliver a powerful strike, (TODO: dealing double damage to a
+        single enemy)'
+      itemType: 0
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 0
+      rarity: 0
+    - ID: 1008
+      Icon: {fileID: 21300356, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
+      Name: Retaliation
+      Description: 'Deals damage (TODO: based on most recent HP loss)'
+      itemType: 0
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 0
+      rarity: 0
+    - ID: 1007
+      Icon: {fileID: 21300352, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
+      Name: Rush Attack
+      Description: 'TODO: Advance 1 space to get closer to an enemy, dealing moderate
+        damage '
+      itemType: 0
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 0
+      rarity: 0
+    - ID: 1004
+      Icon: {fileID: 21300000, guid: 73d3cc63327012249b4f98eb9289311d, type: 3}
+      Name: Smash
+      Description: 'Deals moderate damage (TODO: and pushes back the enemy by 3 spaces)'
+      itemType: 0
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 0
+      rarity: 0
+    - ID: 1005
+      Icon: {fileID: 21300060, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
+      Name: Strike Through
+      Description: 'Deals moderate damage (TODO: and moves through a line of adjacent
+        enemies)'
+      itemType: 0
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 0
+      rarity: 0
+    - ID: 1009
+      Icon: {fileID: 21300042, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
+      Name: 
+      Description: 'TODO: Charge forward a short distance, bashing an enemy with
+        their shield, dealing moderate damage and stunning the enemy for 2 turns'
+      itemType: 0
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 0
+      rarity: 0
+    - ID: 1012
+      Icon: {fileID: 1072186538, guid: 8bc6b693366d3ac41ae7f20723396814, type: 3}
+      Name: Stab
+      Description: Stab Description
+      itemType: 0
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 0
+      rarity: 0
+    _consumableItemDatas:
+    - ID: 3000
+      Icon: {fileID: 1348272354, guid: 796574b158e05b44c8f9deae75f9d1ec, type: 3}
+      Name: Minor Healing Potion
+      Description: Heals player for 5 health
+      itemType: 2
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 0
+      rarity: 0
+    _equipmentItemDatas:
+    - ID: 1002
+      Icon: {fileID: 1560907362, guid: f3c637fbed5451e4c85c7195e80a0954, type: 3}
+      Name: Fire Up
+      Description: Rally yourself, increasing Strength by 25% for 2 turns
+      itemType: 0
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 0
+      rarity: 0
+    - ID: 1006
+      Icon: {fileID: 21300306, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
+      Name: Flaming Blade
+      Description: A high-damage fireball that burns the enemy for 2 turns
+      itemType: 0
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 0
+      rarity: 0
+    - ID: 1003
+      Icon: {fileID: -811106580, guid: e395485de996e754d9b1dd212fd50f3d, type: 3}
+      Name: Merciless Blows
+      Description: Deals moderate damage to target & nearby tiles
+      itemType: 0
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 0
+      rarity: 0
+    - ID: 1000
+      Icon: {fileID: 1560907362, guid: f3c637fbed5451e4c85c7195e80a0954, type: 3}
+      Name: Power Strike
+      Description: 'Deliver a powerful strike, (TODO: dealing double damage to a
+        single enemy)'
+      itemType: 0
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 0
+      rarity: 0
+    - ID: 1008
+      Icon: {fileID: 21300356, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
+      Name: Retaliation
+      Description: 'Deals damage (TODO: based on most recent HP loss)'
+      itemType: 0
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 0
+      rarity: 0
+    - ID: 1007
+      Icon: {fileID: 21300352, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
+      Name: Rush Attack
+      Description: 'TODO: Advance 1 space to get closer to an enemy, dealing moderate
+        damage '
+      itemType: 0
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 0
+      rarity: 0
+    - ID: 1004
+      Icon: {fileID: 21300000, guid: 73d3cc63327012249b4f98eb9289311d, type: 3}
+      Name: Smash
+      Description: 'Deals moderate damage (TODO: and pushes back the enemy by 3 spaces)'
+      itemType: 0
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 0
+      rarity: 0
+    - ID: 1005
+      Icon: {fileID: 21300060, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
+      Name: Strike Through
+      Description: 'Deals moderate damage (TODO: and moves through a line of adjacent
+        enemies)'
+      itemType: 0
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 0
+      rarity: 0
+    - ID: 1009
+      Icon: {fileID: 21300042, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
+      Name: 
+      Description: 'TODO: Charge forward a short distance, bashing an enemy with
+        their shield, dealing moderate damage and stunning the enemy for 2 turns'
+      itemType: 0
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 0
+      rarity: 0
+    - ID: 1012
+      Icon: {fileID: 1072186538, guid: 8bc6b693366d3ac41ae7f20723396814, type: 3}
+      Name: Stab
+      Description: Stab Description
+      itemType: 0
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 0
+      rarity: 0
+    log:
+      showMessages: 0
   _minXP: 0
   _maxXP: 0
   _minSkillPoints: 0

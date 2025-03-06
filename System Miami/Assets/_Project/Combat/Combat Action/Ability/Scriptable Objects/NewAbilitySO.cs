@@ -12,7 +12,8 @@ namespace SystemMiami.CombatRefactor
         public float ResourceCost;
         public int CooldownTurns;
         [FormerlySerializedAs("Data")] public ItemData itemData;
+        public CharacterClassType classType;
+        public bool isEnemyAbility;
 
-        
     }
 }

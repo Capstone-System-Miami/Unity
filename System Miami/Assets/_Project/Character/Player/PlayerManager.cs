@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using SystemMiami.Management;
 using SystemMiami.CombatSystem;
 using System.Runtime.CompilerServices;
+using SystemMiami.InventorySystem;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -49,6 +50,13 @@ namespace SystemMiami
         // ======================================
         #endregion // SERIALIZED
 
+        #region PROPERTIES
+
+        public int CurrentLevel { get; private set; }
+        public int CurrentCredits {get; private set;}
+
+        #endregion
+       
 
         #region UNITY METHODS
         // ======================================
@@ -74,6 +82,11 @@ namespace SystemMiami
             }
 
             base.Awake();
+            
+            PlayerLevel playerLevelscript = GetComponent<PlayerLevel>();
+            CurrentLevel = playerLevelscript.CurrentLevel;
+            Inventory playerInventory = GetComponent<Inventory>();
+            CurrentCredits = playerInventory.Credits;
         }
 
         private void Start()
@@ -156,6 +169,8 @@ namespace SystemMiami
         // ======================================
         #endregion
 
+      
+        
 
         #region PUBLIC METHODS
         // ======================================
@@ -202,6 +217,17 @@ namespace SystemMiami
             neighborhoodReturnPos = transform.position;
         }
         // ======================================
+        
+        /// <summary>
+        /// Utility method to get player's level.
+        /// 
+        /// </summary>
+        public int GetPlayerLevel()
+        {
+            PlayerLevel playerLevelscript = GetComponent<PlayerLevel>();
+            if (playerLevelscript == null) return 1;
+            return playerLevelscript.CurrentLevel; 
+        }
         #endregion
     }
 }

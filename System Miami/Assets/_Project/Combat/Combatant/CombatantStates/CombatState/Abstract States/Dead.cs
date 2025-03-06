@@ -1,4 +1,5 @@
 using SystemMiami.CombatSystem;
+using SystemMiami.Management;
 using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
@@ -11,10 +12,11 @@ namespace SystemMiami.CombatRefactor
         public override void OnEnter()
         {
             base.OnEnter();
-
+            GAME.MGR.CombatantDeath?.Invoke(combatant);
+            
             // Player died
             Debug.Log($"{combatant.name} has died.");
-            MonoBehaviour.Destroy(combatant.gameObject);
+            MonoBehaviour.Destroy(combatant.gameObject,0.06f);
         }
     }
 }

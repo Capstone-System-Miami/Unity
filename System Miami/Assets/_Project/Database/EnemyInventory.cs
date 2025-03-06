@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SystemMiami.CombatSystem
+namespace SystemMiami.InventorySystem
 {
 
     public class EnemyInventory : Inventory

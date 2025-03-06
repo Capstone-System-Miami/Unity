@@ -1,8 +1,10 @@
 ﻿// Authors: Layla Hoey
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace SystemMiami
 {
+    [System.Serializable]
     public class AttributeSet
     {
         private Dictionary<AttributeType, int> _dict = new Dictionary<AttributeType, int>();
@@ -19,11 +21,20 @@ namespace SystemMiami
 
         public AttributeSet(AttributeSetSO scriptable)
         {
-            _dict[AttributeType.STRENGTH] = scriptable.Strength;
-            _dict[AttributeType.DEXTERITY] = scriptable.Dexterity;
-            _dict[AttributeType.CONSTITUTION] = scriptable.Constitution;
-            _dict[AttributeType.WISDOM] = scriptable.Wisdom;
-            _dict[AttributeType.INTELLIGENCE] = scriptable.Intelligence;
+            _dict[AttributeType.STRENGTH]       = scriptable.Strength;
+            _dict[AttributeType.DEXTERITY]      = scriptable.Dexterity;
+            _dict[AttributeType.CONSTITUTION]   = scriptable.Constitution;
+            _dict[AttributeType.WISDOM]         = scriptable.Wisdom;
+            _dict[AttributeType.INTELLIGENCE]   = scriptable.Intelligence;
+        }
+
+        public AttributeSet(AttributeSet toCopy)
+        {
+            _dict[AttributeType.STRENGTH]       = toCopy._dict[AttributeType.STRENGTH];
+            _dict[AttributeType.DEXTERITY]      = toCopy._dict[AttributeType.DEXTERITY];
+            _dict[AttributeType.CONSTITUTION]   = toCopy._dict[AttributeType.CONSTITUTION];
+            _dict[AttributeType.WISDOM]         = toCopy._dict[AttributeType.WISDOM];
+            _dict[AttributeType.INTELLIGENCE]   = toCopy._dict[AttributeType.INTELLIGENCE];
         }
 
         public AttributeSet(int[] vals)
@@ -39,6 +50,19 @@ namespace SystemMiami
             }
         }
 
+        public static AttributeSet operator +(AttributeSet a, AttributeSet b)
+        {
+            int[] newAttributeVals = new []
+            {
+                a.Get(AttributeType.STRENGTH) + b.Get(AttributeType.STRENGTH),
+                a.Get(AttributeType.DEXTERITY) + b.Get(AttributeType.DEXTERITY),
+                a.Get(AttributeType.CONSTITUTION) + b.Get(AttributeType.CONSTITUTION),
+                a.Get(AttributeType.WISDOM) + b.Get(AttributeType.WISDOM),
+                a.Get(AttributeType.INTELLIGENCE) + b.Get(AttributeType.INTELLIGENCE)
+            };
+            return new(newAttributeVals);
+        }
+
         private void zero(ref int[] incoming)
         {
             incoming = new int[CharacterEnums.ATTRIBUTE_COUNT];
@@ -47,6 +71,7 @@ namespace SystemMiami
             {
                 incoming[i] = 0;
             }
+            Debug.Log("Zeroed array");
         }
 
         public int Get(AttributeType attr)

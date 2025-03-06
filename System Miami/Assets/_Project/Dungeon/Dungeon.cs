@@ -32,6 +32,8 @@ namespace SystemMiami.Dungeons
 
         [SerializeField] private GameObject _overlayTileContainer;
 
+        [SerializeField,ReadOnly] public DifficultyLevel DifficultyLevel;
+
         /// <summary>
         /// The general style / vibe of the Dungeon.
         /// </summary>
@@ -42,6 +44,7 @@ namespace SystemMiami.Dungeons
         /// when the Neighborhood is generated.
         public Style Style { get { return _style; } }
 
+        public DungeonRewards Rewards;
         public BlockHeight BoardTilesHeight { get { return _boardTilesHeight; } }
 
         public GameObject GameBoard { get { return _gameBoard; } }

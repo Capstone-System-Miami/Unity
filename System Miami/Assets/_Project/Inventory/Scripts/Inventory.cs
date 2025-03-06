@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using SystemMiami.Management;
 using SystemMiami.LeeInventory;
 
-namespace SystemMiami
+namespace SystemMiami.Outdated
 {
     public class Inventory : Singleton<Inventory>
     {

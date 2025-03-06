@@ -8,6 +8,7 @@ namespace SystemMiami.Shop
         public string title;
         public string description;
         public int baseCost;
+        public int ID; // dummy for database requirement
 
         public int additionalCost;
 
@@ -33,6 +34,11 @@ namespace SystemMiami.Shop
         public int GetCost()
         {
             return baseCost + additionalCost;
+        }
+
+        public int GetDatabaseID()
+        {
+            return ID;
         }
     }
 }

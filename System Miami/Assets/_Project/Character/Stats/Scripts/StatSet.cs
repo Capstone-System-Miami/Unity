@@ -43,10 +43,64 @@ namespace SystemMiami
             _dict[StatType.SPEED]           = statSet.Speed;
         }
 
+        public StatSet(StatSet toCopy)
+        {
+            _dict[StatType.PHYSICAL_PWR]    = toCopy._dict[StatType.PHYSICAL_PWR];
+            _dict[StatType.MAGICAL_PWR]     = toCopy._dict[StatType.MAGICAL_PWR];
+            _dict[StatType.PHYSICAL_SLOTS]  = toCopy._dict[StatType.PHYSICAL_SLOTS];
+            _dict[StatType.MAGICAL_SLOTS]   = toCopy._dict[StatType.MAGICAL_SLOTS];
+            _dict[StatType.STAMINA]         = toCopy._dict[StatType.STAMINA];
+            _dict[StatType.MANA]            = toCopy._dict[StatType.MANA];
+            _dict[StatType.MAX_HEALTH]      = toCopy._dict[StatType.MAX_HEALTH];    
+            _dict[StatType.DMG_RDX]         = toCopy._dict[StatType.DMG_RDX];
+            _dict[StatType.SPEED]           = toCopy._dict[StatType.SPEED];
+        }
+
+        public StatSet(float[] vals)
+        {
+            if (vals.Length != CharacterEnums.ATTRIBUTE_COUNT)
+            {
+                zero(ref vals);
+            }
+
+            foreach (StatType stat in _dict.Keys)
+            {
+                _dict[stat] = vals[(int)stat];
+            }
+        }
+
+        public static StatSet operator +(StatSet a, StatSet b)
+        {
+            float[] newAttributeVals = new []
+            {
+                a.GetStat(StatType.PHYSICAL_PWR)    + b.GetStat(StatType.PHYSICAL_PWR),
+                a.GetStat(StatType.MAGICAL_PWR)     + b.GetStat(StatType.MAGICAL_PWR),
+                a.GetStat(StatType.PHYSICAL_SLOTS)  + b.GetStat(StatType.PHYSICAL_SLOTS),
+                a.GetStat(StatType.MAGICAL_SLOTS)   + b.GetStat(StatType.MAGICAL_SLOTS),
+                a.GetStat(StatType.STAMINA)         + b.GetStat(StatType.STAMINA),
+                a.GetStat(StatType.MANA)            + b.GetStat(StatType.MANA),
+                a.GetStat(StatType.MAX_HEALTH)      + b.GetStat(StatType.MAX_HEALTH),
+                a.GetStat(StatType.DMG_RDX)         + b.GetStat(StatType.DMG_RDX),
+                a.GetStat(StatType.SPEED)           + b.GetStat(StatType.SPEED),
+            };
+            return new(newAttributeVals);
+        }
+
+        private void zero(ref float[] incoming)
+        {
+            incoming = new float[CharacterEnums.STATS_COUNT];
+
+            for (int i = 0; i < incoming.Length; i++)
+            {
+                incoming[i] = 0;
+            }
+            Debug.Log("Zeroed incoming array");
+        }
+
         #region SETTERS/FORMULAS
         private void setPhysicalPower(int strength, StatData statData)
         {
-            _dict[StatType.PHYSICAL_PWR] = strength * statData.EffectMultiplier;
+            _dict[StatType.PHYSICAL_PWR] = strength * statData.EffectMultiplier ;
         }
 
         private void setMagicalPower(int wisdom, StatData statData)

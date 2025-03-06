@@ -1,4 +1,6 @@
 // Authors: Layla Hoey
+
+using SystemMiami.CombatRefactor;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem
@@ -13,7 +15,7 @@ namespace SystemMiami.CombatSystem
         // In reference to attacker or reciever though, idk.
         [SerializeField] private Vector2Int direction;
 
-        public override ISubactionCommand GenerateCommand(ITargetable target)
+        public override ISubactionCommand GenerateCommand(ITargetable target,CombatAction action)
         {
             return new ForceMoveData(target, distance, direction);
         }

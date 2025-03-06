@@ -101,6 +101,43 @@ namespace SystemMiami.Management
             return true;
         }
 
+        public bool TryGetRewards(out List<ItemData> rewards)
+        {
+            if (_dungeonData == null)
+            {
+                rewards = new();
+                return false;
+            }
+            
+
+            rewards = _dungeonData.ItemRewards;
+            return true;
+        }
+
+        public bool TryGetEXP(out int exp)
+        {
+            if (_dungeonData == null)
+            {
+                exp = 0;
+                return false;
+            }
+
+            exp = _dungeonData.EXPToGive;
+            return true;
+        }
+
+        public bool TryGetCredit(out int credit)
+        {
+            if (_dungeonData == null)
+            {
+                credit = 0;
+                return false;
+            }
+
+            credit = _dungeonData.Credits;
+            return true;
+        }
+
         public void GoToNeighborhood()
         {
             _dungeonData = null;

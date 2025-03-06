@@ -1,4 +1,6 @@
 // Authors: Layla Hoey, Lee St. Louis
+
+using SystemMiami.CombatRefactor;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem
@@ -15,6 +17,6 @@ namespace SystemMiami.CombatSystem
 
         public TargetingPattern TargetingPattern { get { return _targetingPattern; } }
 
-        public abstract ISubactionCommand GenerateCommand(ITargetable target);
+        public abstract ISubactionCommand GenerateCommand(ITargetable target, CombatAction action);
     }
 }

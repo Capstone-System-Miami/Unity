@@ -1,4 +1,6 @@
 // Authors: Layla Hoey
+
+using SystemMiami.CombatRefactor;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem
@@ -11,8 +13,19 @@ namespace SystemMiami.CombatSystem
     {
         [SerializeField] private float damageToDeal;
 
-        public override ISubactionCommand GenerateCommand(ITargetable target)
+        public override ISubactionCommand GenerateCommand(ITargetable target,CombatAction action)
         {
+            float power = 0;
+            if (action is AbilityPhysical)
+            {
+                power = action.User.Stats.GetStat(StatType.PHYSICAL_PWR);
+            }
+            else if (action is AbilityMagical)
+            {
+                power = action.User.Stats.GetStat(StatType.MAGICAL_PWR);
+            }
+
+            damageToDeal += power;
             return new DamageCommand(target, damageToDeal);
         }
     }
@@ -37,7 +50,7 @@ namespace SystemMiami.CombatSystem
         public DamageCommand(ITargetable target, float amount)
         {
             this.target = target;
-            this.amount = amount;
+            this.amount = amount ;
         }
 
         public void Preview()

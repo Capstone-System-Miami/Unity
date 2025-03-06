@@ -1,5 +1,6 @@
 // Authors: Layla Hoey, Lee St Louis
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace SystemMiami
@@ -25,8 +26,23 @@ namespace SystemMiami
         // as modified by any status effects
         private StatSet _afterEffects = new StatSet();
 
-        // For any current status effects
+        // Time-limited status effects: (StatSet, duration)
         private Dictionary<StatSet, int> _statusEffects = new();
+
+        // Permanent equipment mods: (modID, StatSet)
+        private Dictionary<int, StatSet> _equipmentMods = new();
+        private StatSet TotalEquipmentEffects
+        {
+            get
+            {
+                StatSet runningTotal = new StatSet();
+                _equipmentMods.Values.ToList().ForEach(mod => runningTotal += mod);
+                return runningTotal;
+            }
+        }
+
+        public StatSet BeforeEffectsCopy { get { return new(_beforeEffects); } }
+        public StatSet AfterEffectsCopy { get { return new(_afterEffects); } }
 
         //===============================
         #endregion // ^vars^
@@ -41,13 +57,13 @@ namespace SystemMiami
 
         private void Start()
         {
-            _beforeEffects = new StatSet(_attributes.GetSet(), _statData);
+            _beforeEffects = new StatSet(_attributes.GetAttributeSet(), _statData);
             updateEffects();
         }
 
         private void Update()
         {
-            _beforeEffects = new StatSet(_attributes.GetSet(), _statData);
+            _beforeEffects = new StatSet(_attributes.GetAttributeSet(), _statData);
             updateEffects();
             if (_printReports) { print($"{name} stat: \n" +
                                         $"{getStatsReport()}"); }
@@ -64,8 +80,12 @@ namespace SystemMiami
             for (int i = 0; i < CharacterEnums.STATS_COUNT; i++)
             {
                 StatType stat = (StatType)i;
+                //the after effect line was getting long so just made these into vars
+                float baseValue      = _beforeEffects.GetStat(stat);
+                float statusBonus    = GetNetStatusEffects(stat);
+                float equipmentBonus = GetNetEquipmentMods(stat);
 
-                _afterEffects.Set(stat, (_beforeEffects.GetStat(stat) + GetNetStatusEffects(stat)) );
+                _afterEffects.Set(stat, baseValue + statusBonus + equipmentBonus);
             }
         }
 
@@ -131,6 +151,46 @@ namespace SystemMiami
             }
 
             toRemove.ForEach(statSet => _statusEffects.Remove(statSet));
+        }
+        
+        /// <summary>
+        /// Adds an equipment mod's stats by ID, separate from status effects.
+        /// </summary>
+        public void EquipMod(int modID, StatSet modStats)
+        {
+            if (_equipmentMods.ContainsKey(modID))
+            {
+                Debug.LogWarning($"{name} already has equipment mod {modID}!");
+                return;
+            }
+            _equipmentMods.Add(modID, modStats);
+            Debug.Log($"{name} equipped mod ID={modID}.");
+        }
+
+        /// <summary>
+        /// Removes an equipment mod (if present).
+        /// </summary>
+        public void UnequipMod(int modID)
+        {
+            if (_equipmentMods.Remove(modID))
+            {
+                Debug.Log($"{name} unequipped mod ID={modID}.");
+            }
+            else
+            {
+                Debug.LogWarning($"{name} tried to unequip mod {modID}, but it wasn't found!");
+            }
+        }
+
+        public float GetNetEquipmentMods(StatType stat)
+        {
+            float total = 0f;
+            foreach (var kvp in _equipmentMods)
+            {
+                StatSet modStats = kvp.Value;
+                total += modStats.GetStat(stat);
+            }
+            return total;
         }
         #endregion
 

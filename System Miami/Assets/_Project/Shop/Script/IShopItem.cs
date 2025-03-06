@@ -7,5 +7,6 @@ namespace SystemMiami
         string GetTitle();
         string GetDescription();
         int GetCost();
+        int GetDatabaseID();
     }
 }

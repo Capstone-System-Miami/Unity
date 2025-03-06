@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using SystemMiami.CombatSystem;
 using UnityEngine;
 using SystemMiami.Dungeons;
+using UnityEngine.UIElements;
 
 namespace SystemMiami
 {
@@ -10,20 +11,22 @@ namespace SystemMiami
     {
         public DifficultyLevel _difficulty;
         int playerCurrentLevel; //to Set Player Level
-        int enemyLevel; //Enemy Level;
-        int levelRange; //use to set the range between the player can enemy levels
-        int statSelector; //use to get a random number for the stats
+        [SerializeField]int enemyLevel; //Enemy Level;
+        [SerializeField]int levelRange; //use to set the range between the player can enemy levels
+        
+        Attributes attributes;
+        AttributeType attributeType; //use to get a random number for the stats
 
         [Header("Attributes")]
-        public int str = 1; // strength
-        public int con = 1; // constitution
-        public int dex = 1; // dexterity
-        public int inte = 1; // intelligence
-        public int wis = 1; // wisdom
+        public int str; // strength
+        public int con; // constitution
+        public int dex; // dexterity
+        public int inte; // intelligence
+        public int wis; // wisdom
 
         public void Initialize(DifficultyLevel difficulty, int playerLevel)
         {
-            playerCurrentLevel = playerLevel;
+            playerCurrentLevel = PlayerManager.MGR.GetPlayerLevel();
             SetEnemyLevel(difficulty);
         }
         
@@ -47,64 +50,66 @@ namespace SystemMiami
                     enemyLevel = playerCurrentLevel + levelRange; // if player levels is 10 then enemies level should be (10 to 13) like in doc
                     break;
             }
-            if (enemyLevel < 0) // if Range goes out of bounds like 0 or -1
+            if (enemyLevel <= 0) // if Range goes out of bounds like 0 or -1
             {
                 enemyLevel = 1;
             }
 
-            AttributeSet additionalAttributes = new(GenerateAttributes());
+            
 
-            if (!TryGetComponent(out Attributes attributesComponent))
-            {
-                Debug.LogWarning($"No Enemy Combatant found on {this}", this);
-            }
+            // if (!TryGetComponent(out Attributes attributesComponent))
+            // {
+            //     Debug.LogWarning($"No Enemy Combatant found on {this}", this);
+            // }
+            attributes = GetComponent<Attributes>();
 
             // TODO: once there is a public method to add attribute sets
             // to the attributes component, use it here
-            //attributesComponent.AddAttributes(additionalAttributes);
+            attributes.AddAttributeSet(GenerateAttributes());
 
             Debug.Log("Enemy Level : " + enemyLevel);
         }
 
-        private int[] GenerateAttributes() // Set enemy stat using leveling System
+        private AttributeSet GenerateAttributes() // Set enemy stat using leveling System
         {
-            for (int i = 0; i < enemyLevel - 1; i++) // does it for each level until it hits max
+            AttributeSet additionalAttributes = new();
+            int[] stats = new int[5];
+            for (int i = 0; i <= enemyLevel; i++) // does it for each level until it hits max
             {
-                statSelector = Random.Range(1, 6);
-                print("statSelector" + statSelector);
-                switch (statSelector)
+                attributeType = (AttributeType)Random.Range(0, 6);
+                print("statSelector" + attributeType);
+                switch (attributeType)
                 {
-                    case 1:
-                        str++;
+                    case AttributeType.STRENGTH:
+                        stats[0]++;
+                        additionalAttributes.Set(AttributeType.STRENGTH, stats[0]); 
                         print("strength level: " + str);
                         break;
-                    case 2:
-                        con++;
+                    case AttributeType.CONSTITUTION:
+                        stats[1]++;
+                        additionalAttributes.Set(AttributeType.CONSTITUTION, stats[1]);
                         print("Constitution level: " + con);
                         break;
-                    case 3:
-                        dex++;
+                    case AttributeType.DEXTERITY:
+                        stats[2]++;
+                        additionalAttributes.Set(AttributeType.DEXTERITY, stats[2]);
                         print("Dexterity level: " + dex);
                         break;
-                    case 4:
-                        inte++;
+                    case AttributeType.INTELLIGENCE:
+                        stats[3]++;
+                        additionalAttributes.Set(AttributeType.INTELLIGENCE, stats[3]);
                         print("Intelligence level: " + inte);
                         break;
-                    case 5:
-                        wis++;
+                    case AttributeType.WISDOM:
+                        stats[4]++;
+                        additionalAttributes.Set(AttributeType.WISDOM, stats[4]);
                         print("Wisdom level: " + wis);
                         break;
                 }
                 
             }
-
-            return new int[] {
-                str,
-                con,
-                dex,
-                inte,
-                wis
-            };
+            Debug.Log($"Stats {stats[0]} {stats[1]} {stats[2]} {stats[3]} {stats[4]}");
+            return additionalAttributes;
         }
     }
 }

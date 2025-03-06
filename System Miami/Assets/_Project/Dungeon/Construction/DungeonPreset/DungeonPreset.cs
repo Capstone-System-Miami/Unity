@@ -1,8 +1,6 @@
 /// Layla
 using System.Collections.Generic;
-using SystemMiami.AbilitySystem;
 using UnityEngine;
-using SystemMiami.LeeInventory;
 
 namespace SystemMiami.Dungeons
 {
@@ -37,27 +35,25 @@ namespace SystemMiami.Dungeons
         [Space(5), SerializeField] private Pool<GameObject> _enemyPool;
 
         [Header("Rewards")]
-        [Space(5), SerializeField] private Pool<Outdated.Ability> _abilityRewards;
-        [Space(5), SerializeField] private Pool<LeeInventory.OutdatedOrDuplicates.ItemData> _itemRewards;
-
-        [Space(5)]
-        [SerializeField] private int _minXP;
-        [SerializeField] private int _maxXP;
-
-        [SerializeField] private int _minSkillPoints;
-        [SerializeField] private int _maxSkillPoints;
+        [SerializeField] private DungeonRewards _rewards;           
 
         public DungeonData GetData(List<Style> excludedStyles)
         {
             GameObject prefab = getPrefab(excludedStyles);
 
             List<GameObject> enemies = _enemyPool.GetNewList();
+            
+            _rewards.Initialize();
+            
+            List<ItemData> itemRewards = _rewards.GenerateItemRewards(_difficulty);
+            Debug.LogWarning($"Dungeon Preset {name} generated rewards: {itemRewards.Count}");
+            
+            int EXPToGive = _rewards.GenerateExpReward(_difficulty);
+            int creditsToGive = _rewards.GenerateCreditReward(_difficulty);
+            
+            DungeonData data = new DungeonData(prefab, enemies, itemRewards,EXPToGive,creditsToGive);
 
-            List<Outdated.Ability> abilities = _abilityRewards.GetNewList();
-
-            List<LeeInventory.OutdatedOrDuplicates.ItemData> items = _itemRewards.GetNewList();
-
-            return new DungeonData(prefab, enemies, abilities, items);
+            return data;
         }
 
         /// <summary>
@@ -145,8 +141,13 @@ namespace SystemMiami.Dungeons
                 Debug.LogWarning( warning );
                 return _prefabPool.DefaultPrefab;
             }
-
+            dungeon.DifficultyLevel = _difficulty;
             return golist[0];
+        }
+        
+        public void AdjustEXPRewards(int requiredLevel, int totalDungeons)
+        {
+           
         }
     }
 }

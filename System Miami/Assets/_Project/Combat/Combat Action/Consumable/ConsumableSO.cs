@@ -9,5 +9,6 @@ namespace SystemMiami.CombatRefactor
         [Space(20)]
         public int Uses;
         [FormerlySerializedAs("Data")] public ItemData itemData;
+        
     }
 }

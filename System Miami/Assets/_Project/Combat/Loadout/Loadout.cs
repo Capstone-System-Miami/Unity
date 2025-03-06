@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using SystemMiami.CombatSystem;
+using SystemMiami.InventorySystem;
 using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
@@ -13,13 +14,38 @@ namespace SystemMiami.CombatRefactor
         private Combatant user;
 
       
-        public Loadout(CombatSystem.Inventory inventory, Combatant user)
+        public Loadout(Inventory inventory, Combatant user)
         {
             this.user = user;
 
             PhysicalAbilities = ConvertPhysical(inventory.QuickslotPhysicalAbilityIDs);
             MagicalAbilities  = ConvertMagical(inventory.QuickslotMagicalAbilityIDs);
             Consumables       = ConvertConsumable(inventory.QuickslotConsumableIDs);
+        }
+        
+        public Loadout(List<int> abilities, Combatant user)
+        {
+            this.user = user;
+
+            foreach (int abilityID in abilities)
+            {
+                if (Database.MGR.GetDataType(abilityID) == ItemType.PhysicalAbility)
+                {
+                    AbilityPhysical ability = Database.MGR.CreateInstance(abilityID, user) as AbilityPhysical;
+                    PhysicalAbilities.Add(ability);
+                }
+                else if (Database.MGR.GetDataType(abilityID) == ItemType.MagicalAbility)
+                {
+                    AbilityMagical ability = Database.MGR.CreateInstance(abilityID, user) as AbilityMagical;
+                    MagicalAbilities.Add(ability);
+                }
+                else if (Database.MGR.GetDataType(abilityID) == ItemType.Consumable)
+                {
+                    Consumable ability = Database.MGR.CreateInstance(abilityID, user) as Consumable;
+                    Consumables.Add(ability);
+                }
+            }
+           
         }
 
         

@@ -30,7 +30,7 @@ namespace SystemMiami
 
                 if (tile.Occupier is ITargetable target)
                 {
-                    //Debug.LogWarning($"OCCUPANT: {(tile.Occupier is null ? "nothin" : tile.Occupier.ToString())}");
+                    Debug.LogWarning($"OCCUPANT: {(tile.Occupier is null ? "nothin" : tile.Occupier.ToString())}");
 
                     //int count = all.Count;
                     this.occupants.Add(target);
