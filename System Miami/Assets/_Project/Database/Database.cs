@@ -4,9 +4,12 @@ using SystemMiami.AbilitySystem;
 using SystemMiami.CombatRefactor;
 using SystemMiami.CombatSystem;
 using SystemMiami.Management;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Serialization;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace SystemMiami
 {
@@ -42,29 +45,52 @@ namespace SystemMiami
        
        public void Initialize()
        {
-           // Filter database to only include abilities matching the player's class type.
-           Attributes playerAttributes = FindObjectOfType<PlayerManager>().GetComponent<Attributes>();
-           CharacterClassType playerClassType = playerAttributes._characterClass;
-           
-           // Filter physical abilities
-           physicalAbilityEntries = physicalAbilityEntries
-               .Where(entry => entry.classType == playerClassType ).ToList();
-           
-           // Filter magical abilities
-           magicalAbilityEntries = magicalAbilityEntries
+            // Filter database to only include abilities matching the player's class type.
+            Attributes playerAttributes = FindObjectOfType<PlayerManager>().GetComponent<Attributes>();
+            CharacterClassType playerClassType = playerAttributes._characterClass;
+            
+            // Filter physical abilities
+            physicalAbilityEntries = physicalAbilityEntries
+                .Where(entry => entry.classType == playerClassType ).ToList();
+            
+            // Filter magical abilities
+            magicalAbilityEntries = magicalAbilityEntries
                .Where(entry => entry.classType == playerClassType).ToList();
-           
-           // Convert lists to dictionaries 
-           physicalAbilityDatabase = physicalAbilityEntries.ToDictionary(entry => entry.itemData.ID);
-           magicalAbilityDatabase = magicalAbilityEntries.ToDictionary(entry => entry.itemData.ID);
-           consumableDatabase = consumableEntries.ToDictionary(entry => entry.itemData.ID);
-           enemyPhysicalAbilityDatabase = enemyPhysicalAbilityEntries.ToDictionary(entry => entry.itemData.ID);
-           enemyMagicalAbilityDatabase = enemyMagicalAbilityEntries.ToDictionary(entry => entry.itemData.ID);
-           equipmentModDatabase = equipmentModEntries.ToDictionary(entry => entry.itemData.ID);
+            
+            // Convert lists to dictionaries 
+            physicalAbilityDatabase = physicalAbilityEntries.ToDictionary(entry => entry.itemData.ID);
+            magicalAbilityDatabase = magicalAbilityEntries.ToDictionary(entry => entry.itemData.ID);
+            consumableDatabase = consumableEntries.ToDictionary(entry => entry.itemData.ID);
+            enemyPhysicalAbilityDatabase = enemyPhysicalAbilityEntries.ToDictionary(entry => entry.itemData.ID);
+            enemyMagicalAbilityDatabase = enemyMagicalAbilityEntries.ToDictionary(entry => entry.itemData.ID);
+            equipmentModDatabase = equipmentModEntries.ToDictionary(entry => entry.itemData.ID);
        }
 
+        private void Start()
+        {
 
-       public List <ItemData> GetAll(ItemType type)
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                PintAllItemsOfPlayerClassToUI();
+            }
+        }
+
+        private void PintAllItemsOfPlayerClassToUI()
+        {
+            List<string> itemsOfPlayerClass =
+                GetAllItemsOfPlayerClass(ItemType.PhysicalAbility).Select(phys => phys.Name).ToList();
+            itemsOfPlayerClass.AddRange(GetAllItemsOfPlayerClass(ItemType.MagicalAbility).Select(mag => mag.Name).ToList());
+            itemsOfPlayerClass.AddRange(GetAllItemsOfPlayerClass(ItemType.Consumable).Select(cons => cons.Name).ToList());
+
+            UI.MGR.StartDialogue(this, true, true, true, "DATABASE CHECK", itemsOfPlayerClass.ToArray());
+        }
+
+
+        public List <ItemData> GetAllItemsOfPlayerClass(ItemType type)
        {
            List<ItemData> result = new();
            
@@ -261,7 +287,7 @@ namespace SystemMiami
          return filtered;
        }
 
-   #if UNITY_EDITOR
+ #if UNITY_EDITOR
         [ContextMenu("Load All Abilities & Consumables")]
         private void LoadAllSOsInProject()
         {

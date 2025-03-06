@@ -1,30 +1,29 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using SystemMiami.Shop;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Serialization;
+using SystemMiami.Management;
+using SystemMiami.ui;
 using Random = UnityEngine.Random;
 
 namespace SystemMiami
 {
     public class NPC : MonoBehaviour
     {
+        
         public string npcName;
         public SpriteRenderer sprite;
         
-       public NPCInfoSO npcInfoSo;
+        public NPCInfoSO npcInfoSo;
 
-       public bool assigned;
+        public bool assigned;
 
-       public GameObject questPanel;
-       public GameObject shopPanel; 
+        public GameObject questPanel;
+        public GameObject shopPanel;
+        public string[] DialogueStrings;
        
-       public NPCType myType;
+        public NPCType myType;
        
-       QuestGiver questGiver;
-       ShopKeeper shopKeeper;
+        QuestGiver questGiver;
+        ShopKeeper shopKeeper;
 
         private void Start()
         {
@@ -48,11 +47,16 @@ namespace SystemMiami
                 shopKeeper = gameObject.AddComponent<ShopKeeper>();
                 shopKeeper.Initialize(npcInfoSo, npcName, shopPanel);
             }
-            else
+            else if (DialogueStrings.Length == 0)
             {
-                
+                DialogueStrings = new string[]
+                {
+                    "Placeholder NPC Dialogue One,",
+                    "Placeholder NPC Dialogue Two.",
+                };
             }
         }
+
         public void InteractWithPlayer()
         {
             if (myType == NPCType.QuestGiver)
@@ -60,14 +64,20 @@ namespace SystemMiami
                 questGiver.TalkToQuestGiver();
             }
             else if (myType == NPCType.ShopKeeper)
+            {                
+                shopKeeper.TalkToShopKeeper();
+            }
+            else
             {
-                
-              shopKeeper.TalkToShopKeeper();
+                UI.MGR.StartDialogue(
+                    this,
+                    false,
+                    false,
+                    true,
+                    npcName,
+                    DialogueStrings);
             }
         }
-
-        
-        
     }
 }
 

@@ -12,12 +12,17 @@ namespace SystemMiami
 {
     public class PlayerLevel : MonoBehaviour
     {
-
         [SerializeField] private int baseXPPerLevel = 100;
         [SerializeField] private int additionalXPPerLevel = 50;
 
         [SerializeField, ReadOnly] private int level = 0;
         [SerializeField, ReadOnly] private int currentXP = 0;
+
+        [Header("Debugging")]
+        [SerializeField] private bool debugMode = false;
+        [SerializeField] private KeyCode debug_GainExpKey;
+        [SerializeField] private int debug_amountToGain = 50;
+
         private int XpToNextTotal => GetXPtoNextLevel(level);
         private int xpToNextRemaining = 0;
         
@@ -30,6 +35,14 @@ namespace SystemMiami
         private void Start()
         {
             RecalculateXPtoNextRemaining();
+        }
+
+        private void Update()
+        {
+            if (debugMode && Input.GetKeyDown(debug_GainExpKey))
+            {
+                DEBUG_GainEXP();
+            }
         }
 
         // Gain XP from any source (quests, combat, etc.)
@@ -106,9 +119,17 @@ namespace SystemMiami
             }
             return totalXP;
         }
+
+        private void DEBUG_GainEXP()
+        {
+            GainXP(debug_amountToGain);
+        }
     }
    
     
+    public class ReadOnlyAttribute : PropertyAttribute
+    {
+    }
 #if UNITY_EDITOR
     [CustomPropertyDrawer(typeof(ReadOnlyAttribute))]
     public class ReadOnlyDrawer : PropertyDrawer
@@ -119,10 +140,6 @@ namespace SystemMiami
             EditorGUI.PropertyField(position, property, label, true);
             GUI.enabled = true;
         }
-    }
-
-    public class ReadOnlyAttribute : PropertyAttribute
-    {
     }
 #endif
 }

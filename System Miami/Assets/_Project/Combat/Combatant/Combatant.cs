@@ -52,7 +52,7 @@ namespace SystemMiami.CombatSystem
         private Stats _stats;
         private bool isDamageable = true;
         private bool isHealable = true;
-        private bool isMovable = true;   
+        private bool isMovable = true;
         private bool isStunned = false;
         private bool isInvisible = false;
         private float _endOfTurnDamage;
@@ -460,12 +460,12 @@ namespace SystemMiami.CombatSystem
 
         public void PreviewHeal(float amount)
         {
-            throw new NotImplementedException();
+            // preview heal
         }
 
         public void ReceiveHeal(float amount)
         {
-            throw new NotImplementedException();
+            Health.Gain(amount);
         }
         #endregion IHealReceiver
 

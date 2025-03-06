@@ -71,10 +71,10 @@ namespace SystemMiami.Dungeons
             _equipmentItemDatas.Clear();
             rewards = new List<ItemData>();
             
-            _abilityItemDatas = Database.MGR.GetAll(ItemType.MagicalAbility);
-            _abilityItemDatas.AddRange(Database.MGR.GetAll(ItemType.PhysicalAbility));
-            _consumableItemDatas = Database.MGR.GetAll(ItemType.Consumable);
-            _equipmentItemDatas = Database.MGR.GetAll(ItemType.EquipmentMod);
+            _abilityItemDatas = Database.MGR.GetAllItemsOfPlayerClass(ItemType.MagicalAbility);
+            _abilityItemDatas.AddRange(Database.MGR.GetAllItemsOfPlayerClass(ItemType.PhysicalAbility));
+            _consumableItemDatas = Database.MGR.GetAllItemsOfPlayerClass(ItemType.Consumable);
+            _equipmentItemDatas = Database.MGR.GetAllItemsOfPlayerClass(ItemType.EquipmentMod);
         }
         
         /// <summary>

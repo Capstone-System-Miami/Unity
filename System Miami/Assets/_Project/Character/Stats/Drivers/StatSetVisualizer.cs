@@ -11,6 +11,8 @@ namespace SystemMiami
         [Space(10)]
         [SerializeField] private List<LabeledField> fields = new();
 
+        [SerializeField] private bool useEnumNames;
+
         private StatSet statSet;
 
         private void Awake()
@@ -32,7 +34,10 @@ namespace SystemMiami
 
         private void Start()
         {
-            SetLabels();
+            if (useEnumNames)
+            {
+                SetLabels();
+            }
         }
 
         public void Assign(StatSet statSet)

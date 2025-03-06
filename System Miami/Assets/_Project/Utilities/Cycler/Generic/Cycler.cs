@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace SystemMiami.Utilities
 {
-    public class Cycler<T> where T : class, ICycleable
+    public class Cycler<T> where T : class, ISelectable
     {
         private readonly List<T> elements = new();
         private readonly bool wrapStart = false;
@@ -56,7 +56,7 @@ namespace SystemMiami.Utilities
         {
             currentIndex = 0;
             currentElement = null;
-            Elements.ForEach(element => element.CycleAway());
+            Elements.ForEach(element => element.Deselect());
         }
 
         public void NextElement()
@@ -99,9 +99,9 @@ namespace SystemMiami.Utilities
 
         private void CycleToCurrentElement()
         {
-            currentElement?.CycleAway();
+            currentElement?.Deselect();
             UpdateCurrentElement();
-            currentElement?.CycleTo();
+            currentElement?.Select();
         }
 
         private void UpdateCurrentElement()
