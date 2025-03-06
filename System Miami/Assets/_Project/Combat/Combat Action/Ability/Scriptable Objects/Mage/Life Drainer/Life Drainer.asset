@@ -10,21 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 58d728392c04c9a48a8a419a8ac94f33, type: 3}
-  m_Name: Fireball
+  m_Name: Life Drainer
   m_EditorClassIdentifier: 
-  Icon: {fileID: 21300290, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
+  Icon: {fileID: 21300420, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
   Actions:
-  - {fileID: 11400000, guid: a44a95abef297144a9d13e6631bad263, type: 2}
-  OverrideController: {fileID: 22100000, guid: c733105dfa811ee4cb2cfc167498be4e, type: 2}
+  - {fileID: 11400000, guid: b2341d74859ea8845b864e95367767e8, type: 2}
+  - {fileID: 11400000, guid: 44a9293b0f23ff04495f4c04b0d799d9, type: 2}
+  OverrideController: {fileID: 22100000, guid: 6a517d63575cd2f409d46b2014197ec1, type: 2}
   AbilityType: 1
   ResourceCost: 5
   CooldownTurns: 1
   itemData:
-    ID: 2000
-    Icon: {fileID: 21300290, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
-    Name: Fireball
-    Description: Cast a fireball that explodes on impact, dealing high damage to
-      the target and nearby enemies
+    ID: 2002
+    Icon: {fileID: 21300420, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
+    Name: Life Drainer
+    Description: The player absorbs HP equal to 50% of the damage they deal to enemy
     itemType: 2
     Price: 0
     MinLevel: 0
