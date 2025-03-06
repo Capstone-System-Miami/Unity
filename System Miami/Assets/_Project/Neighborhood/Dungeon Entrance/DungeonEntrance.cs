@@ -15,7 +15,7 @@ namespace SystemMiami
         #region SERIALIZED
         // ======================================
         [SerializeField] private dbug log;
-        [SerializeField] private List<Dungeons.Style> _excludedStyles = new();
+        [SerializeField] public List<Dungeons.Style> _excludedStyles = new();
        
         //=======================================
         #endregion // SERIALIZED
@@ -37,6 +37,7 @@ namespace SystemMiami
         // ======================================
 
         public DungeonPreset CurrentPreset { get { return _currentPreset; } }
+        public DungeonData DungeonData { get { return _dungeonData; } }
 
         //=======================================
         #endregion // PROPERTIES
@@ -174,8 +175,11 @@ namespace SystemMiami
                 log.warn($"DungeonData being re-generated:\n {_dungeonData}");
                 _dungeonData = CurrentPreset.GetData(_excludedStyles);
             }
-
-            GAME.MGR.GoToDungeon(_dungeonData);
+            if (DungeonRewardsPanel.MGR != null)
+            {
+                DungeonRewardsPanel.MGR.ShowPanel(_dungeonData);
+            }
+           // GAME.MGR.GoToDungeon(_dungeonData);
         }
         
         //=======================================

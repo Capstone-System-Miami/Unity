@@ -1,13 +1,7 @@
 /// Layla
 using System.Collections.Generic;
-using SystemMiami.AbilitySystem;
 using UnityEngine;
-using SystemMiami.LeeInventory;
-using SystemMiami.Outdated;
-using UnityEditor.U2D.Animation;
-#if UNITY_EDITOR
-using UnityEditor; 
-#endif
+
 namespace SystemMiami.Dungeons
 {
     public enum DifficultyLevel { EASY, MEDIUM, HARD }
@@ -41,11 +35,7 @@ namespace SystemMiami.Dungeons
         [Space(5), SerializeField] private Pool<GameObject> _enemyPool;
 
         [Header("Rewards")]
-        [SerializeField] private DungeonRewards _rewards;
-
-      
-
-       
+        [SerializeField] private DungeonRewards _rewards;           
 
         public DungeonData GetData(List<Style> excludedStyles)
         {
@@ -159,6 +149,5 @@ namespace SystemMiami.Dungeons
         {
            
         }
-       
     }
 }

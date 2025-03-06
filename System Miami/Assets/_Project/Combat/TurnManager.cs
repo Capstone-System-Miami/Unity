@@ -199,7 +199,6 @@ namespace SystemMiami
 
         #region Spawning
         //===============================
-
         private void SpawnEnemies()
         {
             for (int i = 0; i < numberOfEnemies; i++)

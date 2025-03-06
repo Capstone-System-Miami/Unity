@@ -57,5 +57,19 @@ namespace SystemMiami.ui
             // Enable or disable the gameObject
             gameObjectsToToggle.ForEach(go => go.SetActive(isActive));
         }
+
+        public void AllOn()
+        {
+            isActive = true;
+
+            gameObjectsToToggle.ForEach(go => go.SetActive(isActive));
+        }
+
+        public void AllOff()
+        {
+            isActive = false;
+
+            gameObjectsToToggle.ForEach(go => go.SetActive(isActive));
+        }
     }
 }

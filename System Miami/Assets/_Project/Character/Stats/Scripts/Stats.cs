@@ -1,5 +1,6 @@
 // Authors: Layla Hoey, Lee St Louis
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace SystemMiami
@@ -30,6 +31,15 @@ namespace SystemMiami
 
         // Permanent equipment mods: (modID, StatSet)
         private Dictionary<int, StatSet> _equipmentMods = new();
+        private StatSet TotalEquipmentEffects
+        {
+            get
+            {
+                StatSet runningTotal = new StatSet();
+                _equipmentMods.Values.ToList().ForEach(mod => runningTotal += mod);
+                return runningTotal;
+            }
+        }
 
         public StatSet BeforeEffectsCopy { get { return new(_beforeEffects); } }
         public StatSet AfterEffectsCopy { get { return new(_afterEffects); } }

@@ -39,19 +39,19 @@ namespace SystemMiami
         public void Show()
         {
             _panelBackground.enabled = true;
-            Label.ShowBackground();
-            Label.ShowForeground();
-            Value.ShowBackground();
-            Value.ShowForeground();
+            Label?.ShowBackground();
+            Label?.ShowForeground();
+            Value?.ShowBackground();
+            Value?.ShowForeground();
         }
 
         public void Hide()
         {
             _panelBackground.enabled = false;
-            Label.HideBackground();
-            Label.HideForeground();
-            Value.HideBackground();
-            Value.HideForeground();
+            Label?.HideBackground();
+            Label?.HideForeground();
+            Value?.HideBackground();
+            Value?.HideForeground();
         }
     }
 }

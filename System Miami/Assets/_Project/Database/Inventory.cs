@@ -9,22 +9,22 @@ namespace SystemMiami.InventorySystem
 {
     public class Inventory : MonoBehaviour
     {
-        [SerializeField] private List<int> magicalAbilityIDs = new();
         [SerializeField] private List<int> physicalAbilityIDs = new();
+        [SerializeField] private List<int> magicalAbilityIDs = new();
         [SerializeField] private List<int> consumableIDs = new();
         [SerializeField] private List<int> equipmentModIDs = new(); //TODO
-        [FormerlySerializedAs("quickslotMagicalAbilities")] [SerializeField] private List<int> quickslotMagicalAbilityIDs = new(); 
         [FormerlySerializedAs("quickslotPhysicalAbilities")] [SerializeField] private List<int> quickslotPhysicalAbilityIDs = new(); 
+        [FormerlySerializedAs("quickslotMagicalAbilities")] [SerializeField] private List<int> quickslotMagicalAbilityIDs = new(); 
         [FormerlySerializedAs("quickslotConsumable")] [SerializeField] private List<int> quickslotConsumableIDs = new();
 
         [SerializeField] private int credits;
 
-        public List<int> MagicalAbilityIDs { get => magicalAbilityIDs; private set => magicalAbilityIDs = value; }
         public List<int> PhysicalAbilityIDs { get => physicalAbilityIDs; private set => physicalAbilityIDs = value; }
+        public List<int> MagicalAbilityIDs { get => magicalAbilityIDs; private set => magicalAbilityIDs = value; }
         public List<int> ConsumableIDs { get => consumableIDs; private set => consumableIDs = value; }
 
-        public List<int> QuickslotMagicalAbilityIDs { get => quickslotMagicalAbilityIDs; private set => quickslotMagicalAbilityIDs = value; }
         public List<int> QuickslotPhysicalAbilityIDs { get => quickslotPhysicalAbilityIDs; private set => quickslotPhysicalAbilityIDs = value; }
+        public List<int> QuickslotMagicalAbilityIDs { get => quickslotMagicalAbilityIDs; private set => quickslotMagicalAbilityIDs = value; }
         public List<int> QuickslotConsumableIDs { get => quickslotConsumableIDs; private set => quickslotConsumableIDs = value; }
 
         public List<int> AllValidInventoryItems
@@ -32,8 +32,8 @@ namespace SystemMiami.InventorySystem
             get
             {
                 List<int> allIDs = new();
-                allIDs.AddRange(MagicalAbilityIDs);
                 allIDs.AddRange(PhysicalAbilityIDs);
+                allIDs.AddRange(MagicalAbilityIDs);
                 allIDs.AddRange(ConsumableIDs);
 
                 return allIDs ?? new();

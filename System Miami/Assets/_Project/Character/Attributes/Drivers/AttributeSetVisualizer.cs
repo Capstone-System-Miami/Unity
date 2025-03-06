@@ -14,6 +14,8 @@ namespace SystemMiami
 
         [SerializeField] private AttributeSet attributeSet;
 
+        [SerializeField] private bool useEnumNames;
+
         private void OnEnable()
         {
             if (attributeSet == null)
@@ -40,7 +42,10 @@ namespace SystemMiami
 
         private void Start()
         {
-            SetLabels();
+            if (useEnumNames)
+            {
+                SetLabels();
+            }
         }
 
         public void Assign(AttributeSet attributeSet)
