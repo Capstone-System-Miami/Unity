@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using SystemMiami.ui;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using System;
 
 namespace SystemMiami
 {
@@ -10,10 +12,10 @@ namespace SystemMiami
         IPointerEnterHandler, IPointerExitHandler,
         IPointerDownHandler, IPointerUpHandler
     {
-        [SerializeField] private UnityEvent AdditionalOnPointerEnter;
-        [SerializeField] private UnityEvent AdditionalOnPointerExit;
-        [SerializeField] private UnityEvent AdditionalOnPointerDown;
-        [SerializeField] private UnityEvent AdditionalOnPointerUp;
+        [SerializeField] public UnityEvent AdditionalOnPointerEnter;
+        [SerializeField] public UnityEvent AdditionalOnPointerExit;
+        [SerializeField] public UnityEvent AdditionalOnPointerDown;
+        [SerializeField] public UnityEvent AdditionalOnPointerUp;
 
         protected SelectableSprite selectableSprite;
         //protected SelectableTMP text;
