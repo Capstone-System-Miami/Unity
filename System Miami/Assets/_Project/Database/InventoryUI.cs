@@ -23,6 +23,11 @@ namespace SystemMiami.InventorySystem
         [SerializeField] private InventoryTab tabConsumable;
         [SerializeField] private InventoryTab tabEquipment;
 
+        public InventoryTab TabPhysical { get {return tabPhysical;} }
+        public InventoryTab TabMagical  { get {return tabMagical;} }
+        public InventoryTab TabConsumable  { get {return tabConsumable;} }
+        public InventoryTab TabEquipment  { get {return tabEquipment;} }
+        
         [Header("Readonly")]
         [SerializeField, ReadOnly] private string activeTab;
         [SerializeField] public ItemGrid activeGrid

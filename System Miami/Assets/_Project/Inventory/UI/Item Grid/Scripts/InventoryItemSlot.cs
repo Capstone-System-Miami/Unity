@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -8,7 +9,7 @@ using SystemMiami.Utilities;
 namespace SystemMiami
 {
     [RequireComponent(typeof(RectTransform))]
-    public class InventoryItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+    public class InventoryItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
     {
         [SerializeField] private dbug log;
 
@@ -33,6 +34,12 @@ namespace SystemMiami
         [field: SerializeField, ReadOnly] bool IsEnabled;
         [field: SerializeField, ReadOnly] private string currentItemStr;
 
+        private float clickTime;
+        private float clickDelay = 0.2f;
+        private int clicks;
+        public bool doubleClick;
+
+        public event Action<InventoryItemSlot> slotDoubleClicked;
         private void Awake()
         {
             RT = GetComponent<RectTransform>();
@@ -82,8 +89,9 @@ namespace SystemMiami
             return !itemData.failbit;
         }
 
-        public void ClearSlot()
+        public ItemData ClearSlot()
         {
+            ItemData itemCleared = itemData;
             itemData = ItemData.FailedData;
 
             if (!usingFallback)
@@ -97,7 +105,9 @@ namespace SystemMiami
             }
 
             currentItemStr = "None";
+            return itemCleared;
         }
+        
 
         private void Refresh()
         {
@@ -158,6 +168,28 @@ namespace SystemMiami
             spriteBox.SetBackground(toSet);
 
             PopUpHandler.MGR.ClosePopup();
+        }
+
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            clicks++;
+            if (clicks == 1) clickTime = Time.time;
+
+            if (clicks > 1 && Time.time - clickTime < clickDelay)
+            {
+                clicks = 0;
+                clickTime = 0;
+                slotDoubleClicked?.Invoke(this);
+                Debug.Log("Double CLick: "+this.GetComponent<RectTransform>().name);
+
+            }
+            else if (clicks > 2 || Time.time - clickTime > 1)
+            {
+                clicks = 0;
+                
+            }
+            
+           
         }
     }
 }
