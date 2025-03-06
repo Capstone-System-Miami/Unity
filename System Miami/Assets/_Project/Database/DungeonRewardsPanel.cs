@@ -223,6 +223,11 @@ namespace SystemMiami
         {
             if (!PlayerManager.MGR.TryGetComponent(out playerInventory))
             {
+                string[] error = new string[]
+                {
+                    "DungeonRewardsPanel couldn't find the Inventory component on Player"
+                };
+                UI.MGR.StartDialogue(this, true, true, false, "ERROR", error);
                 log.error("No player inventory assigned. Cannot fill loadout UI.");
             }
 

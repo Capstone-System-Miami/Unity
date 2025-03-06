@@ -6,6 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UI;
+using SystemMiami.Management;
 
 namespace SystemMiami.InventorySystem
 {
@@ -57,21 +58,24 @@ namespace SystemMiami.InventorySystem
 
         private void Awake()
         {
-            InitializeTabs();
-            InitializeButtons();
         }
 
         private void OnEnable()
         {
-            if (playerInventory == null)
+            if (!PlayerManager.MGR.TryGetComponent(out playerInventory))
             {
-                //log.error(
-                //    $"inventory was null during {name}'s {this}.OnEnable(), " +
-                //    $"so {name} did not subscribe to inventory's System.Action " +
-                //    $"OnInventoryChanged."); return;
-                playerInventory = PlayerManager.MGR.GetComponent<Inventory>();
-            }
+                string[] error = new string[]
+                {
+                    "InventoryUI couldn't find the Inventory component on Player"
+                };
+                UI.MGR.StartDialogue(this, true, true, false, "ERROR", error);
+                log.error(
+                    $"inventory was null during {name}'s {this}.OnEnable(), " +
+                    $"so {name} did not subscribe to inventory's System.Action " +
+                    $"OnInventoryChanged.");
+                return;
 
+            }
 
             // TODO: Should this be reversed? I was sort of assuming the
             // inventory menu would be a place where the UI affects the
@@ -85,6 +89,8 @@ namespace SystemMiami.InventorySystem
 
         private void Start()
         {
+            InitializeTabs();
+            InitializeButtons();
             RefreshUI();
         }
 
