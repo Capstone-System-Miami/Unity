@@ -517,6 +517,10 @@ public class IntersectionManager : Singleton<IntersectionManager>
        {
          npc.Initialize(NPCType.QuestGiver);
        }
+        else
+        {
+            npc.Initialize(NPCType.Dialogue);
+        }
        
     }
 

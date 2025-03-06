@@ -624,7 +624,7 @@ MonoBehaviour:
   _constitution: 0
   _wisdom: 0
   _intelligence: 0
-  attributePointsPerLevel: 0
+  attributePointsPerLevel: 2
   _upgradeMode: 0
   upgradeType: 0
   upgradeAmt: 0
@@ -712,7 +712,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   log:
-    showMessages: 1
+    showMessages: 0
   _interactKey: 101
   _promptBox: {fileID: 6499409498506360628}
 --- !u!61 &4261404639173623324
@@ -792,10 +792,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   physicalAbilityIDs: ea030000ee030000eb030000e8030000ed030000
-  magicalAbilityIDs: 00000000
-  consumableIDs: b80b0000b80b0000
+  magicalAbilityIDs: 
+  consumableIDs: b80b0000
   equipmentModIDs: 
-  quickslotPhysicalAbilityIDs: ea030000ee030000eb030000e8030000ed030000
+  quickslotPhysicalAbilityIDs: 
   quickslotMagicalAbilityIDs: 
   quickslotConsumableIDs: 
   credits: 0
@@ -815,3 +815,6 @@ MonoBehaviour:
   additionalXPPerLevel: 50
   level: 0
   currentXP: 0
+  debugMode: 0
+  debug_GainExpKey: 0
+  debug_amountToGain: 50

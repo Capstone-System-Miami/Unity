@@ -9,6 +9,7 @@ using SystemMiami.Management;
 using SystemMiami.Utilities;
 using SystemMiami.ui;
 using UnityEngine.Serialization;
+using System.Linq;
 
 namespace SystemMiami
 {
@@ -96,7 +97,7 @@ namespace SystemMiami
         public void ShowPanel(DungeonData dungeonData)
         {
             currentDungeonData = dungeonData;
-            continueButton.onClick.AddListener ( () => GAME.MGR.GoToDungeon(CurrentDungeonData));
+            continueButton.onClick.AddListener ( () => HandleContinueButtonClickedClicked());
            
             FillDungeonRewardsUI(dungeonData);
 
@@ -147,66 +148,6 @@ namespace SystemMiami
 
             
         }*/
-
-       
-        private void FillloadoutUI()
-        {
-            if (playerInventory == null)
-            {
-                log?.error("No player inventory assigned. Cannot fill loadout UI.");
-                return;
-            }
-
-           
-            loadoutGridPhysical?.ClearSlots();
-            loadoutGridMagical?.ClearSlots();
-            loadoutGridConsumable?.ClearSlots();
-
-            
-            loadoutGridPhysical?.FillSlots(playerInventory.QuickslotPhysicalAbilityIDs);
-            loadoutGridMagical?.FillSlots(playerInventory.QuickslotMagicalAbilityIDs);
-            loadoutGridConsumable?.FillSlots(playerInventory.QuickslotConsumableIDs);
-        }
-
-        public void Update()
-        {
-            
-
-           
-        }
-
-
-        private void FillDungeonRewardsUI(DungeonData data)
-        {
-            if (data == null)
-            {
-               
-                dungeonRewardsGrid?.ClearSlots();
-                return;
-            }
-
-            dungeonRewardsGrid?.ClearSlots();
-
-            
-            List<int> rewardIDs = new List<int>();
-            if (data.ItemRewards != null)
-            {
-                foreach (ItemData itemData in data.ItemRewards)
-                {
-                    rewardIDs.Add(itemData.ID);
-                }
-            }
-
-          
-            dungeonRewardsGrid?.FillSlots(rewardIDs);
-
-           
-            if (textExpReward != null)
-                textExpReward.text = $"{data.EXPToGive}";
-
-            if (textCreditReward != null)
-                textCreditReward.text = $"{data.Credits}";
-        }
 
         public void CheckGrid(ItemGrid grid, bool InventoryGrid)
         {
@@ -277,6 +218,75 @@ namespace SystemMiami
             Debug.Log($"MoveItemToInventory: {itemID}");
             RefreshPanel();
         }
-       
+
+        private void FillloadoutUI()
+        {
+            if (!PlayerManager.MGR.TryGetComponent(out playerInventory))
+            {
+                log.error("No player inventory assigned. Cannot fill loadout UI.");
+            }
+
+
+            loadoutGridPhysical?.ClearSlots();
+            loadoutGridMagical?.ClearSlots();
+            loadoutGridConsumable?.ClearSlots();
+
+
+            loadoutGridPhysical?.FillSlots(playerInventory.QuickslotPhysicalAbilityIDs);
+            loadoutGridMagical?.FillSlots(playerInventory.QuickslotMagicalAbilityIDs);
+            loadoutGridConsumable?.FillSlots(playerInventory.QuickslotConsumableIDs);
+        }
+
+
+        private void FillDungeonRewardsUI(DungeonData data)
+        {
+            if (data == null)
+            {
+
+                dungeonRewardsGrid?.ClearSlots();
+                return;
+            }
+
+            dungeonRewardsGrid?.ClearSlots();
+
+
+            List<int> rewardIDs = new List<int>();
+            if (data.ItemRewards != null)
+            {
+                foreach (ItemData itemData in data.ItemRewards)
+                {
+                    rewardIDs.Add(itemData.ID);
+                }
+            }
+
+
+            dungeonRewardsGrid?.FillSlots(rewardIDs);
+
+
+            if (textExpReward != null)
+                textExpReward.text = $"{data.EXPToGive}";
+
+            if (textCreditReward != null)
+                textCreditReward.text = $"{data.Credits}";
+        }
+
+
+        private void HandleContinueButtonClickedClicked()
+        {
+            if (!playerInventory.QuickslotPhysicalAbilityIDs.Any()
+                && !playerInventory.QuickslotMagicalAbilityIDs.Any()
+                && !playerInventory.QuickslotConsumableIDs.Any())
+            {
+                Debug.LogError(
+                    "NOTHING IN PLAYER LOADOUT." +
+                    "Handle this. For now, do nothing",
+                    this);
+
+                return;
+            }
+
+            HidePanel();
+            GAME.MGR.GoToDungeon(CurrentDungeonData);
+        }
     }
 }

@@ -65,10 +65,11 @@ namespace SystemMiami.InventorySystem
         {
             if (playerInventory == null)
             {
-                log.error(
-                    $"inventory was null during {name}'s {this}.OnEnable(), " +
-                    $"so {name} did not subscribe to inventory's System.Action " +
-                    $"OnInventoryChanged."); return;
+                //log.error(
+                //    $"inventory was null during {name}'s {this}.OnEnable(), " +
+                //    $"so {name} did not subscribe to inventory's System.Action " +
+                //    $"OnInventoryChanged."); return;
+                playerInventory = PlayerManager.MGR.GetComponent<Inventory>();
             }
 
 

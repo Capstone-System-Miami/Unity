@@ -460,12 +460,12 @@ namespace SystemMiami.CombatSystem
 
         public void PreviewHeal(float amount)
         {
-            throw new NotImplementedException();
+            // preview heal
         }
 
         public void ReceiveHeal(float amount)
         {
-            throw new NotImplementedException();
+            Health.Gain(amount);
         }
         #endregion IHealReceiver
 
