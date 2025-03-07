@@ -25,8 +25,8 @@ namespace SystemMiami.CombatSystem
                 power = action.User.Stats.GetStat(StatType.MAGICAL_PWR);
             }
 
-            damageToDeal += power;
-            return new DamageCommand(target, damageToDeal);
+            float finalDamage = damageToDeal + power;
+            return new DamageCommand(target, finalDamage);
         }
     }
 
