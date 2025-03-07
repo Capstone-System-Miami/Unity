@@ -135,6 +135,37 @@ namespace SystemMiami.InventorySystem
             OnInventoryChanged?.Invoke();
         }
 
+        public void InitializeStartingAbility(CharacterClassType characterClass)
+        {
+            magicalAbilityIDs.Clear();
+            physicalAbilityIDs.Clear();
+            consumableIDs.Clear();
+            equipmentModIDs.Clear();
+            quickslotMagicalAbilityIDs.Clear();
+            quickslotPhysicalAbilityIDs.Clear();
+            quickslotConsumableIDs.Clear();
+            
+            
+            switch (characterClass)
+            {
+                case CharacterClassType.MAGE:
+                    AddToInventory(2000);
+                    break;
+                case CharacterClassType.TANK:
+                    AddToInventory(1015);
+                    break;
+                case CharacterClassType.ROGUE:
+                    AddToInventory(1019);
+                    break;
+                case CharacterClassType.FIGHTER:
+                    AddToInventory(1012);
+                    break;
+                    
+                    
+            }
+            
+        }
+
         // Gain Credits from quests and other sources
         public void AddCredits(int amount)
         {

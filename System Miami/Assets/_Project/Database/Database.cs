@@ -31,8 +31,10 @@ namespace SystemMiami
        private Dictionary<int, NewAbilitySO> enemyPhysicalAbilityDatabase;
        private Dictionary<int, NewAbilitySO> enemyMagicalAbilityDatabase;
        private Dictionary<int, EquipmentModSO> equipmentModDatabase;
-       
-       
+
+       [SerializeField] private bool characterSelection;
+
+
        
        
        
@@ -49,14 +51,17 @@ namespace SystemMiami
             Attributes playerAttributes = FindObjectOfType<PlayerManager>().GetComponent<Attributes>();
             CharacterClassType playerClassType = playerAttributes._characterClass;
             
-            // Filter physical abilities
-            physicalAbilityEntries = physicalAbilityEntries
-                .Where(entry => entry.classType == playerClassType ).ToList();
-            
-            // Filter magical abilities
-            magicalAbilityEntries = magicalAbilityEntries
-               .Where(entry => entry.classType == playerClassType).ToList();
-            
+            // Filter physical abilities if not in character selection screen
+            if (!characterSelection)
+            {
+                physicalAbilityEntries = physicalAbilityEntries
+                    .Where(entry => entry.classType == playerClassType).ToList();
+
+                // Filter magical abilities
+                magicalAbilityEntries = magicalAbilityEntries
+                    .Where(entry => entry.classType == playerClassType).ToList();
+            }
+
             // Convert lists to dictionaries 
             physicalAbilityDatabase = physicalAbilityEntries.ToDictionary(entry => entry.itemData.ID);
             magicalAbilityDatabase = magicalAbilityEntries.ToDictionary(entry => entry.itemData.ID);
@@ -66,10 +71,7 @@ namespace SystemMiami
             equipmentModDatabase = equipmentModEntries.ToDictionary(entry => entry.itemData.ID);
        }
 
-        private void Start()
-        {
-
-        }
+       
 
         private void Update()
         {
