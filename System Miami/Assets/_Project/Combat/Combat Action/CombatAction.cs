@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using SystemMiami.CombatSystem;
 using SystemMiami.Utilities;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace SystemMiami.CombatRefactor
 {
@@ -23,6 +24,8 @@ namespace SystemMiami.CombatRefactor
 
         public readonly List<ISubactionCommand> Commands = new();
 
+        public dbug log = new();
+
         private Coroutine executionProcess;
 
         private TargetSet directionBasedTargetSet = new();
@@ -37,7 +40,8 @@ namespace SystemMiami.CombatRefactor
         public event EventHandler<TargetingEventArgs> TargetingEvent;
 
         protected CombatAction(
-            Sprite icon,int ActionID,
+            Sprite icon,
+            int ActionID,
             List<CombatSubactionSO> subactions,
             AnimatorOverrideController overrideController,
             Combatant user)
@@ -52,6 +56,9 @@ namespace SystemMiami.CombatRefactor
                 Subactions,
                 out FocusBasedSubactions,
                 out DirectionBasedSubactions);
+
+            log = new();
+            log.off();
         }
 
         public void Equip()
@@ -302,7 +309,7 @@ namespace SystemMiami.CombatRefactor
             targets?.all?.ForEach(target =>
             {
                 Debug.LogWarning($"Subscribing {target} to TargetingEvent...");
-
+                
                 target.SubscribeTo(ref TargetingEvent);
 
                 Debug.LogWarning(

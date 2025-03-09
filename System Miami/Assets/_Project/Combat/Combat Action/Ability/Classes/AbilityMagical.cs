@@ -8,7 +8,7 @@ namespace SystemMiami.CombatRefactor
             : base(
                 preset,
                 user,
-                user.Mana)
+                (amount) => user.Mana.Lose(amount))
         { }
     }
 }

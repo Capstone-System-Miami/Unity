@@ -3,10 +3,9 @@ using System;
 using System.Collections.Generic;
 using SystemMiami.AbilitySystem;
 using SystemMiami.CombatRefactor;
+using SystemMiami.InventorySystem;
 using SystemMiami.Management;
 using SystemMiami.Utilities;
-using SystemMiami.InventorySystem;
-using UnityEngine.Animations;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem
@@ -582,7 +581,6 @@ namespace SystemMiami.CombatSystem
 
         public void HandleTargetingEvent(object sender, TargetingEventArgs args)
         {
-            if(this == null) return;
            // Debug.Log($"Trying to process a TargetingEvent of type {args.EventType}", gameObject);
            if (this is not ITargetable me) { return; }
             
