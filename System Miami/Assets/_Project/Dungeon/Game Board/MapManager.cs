@@ -107,6 +107,7 @@ namespace SystemMiami
             gridTilesHeight = dungeon.BoardTilesHeight;
             overlayContainer = dungeon.OverlayTileContainer;
             map = new Dictionary<Vector2Int, OverlayTile> ();
+            int obstacleRunningTotal = 0;
 
             // Get the bounds of tile map in BounsInt
             bounds = gameBoardTilemap.cellBounds;
@@ -148,6 +149,38 @@ namespace SystemMiami
                             //overlayTile.GetComponent<SpriteRenderer>().sortingOrder = gameBoardTilemap.GetComponent<TilemapRenderer>().sortingOrder;
                             overlayTile.GridLocation = tileLocation;
                             map.Add(tileKey, overlayTile);
+
+                            // obstacle placement
+                            Vector3Int obstacleCoords = new (tileLocation.x, tileLocation.y, 2);
+
+                            if (obstaclesTilemap.HasTile(obstacleCoords))
+                            {
+                                Debug.LogError(
+                                    $"Tile found at {obstacleCoords}" +
+                                    $"in obstacles tilemap",
+                                    obstaclesTilemap);
+                                obstacleRunningTotal++;
+
+                                TileData tileData = new();
+                                TileBase tile = obstaclesTilemap.GetTile(obstacleCoords);
+                                tile.GetTileData(obstacleCoords, obstaclesTilemap, ref tileData);
+                                obstaclesTilemap.SetTile(obstacleCoords, null);
+
+                                Sprite obstacleSprite = tileData.sprite;
+
+                                GameObject newObstacleObj = new($"OBSTACLE {obstacleRunningTotal}");
+                                newObstacleObj.transform.SetParent(obstaclesTilemap.transform);
+                                Obstacle obst = newObstacleObj.AddComponent<StaticObstacle>();
+                                obst.Initialize(obstacleSprite);
+                                if (!TryPlaceOnTile(obst, overlayTile))
+                                {
+                                    Debug.LogError($"Obstacle placement failed at {obstacleCoords}", overlayTile);
+                                }
+                                else
+                                {
+                                    Debug.LogError($"Obstacle placement successful", overlayTile);
+                                }
+                            }
                         }
                     }
                 }
@@ -214,6 +247,11 @@ namespace SystemMiami
         public Vector3 IsoToScreen(Vector3Int tileLocation)
         {
             return Coordinates.IsoToScreen(tileLocation, gridTilesHeight);
+        }
+
+        private bool TryPlaceObstacle(Vector3Int tileLocation, int currentTotal)
+        {
+            return false;
         }
 
         private Vector2Int GetCenter(BoundsInt bounds)

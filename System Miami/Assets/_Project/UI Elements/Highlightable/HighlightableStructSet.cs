@@ -11,6 +11,12 @@ namespace SystemMiami
         public T Normal { get { return _normal; } }
         public T Highlighted { get { return _highlighted; } }
 
+        public HighlightableStructSet()
+        {
+            _normal = default;
+            _highlighted = default;
+        }
+
         public HighlightableStructSet(T val)
         {
             _normal = val;

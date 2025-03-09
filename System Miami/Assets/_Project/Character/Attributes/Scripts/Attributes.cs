@@ -87,24 +87,22 @@ namespace SystemMiami
         
         public void AddAttributeSet(AttributeSet additionalAttributes)
         {
-           
-                List<AttributeType> allTypes = new();
-                allTypes.Add(AttributeType.WISDOM);
-                allTypes.Add(AttributeType.STRENGTH);
-                allTypes.Add(AttributeType.INTELLIGENCE);
-                allTypes.Add(AttributeType.DEXTERITY);
-                allTypes.Add(AttributeType.CONSTITUTION);
+            List<AttributeType> allTypes = new();
+            allTypes.Add(AttributeType.WISDOM);
+            allTypes.Add(AttributeType.STRENGTH);
+            allTypes.Add(AttributeType.INTELLIGENCE);
+            allTypes.Add(AttributeType.DEXTERITY);
+            allTypes.Add(AttributeType.CONSTITUTION);
 
-                foreach (AttributeType type in allTypes)
-                {
-                    _current.Set(type, (_current.Get(type) + additionalAttributes.Get(type)));
-                }
+            foreach (AttributeType type in allTypes)
+            {
+                _current.Set(type, (_current.Get(type) + additionalAttributes.Get(type)));
+            }
             updateVals(true);
-            
-            
-           
-            Debug.LogError($"Added {additionalAttributes.Get(AttributeType.STRENGTH)} to {name}'s strength. in AddAttributeSet");
-           
+
+            Debug.Log(
+                $"Added {additionalAttributes.Get(AttributeType.STRENGTH)} " +
+                $"to {name}'s strength. in AddAttributeSet");
         }
 
         /// <summary>

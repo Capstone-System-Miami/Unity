@@ -78,13 +78,6 @@ namespace SystemMiami
             { get { return transform.position + offsetVector; } }
 
         /// <summary>
-        /// Reference to the combatant currently occupying this tile
-        /// This is a getter property, and casts the ITileOccupier
-        /// </summary>
-        public Combatant CurrentCombatant
-            { get { return occupant as Combatant; } }
-
-        /// <summary>
         /// Whether or not the tile is occupied by a combatant.
         /// </summary>
         public bool Occupied
@@ -173,9 +166,9 @@ namespace SystemMiami
 
             Highlight();
 
-            if (TargetedBy.Any())
+            if (occupant is IHighlightable h)
             {
-                PreviewOn();
+                h.Highlight();
             }
         }
 
@@ -190,6 +183,11 @@ namespace SystemMiami
             //else
 
             UnHighlight();
+
+            if (occupant is IHighlightable h)
+            {
+                h.UnHighlight();
+            }
         }
 
         #endregion Mouseover
@@ -227,11 +225,13 @@ namespace SystemMiami
 
 
         /// <summary>
-        /// Positions a combatant on this tile.
-        /// If the combatant already has a CurrentTile,
-        /// this function calls RemoveCombatant() on
-        /// combatant's CurrentTile before setting it to
-        /// this tile.
+        /// Positions a combatant on this tile by
+        /// <para>
+        /// checking if this tile is <see cref="ValidForPlacement"/>,</para>
+        /// <para>
+        /// setting its <see cref="ITileOccupant.PositionTile"/>, and</para>
+        /// <para>
+        /// calling its <see cref="ITileOccupant.SnapToPositionTile"/> method</para>
         /// </summary>
         public void SetOccupant(ITileOccupant newOccupant)
         {
@@ -250,9 +250,9 @@ namespace SystemMiami
             occupant = null;
         }
         
-        private void HandleCombatantDeath(Combatant obj)
+        private void HandleCombatantDeath(Combatant deadCombatant)
         {
-            if (obj == CurrentCombatant)
+            if (deadCombatant == occupant as Combatant)
             {
                 ClearOccupant();
                 UnHighlight();
@@ -309,6 +309,7 @@ namespace SystemMiami
                     ApplyCombatAction();
                     break;
                 case TargetingEventType.COMPLETED:
+                    UnHighlight();
                     break;
                 case TargetingEventType.REPORTBACK:
                     Debug.Log("Im subbed", this);
@@ -383,20 +384,17 @@ namespace SystemMiami
 
         private Color getUnhighlightedColor()
         {
-            if (Occupied)
+            if (!Occupied || occupant is not Combatant c)
             {
-                if (CurrentCombatant.IsMyTurn)
-                {
-                    return _activeCombatantColor;
-                }
-                else
-                {
-                    return _occupiedColor;
-                }
+                // Alpha set to 0 means transparent.
+                return new Color(1, 1, 1, 0);
             }
-
-            // Alpha set to 0 means transparent.
-            return new Color(1, 1, 1, 0);
+            else
+            {
+                return c.IsMyTurn
+                    ? _activeCombatantColor
+                    : _occupiedColor;
+            }
         }
         
         

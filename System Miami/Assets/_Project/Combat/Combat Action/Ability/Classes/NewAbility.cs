@@ -3,6 +3,7 @@ using System.Linq;
 using SystemMiami.CombatSystem;
 using SystemMiami.Utilities;
 using UnityEngine;
+using System;
 
 namespace SystemMiami.CombatRefactor
 {
@@ -11,7 +12,7 @@ namespace SystemMiami.CombatRefactor
         public readonly float ResourceCost;
         public readonly int CooldownTurns;
 
-        private Resource targetResource;
+        private Action<float> looseResource;
         private int cooldownRemaining;
 
         public bool IsOnCooldown
@@ -22,16 +23,17 @@ namespace SystemMiami.CombatRefactor
             }
         }
 
-        protected NewAbility(NewAbilitySO preset, Combatant user, Resource targetResource)
+        protected NewAbility(NewAbilitySO preset, Combatant user, Action<float> looseResource)
             : base(
-                  preset.Icon, preset.itemData.ID,
+                  preset.Icon,
+                  preset.itemData.ID,
                   preset.Actions.ToList(),
                   preset.OverrideController,
                   user)
         {
             this.ResourceCost = preset.ResourceCost;
             this.CooldownTurns = preset.CooldownTurns;
-            this.targetResource = targetResource;
+            this.looseResource = looseResource;
         }
 
         public void ReduceCooldown()
@@ -44,7 +46,7 @@ namespace SystemMiami.CombatRefactor
 
         protected override void PreExecution()
         {
-            targetResource.Lose(ResourceCost);
+            looseResource?.Invoke(ResourceCost);
         }
 
         protected override void PostExecution()
