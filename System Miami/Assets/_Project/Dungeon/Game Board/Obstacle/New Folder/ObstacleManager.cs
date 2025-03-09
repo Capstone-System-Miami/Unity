@@ -8,11 +8,12 @@ namespace SystemMiami.Management
 {
     public class ObstacleManager : Singleton<ObstacleManager>
     {
-        // INSPECTOR ONLY
-        [SerializeField] private ObstacleColorSetSO staticUndamageableColors;
-        [SerializeField] private ObstacleColorSetSO staticDamageableColors;
-        [SerializeField] private ObstacleColorSetSO dynamicUndamageableColors;
-        [SerializeField] private ObstacleColorSetSO dynamicDamageableColors;
+        // INSPECTOR READ ONLY
+        // just so we can see what's in the dictionary
+        [SerializeField, ReadOnly] private ObstacleColorSetSO staticUndamageableColors;
+        [SerializeField, ReadOnly] private ObstacleColorSetSO staticDamageableColors;
+        [SerializeField, ReadOnly] private ObstacleColorSetSO dynamicUndamageableColors;
+        [SerializeField, ReadOnly] private ObstacleColorSetSO dynamicDamageableColors;
 
         private Dictionary<ObstacleType, ObstacleColorSetSO> obstacleColors = new();
 
@@ -26,21 +27,29 @@ namespace SystemMiami.Management
                 { ObstacleType.DYNAMIC_DAMAGEABLE, dynamicDamageableColors },
             };
 
-            Debug.LogError($"This is happening now");
             LoadSetsFromResources();
+
+            staticUndamageableColors = obstacleColors[ObstacleType.STATIC_UNDAMAGEABLE];
+            staticDamageableColors = obstacleColors[ObstacleType.STATIC_DAMAGEABLE];
+            dynamicUndamageableColors = obstacleColors[ObstacleType.DYNAMIC_UNDAMAGEABLE];
+            dynamicDamageableColors = obstacleColors[ObstacleType.DYNAMIC_DAMAGEABLE];
         }
 
         public ObstacleColorSetSO StaticUndamageableColors {
-            get { return staticUndamageableColors ?? obstacleColors[ObstacleType.STATIC_UNDAMAGEABLE]; }
+            get { return obstacleColors[ObstacleType.STATIC_UNDAMAGEABLE]; }
+            private set { obstacleColors[ObstacleType.STATIC_UNDAMAGEABLE] = value; }
         }
         public ObstacleColorSetSO StaticDamageableColors {
-            get { return staticDamageableColors ?? obstacleColors[ObstacleType.STATIC_DAMAGEABLE]; }
+            get { return obstacleColors[ObstacleType.STATIC_DAMAGEABLE]; }
+            private set { obstacleColors[ObstacleType.STATIC_DAMAGEABLE] = value; }
         }
         public ObstacleColorSetSO DynamicUndamageableColors {
-            get { return dynamicUndamageableColors ?? obstacleColors[ObstacleType.DYNAMIC_UNDAMAGEABLE]; }
+            get { return obstacleColors[ObstacleType.DYNAMIC_UNDAMAGEABLE]; }
+            private set { obstacleColors[ObstacleType.DYNAMIC_UNDAMAGEABLE] = value; }
         }
         public ObstacleColorSetSO DynamicDamageableColors {
-            get { return dynamicDamageableColors ?? obstacleColors[ObstacleType.DYNAMIC_DAMAGEABLE]; }
+            get { return obstacleColors[ObstacleType.DYNAMIC_DAMAGEABLE]; }
+            private set { obstacleColors[ObstacleType.DYNAMIC_DAMAGEABLE] = value; }
         }
 
         public ObstacleColorSetSO GetColorSetByType(ObstacleType type)
