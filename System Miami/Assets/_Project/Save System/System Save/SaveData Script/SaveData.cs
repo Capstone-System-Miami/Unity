@@ -8,11 +8,14 @@ namespace SystemMiami
     public class SaveData
     {
         public int playerLevel;
-        public int playerGold;
+        public int playerCurrency;
         public int playerExperience;
         public string playerClassType;
 
-        public List<string> playerAbilities = new List<string>();
+        public List<string> playerMagicalAbilities = new List<string>();
+
+        public List<string> playerPhysicalAbilities = new List<string>();
+
         public List<string> playerTools = new List<string>();
         public List<QuestData> activeQuests = new List<QuestData>();
     }
