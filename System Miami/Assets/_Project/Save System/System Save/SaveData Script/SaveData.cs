@@ -7,16 +7,14 @@ namespace SystemMiami
     [System.Serializable]
     public class SaveData
     {
-        public int playerLevel;
-        public int playerCurrency;
-        public int playerExperience;
-        public string playerClassType;
+        public int playerLevel; // Level
+        public int playerCredits; // Money
+        public int playerExperience; // EXP
+        public string playerClassType; //May need to change this so its more dynamic
 
-        public List<string> playerMagicalAbilities = new List<string>();
-
-        public List<string> playerPhysicalAbilities = new List<string>();
-
-        public List<string> playerTools = new List<string>();
-        public List<QuestData> activeQuests = new List<QuestData>();
+        public List<string> magicalAbilities = new List<string>(); // magical
+        public List<string> physicalAbilities = new List<string>(); // physical
+        public List<string> playerTools = new List<string>(); // Shop tools
+        public List<QuestData> activeQuests = new List<QuestData>(); // Quest
     }
 }

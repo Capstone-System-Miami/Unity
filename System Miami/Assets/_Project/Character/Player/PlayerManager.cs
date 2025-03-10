@@ -19,6 +19,12 @@ namespace SystemMiami
         #region SERIALIZED
         // ======================================
 
+        public static PlayerManager Instance;
+
+        public List<string> Physicalabilities = new List<string>();
+        public List<string> Magicalabilities = new List<string>();
+        public List<string> tools = new List<string>();
+
         [SerializeField] bool showDebug;
 
         [Header("Component Groups")]
