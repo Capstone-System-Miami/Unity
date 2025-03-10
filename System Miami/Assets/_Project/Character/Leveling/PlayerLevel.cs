@@ -10,6 +10,7 @@ using UnityEditor;
 
 namespace SystemMiami
 {
+    [System.Serializable]
     public class PlayerLevel : MonoBehaviour
     {
         [SerializeField] private int baseXPPerLevel = 100;
@@ -125,8 +126,8 @@ namespace SystemMiami
             GainXP(debug_amountToGain);
         }
     }
-   
-    
+
+
     public class ReadOnlyAttribute : PropertyAttribute
     {
     }

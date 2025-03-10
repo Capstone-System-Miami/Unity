@@ -1,27 +1,31 @@
-/*using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using SystemMiami.Management;
 namespace SystemMiami
 {
-    public class SaveSystem : MonoBehaviour
+
+    public interface ISaveable<T> where T : class
+    {
+        T SaveToFile();
+        void LoadFromFile(T toLoad);
+    }
+
+    public class SaveSystem : Singleton<SaveSystem>
     {
         private string saveFilePath;
         public static SaveSystem Instance;
 
-        void Awake()
+
+        //for example vv
+        ExamplePlayer examplePlayer;
+        UnrelatedClass randomOtherVariable;
+        // for example ^^
+
+        protected override void Awake()
         {
-            // Ensure only one SaveSystem exists
-            if (Instance == null) 
-            {
-                Instance = this;
-                DontDestroyOnLoad(gameObject);
-            } 
-            else 
-            {
-                Destroy(gameObject);
-            }
+            base.Awake();
 
             saveFilePath = Application.persistentDataPath + "/savegame.json";
             SceneManager.sceneLoaded += OnSceneLoaded;
@@ -37,15 +41,8 @@ namespace SystemMiami
         {
             SaveData data = new SaveData();
 
-            data.playerLevel = PlayerManager.Instance.playerLevel;
-            data.playerCredits = PlayerManager.Instance.playerCredits;
-            data.playerExperience = PlayerManager.Instance.playerExperience;
-            data.playerClassType = PlayerManager.Instance.playerClassType;
-
-            data.magicalAbilities = new List<string>(PlayerManager.Instance.MagicalAbilities); // Magic
-            data.physicalAbilities = new List<string>(PlayerManager.Instance.PhysicalAbilities); //  Physical
-            data.playerTools = new List<string>(PlayerManager.Instance.tools);
-            data.activeQuests = QuestManager.Instance.GetActiveQuests();
+            data.examplePlayer = this.examplePlayer;
+            data.randomOtherClass = this.randomOtherVariable;
 
             string json = JsonUtility.ToJson(data, true);
             File.WriteAllText(saveFilePath, json);
@@ -60,15 +57,10 @@ namespace SystemMiami
                 SaveData data = JsonUtility.FromJson<SaveData>(json);
 
                 // Restore Player Data
-                PlayerManager.Instance.playerLevel = data.playerLevel;
-                PlayerManager.Instance.playerCredits = data.playerCredits;
-                PlayerManager.Instance.playerExperience = data.playerExperience;
-                PlayerManager.Instance.playerClassType = data.playerClassType;
-
-                PlayerManager.Instance.MagicalAbilities = new List<string>(data.magicalAbilities); // ✅ Loading separately
-                PlayerManager.Instance.PhysicalAbilities = new List<string>(data.physicalAbilities); // ✅ Loading separately
-                PlayerManager.Instance.tools = new List<string>(data.playerTools);
-                QuestManager.Instance.LoadQuests(data.activeQuests);
+                // pretend this is from player manager vv
+                examplePlayer.LoadFromFile(data.examplePlayer); 
+                randomOtherVariable.LoadFromFile(data.randomOtherClass);
+                // pretend this is from player manager ^^
 
                 Debug.Log("Game Loaded!");
             }
@@ -80,7 +72,5 @@ namespace SystemMiami
         }
     }
 }
-*/
-
 
 // Need to organize and find all the location this is being stored if not it will reproduce errors. 

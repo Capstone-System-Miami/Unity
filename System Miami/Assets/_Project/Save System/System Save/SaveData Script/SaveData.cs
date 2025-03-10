@@ -16,5 +16,9 @@ namespace SystemMiami
         public List<string> physicalAbilities = new List<string>(); // physical
         public List<string> playerTools = new List<string>(); // Shop tools
         public List<QuestData> activeQuests = new List<QuestData>(); // Quest
+
+
+        public ExamplePlayer examplePlayer;
+        public UnrelatedClass randomOtherClass;
     }
 }
