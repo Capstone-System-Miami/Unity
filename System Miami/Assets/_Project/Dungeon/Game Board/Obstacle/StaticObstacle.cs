@@ -6,6 +6,8 @@ namespace SystemMiami.CombatSystem
     {
         [SerializeField] private bool isDamageable;
 
+        private Resource health;
+
         protected override void Awake()
         {
             base.Awake();
@@ -40,6 +42,8 @@ namespace SystemMiami.CombatSystem
             log.print(
                 $"{gameObject} would have taken {amount} damage, but health " +
                 $"has not been implemented on {GetType()} yet.");
+
+            health.Lose(amount);
         }
     }
 }

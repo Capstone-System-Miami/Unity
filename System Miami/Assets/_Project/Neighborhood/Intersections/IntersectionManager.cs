@@ -40,6 +40,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
     // List to keep track of instantiated street GameObjects.
     private List<GameObject> streetObjects = new List<GameObject>();
 
+
     // Queue used for breadth-first street generation.
     private Queue<Vector2Int> streetQueue = new Queue<Vector2Int>();
 
@@ -82,7 +83,6 @@ public class IntersectionManager : Singleton<IntersectionManager>
     [Range(0,1)]
     [SerializeField] private float shopChance = 0.2f;
     public NPCInfoSO npcInfo;
-    public event Action GenerationComplete;
 
     // Possible directions to check for neighboring streets (up, down, right, left).
     private Vector2Int[] directions =
@@ -128,6 +128,11 @@ public class IntersectionManager : Singleton<IntersectionManager>
 
     // Reference to the last StreetData object generated.
     private StreetData lastStreetGenerated;
+
+    [field: SerializeField, ReadOnly] public GameObject FarthestIntersetion { get; private set; }
+
+
+    public event Action GenerationComplete;
 
 
     // Unity's Start method is called before the first frame update.
@@ -750,6 +755,16 @@ public class IntersectionManager : Singleton<IntersectionManager>
     {
         CleanupExits(); // Adjust exits to ensure consistency between connected streets.
         SetEntranceLists();
+
+
+        Dictionary<GameObject, int> manhattan = new();
+        streetObjects.ForEach(
+            intersection => manhattan[intersection] =
+                (int)(intersection.transform.position.y + intersection.transform.position.x));
+
+        //List<GameObject> intersectionsByManhattan = manhattan.OrderBy(pair => pair.Value).ToList();
+        //FarthestIntersetion = intersectionsByPosY[intersectionsByPosY.Count - 1];
+
         easyDungeonReward = SetEXPReward(easyDungeons);
         mediumDungeonReward = SetEXPReward(mediumDungeons);
         hardDungeonReward = SetEXPReward(hardDungeons);
