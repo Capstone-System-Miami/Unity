@@ -50,9 +50,6 @@ MonoBehaviour:
     - _isDefault: 0
       _elementPrefab: {fileID: 1355404933006533099, guid: 642cd402dcc77fa499cb6ba20491908d, type: 3}
       _maxCount: 1
-    - _isDefault: 0
-      _elementPrefab: {fileID: 2662147731107643181, guid: f0e0102e2e688304bab50a30ad54f68a, type: 3}
-      _maxCount: 1
   _enemyPool:
     _minCount: 4
     _maxCount: 8
@@ -160,12 +157,12 @@ MonoBehaviour:
       MinLevel: 0
       MaxLevel: 0
       rarity: 0
-    - ID: 1009
-      Icon: {fileID: 21300042, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
-      Name: 
-      Description: 'TODO: Charge forward a short distance, bashing an enemy with
-        their shield, dealing moderate damage and stunning the enemy for 2 turns'
-      itemType: 0
+    - ID: 1016
+      Icon: {fileID: 21300264, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
+      Name: Defensive Stance
+      Description: The player adopts a defensive stance, reducing incoming damage
+        by 5 for 2 turns
+      itemType: 1
       Price: 0
       MinLevel: 0
       MaxLevel: 0
@@ -180,6 +177,15 @@ MonoBehaviour:
       MaxLevel: 0
       rarity: 0
     _consumableItemDatas:
+    - ID: 3001
+      Icon: {fileID: 21300054, guid: 1033079a30e5c624e86332d39519f284, type: 3}
+      Name: Fire Bomb
+      Description: Launch a bomb that explodes and harms all enemies in its radius
+      itemType: 3
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 0
+      rarity: 0
     - ID: 3000
       Icon: {fileID: 1348272354, guid: 796574b158e05b44c8f9deae75f9d1ec, type: 3}
       Name: Minor Healing Potion
@@ -265,12 +271,12 @@ MonoBehaviour:
       MinLevel: 0
       MaxLevel: 0
       rarity: 0
-    - ID: 1009
-      Icon: {fileID: 21300042, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
-      Name: 
-      Description: 'TODO: Charge forward a short distance, bashing an enemy with
-        their shield, dealing moderate damage and stunning the enemy for 2 turns'
-      itemType: 0
+    - ID: 1016
+      Icon: {fileID: 21300264, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
+      Name: Defensive Stance
+      Description: The player adopts a defensive stance, reducing incoming damage
+        by 5 for 2 turns
+      itemType: 1
       Price: 0
       MinLevel: 0
       MaxLevel: 0
@@ -286,7 +292,3 @@ MonoBehaviour:
       rarity: 0
     log:
       showMessages: 0
-  _minXP: 0
-  _maxXP: 0
-  _minSkillPoints: 0
-  _maxSkillPoints: 0

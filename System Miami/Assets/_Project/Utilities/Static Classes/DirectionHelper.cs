@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using SystemMiami.Enums;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace SystemMiami.Utilities
 {
@@ -90,19 +91,19 @@ namespace SystemMiami.Utilities
             return new Vector2Int(x, y);
         }
 
+        public static Vector2Int GetNormalized(Vector2Int intVec)
+        {
+            Vector2 floatsNormalized = ((Vector2)intVec).normalized;
+            return new( (int)floatsNormalized.x, (int)floatsNormalized.y );
+        }
+
         public static TileDir GetTileDir(Vector2Int directionVec)
         {
-            if (BoardDirectionEnumByVector.TryGetValue(
-                directionVec,
-                out TileDir dir)
-                )
-            {
-                return dir;
-            }
-            else // default
-            {
-                return TileDir.FORWARD_C;
-            }
+            directionVec = GetNormalized(directionVec);
+
+            Assert.IsTrue(BoardDirectionEnumByVector.ContainsKey(directionVec));
+
+            return BoardDirectionEnumByVector[directionVec];
         }
 
         public static TileDir GetTileDir(ScreenDir screenDir)

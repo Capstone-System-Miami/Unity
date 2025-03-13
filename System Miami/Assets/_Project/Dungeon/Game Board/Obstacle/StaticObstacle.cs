@@ -8,17 +8,22 @@ namespace SystemMiami.CombatSystem
 
         private Resource health;
 
-        protected override void Awake()
+        public void Initialize(Sprite sprite, int maxHealth)
         {
-            base.Awake();
+            base.Initialize(sprite);
+            isDamageable = (maxHealth != int.MaxValue) && (maxHealth > 0);
+
             ObstacleType = isDamageable
-                ? ObstacleType.STATIC_DAMAGEABLE
-                : ObstacleType.STATIC_UNDAMAGEABLE;
+                ? ObstacleType.DYNAMIC_DAMAGEABLE
+                : ObstacleType.DYNAMIC_UNDAMAGEABLE;
+
+            health = new(maxHealth);
         }
 
         public override IDamageReceiver GetDamageInterface()
         {
-            return this;
+            return isDamageable ? this : null;
+
         }
 
         public override IForceMoveReceiver GetMoveInterface()
@@ -28,22 +33,26 @@ namespace SystemMiami.CombatSystem
 
         public bool IsCurrentlyDamageable()
         {
-            return true;
+            return isDamageable;
         }
 
         public void PreviewDamage(float amount)
         {
             log.print(
-                $"{gameObject} will take {amount} damage from this action");
+                $"{gameObject} will take {amount} damage from this action\n" +
+                $"<UI NOT IMPLEMENTED>");
         }
 
         public void ReceiveDamage(float amount)
         {
-            log.print(
-                $"{gameObject} would have taken {amount} damage, but health " +
-                $"has not been implemented on {GetType()} yet.");
-
+            float prev = health.Get();
             health.Lose(amount);
+            float current = health.Get();
+
+            // TODO: Test
+            log.print(
+                $"{gameObject} Received Damage." +
+                $"Prev Health :{prev}, After attack: {current}");
         }
     }
 }
