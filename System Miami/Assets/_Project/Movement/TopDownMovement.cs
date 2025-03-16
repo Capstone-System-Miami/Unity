@@ -19,8 +19,8 @@ public class TopDownMovement : MonoBehaviour
     float idleTime;
 
     Vector2 rawInput;
+    Vector2Int input;
     Vector2 moveDirection;
-    Vector2Int roundedDirection;
 
     // Start is called before the first frame update
     void Start()
@@ -34,15 +34,15 @@ public class TopDownMovement : MonoBehaviour
         updateDirections();
         movePlayer();
 
-        if (roundedDirection == Vector2.zero)
+        if (input == Vector2.zero)
         {
             animator.runtimeAnimatorController = animControllers[0];
         }
         else
         {
             animator.runtimeAnimatorController = animControllers[1];
-        }
             setAnim();
+        }
 
         //HandleSpriteFlip(); // Flips sprite based on movement moveDirection
         //SetAll(); // Sets the current sprite
@@ -51,7 +51,14 @@ public class TopDownMovement : MonoBehaviour
     private void updateDirections()
     {
         rawInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-        roundedDirection = new Vector2Int(Mathf.RoundToInt(rawInput.x), Mathf.RoundToInt(rawInput.y));
+
+        int inputX = rawInput.x == 0f
+            ? 0
+            : rawInput.x < 0 ? -1 : 1;
+        int inputY = rawInput.y == 0f
+            ? 0
+            : rawInput.y < 0 ? -1 : 1;
+        input = new Vector2Int(inputX, inputY);
 
         moveDirection = new Vector2(rawInput.x, rawInput.y * .5f).normalized; // Handles input
     }
@@ -63,7 +70,7 @@ public class TopDownMovement : MonoBehaviour
 
     private void setAnim()
     {
-        TileDir dir = DirectionHelper.GetTileDir(roundedDirection);
+        TileDir dir = DirectionHelper.GetTileDir(input);
         animator.SetInteger("TileDir", (int)dir);
     }
 
@@ -71,8 +78,6 @@ public class TopDownMovement : MonoBehaviour
     {
         animator.runtimeAnimatorController = animControllers[0];
     }
-
-    
 
     #region old (sprite-flipper)
     //void SetAll()
