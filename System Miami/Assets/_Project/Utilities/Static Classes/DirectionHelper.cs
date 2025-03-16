@@ -75,7 +75,13 @@ namespace SystemMiami.Utilities
             // Force a magnitude of 1.
             // ex1. | difference = (-1.0,  0.25)
             // ex2. | difference = (-1.0, -0.75)
-            difference.Normalize();
+
+            // i guess this doesnt work the way you'd expect
+            // keeping it here incase changing it breaks everything.
+            // VV
+            //difference.Normalize();
+            // ^^
+            difference = ScaledClamp(difference);
 
             // Round both values to int
             // ex1. | x = -1, y = 0
@@ -91,15 +97,36 @@ namespace SystemMiami.Utilities
             return new Vector2Int(x, y);
         }
 
+        public static Vector2 ScaledClamp(Vector2 vec)
+        {
+            return ScaledClamp(vec, 1f);
+        }
+
+        public static Vector2 ScaledClamp(Vector2 vec, float targetRadius)
+        {
+            float currentRadius = Mathf.Max(Mathf.Abs(vec.x), Mathf.Abs(vec.y));
+            float scaleDivisor = currentRadius / targetRadius;
+            return vec / scaleDivisor;
+        }
+
         public static Vector2Int GetNormalized(Vector2Int intVec)
         {
-            Vector2 floatsNormalized = ((Vector2)intVec).normalized;
-            return new( (int)floatsNormalized.x, (int)floatsNormalized.y );
+            Vector2 floatVec = ((Vector2)intVec);
+            Vector2 floatVecScaled = ScaledClamp(floatVec);
+
+            Vector2Int result = new(
+                Mathf.RoundToInt(floatVecScaled.x),
+                Mathf.RoundToInt(floatVecScaled.y)
+            );
+
+            return result;
         }
 
         public static TileDir GetTileDir(Vector2Int directionVec)
         {
             directionVec = GetNormalized(directionVec);
+
+            Debug.Log($"{directionVec}");
 
             Assert.IsTrue(BoardDirectionEnumByVector.ContainsKey(directionVec));
 
