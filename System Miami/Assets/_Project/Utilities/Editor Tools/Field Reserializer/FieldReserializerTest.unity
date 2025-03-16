@@ -6307,6 +6307,7 @@ MonoBehaviour:
     testStringInner: This should get copied within this ser. class bc recursion
     testVecInner: {x: 12, y: 5634, z: 1234}
     testPrefabInner: {fileID: 4695248568358622349}
+  _testRenameEditor: {fileID: 0}
   testInt: 10
   testString: baloney
   testVec: {x: 12, y: 12, z: 3223}
@@ -6320,6 +6321,7 @@ MonoBehaviour:
     testStringInner: This should get copied within this ser. class bc recursion
     testVecInner: {x: 12, y: 5634, z: 1234}
     testPrefabInner: {fileID: 4695248568358622349}
+  newGuy7000_hellYeah: {fileID: 0}
 --- !u!4 &1208034584
 Transform:
   m_ObjectHideFlags: 0
@@ -14910,6 +14912,63 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1001 &7824617098243010490
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 807414647604046011, guid: 2d9ffc390a7b37c49a573594f00fa393, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 816.0467
+      objectReference: {fileID: 0}
+    - target: {fileID: 807414647604046011, guid: 2d9ffc390a7b37c49a573594f00fa393, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 351.3467
+      objectReference: {fileID: 0}
+    - target: {fileID: 807414647604046011, guid: 2d9ffc390a7b37c49a573594f00fa393, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 2.6065705
+      objectReference: {fileID: 0}
+    - target: {fileID: 807414647604046011, guid: 2d9ffc390a7b37c49a573594f00fa393, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 807414647604046011, guid: 2d9ffc390a7b37c49a573594f00fa393, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807414647604046011, guid: 2d9ffc390a7b37c49a573594f00fa393, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807414647604046011, guid: 2d9ffc390a7b37c49a573594f00fa393, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807414647604046011, guid: 2d9ffc390a7b37c49a573594f00fa393, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807414647604046011, guid: 2d9ffc390a7b37c49a573594f00fa393, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807414647604046011, guid: 2d9ffc390a7b37c49a573594f00fa393, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5439845453544039972, guid: 2d9ffc390a7b37c49a573594f00fa393, type: 3}
+      propertyPath: m_Name
+      value: test pref 2
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2d9ffc390a7b37c49a573594f00fa393, type: 3}
 --- !u!1 &7861139290279460968
 GameObject:
   m_ObjectHideFlags: 0
@@ -16357,3 +16416,4 @@ SceneRoots:
   - {fileID: 104641309}
   - {fileID: 1208034584}
   - {fileID: 4695248568358622348}
+  - {fileID: 7824617098243010490}
