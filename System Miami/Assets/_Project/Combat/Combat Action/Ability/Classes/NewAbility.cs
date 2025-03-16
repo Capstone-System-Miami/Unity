@@ -29,7 +29,7 @@ namespace SystemMiami.CombatRefactor
                   preset.itemData.ID,
                   preset.Actions.ToList(),
                   preset.OverrideController,
-                  user)
+                  user,preset.VFXPrefab)
         {
             this.ResourceCost = preset.ResourceCost;
             this.CooldownTurns = preset.CooldownTurns;
@@ -46,6 +46,7 @@ namespace SystemMiami.CombatRefactor
 
         protected override void PreExecution()
         {
+            base.PreExecution();
             looseResource?.Invoke(ResourceCost);
         }
 

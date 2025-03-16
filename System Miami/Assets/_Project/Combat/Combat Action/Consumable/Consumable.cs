@@ -34,13 +34,14 @@ namespace SystemMiami.CombatRefactor
                   preset.Icon, preset.itemData.ID,
                   preset.Actions.ToList(),
                   preset.OverrideController,
-                  user)
+                  user,preset.VFXPrefab)
         {
             MaxUses = preset.Uses;
         }
 
         protected override void PreExecution()
         {
+            //base.PreExecution();
             usesRemaining--;
         }
 
