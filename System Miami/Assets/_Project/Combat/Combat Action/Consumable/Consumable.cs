@@ -34,7 +34,7 @@ namespace SystemMiami.CombatRefactor
                   preset.Icon, preset.itemData.ID,
                   preset.Actions.ToList(),
                   preset.OverrideController,
-                  user,preset.VFXPrefab)
+                  user)
         {
             MaxUses = preset.Uses;
         }

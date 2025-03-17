@@ -3,9 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using SystemMiami.CombatSystem;
 using SystemMiami.Utilities;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Assertions;
 
 namespace SystemMiami.CombatRefactor
 {
@@ -18,7 +16,6 @@ namespace SystemMiami.CombatRefactor
         public readonly Combatant User;
         public readonly int ID;
         public readonly ItemType type;
-        public readonly GameObject VFXPrefab;
 
         public readonly List<CombatSubactionSO> Subactions = new();
         public readonly List<CombatSubactionSO> DirectionBasedSubactions = new();
@@ -46,14 +43,13 @@ namespace SystemMiami.CombatRefactor
             int ActionID,
             List<CombatSubactionSO> subactions,
             AnimatorOverrideController overrideController,
-            Combatant user,GameObject vfxPrefab)
+            Combatant user)
         {
             ID = ActionID;
             Icon = icon;
             Subactions = subactions;
             OverrideController = overrideController;
             User = user;
-            VFXPrefab = vfxPrefab;
 
             SortByPatternOrigin(
                 Subactions,
@@ -278,21 +274,7 @@ namespace SystemMiami.CombatRefactor
             ExecutionFinished = true;
         }
 
-        protected virtual void PreExecution()
-        {
-            Debug.LogError($"{this} pre-execution");
-            foreach (CombatSubactionSO subaction in Subactions)
-            {
-                if (subaction.isPreExecution)
-                {
-                    foreach (ITargetable target in cumulativeTargetSet.all)
-                    {
-                        ISubactionCommand command = subaction.GenerateCommand(target, this);
-                        command.Execute();
-                    }
-                }
-            }
-        }
+        protected abstract void PreExecution();
         protected abstract void PostExecution();
 
 

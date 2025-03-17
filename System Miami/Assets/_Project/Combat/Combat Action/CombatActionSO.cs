@@ -7,8 +7,6 @@ namespace SystemMiami.CombatRefactor
     {
         public Sprite Icon;
         public CombatSubactionSO[] Actions;
-        public AnimatorOverrideController OverrideController;
-        public GameObject VFXPrefab;
-        
+        public AnimatorOverrideController OverrideController;        
     }
 }
