@@ -2,11 +2,10 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using SystemMiami.CombatSystem;
 using UnityEngine.EventSystems;
 using SystemMiami.Utilities;
 
-namespace SystemMiami
+namespace SystemMiami.ui
 {
     [RequireComponent(typeof(RectTransform))]
     public class InventoryItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
