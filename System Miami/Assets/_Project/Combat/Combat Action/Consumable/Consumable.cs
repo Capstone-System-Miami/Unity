@@ -2,6 +2,7 @@ using System.Collections;
 using System;
 using SystemMiami.CombatSystem;
 using System.Linq;
+using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
 {
@@ -11,21 +12,13 @@ namespace SystemMiami.CombatRefactor
 
         public readonly int MaxUses;
 
-        private int usesRemaining;
-
-        public int UsesRemaining
-        {
-            get
-            {
-                return usesRemaining;
-            }
-        }
+        public int UsesRemaining { get; private set; }
 
         public bool IsEmpty
         {
             get
             {
-                return usesRemaining <= 0;
+                return UsesRemaining <= 0;
             }
         }
 
@@ -36,17 +29,18 @@ namespace SystemMiami.CombatRefactor
                   preset.OverrideController,
                   user)
         {
-            MaxUses = preset.Uses;
+            MaxUses = (int)Mathf.Clamp(preset.Uses, 1, Mathf.Infinity);
+            UsesRemaining = MaxUses;
         }
 
         protected override void PreExecution()
         {
-            usesRemaining--;
+            UsesRemaining--;
         }
 
         protected override void PostExecution()
         {
-            if (usesRemaining <= 0)
+            if (UsesRemaining <= 0)
             {
                 Consumed?.Invoke(this);
             }

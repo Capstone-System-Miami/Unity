@@ -149,7 +149,7 @@ namespace SystemMiami
         {
             
             bool combatantsReady = true;
-           
+            
             do
             {
                 combatantsReady = true;
