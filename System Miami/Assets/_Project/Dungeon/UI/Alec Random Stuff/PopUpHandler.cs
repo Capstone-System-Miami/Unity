@@ -13,9 +13,10 @@ namespace SystemMiami.ui
         public RectTransform Popup;
         public Text ItemName;
         public Text DescriptionText;
-        public Text CooldownIndicator;
+        public Text StatusIndicator;
         [TextArea] public string enabledStr;
         [TextArea] public string cooldownStr;
+        [TextArea] public string usesRemainingStr;
 
         public ItemData CurrentItemData;
         public Vector2 offset;
@@ -50,9 +51,13 @@ namespace SystemMiami.ui
 
             if (combatAction is NewAbility ability)
             {
-                CooldownIndicator.text = ability.IsOnCooldown
+                StatusIndicator.text = ability.IsOnCooldown
                     ? cooldownStr.Replace("<>", ability.CooldownRemaining.ToString())
                     : enabledStr;
+            }
+            else if (combatAction is Consumable consumable)
+            {
+                StatusIndicator.text = usesRemainingStr.Replace("<>", consumable.UsesRemaining.ToString());
             }
 
             OpenPopup(itemData, slot.RT, true);
@@ -60,6 +65,8 @@ namespace SystemMiami.ui
 
         public void OpenPopup(ItemData itemData, InventoryItemSlot slot)
         {
+            StatusIndicator.text = "";
+
             OpenPopup(itemData, slot.RT, false);
         }
 
