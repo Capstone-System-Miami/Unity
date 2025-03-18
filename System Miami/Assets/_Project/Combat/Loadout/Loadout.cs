@@ -136,8 +136,7 @@ namespace SystemMiami.CombatRefactor
         public void ReduceCooldowns()
         {
             PhysicalAbilities.ForEach(a => a.ReduceCooldown());
-            MagicalAbilities.ForEach(a => a.ReduceCooldown());
-            
+            MagicalAbilities.ForEach(a => a.ReduceCooldown());            
         }
 
        
