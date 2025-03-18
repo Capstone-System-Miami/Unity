@@ -6,6 +6,7 @@ using SystemMiami.CombatSystem;
 using System.Collections.Generic;
 using SystemMiami.ui;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace SystemMiami.Management
 {
@@ -93,12 +94,14 @@ namespace SystemMiami.Management
                 combatant._inventory,
                 combatant);
 
+            Assert.IsNotNull(combatantLoadout);
+
             if (combatant is PlayerCombatant)
             {
                 FillLoadoutBars(combatantLoadout);
             }
 
-            CombatantLoadoutCreated.Invoke(combatantLoadout, combatant);
+            CombatantLoadoutCreated?.Invoke(combatantLoadout, combatant);
         }
 
         protected virtual void OnSlotClicked(ActionQuickslot slot)

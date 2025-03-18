@@ -1,10 +1,10 @@
 using SystemMiami.Management;
-using SystemMiami.ui;
 using SystemMiami.Utilities;
 using UnityEngine;
 using UnityEngine.UI;
+using SystemMiami.CombatRefactor;
 
-namespace SystemMiami
+namespace SystemMiami.ui
 {
     public class PopUpHandler : Singleton<PopUpHandler>
     {
@@ -13,6 +13,9 @@ namespace SystemMiami
         public RectTransform Popup;
         public Text ItemName;
         public Text DescriptionText;
+        public Text CooldownIndicator;
+        [TextArea] public string enabledStr;
+        [TextArea] public string cooldownStr;
 
         public ItemData CurrentItemData;
         public Vector2 offset;
@@ -38,6 +41,20 @@ namespace SystemMiami
         // PUBLIC
         public void OpenPopup(ItemData itemData, ActionQuickslot slot)
         {
+            OpenPopup(itemData, slot.RT, true);
+        }
+
+        public void OpenPopup(CombatAction combatAction, ActionQuickslot slot)
+        {
+            ItemData itemData = Database.MGR.GetDataWithJustID(combatAction.ID);
+
+            if (combatAction is NewAbility ability)
+            {
+                CooldownIndicator.text = ability.IsOnCooldown
+                    ? cooldownStr.Replace("<>", ability.CooldownRemaining.ToString())
+                    : enabledStr;
+            }
+
             OpenPopup(itemData, slot.RT, true);
         }
 
@@ -82,10 +99,9 @@ namespace SystemMiami
                     //);
             }
 
-
             // Set the text in the popup
             BindText();
-        }
+        }        
 
         public void ClosePopup()
         {
