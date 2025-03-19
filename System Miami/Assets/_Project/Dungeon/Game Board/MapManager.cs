@@ -14,6 +14,8 @@ namespace SystemMiami
     // so I switched it to inherit from that for consistency.
     public class MapManager : Singleton<MapManager>
     {
+        [SerializeField] private dbug log;
+
         // Just an enum for the height of the block,
         // which is distinct from the zIndex
         public BlockHeight gridTilesHeight;
@@ -56,47 +58,47 @@ namespace SystemMiami
 
             if (environment == null)
             {
-                Debug.LogError($"{name}'s {this} didn't find " +
+                log.error($"{name}'s {this} didn't find " +
                     $"an environment to use");
                 return;
             }
 
             if (!environment.TryGetComponent(out dungeon))
             {
-                Debug.LogError($"{name}'s {this} didn't find " +
+                log.error($"{name}'s {this} didn't find " +
                     $"a Dungeon on the environment object");
                 return;
             }
 
             if (dungeon.OverlayTileContainer == null)
             {
-                Debug.LogError($"{name}'s {this} didn't find " +
+                log.error($"{name}'s {this} didn't find " +
                     $"an Overlay Container in {environment}'s {dungeon}");
                 return;
             }
 
             if (dungeon.GameBoard == null)
             {
-                Debug.LogError($"{name}'s {this} didn't find " +
+                log.error($"{name}'s {this} didn't find " +
                     $"a GameBoard object in {environment}'s {dungeon}");
                 return;
             }
             else if (!dungeon.GameBoard.TryGetComponent(out gameBoardTilemap))
             {
-                Debug.LogError($"{name}'s {this} didn't find " +
+                log.error($"{name}'s {this} didn't find " +
                     $"a tilemap component on {dungeon}'s {dungeon.GameBoard}");
                 return;
             }
 
             if (dungeon.Obstacles == null)
             {
-                Debug.LogError($"{name}'s {this} didn't find " +
+                log.error($"{name}'s {this} didn't find " +
                     $"a GameBoard object in {environment}'s {dungeon}");
                 return;
             }
             else if (!dungeon.Obstacles.TryGetComponent(out obstaclesTilemap))
             {
-                Debug.LogError($"{name}'s {this} didn't find " +
+                log.error($"{name}'s {this} didn't find " +
                     $"a tilemap component on {dungeon}'s {dungeon.GameBoard}");
                 return;
             }
@@ -112,7 +114,7 @@ namespace SystemMiami
             // Get the bounds of tile map in BounsInt
             bounds = gameBoardTilemap.cellBounds;
 
-            Debug.Log(
+            log.print(
                 $"Bounds\n" +
                 $"| xmin {bounds.min.x}\n" +
                 $"| xmax {bounds.max.x}\n" +
@@ -155,7 +157,7 @@ namespace SystemMiami
 
                             if (obstaclesTilemap.HasTile(obstacleCoords))
                             {
-                                Debug.LogError(
+                                log.error(
                                     $"Tile found at {obstacleCoords}" +
                                     $"in obstacles tilemap",
                                     obstaclesTilemap);
@@ -174,11 +176,11 @@ namespace SystemMiami
                                 obst.Initialize(obstacleSprite);
                                 if (!TryPlaceOnTile(obst, overlayTile))
                                 {
-                                    Debug.LogError($"Obstacle placement failed at {obstacleCoords}", overlayTile);
+                                    log.error($"Obstacle placement failed at {obstacleCoords}", overlayTile);
                                 }
                                 else
                                 {
-                                    Debug.LogError($"Obstacle placement successful", overlayTile);
+                                    log.error($"Obstacle placement successful", overlayTile);
                                 }
                             }
                         }
@@ -231,7 +233,7 @@ namespace SystemMiami
         {
             if (!tile.ValidForPlacement)
             {
-                Debug.LogError(
+                log.error(
                     $"Trying to place {occupant} " +
                     $"on {tile.gameObject}. " +
                     $"This placement is invalid.");
