@@ -1,6 +1,7 @@
 /// Layla
 using UnityEngine;
 using SystemMiami.Utilities;
+using UnityEngine.Tilemaps;
 
 namespace SystemMiami.Dungeons
 {
@@ -29,6 +30,12 @@ namespace SystemMiami.Dungeons
         [SerializeField] private GameObject _gameBoard;
 
         [SerializeField] private GameObject _obstacles;
+
+        [SerializeField] private Tilemap staticUndamageable;
+        [SerializeField] private Tilemap staticDamageable;
+        [SerializeField] private Tilemap dynamicUndamageable;
+        [SerializeField] private Tilemap dynamicDamageable;
+
 
         [SerializeField] private GameObject _overlayTileContainer;
 
