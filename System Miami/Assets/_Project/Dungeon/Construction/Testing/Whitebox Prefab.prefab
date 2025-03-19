@@ -225,7 +225,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 492610115848058592}
-  - {fileID: 8544664040288080134}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!156049354 &9069271808572422768
@@ -279,11 +278,10 @@ MonoBehaviour:
   _boardTilesHeight: 2
   _gameBoard: {fileID: 2218977391077566948}
   _obstacles: {fileID: 8093397583009811574}
-  staticUndamageable: {fileID: 2518239979465216127}
+  staticUndamageable: {fileID: 0}
   staticDamageable: {fileID: 4052316123099690262}
   dynamicUndamageable: {fileID: 1398230964234677446}
   dynamicDamageable: {fileID: 5482038568778142483}
-  _overlayTileContainer: {fileID: 8043901226698614194}
   DifficultyLevel: 0
   Rewards:
     _overrideByDifficulty: 1
@@ -2157,37 +2155,6 @@ TilemapRenderer:
   m_Mode: 0
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
---- !u!1 &8043901226698614194
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8544664040288080134}
-  m_Layer: 0
-  m_Name: overlayContainer
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8544664040288080134
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8043901226698614194}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 4867129910778194894}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8093397583009811574
 GameObject:
   m_ObjectHideFlags: 0
@@ -2205,7 +2172,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1239634409111337048
 Transform:
   m_ObjectHideFlags: 0

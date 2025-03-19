@@ -36,10 +36,15 @@ namespace SystemMiami.Dungeons
         [SerializeField] private Tilemap dynamicUndamageable;
         [SerializeField] private Tilemap dynamicDamageable;
 
-
-        [SerializeField] private GameObject _overlayTileContainer;
+        private GameObject overlayTileContainer;
 
         [SerializeField,ReadOnly] public DifficultyLevel DifficultyLevel;
+
+        private void Awake()
+        {
+            overlayTileContainer = Instantiate(new GameObject(), transform);
+            overlayTileContainer.name = "Overlay Tile Container";
+        }
 
         /// <summary>
         /// The general style / vibe of the Dungeon.
@@ -58,6 +63,6 @@ namespace SystemMiami.Dungeons
 
         public GameObject Obstacles { get { return _obstacles; } }
 
-        public GameObject OverlayTileContainer { get { return _overlayTileContainer; } }
+        public GameObject OverlayTileContainer { get { return overlayTileContainer; } }
     }
 }
