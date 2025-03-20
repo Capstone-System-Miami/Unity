@@ -5,16 +5,20 @@ namespace SystemMiami
 {
     public class SinglePressButton : BetterButton
     {
-        [SerializeField] private float pressDuration = 0.1f;
-
-        public override void OnPointerEnter(PointerEventData eventData)
+        protected override void OnBadClickDown(PointerEventData eventData)
         {
-            base.OnPointerEnter(eventData);
         }
 
-        public override void OnPointerExit(PointerEventData eventData)
+        protected override void OnBadClickUp(PointerEventData eventData)
         {
-            base.OnPointerExit(eventData);
+        }
+
+        protected override void OnGoodClickDown(PointerEventData eventData)
+        {
+        }
+
+        protected override void OnGoodClickUp(PointerEventData eventData)
+        {
         }
     }
 }
