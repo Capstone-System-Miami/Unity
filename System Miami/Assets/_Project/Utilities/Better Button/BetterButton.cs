@@ -17,7 +17,14 @@ namespace SystemMiami
         [SerializeField] public UnityEvent AdditionalOnPointerDown;
         [SerializeField] public UnityEvent AdditionalOnPointerUp;
 
-        protected SelectableSprite selectableSprite;
+        private SelectableSprite selectableSprite;
+        protected SelectableSprite SelectableSprite
+        {
+            get
+            {
+                return selectableSprite ?? GetComponent<SelectableSprite>();
+            }
+        }
         //protected SelectableTMP text;
         [field: SerializeField, ReadOnly] public bool isButtonEnabled { get; protected set; }
         [field: SerializeField, ReadOnly] public bool isPointerHere { get; protected set; }
@@ -65,16 +72,37 @@ namespace SystemMiami
             selectableSprite.UnHighlight();
         }
 
-        public virtual void OnPointerDown(PointerEventData eventData)
+        public void OnPointerDown(PointerEventData eventData)
         {
             isPointerDown = true;
-            AdditionalOnPointerDown?.Invoke();
+            if (isButtonEnabled)
+            {
+                OnGoodClickDown(eventData);
+                AdditionalOnPointerDown?.Invoke();
+            }
+            else
+            {
+                OnBadClickDown(eventData);
+            }
         }
 
-        public virtual void OnPointerUp(PointerEventData eventData)
+        public void OnPointerUp(PointerEventData eventData)
         {
             isPointerDown = false;
-            AdditionalOnPointerUp?.Invoke();
+            if (isButtonEnabled)
+            {
+                OnGoodClickUp(eventData);
+                AdditionalOnPointerUp?.Invoke();
+            }
+            else
+            {
+                OnBadClickUp(eventData);
+            }
         }
+
+        protected abstract void OnGoodClickDown(PointerEventData eventData);
+        protected abstract void OnGoodClickUp(PointerEventData eventData);
+        protected abstract void OnBadClickDown(PointerEventData eventData);
+        protected abstract void OnBadClickUp(PointerEventData eventData);
     }
 }

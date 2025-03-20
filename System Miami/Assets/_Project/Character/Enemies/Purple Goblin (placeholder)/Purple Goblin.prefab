@@ -238,6 +238,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a38d5318836002c44906ddc5808316d0, type: 2}
   magicalSOs: []
   consumableSOs: []
+  standardAnimsSO: {fileID: 11400000, guid: 85595e3989d1681459473592f21f426c, type: 2}
 --- !u!114 &6083187466875687617
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -250,12 +251,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cd6b3ea2f86d184a88aec7980f17cc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  magicalAbilityIDs: 
   physicalAbilityIDs: 
+  magicalAbilityIDs: 
   consumableIDs: 
   equipmentModIDs: 
-  quickslotMagicalAbilityIDs: 
   quickslotPhysicalAbilityIDs: 8a130000
+  quickslotMagicalAbilityIDs: 
   quickslotConsumableIDs: 
   credits: 0
 --- !u!114 &-4444478195236609224
@@ -271,6 +272,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _difficulty: 0
+  enemyLevel: 0
+  levelRange: 0
   str: 1
   con: 1
   dex: 1

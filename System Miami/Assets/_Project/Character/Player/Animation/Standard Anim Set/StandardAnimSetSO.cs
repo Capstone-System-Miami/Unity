@@ -1,10 +1,11 @@
+using UnityEditor.Animations;
 using UnityEngine;
 
 namespace SystemMiami.Animation
 {
     [CreateAssetMenu(
-        fileName = "New Standard Anim Set",
-        menuName = "Animation/Standard Anim Set")]
+        fileName = "New Standard Anim Controller Set",
+        menuName = "Anim/Standard Controller Set")]
     public class StandardAnimSetSO : ScriptableObject
     {
         [SerializeField] private AnimatorOverrideController immoble;
