@@ -109,6 +109,7 @@ namespace SystemMiami.InventorySystem
             //        tabSelector.Select(i);
             //    }
             //}
+            RefreshUI();
         }
 
         public void RefreshUI()
