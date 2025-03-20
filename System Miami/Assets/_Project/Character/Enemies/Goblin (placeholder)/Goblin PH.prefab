@@ -20,7 +20,7 @@ GameObject:
   - component: {fileID: -7163708798834749806}
   - component: {fileID: -4757405529046438839}
   m_Layer: 0
-  m_Name: Goblin
+  m_Name: Goblin PH
   m_TagString: Goblin
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -238,6 +238,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0784bd47bf6a041418288067a69788dd, type: 2}
   magicalSOs: []
   consumableSOs: []
+  standardAnimsSO: {fileID: 11400000, guid: 7fdb2ae8e4da9aa4dac6aded5cf48863, type: 2}
 --- !u!114 &-7163708798834749806
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -250,12 +251,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cd6b3ea2f86d184a88aec7980f17cc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  magicalAbilityIDs: 00000000
   physicalAbilityIDs: 
+  magicalAbilityIDs: 00000000
   consumableIDs: 
   equipmentModIDs: 
-  quickslotMagicalAbilityIDs: 
   quickslotPhysicalAbilityIDs: 88130000
+  quickslotMagicalAbilityIDs: 
   quickslotConsumableIDs: 
   credits: 0
 --- !u!114 &-4757405529046438839
@@ -271,6 +272,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _difficulty: 0
+  enemyLevel: 0
+  levelRange: 0
   str: 1
   con: 1
   dex: 1
