@@ -23,12 +23,12 @@ namespace SystemMiami
         [SerializeField] private KeyCode debug_GainExpKey;
         [SerializeField] private int debug_amountToGain = 50;
 
-        private int XpToNextTotal => GetXPtoNextLevel(level);
         private int xpToNextRemaining = 0;
         
         public int CurrentLevel => level;
         public int CurrentXP { get { return currentXP; } }
         public int XPtoNextRemaining { get { return  xpToNextRemaining; } }
+        public int XpToNextTotal => GetXPtoNextLevel(level);
 
         public event System.Action<int> LevelUp;
 

@@ -4,29 +4,24 @@ using UnityEngine.EventSystems;
 
 namespace SystemMiami
 {
-    public class SelectableButton : BetterButton, ISelectable
+    public class ToggleButton : BetterButton, ISelectable, IToggleable
     {
         [SerializeField] private UnityEvent AdditionalOnButtonSelected;
         [SerializeField] private UnityEvent AdditionalOnButtonDeselected;
 
         [field: SerializeField, ReadOnly] public virtual bool IsSelected { get; protected set; }
 
-        public override void OnPointerDown(PointerEventData eventData)
-        {
-            base.OnPointerDown(eventData);
-
-            Toggle();
-        }
-
         public virtual void Select()
         {
-            selectableSprite.Select();
+            SelectableSprite.Select();
+            AdditionalOnButtonSelected?.Invoke();
             IsSelected = true;
         }
 
         public virtual void Deselect()
         {
-            selectableSprite.Deselect();
+            SelectableSprite.Deselect();
+            AdditionalOnButtonDeselected?.Invoke();
             IsSelected = false;
         }
 
@@ -40,6 +35,23 @@ namespace SystemMiami
             {
                 Select();
             }
+        }
+
+        protected override void OnGoodClickDown(PointerEventData eventData)
+        {
+            Toggle();
+        }
+
+        protected override void OnGoodClickUp(PointerEventData eventData)
+        {
+        }
+
+        protected override void OnBadClickDown(PointerEventData eventData)
+        {
+        }
+
+        protected override void OnBadClickUp(PointerEventData eventData)
+        {
         }
     }
 }
