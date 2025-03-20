@@ -8713,6 +8713,14 @@ PrefabInstance:
       propertyPath: physicalAbilityEntries.Array.data[17]
       value: 
       objectReference: {fileID: 11400000, guid: 325584827e537574f87e9c204cceb703, type: 2}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: enemyPhysicalAbilityEntries.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: enemyPhysicalAbilityEntries.Array.data[4]
+      value: 
+      objectReference: {fileID: 11400000, guid: 9a88aa5433b55c1498d0358ad41507fd, type: 2}
     - target: {fileID: 7984003600839781529, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
       propertyPath: m_Name
       value: Database
@@ -8803,9 +8811,12 @@ MonoBehaviour:
   hardDungeonReward: 
   <allNPCs>k__BackingField: []
   npcPrefab: {fileID: 8476462788968368805, guid: 3988a39c08151eb4ca6432a338ae8c26, type: 3}
-  dialogueChance: 0
-  questChance: 0
-  shopChance: 0
+  maxNpcsTotal: 30
+  maxNpcsShops: 5
+  maxNpcsQuests: 4
+  dialogueChance: 0.5
+  questChance: 0.2
+  shopChance: 0.4
   npcInfo: {fileID: 11400000, guid: 40557af94cd9589468c04b0bc14ee1fb, type: 2}
   <FarthestIntersetion>k__BackingField: {fileID: 0}
 --- !u!1660057539 &9223372036854775807

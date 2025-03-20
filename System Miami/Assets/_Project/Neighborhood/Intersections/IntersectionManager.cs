@@ -6,6 +6,7 @@ using SystemMiami.Management;
 using SystemMiami.Dungeons;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using UnityEngine.Assertions;
 
 //Made By Antony (Layla edited)
 
@@ -72,10 +73,14 @@ public class IntersectionManager : Singleton<IntersectionManager>
     
     [Header("NPC Settings")]
     [SerializeField] private GameObject npcPrefab;
+    [SerializeField] private int maxNpcsTotal;
+    [SerializeField] private int maxNpcsShops;
+    [SerializeField] private int maxNpcsQuests;
 
-   
-    
-    [Header("NPC Spawn Settings")]
+    private int currentNpcCount = 0;
+    private int currentShopCount = 0;
+    private int currentQuestCount = 0;
+
     [Range(0,1)]
     [SerializeField] private float dialogueChance = 0.5f;
     [Range(0,1)]
@@ -384,13 +389,16 @@ public class IntersectionManager : Singleton<IntersectionManager>
             int firstEntranceIndex = allEntrances.IndexOf(firstEntrance);
             allEntrances.RemoveRange(firstEntranceIndex, dataEntrances.Length - 1);
         }
-        NPCSpawner[] NPCs = streetData.streetInstance.GetComponentsInChildren<NPCSpawner>();
-        if (NPCs.Length > 0)
+
+        NPCSpawner[] NpcSpawners = streetData.streetInstance.GetComponentsInChildren<NPCSpawner>();
+
+        if (NpcSpawners.Length > 0)
         {
-            Debug.Log("Found NPCs");
-            NPCSpawner firstNPC = NPCs[0];
+            Debug.Log("Found NpcSpawners");
+
+            NPCSpawner firstNPC = NpcSpawners[0];
             int firstNPCIndex = allNPCs.IndexOf(firstNPC);
-            allNPCs.RemoveRange(firstNPCIndex, NPCs.Length - 1);
+            allNPCs.RemoveRange(firstNPCIndex, NpcSpawners.Length - 1);
         }
 
         // Destroy the old street instance.
@@ -445,8 +453,6 @@ public class IntersectionManager : Singleton<IntersectionManager>
         DungeonEntrance[] dungeonEntrances = instance.GetComponentsInChildren<DungeonEntrance>();
        
         allEntrances.AddRange(dungeonEntrances);
-        
-        
 
         if (dungeonEntrances.Length != streetData.dungeonEntranceDifficulties.Count)
         {
@@ -492,35 +498,40 @@ public class IntersectionManager : Singleton<IntersectionManager>
         GameObject instance = streetData.streetInstance;
         NPCSpawner[] npcSpawners = instance.GetComponentsInChildren<NPCSpawner>();
         allNPCs.AddRange(npcSpawners);
-
-        
     }
 
     public void SpawnNPCs()
     {
+        int maxNpcs = Mathf.Min(maxNpcsTotal, allNPCs.Count);
+
+        int npcsToSpawn = Random.Range(0, maxNpcs);
         
-        foreach(NPCSpawner spawner in allNPCs)
+        for (int i = 0; i < npcsToSpawn; i++)
         {
-            spawner.SpawnNPC(npcPrefab);
-            AssignRoles(spawner.npcPrefabInstance);
+            Assert.IsTrue(i < maxNpcsTotal);
+
+            GameObject npcInstance = allNPCs[i].SpawnNPC(npcPrefab);
+            AssignRole(npcInstance);
         }
-       
-        
     }
 
-    private void AssignRoles(GameObject spawnerNpcPrefab)
+    private void AssignRole(GameObject spawnerNpcPrefab)
     {
         NPC npc = spawnerNpcPrefab.GetComponent<NPC>();
      
        float roll = Random.value;
 
-       if (roll < shopChance)
+       if (roll < shopChance
+            && currentShopCount < maxNpcsShops)
        {
-          npc.Initialize(NPCType.ShopKeeper);
+            currentShopCount++;
+            npc.Initialize(NPCType.ShopKeeper);
        }
-       else if (roll < shopChance + questChance)
-       {
-         npc.Initialize(NPCType.QuestGiver);
+       else if (roll < shopChance + questChance
+            && currentQuestCount < maxNpcsQuests)
+        {
+            currentQuestCount++;
+            npc.Initialize(NPCType.QuestGiver);
        }
         else
         {
