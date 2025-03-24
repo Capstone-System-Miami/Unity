@@ -1,43 +1,55 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+using UnityEngine.Audio;
 using UnityEngine;
+using System;
 
 namespace SystemMiami
 {
     public class AudioManager : MonoBehaviour
     {
-        #region Values
-        [SerializeField]
+        public Sound[] sounds;
 
-        [Header("Player")]
-        public GameObject Player;
-        [Header("Audio Clips")]
-        public AudioSource Idle; // Player Idle
-        public AudioSource Walking; // Player walking
-        public AudioSource Enter; // Player Enter
-        public AudioSource Exit; // Player Exit
-        public AudioSource Shop; // Player Use Shop
-        #endregion
-        // Start is called before the first frame update
+        [SerializeField] public AudioSource SqawnSFXObject;
+
+        public static AudioManager instance;
+
+        void Awake()
+        {
+            if (instance == null)
+            {
+                instance = this;
+            }
+            else
+            {
+                Destroy(instance);
+                return;
+            }
+
+            DontDestroyOnLoad(gameObject);
+
+            foreach (Sound s in sounds)
+            {
+                s.source = gameObject.AddComponent<AudioSource>();
+                s.source.clip = s.clip;
+
+                s.source.volume = s.volume;
+                s.source.pitch = s.pitch;
+
+                s.source.loop = s.loop;
+            }
+        }
         void Start()
         {
-            SetAudioLocation(Idle);
-            SetAudioLocation(Walking);
-            SetAudioLocation(Enter);
-            SetAudioLocation(Exit);
-            SetAudioLocation(Shop);
+            Play("Theme");
         }
-
-        // Update is called once per frame
-        void Update()
+        public void Play(string name)
         {
-        
+            Sound s = Array.Find(sounds, sound => sound.name == name);
+            if (s == null)
+            {
+                Debug.LogWarning("Sound: " + name + " Not FOUND");
+                return;
+            }
+            s.source.Play();
         }
-        void SetAudioLocation(AudioSource ADS)
-        {
-            ADS.transform.position = Player.transform.position;
-        }
-
     }
 }
