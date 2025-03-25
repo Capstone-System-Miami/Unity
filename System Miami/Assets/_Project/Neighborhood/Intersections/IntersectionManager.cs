@@ -448,6 +448,13 @@ public class IntersectionManager : Singleton<IntersectionManager>
         // Instantiate the new street prefab.
         GameObject streetInstance = Instantiate(prefabToInstantiate, position, Quaternion.identity, transform);
 
+        if (rawPrefab.TryGetComponent(out Author auth)
+            && !streetInstance.TryGetComponent(out Author instanceAuth))
+        {
+            instanceAuth = streetInstance.AddComponent<Author>();
+            instanceAuth.Name = $"{auth.Name} (From prefab: \'{rawPrefab.name}\')";
+        }
+
         // Name the street instance based on its index in the grid.
         streetInstance.name = $"Street [{streetData.gridIndex.x}, {streetData.gridIndex.y}]";
 
