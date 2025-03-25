@@ -67,13 +67,22 @@ public class RangedDamageCommand : ISubactionCommand
         {
             projectileScript.Launch(targetPosition, speed, () =>
             {
+                if (target as Combatant == action.User)
+                {
+                    return;
+                }
                 target.GetDamageInterface()?.ReceiveDamage(damage);
+                Debug.Log(target);
             });
         }
     }
 
     public void Preview()
     {
+        if (target as Combatant == action.User)
+        {
+            return;
+        }
         target.GetDamageInterface()?.PreviewDamage(damage);
     }
 }

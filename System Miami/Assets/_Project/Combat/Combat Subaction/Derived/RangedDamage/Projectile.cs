@@ -1,18 +1,21 @@
 using UnityEngine;
 using System.Collections;
 using System;
+using SystemMiami.CombatSystem;
 
 public class Projectile : MonoBehaviour
 {
     private Vector3 _targetPosition;
     private float _speed;
     private Action _onHit; // Callback function to execute when projectile arrives
+    
 
     public void Launch(Vector3 targetPosition, float speed, Action onHit)
     {
         _targetPosition = targetPosition;
         _speed = speed;
         _onHit = onHit;
+        
         StartCoroutine(MoveToTarget());
     }
 
