@@ -513,6 +513,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
             GameObject npcInstance = allNPCs[i].SpawnNPC(npcPrefab);
             AssignRole(npcInstance);
         }
+        Debug.Log("Spawned NPCs");
     }
 
     private void AssignRole(GameObject spawnerNpcPrefab)
