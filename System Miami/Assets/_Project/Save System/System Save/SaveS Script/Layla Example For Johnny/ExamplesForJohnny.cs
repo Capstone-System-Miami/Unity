@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+/*using System.IO;
 using UnityEngine;
 
 namespace SystemMiami
@@ -16,12 +15,28 @@ namespace SystemMiami
 
         private double fullPrivateField = 13.465747;
 
+        private static string filePath => Path.Combine(Application.persistentDataPath, "savefile.json");
+
+        void Start()
+        {
+            ExamplePlayer player = new ExamplePlayer();
+            player.SaveToFile(); // Save example data
+
+            ExamplePlayer loadedPlayer = ExamplePlayer.LoadFromJson(); // Load saved data
+            Debug.Log($"Loaded Player Test String: {loadedPlayer.testString}");
+        }
+
+
 
         public ExamplePlayer SaveToFile()
         {
-            // do saving stuff
             testString = $"This object was last saved at {System.DateTime.Now}";
             fullPrivateField = Mathf.PI;
+
+            string json = JsonUtility.ToJson(this, true);
+            File.WriteAllText(filePath, json);
+            Debug.Log($"Saved to {filePath}");
+
             return this;
         }
 
@@ -32,21 +47,22 @@ namespace SystemMiami
             this.testString = toLoad.testString;
             this.pubVarExample = toLoad.pubVarExample;
             this.pubVarExampleStr = toLoad.pubVarExampleStr;
-            // do loading stuff
         }
     }
 
-    public class UnrelatedClass : ISaveable<UnrelatedClass>
-    {
-        public void LoadFromFile(UnrelatedClass toLoad)
+        public static ExamplePlayer LoadFromJson()
         {
-            // this class also loads things
-        }
+            if (!File.Exists(filePath))
+            {
+                Debug.LogWarning("Save file not found, creating new instance.");
+                return new ExamplePlayer();
+            }
 
-        public UnrelatedClass SaveToFile()
-        {
-            // this class also saves things
-            return this;
+            string json = File.ReadAllText(filePath);
+            ExamplePlayer loaded = JsonUtility.FromJson<ExamplePlayer>(json);
+            Debug.Log("Loaded from file.");
+            return loaded;
         }
     }
 }
+*/
