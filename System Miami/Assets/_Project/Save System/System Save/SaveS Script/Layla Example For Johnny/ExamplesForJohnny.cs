@@ -48,7 +48,6 @@ namespace SystemMiami
             this.pubVarExample = toLoad.pubVarExample;
             this.pubVarExampleStr = toLoad.pubVarExampleStr;
         }
-    }
 
         public static ExamplePlayer LoadFromJson()
         {
