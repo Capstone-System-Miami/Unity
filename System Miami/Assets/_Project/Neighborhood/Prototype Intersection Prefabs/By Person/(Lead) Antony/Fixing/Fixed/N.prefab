@@ -30,7 +30,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 58683516602800037}
+  m_Father: {fileID: 1673074290222588659}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3831792760630030253
 MonoBehaviour:
@@ -8448,6 +8448,8 @@ Transform:
   m_Children:
   - {fileID: 6423109692554159023}
   - {fileID: 1551381502514547435}
+  - {fileID: 2253461762113674053}
+  - {fileID: 5832461572819723920}
   m_Father: {fileID: 7324329319312022347}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1839735485 &7933300308447100570
@@ -20353,7 +20355,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c94ab060c368be4b80a7d4a7e2771d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  log:
+    showMessages: 1
   _excludedStyles: 00000000010000000600000005000000
+  _dungeonData:
+    Prefab: {fileID: 0}
+    Enemies: []
+    ItemRewards: []
+    EXPToGive: 0
+    Credits: 0
 --- !u!1 &6483084057893028852
 GameObject:
   m_ObjectHideFlags: 0
@@ -23799,7 +23809,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 58683516602800037}
+  m_Father: {fileID: 1673074290222588659}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4120634796157705763
 MonoBehaviour:
@@ -24273,8 +24283,6 @@ Transform:
   - {fileID: 2143599771467641982}
   - {fileID: 8022024682424617982}
   - {fileID: 3132487406245135938}
-  - {fileID: 5832461572819723920}
-  - {fileID: 2253461762113674053}
   m_Father: {fileID: 8535713974320782374}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1839735485 &5874518097262244640
