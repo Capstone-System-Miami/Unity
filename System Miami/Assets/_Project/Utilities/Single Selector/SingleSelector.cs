@@ -3,9 +3,9 @@ using UnityEngine.Assertions;
 
 namespace SystemMiami
 {
-    public class SingleSelector
+    public class SingleSelector<T> where T : class, ISingleSelectable
     {
-        private List<ISingleSelectable> elements = new();
+        private List<T> elements = new();
 
         private int previousIndexInternal;
         private int currentIndexInternal;
@@ -26,14 +26,14 @@ namespace SystemMiami
             }
         }
 
-        public ISingleSelectable PreviousSelection {
+        public T PreviousSelection {
             get { return elements[previousIndexInternal]; }
         }
-        public ISingleSelectable CurrentSelection {
+        public T CurrentSelection {
             get { return elements[CurrentIndex]; }
         }
 
-        public SingleSelector(List<ISingleSelectable> elements)
+        public SingleSelector(List<T> elements)
         {
             Assert.IsNotNull(elements,
                 $"SingleSelector was passed NULL during construction");
@@ -53,20 +53,18 @@ namespace SystemMiami
             for (int i = 0; i < this.elements.Count; i++)
             {
                 this.elements[i].SelectionIndex = i;
-                this.elements[i].Reference = this;
 
                 Assert.IsNotNull(this);
                 Assert.IsNotNull(elements[i]);
-                Assert.IsNotNull(this.elements[i].Reference);
             }
         }
 
-        public ISingleSelectable Select(int index)
+        public T Select(int index)
         {
             return Select(index, false);
         }
 
-        public ISingleSelectable Select(int index, bool reselectIfSame)
+        public T Select(int index, bool reselectIfSame)
         {
             if (CurrentIndex == index && !reselectIfSame)
             {
@@ -81,9 +79,9 @@ namespace SystemMiami
             return CurrentSelection;
         }
 
-        public ISingleSelectable Reset()
+        public T Reset()
         {
-            foreach (ISingleSelectable element in elements)
+            foreach (T element in elements)
             {
                 if (element == CurrentSelection) { continue; }
                 element.Deselect();
@@ -91,7 +89,7 @@ namespace SystemMiami
             return Select(0, true);
         }
 
-        public bool IsCurrent(ISingleSelectable element)
+        public bool IsCurrent(T element)
         {
             return element == CurrentSelection;
         }

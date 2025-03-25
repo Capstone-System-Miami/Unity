@@ -18,5 +18,6 @@ namespace SystemMiami.CombatSystem
         public TargetingPattern TargetingPattern { get { return _targetingPattern; } }
 
         public abstract ISubactionCommand GenerateCommand(ITargetable target, CombatAction action);
+        public bool isPreExecution = false;
     }
 }

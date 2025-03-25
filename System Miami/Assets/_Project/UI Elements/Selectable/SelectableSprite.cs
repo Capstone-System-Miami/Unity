@@ -140,7 +140,7 @@ namespace SystemMiami.ui
 
         public void EnableSelection()
         {
-            Deselect();
+            NewState(SelectionState.UNSELECTED);
         }
 
         public void DisableSelection()

@@ -1,38 +1,60 @@
+using System;
+using SystemMiami.ui;
+using Unity.VisualScripting;
+using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 namespace SystemMiami
 {
-    public class SingleSelectButton : SelectableButton, ISingleSelectable
+    public class SingleSelectButton : BetterButton, ISingleSelectable
     {
-        SingleSelector ISingleSelectable.Reference { get; set; }
+        [SerializeField] private UnityEvent AdditionalOnButtonSelected;
+        [SerializeField] private UnityEvent AdditionalOnButtonDeselected;
+
+        [field: SerializeField, ReadOnly] public virtual bool IsSelected { get; protected set; }
+
+        private Action<int> notifySelectionGroup;
 
         int ISingleSelectable.SelectionIndex { get; set; }
 
-        private bool isSingleSelected => selectionInterface.Reference != null
-            ? selectionInterface.Reference.CurrentSelection == selectionInterface
-            : false;
-
-        private ISingleSelectable selectionInterface => this as ISingleSelectable;
-
-
-        private void Update()
+        public void Init(Action<int> notifySelectionGroup)
         {
-            if (selectionInterface.Reference == null) { return; }
-
-            IsSelected = isSingleSelected;
+            this.notifySelectionGroup = notifySelectionGroup;
         }
 
-        public override void OnPointerDown(PointerEventData eventData)
+        public virtual void Select()
         {
-            Assert.IsNotNull(selectionInterface);
-            Assert.IsNotNull(selectionInterface.Reference);
+            SelectableSprite.Select();
+            AdditionalOnButtonSelected?.Invoke();
+            IsSelected = true;
+        }
 
-            // Since we can only have one thing selected,
-            // we should only deselect via another button getting selected,
-            // rather than by Toggling.
-            // Select Via the SingleSelector instead of directly.
-            selectionInterface.Reference.Select(selectionInterface.SelectionIndex);
+        public virtual void Deselect()
+        {
+            SelectableSprite.Deselect();
+            AdditionalOnButtonDeselected?.Invoke();
+            IsSelected = false;
+        }
+
+        protected override void OnGoodClickDown(PointerEventData eventData)
+        {
+            Assert.IsNotNull(notifySelectionGroup);
+
+            notifySelectionGroup((this as ISingleSelectable).SelectionIndex);
+        }
+
+        protected override void OnGoodClickUp(PointerEventData eventData)
+        {
+        }
+
+        protected override void OnBadClickDown(PointerEventData eventData)
+        {
+        }
+
+        protected override void OnBadClickUp(PointerEventData eventData)
+        {
         }
     }
 }

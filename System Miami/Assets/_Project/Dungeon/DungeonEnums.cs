@@ -12,6 +12,6 @@ namespace SystemMiami.Dungeons
         CORPORATE,
         RESTAURANT,
         OUTDOOR,
-        ROOFTOP
+        ROOFTOP,
     }
 }

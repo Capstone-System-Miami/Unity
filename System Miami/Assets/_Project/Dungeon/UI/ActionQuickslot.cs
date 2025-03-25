@@ -1,5 +1,6 @@
 using SystemMiami.CombatRefactor;
 using SystemMiami.Management;
+using SystemMiami.Outdated;
 using TMPro;
 using UnityEngine;
 
@@ -24,6 +25,14 @@ namespace SystemMiami.ui
         private void Awake()
         {
             rt = GetComponent<RectTransform>();
+        }
+
+        private void Update()
+        {
+            if (_combatAction is NewAbility ability)
+            {
+                UpdateCooldowns(ability);
+            }
         }
 
         /// <summary>
@@ -61,6 +70,11 @@ namespace SystemMiami.ui
         /// </summary>
         public void Click()
         {
+            /// TODO: Need a way more elegant solution than this.
+            /// There should be some indication that the slot was clicked
+            /// but can't be equipped because of cooldown.
+            if (_selectionState == SelectionState.DISABLED) return;
+
             // Notify the UI Manager
             UI.MGR.ClickSlot(this);
         }
@@ -79,6 +93,12 @@ namespace SystemMiami.ui
             UpdateVisualState(SelectionState.UNSELECTED);
         }
 
+        public void EnableSelection()
+        {
+            _selectionState = SelectionState.UNSELECTED;
+            UpdateVisualState(SelectionState.UNSELECTED);
+        }
+
         public void DisableSelection()
         {
             _selectionState = SelectionState.DISABLED;
@@ -90,12 +110,25 @@ namespace SystemMiami.ui
             _icon.NewState(state);
         }
 
+        private void UpdateCooldowns(NewAbility ability)
+        {
+            if (ability.CooldownRemaining > 0
+                && _selectionState != SelectionState.DISABLED)
+            {
+                DisableSelection();
+            }
+            else if (ability.CooldownRemaining == 0
+                && _selectionState == SelectionState.DISABLED)
+            {
+                EnableSelection();
+            }
+        }
+
         public void SetPopupOnEnter()
         {
             if (_combatAction == null) { return; }
 
-            ItemData itemData = Database.MGR.GetDataWithJustID(_combatAction.ID);
-            PopUpHandler.MGR?.OpenPopup(itemData, this);
+            PopUpHandler.MGR?.OpenPopup(_combatAction, this);
         }
 
         public void SetPopupOnExit()

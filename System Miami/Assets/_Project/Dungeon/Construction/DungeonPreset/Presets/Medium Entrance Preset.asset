@@ -30,7 +30,13 @@ MonoBehaviour:
       _elementPrefab: {fileID: 4428148323496112114, guid: 2a2e7d6fb3c990e41a500469f91bc816, type: 3}
       _maxCount: 1
     - _isDefault: 0
-      _elementPrefab: {fileID: 1274995429882738794, guid: 7bae377e6ae517e4f81a30aa3cbe6db1, type: 3}
+      _elementPrefab: {fileID: 5478403791188214871, guid: 8591d9e16f9ed5b4f8f678fc26191dde, type: 3}
+      _maxCount: 1
+    - _isDefault: 0
+      _elementPrefab: {fileID: 5478403791188214871, guid: 9586294ba0731314bb0acd89000e24ca, type: 3}
+      _maxCount: 1
+    - _isDefault: 0
+      _elementPrefab: {fileID: 3736988444542983927, guid: 021d194c7f2aece49b8db678fbe84999, type: 3}
       _maxCount: 1
   _enemyPool:
     _minCount: 3
@@ -45,6 +51,9 @@ MonoBehaviour:
     - _isDefault: 0
       _elementPrefab: {fileID: 5679960105606152641, guid: ea6a1a0b9017fda40b8e6da4c145a98e, type: 3}
       _maxCount: 3
+    - _isDefault: 0
+      _elementPrefab: {fileID: 5985083666047915755, guid: c228b952585c5bd4ebd232d67bd19af3, type: 3}
+      _maxCount: 2
   _rewards:
     _overrideByDifficulty: 1
     _defaultDistributionMethod: 1
@@ -136,12 +145,12 @@ MonoBehaviour:
       MinLevel: 0
       MaxLevel: 0
       rarity: 0
-    - ID: 1009
-      Icon: {fileID: 21300042, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
-      Name: 
-      Description: 'TODO: Charge forward a short distance, bashing an enemy with
-        their shield, dealing moderate damage and stunning the enemy for 2 turns'
-      itemType: 0
+    - ID: 1016
+      Icon: {fileID: 21300264, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
+      Name: Defensive Stance
+      Description: The player adopts a defensive stance, reducing incoming damage
+        by 5 for 2 turns
+      itemType: 1
       Price: 0
       MinLevel: 0
       MaxLevel: 0
@@ -156,6 +165,15 @@ MonoBehaviour:
       MaxLevel: 0
       rarity: 0
     _consumableItemDatas:
+    - ID: 3001
+      Icon: {fileID: 21300054, guid: 1033079a30e5c624e86332d39519f284, type: 3}
+      Name: Fire Bomb
+      Description: Launch a bomb that explodes and harms all enemies in its radius
+      itemType: 3
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 0
+      rarity: 0
     - ID: 3000
       Icon: {fileID: 1348272354, guid: 796574b158e05b44c8f9deae75f9d1ec, type: 3}
       Name: Minor Healing Potion
@@ -241,12 +259,12 @@ MonoBehaviour:
       MinLevel: 0
       MaxLevel: 0
       rarity: 0
-    - ID: 1009
-      Icon: {fileID: 21300042, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
-      Name: 
-      Description: 'TODO: Charge forward a short distance, bashing an enemy with
-        their shield, dealing moderate damage and stunning the enemy for 2 turns'
-      itemType: 0
+    - ID: 1016
+      Icon: {fileID: 21300264, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
+      Name: Defensive Stance
+      Description: The player adopts a defensive stance, reducing incoming damage
+        by 5 for 2 turns
+      itemType: 1
       Price: 0
       MinLevel: 0
       MaxLevel: 0
@@ -262,7 +280,3 @@ MonoBehaviour:
       rarity: 0
     log:
       showMessages: 0
-  _minXP: 0
-  _maxXP: 0
-  _minSkillPoints: 0
-  _maxSkillPoints: 0

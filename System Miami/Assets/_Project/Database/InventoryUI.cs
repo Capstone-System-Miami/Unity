@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UI;
 using SystemMiami.Management;
+using System.ComponentModel;
 
 namespace SystemMiami.InventorySystem
 {
@@ -19,15 +20,8 @@ namespace SystemMiami.InventorySystem
 
         [Header("Internal References")]
         [SerializeField] private ScrollRect scrollRect;
-        [SerializeField] private InventoryTab tabPhysical;
-        [SerializeField] private InventoryTab tabMagical;
-        [SerializeField] private InventoryTab tabConsumable;
-        [SerializeField] private InventoryTab tabEquipment;
+        [SerializeField] private InventoryTabGroup tabs;
 
-        public InventoryTab TabPhysical { get {return tabPhysical;} }
-        public InventoryTab TabMagical  { get {return tabMagical;} }
-        public InventoryTab TabConsumable  { get {return tabConsumable;} }
-        public InventoryTab TabEquipment  { get {return tabEquipment;} }
         
         [Header("Readonly")]
         [SerializeField, ReadOnly] private string activeTab;
@@ -44,15 +38,17 @@ namespace SystemMiami.InventorySystem
             }
         }
 
-        private SingleSelector tabSelector;
-        private List<InventoryTab> tabs = new();
-        private List<ISingleSelectable> selectableTabs = new();
+        //private SingleSelector<InventoryTab> tabSelector;
+        //private List<InventoryTab> tabs = new();
+        //private List<ISingleSelectable> selectableTabs = new();
 
-        private SingleSelector buttonSelector;
-        private List<SingleSelectButton> buttons = new();
-        private List<ISingleSelectable> selectableButtons = new();
+        //private SingleSelector buttonSelector;
+        //private List<SingleSelectButton> buttons = new();
+        //private List<ISingleSelectable> selectableButtons = new();
 
         private ItemGrid activeGridInternal;
+
+        public InventoryTabGroup Tabs { get { return tabs; } }
 
         public ScrollRect ScrollRect { get { return scrollRect; } }
 
@@ -96,86 +92,86 @@ namespace SystemMiami.InventorySystem
 
         private void Update()
         {
-            // Set this to check in the inspector.
-            activeTab = $"{(tabSelector.CurrentSelection as InventoryTab).ValidItemType}";
+            //// Set this to check in the inspector.
+            //activeTab = $"{(tabSelector.CurrentSelection as InventoryTab).ValidItemType}";
 
-            // Loop through our buttons.
-            // If a button is selected and the matching tab is not,
-            // select the tab using the SingleSelector
-            for (int i = 0 ; i < buttons.Count; i++)
-            {
-                if (buttons[i].IsSelected && !tabs[i].IsSelected)
-                {
-                    log.print(
-                        $"{buttons[i].name} is Selected, " +
-                        $"and {tabs[i].ValidItemType} tab is not. Selecting...");
+            //// Loop through our buttons.
+            //// If a button is selected and the matching tab is not,
+            //// select the tab using the SingleSelector
+            //for (int i = 0 ; i < buttons.Count; i++)
+            //{
+            //    if (buttons[i].IsSelected && !tabs[i].IsSelected)
+            //    {
+            //        log.print(
+            //            $"{buttons[i].name} is Selected, " +
+            //            $"and {tabs[i].ValidItemType} tab is not. Selecting...");
 
-                    tabSelector.Select(i);
-                }
-            }
+            //        tabSelector.Select(i);
+            //    }
+            //}
+            RefreshUI();
         }
 
         public void RefreshUI()
         {
-            tabPhysical.ItemGrid.ClearSlots();
-            tabMagical.ItemGrid.ClearSlots();
-            tabConsumable.ItemGrid.ClearSlots();
-            tabEquipment.ItemGrid.ClearSlots();
+            Tabs.TabPhysical.ItemGrid.ClearSlots();
+            Tabs.TabMagical.ItemGrid.ClearSlots();
+            Tabs.TabConsumable.ItemGrid.ClearSlots();
+            Tabs.TabEquipment.ItemGrid.ClearSlots();
 
-            tabPhysical.ItemGrid.FillSlots(playerInventory.PhysicalAbilityIDs);
-            tabMagical.ItemGrid.FillSlots(playerInventory.MagicalAbilityIDs);
-            tabConsumable.ItemGrid.FillSlots(playerInventory.ConsumableIDs);
-            //tabEquipment.ItemGrid.FillSlots(playerInventory.[fill this in whenever]);            
+            Tabs.TabPhysical.ItemGrid.FillSlots(playerInventory.PhysicalAbilityIDs);
+            Tabs.TabMagical.ItemGrid.FillSlots(playerInventory.MagicalAbilityIDs);
+            Tabs.TabConsumable.ItemGrid.FillSlots(playerInventory.ConsumableIDs);
+
+            /// TODO:
+            //Tabs.TabEquipment.ItemGrid.FillSlots(playerInventory.[fill this in whenever]);
         }
 
         private void InitializeTabs()
         {
             // Initialize tabs set in the inspector with the infor they need
-            tabPhysical.Initialize(this, ItemType.PhysicalAbility);
-            tabMagical.Initialize(this, ItemType.MagicalAbility);
-            tabConsumable.Initialize(this, ItemType.Consumable);
-            tabEquipment.Initialize(this, ItemType.EquipmentMod);
 
-            // Create a new list of tabs
-            tabs = new List<InventoryTab>()
-            {
-                tabPhysical,
-                tabMagical,
-                tabConsumable,
-                tabEquipment
-            };
 
-            Assert.IsTrue(tabs != null);
-            Assert.IsTrue(tabs.Count > 0);
+            //// Create a new list of tabs
+            //tabs = new List<InventoryTab>()
+            //{
+            //    tabPhysical,
+            //    tabMagical,
+            //    tabConsumable,
+            //    tabEquipment
+            //};
 
-            // Cast list
-            selectableTabs = tabs.Cast<ISingleSelectable>().ToList();
+            //Assert.IsTrue(tabs != null);
+            //Assert.IsTrue(tabs.Count > 0);
 
-            Assert.IsNotNull(selectableTabs);
-            Assert.IsTrue(selectableTabs.Any());
+            //// Cast list
+            //selectableTabs = tabs.Cast<ISingleSelectable>().ToList();
 
-            // Create a new SingleSelector to manage tab selection
-            tabSelector = new SingleSelector(selectableTabs);
-            tabSelector.Reset();
+            //Assert.IsNotNull(selectableTabs);
+            //Assert.IsTrue(selectableTabs.Any());
+
+            //// Create a new SingleSelector to manage tab selection
+            //tabSelector = new SingleSelector(selectableTabs);
+            //tabSelector.Reset();
         }
 
         private void InitializeButtons()
         {
-            Assert.IsNotNull(selectableTabs);
-            Assert.IsTrue(selectableTabs.Any());
+            //Assert.IsNotNull(selectableTabs);
+            //Assert.IsTrue(selectableTabs.Any());
 
-            // Get buttons from tab objs
-            buttons = tabs.Select(tab => tab.Button).ToList();
+            //// Get buttons from tab objs
+            //buttons = tabs.Select(tab => tab.Button).ToList();
 
-            // Cast list
-            selectableButtons = buttons.Cast<ISingleSelectable>().ToList();
+            //// Cast list
+            //selectableButtons = buttons.Cast<ISingleSelectable>().ToList();
 
-            Assert.IsNotNull(selectableButtons);
-            Assert.IsTrue(selectableButtons.Any());
+            //Assert.IsNotNull(selectableButtons);
+            //Assert.IsTrue(selectableButtons.Any());
 
-            // Create a new SingleSelector to handle button selection
-            buttonSelector = new SingleSelector(selectableButtons);
-            buttonSelector.Reset();
+            //// Create a new SingleSelector to handle button selection
+            //buttonSelector = new SingleSelector(selectableButtons);
+            //buttonSelector.Reset();
         }
 
         private void OnDisable()
