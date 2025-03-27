@@ -22,18 +22,22 @@ MonoBehaviour:
   - {fileID: 755994829, guid: 5fd7ca01da15f124594d41b135886aea, type: 3}
   - {fileID: -63363098, guid: f3dec8406f325824cacb93026e4b1a93, type: 3}
   possibleQuests:
-  - questName: HI
-    questDescriptionLine: sdjklandjk
-    targetEnemyTag: dlakdnklaw
-    objectiveGoal: 4
-    rewardEXP: 4
-    rewardCurrency: 4
+  - questName: Goblin Menace
+    questDescriptionLine: Kill 5 Goblins
+    targetEnemyLayer:
+      serializedVersion: 2
+      m_Bits: 128
+    enemiesToGoal: 0
+    objectiveGoal: 8
+    rewardEXP: 112
+    rewardCurrency: 72
     questDialogue:
-    - fhfhf
-    - fhfhf
-  availableQuests: []
+    - Those goblins are becoming a menace
+    - Kill some for me, would you?
+    questCompleted: 0
   possibleShops:
   - shopType: 3
     shopDialogue:
     - Hey
     - I got what you looking for
+  availableQuests: []

@@ -22,11 +22,26 @@ namespace SystemMiami
         public void Initialize(Quest questArg)
         {
             quest = questArg;
-            questNameText.text = quest.questName;
+            if (questNameText != null)
+            {
+                questNameText.text = quest.questName;
+            }
             questDescriptionText.text = quest.questDescriptionLine;
-            progressText.text = quest.objectiveGoal.ToString();
-            xpRewardText.text = quest.rewardEXP.ToString();
-            creditRewardText.text = quest.rewardCurrency.ToString();
+            progressText.text = $"Progress: {quest.enemiesToGoal} / {quest.objectiveGoal}";
+            xpRewardText.text = $"{quest.rewardEXP} EXP";
+            creditRewardText.text = $"{quest.rewardCurrency} Credits";
+        }
+
+        public void UpdateQuest()
+        {
+            progressText.text = $"Progress: {quest.enemiesToGoal} / {quest.objectiveGoal}";
+        }
+
+        public void CompleteQuest()
+        {
+            questDescriptionText.text = "Quest Completed!";
+            xpRewardText.text = $"Gained {quest.rewardEXP} EXP!";
+            creditRewardText.text = $"Gained {quest.rewardCurrency} Credits!";
         }
     }
 }
