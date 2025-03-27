@@ -9,9 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff315baa2fd9ddf4cb26de460acde7d8, type: 3}
-  m_Name: Flaming Blade Damage VFX
+  m_Script: {fileID: 11500000, guid: fd55539ce69136748b43d99c0330bf70, type: 3}
+  m_Name: Flaming Blade Ranged Damage
   m_EditorClassIdentifier: 
   _targetingPattern: {fileID: 11400000, guid: 00a798078a04aa141bd79ea9a6773ee8, type: 2}
   isPreExecution: 0
-  VFXPrefab: {fileID: 7008469236080542093, guid: 982bf833df05e904d8e853232229025d, type: 3}
+  damageToDeal: 5
+  projectilePrefab: {fileID: 7788189346075509081, guid: d49c15ca7fb5b294bba92f2b59350e41, type: 3}
+  projectileSpeed: 5
