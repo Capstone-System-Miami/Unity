@@ -488,6 +488,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c94ab060c368be4b80a7d4a7e2771d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  log:
+    showMessages: 1
+  _excludedStyles: 
+  _dungeonData:
+    Prefab: {fileID: 0}
+    Enemies: []
+    ItemRewards: []
+    EXPToGive: 0
+    Credits: 0
 --- !u!1 &1929273784577465916
 GameObject:
   m_ObjectHideFlags: 0
@@ -1123,7 +1132,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 3208514434349644603}
         m_TargetAssemblyTypeName: SystemMiami.DungeonEntrance, Assembly-CSharp
-        m_MethodName: SetDungeonColor
+        m_MethodName: TurnOnDungeonColor
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

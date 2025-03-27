@@ -47,9 +47,6 @@ MonoBehaviour:
     - _isDefault: 0
       _elementPrefab: {fileID: 5478403791188214871, guid: 61dcc914716655d4e8e38edb075c81f5, type: 3}
       _maxCount: 1
-    - _isDefault: 0
-      _elementPrefab: {fileID: 1355404933006533099, guid: 642cd402dcc77fa499cb6ba20491908d, type: 3}
-      _maxCount: 1
   _enemyPool:
     _minCount: 4
     _maxCount: 8
@@ -85,96 +82,59 @@ MonoBehaviour:
     _includeConsumables: 1
     _includeEquipmentMods: 1
     _abilityItemDatas:
-    - ID: 1002
+    - ID: 2004
+      Icon: {fileID: -963576434, guid: 8bee6a2e50011a549bd74366f6bca472, type: 3}
+      Name: Exposure
+      Description: "Reduces an enemy\u2019s defence by 5"
+      itemType: 2
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 0
+      rarity: 0
+    - ID: 2000
+      Icon: {fileID: 21300290, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
+      Name: Fireball
+      Description: Cast a fireball that explodes on impact, dealing high damage to
+        the target and nearby enemies
+      itemType: 2
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 0
+      rarity: 0
+    - ID: 2002
+      Icon: {fileID: 21300420, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
+      Name: Life Drainer
+      Description: The player absorbs HP equal to 50% of the damage they deal to
+        enemy
+      itemType: 2
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 0
+      rarity: 0
+    - ID: 2001
+      Icon: {fileID: 21300414, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
+      Name: Magic Shield
+      Description: The player summons a magical shield around themselves, absorbing
+        a certain amount of damage for 2 turns
+      itemType: 2
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 0
+      rarity: 0
+    - ID: 2003
+      Icon: {fileID: -963576434, guid: 8bee6a2e50011a549bd74366f6bca472, type: 3}
+      Name: Self Heal
+      Description: Heals you for a moderate amount of health
+      itemType: 2
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 0
+      rarity: 0
+    - ID: 1001
       Icon: {fileID: 1560907362, guid: f3c637fbed5451e4c85c7195e80a0954, type: 3}
-      Name: Fire Up
-      Description: Rally yourself, increasing Strength by 25% for 2 turns
-      itemType: 0
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 0
-      rarity: 0
-    - ID: 1006
-      Icon: {fileID: 21300306, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
-      Name: Flaming Blade
-      Description: A high-damage fireball that burns the enemy for 2 turns
-      itemType: 0
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 0
-      rarity: 0
-    - ID: 1003
-      Icon: {fileID: -811106580, guid: e395485de996e754d9b1dd212fd50f3d, type: 3}
-      Name: Merciless Blows
-      Description: Deals moderate damage to target & nearby tiles
-      itemType: 0
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 0
-      rarity: 0
-    - ID: 1000
-      Icon: {fileID: 1560907362, guid: f3c637fbed5451e4c85c7195e80a0954, type: 3}
-      Name: Power Strike
-      Description: 'Deliver a powerful strike, (TODO: dealing double damage to a
-        single enemy)'
-      itemType: 0
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 0
-      rarity: 0
-    - ID: 1008
-      Icon: {fileID: 21300356, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
-      Name: Retaliation
-      Description: 'Deals damage (TODO: based on most recent HP loss)'
-      itemType: 0
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 0
-      rarity: 0
-    - ID: 1007
-      Icon: {fileID: 21300352, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
-      Name: Rush Attack
-      Description: 'TODO: Advance 1 space to get closer to an enemy, dealing moderate
-        damage '
-      itemType: 0
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 0
-      rarity: 0
-    - ID: 1004
-      Icon: {fileID: 21300000, guid: 73d3cc63327012249b4f98eb9289311d, type: 3}
-      Name: Smash
-      Description: 'Deals moderate damage (TODO: and pushes back the enemy by 3 spaces)'
-      itemType: 0
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 0
-      rarity: 0
-    - ID: 1005
-      Icon: {fileID: 21300060, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
-      Name: Strike Through
-      Description: 'Deals moderate damage (TODO: and moves through a line of adjacent
-        enemies)'
-      itemType: 0
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 0
-      rarity: 0
-    - ID: 1016
-      Icon: {fileID: 21300264, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
-      Name: Defensive Stance
-      Description: The player adopts a defensive stance, reducing incoming damage
-        by 5 for 2 turns
-      itemType: 1
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 0
-      rarity: 0
-    - ID: 1012
-      Icon: {fileID: 1072186538, guid: 8bc6b693366d3ac41ae7f20723396814, type: 3}
-      Name: Stab
-      Description: Stab Description
-      itemType: 0
+      Name: 
+      Description: Spin in place, dealing damage to all enemies within a small radius
+      itemType: 2
       Price: 0
       MinLevel: 0
       MaxLevel: 0
@@ -199,96 +159,11 @@ MonoBehaviour:
       MaxLevel: 0
       rarity: 0
     _equipmentItemDatas:
-    - ID: 1002
+    - ID: 1001
       Icon: {fileID: 1560907362, guid: f3c637fbed5451e4c85c7195e80a0954, type: 3}
-      Name: Fire Up
-      Description: Rally yourself, increasing Strength by 25% for 2 turns
-      itemType: 0
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 0
-      rarity: 0
-    - ID: 1006
-      Icon: {fileID: 21300306, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
-      Name: Flaming Blade
-      Description: A high-damage fireball that burns the enemy for 2 turns
-      itemType: 0
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 0
-      rarity: 0
-    - ID: 1003
-      Icon: {fileID: -811106580, guid: e395485de996e754d9b1dd212fd50f3d, type: 3}
-      Name: Merciless Blows
-      Description: Deals moderate damage to target & nearby tiles
-      itemType: 0
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 0
-      rarity: 0
-    - ID: 1000
-      Icon: {fileID: 1560907362, guid: f3c637fbed5451e4c85c7195e80a0954, type: 3}
-      Name: Power Strike
-      Description: 'Deliver a powerful strike, (TODO: dealing double damage to a
-        single enemy)'
-      itemType: 0
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 0
-      rarity: 0
-    - ID: 1008
-      Icon: {fileID: 21300356, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
-      Name: Retaliation
-      Description: 'Deals damage (TODO: based on most recent HP loss)'
-      itemType: 0
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 0
-      rarity: 0
-    - ID: 1007
-      Icon: {fileID: 21300352, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
-      Name: Rush Attack
-      Description: 'TODO: Advance 1 space to get closer to an enemy, dealing moderate
-        damage '
-      itemType: 0
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 0
-      rarity: 0
-    - ID: 1004
-      Icon: {fileID: 21300000, guid: 73d3cc63327012249b4f98eb9289311d, type: 3}
-      Name: Smash
-      Description: 'Deals moderate damage (TODO: and pushes back the enemy by 3 spaces)'
-      itemType: 0
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 0
-      rarity: 0
-    - ID: 1005
-      Icon: {fileID: 21300060, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
-      Name: Strike Through
-      Description: 'Deals moderate damage (TODO: and moves through a line of adjacent
-        enemies)'
-      itemType: 0
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 0
-      rarity: 0
-    - ID: 1016
-      Icon: {fileID: 21300264, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
-      Name: Defensive Stance
-      Description: The player adopts a defensive stance, reducing incoming damage
-        by 5 for 2 turns
-      itemType: 1
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 0
-      rarity: 0
-    - ID: 1012
-      Icon: {fileID: 1072186538, guid: 8bc6b693366d3ac41ae7f20723396814, type: 3}
-      Name: Stab
-      Description: Stab Description
-      itemType: 0
+      Name: 
+      Description: Spin in place, dealing damage to all enemies within a small radius
+      itemType: 2
       Price: 0
       MinLevel: 0
       MaxLevel: 0

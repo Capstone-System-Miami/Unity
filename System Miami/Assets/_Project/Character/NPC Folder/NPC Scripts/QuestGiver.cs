@@ -24,17 +24,25 @@ public class QuestGiver : MonoBehaviour
 
     void Start()
     {
-        
-        
         if (questPanel != null) questPanel.SetActive(false);
-        
+    }
+
+    void Update()
+    {
+        if (questPanel.activeSelf)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                questPanel.SetActive(false);
+            }
+        }
     }
 
     public void Initialize(NPCInfoSO npcInfoSo , string npcName, GameObject panelPrefab)
     {
         assignedQuest = npcInfoSo.GetQuest();
         questNPCname = npcName;
-        questPanel = Instantiate(panelPrefab);
+        questPanel = Instantiate(panelPrefab,transform);
         QuestPanel questPanelComponent = panelPrefab.GetComponent<QuestPanel>();
         questPanelComponent.Initialize(assignedQuest);
         questPanel.SetActive(false);
@@ -61,13 +69,16 @@ public class QuestGiver : MonoBehaviour
     {
         questPanel.SetActive(true);
         // Start the quest and reset progress
-        isQuestAccepted = true;
-        isQuestCompleted = false;
-        objectiveCount = 0;
-        UpdateUI();
+        //isQuestAccepted = true;
+        //isQuestCompleted = false;
+       // objectiveCount = 0;
+       // UpdateUI();
+       QuestTracker.MGR.AcceptQuest(assignedQuest);
     }
+    
+    
 
-    public void EnemyDefeated(GameObject enemy)
+    /*public void EnemyDefeated(GameObject enemy)
     {
         if (!isQuestAccepted || isQuestCompleted)
             return;
@@ -85,35 +96,9 @@ public class QuestGiver : MonoBehaviour
                 CompleteQuest();
             }
         }
-    }
+    }*/
 
-    private void CompleteQuest()
-    {
-        if (!isQuestCompleted)
-        {
-            isQuestCompleted = true;
-            Debug.Log($"Congratulations! You completed {selectedQuest.questName}. Reward: {selectedQuest.rewardEXP} EXP, {selectedQuest.rewardCurrency} Currency.");
-            
-            //  add logic to give rewards to the player
-        }
-    }
-
-    // Helper method to update all UI elements at once
-    private void UpdateUI()
-    {
-        
-        UpdateProgressUI();
-    }
-
-    // Helper method to update progress UI
-    private void UpdateProgressUI()
-    {
-        //change actual quest prgress text
-        // if (progressText != null)
-        //     progressText.text = $"Defeat {objectiveCount}/{selectedQuest.objectiveGoal} {selectedQuest.targetEnemyTag}s";
-    }
-
-   
+    
 
     
 
