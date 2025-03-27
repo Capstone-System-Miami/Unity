@@ -19,6 +19,7 @@ namespace SystemMiami.InventorySystem
         [SerializeField] private List<int> equippedEquipmentModIDs = new();
 
         [SerializeField] private int credits;
+        
 
         public List<int> PhysicalAbilityIDs { get => physicalAbilityIDs; private set => physicalAbilityIDs = value; }
         public List<int> MagicalAbilityIDs { get => magicalAbilityIDs; private set => magicalAbilityIDs = value; }
@@ -177,6 +178,7 @@ namespace SystemMiami.InventorySystem
             }
             
         }
+        
 
         // Gain Credits from quests and other sources
         public void AddCredits(int amount)
