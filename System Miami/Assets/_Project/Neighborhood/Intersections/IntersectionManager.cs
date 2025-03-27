@@ -7,12 +7,16 @@ using SystemMiami.Dungeons;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using UnityEngine.Assertions;
+using UnityEngine.Tilemaps;
+using SystemMiami.Utilities;
 
 //Made By Antony (Layla edited)
 
 // The main class responsible for generating and managing streets in the game.
 public class IntersectionManager : Singleton<IntersectionManager>
 {
+    [SerializeField] private dbug log = new();
+
     // Serialized fields allow these private variables to be set in the Unity Editor.
     [Header("Street Generation Settings")] [SerializeField]
     private IntersectionPool[] streetPools; // Array of StreetPools, which contain prefabs for different street types.
@@ -420,15 +424,36 @@ public class IntersectionManager : Singleton<IntersectionManager>
 
     private void InstantiateFromPool(StreetData streetData, IntersectionPool pool)
     {
-
         // Randomly select a prefab from the pool.
-        GameObject prefabToInstantiate = pool.streetPrefabs[Random.Range(0, pool.streetPrefabs.Length)];
+        GameObject rawPrefab = pool.streetPrefabs[Random.Range(0, pool.streetPrefabs.Length)];
+        GameObject prefabToInstantiate;
+
+        if (rawPrefab.TryGetComponent(out Grid grid))
+        {
+            prefabToInstantiate = GetStrippedPrefab(grid.transform);
+        }
+        else
+        {
+            log.warn(
+                $"{rawPrefab.name} is using an outdated format. It will work, " +
+                $"but consider using the new format (with the Grid-containing " +
+                $"object as the root) instead.");
+
+            prefabToInstantiate = rawPrefab;
+        }
 
         // Calculate the position in the world for this grid index.
         Vector3 position = GetPositionFromGridIndex(streetData.gridIndex);
 
         // Instantiate the new street prefab.
         GameObject streetInstance = Instantiate(prefabToInstantiate, position, Quaternion.identity, transform);
+
+        if (rawPrefab.TryGetComponent(out Author auth)
+            && !streetInstance.TryGetComponent(out Author instanceAuth))
+        {
+            instanceAuth = streetInstance.AddComponent<Author>();
+            instanceAuth.Name = $"{auth.Name} (From prefab: \'{rawPrefab.name}\')";
+        }
 
         // Name the street instance based on its index in the grid.
         streetInstance.name = $"Street [{streetData.gridIndex.x}, {streetData.gridIndex.y}]";
@@ -513,6 +538,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
             GameObject npcInstance = allNPCs[i].SpawnNPC(npcPrefab);
             AssignRole(npcInstance);
         }
+        Debug.Log("Spawned NPCs");
     }
 
     private void AssignRole(GameObject spawnerNpcPrefab)
@@ -694,6 +720,32 @@ public class IntersectionManager : Singleton<IntersectionManager>
         if (lastStreetGenerated != null)
         {
             Debug.Log($"Last Street Generated: Index {lastStreetGenerated.gridIndex}");
+        }
+    }
+
+    private GameObject GetStrippedPrefab(Transform prefabRoot)
+    {
+        if (prefabRoot.childCount == 0)
+        {
+            log.error(
+                $"{prefabRoot.name} didn't have any children, " +
+                $"and had to return the original prefab... " +
+                $"Ensure that {prefabRoot.name} is formatted correctly");
+
+            return prefabRoot.gameObject;
+        }
+        else if (!prefabRoot.GetChild(0).TryGetComponent(out Tilemap map))
+        {
+            log.error(
+                $"{prefabRoot.GetChild(0).name} didn't have a tilemap, " +
+                $"and had to return the original prefab..." +
+                $"Ensure that {prefabRoot.name} is formatted correctly");
+
+            return prefabRoot.gameObject;
+        }
+        else
+        {
+            return map.gameObject;
         }
     }
 

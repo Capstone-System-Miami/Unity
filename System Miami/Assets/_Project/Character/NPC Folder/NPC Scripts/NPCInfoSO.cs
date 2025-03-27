@@ -12,7 +12,7 @@ namespace SystemMiami
         public List<Quest> possibleQuests = new();
         public List<ShopData> possibleShops;
         
-        [SerializeField, ReadOnly] private List<Quest> availableQuests;
+        [SerializeField] private List<Quest> availableQuests;
 
         public void Initialize()  
         {
@@ -21,18 +21,20 @@ namespace SystemMiami
         
         public Quest GetQuest()
         {
-            bool noUniqueQuests =
-                availableQuests != null
-                && availableQuests.Count > 0;
-
-            if (noUniqueQuests)
+            // If no available quests, reset from possible quests
+            if (availableQuests == null || availableQuests.Count == 0)
             {
-                Debug.LogWarning($"DUPLICATE QUEST being assigned");
+                availableQuests = new List<Quest>(possibleQuests);
             }
 
-            return noUniqueQuests
-                ? availableQuests[Random.Range(0, availableQuests.Count)]
-                : possibleQuests[Random.Range(0, possibleQuests.Count)];
+            // Select a random quest from available quests
+            int index = Random.Range(0, availableQuests.Count);
+            Quest selectedQuest = availableQuests[index];
+    
+            // Remove the selected quest from available quests
+            availableQuests.RemoveAt(index);
+
+            return selectedQuest;
         }
         
         public ShopData GetShop()

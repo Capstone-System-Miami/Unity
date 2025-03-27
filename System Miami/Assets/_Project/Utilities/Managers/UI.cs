@@ -13,6 +13,7 @@ namespace SystemMiami.Management
     public class UI : Singleton<UI>
     {
         [Header("Messages")]
+        [SerializeField] private bool inputPromptsOn = true;
         [SerializeField] private TextBox inputPromptPanel;
 
 
@@ -36,6 +37,12 @@ namespace SystemMiami.Management
 
         public void UpdateInputPrompt(string msg)
         {
+            if (!inputPromptsOn)
+            {
+                ClearInputPrompt();
+                return ;
+            }
+
             inputPromptPanel.ShowBackground();
             inputPromptPanel.ShowForeground();
             inputPromptPanel.SetForeground(msg);

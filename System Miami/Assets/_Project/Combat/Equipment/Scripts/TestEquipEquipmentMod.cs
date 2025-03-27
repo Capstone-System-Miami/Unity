@@ -24,5 +24,7 @@ namespace SystemMiami
             Debug.Log($"Attempting to equip mod with ID {modIDToEquip}");
             equipmentManager.EquipMod(modIDToEquip);
         }
+        
+        
     }
 }

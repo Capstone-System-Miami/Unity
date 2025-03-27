@@ -15,7 +15,10 @@ namespace SystemMiami
            
             this.spawnerNPCPrefab = npcPrefab;
             npcPrefabInstance = Instantiate(npcPrefab, transform.position, Quaternion.identity);
+            npcPrefabInstance.transform.SetParent(transform);
+            Debug.Log($"Spawned NPC: {this.gameObject.name}");
             return npcPrefabInstance;
+           
         }
     }
 }
