@@ -121,6 +121,8 @@ namespace SystemMiami.CombatSystem
 
         #region ITargetable
         //============================================================
+        Vector2Int ITargetable.BoardPos => PositionTile.BoardPos;
+
         List<ISubactionCommand> ITargetable.TargetedBy { get; set; } = new();
         public string nameMessageForDB { get { return gameObject.name; } set {; } }
 

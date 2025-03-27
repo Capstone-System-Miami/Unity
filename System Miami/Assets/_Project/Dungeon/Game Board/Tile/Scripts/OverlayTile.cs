@@ -259,6 +259,8 @@ namespace SystemMiami
             }
         }
 
+
+        public Vector2Int BoardPos => (Vector2Int)GridLocation;
         public List<ISubactionCommand> TargetedBy { get; set; } = new();
         public string nameMessageForDB { get { return gameObject.name; } set { ; } }
         public void SubscribeTo(ref EventHandler<TargetingEventArgs> combatActionEvent)

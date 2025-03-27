@@ -471,18 +471,18 @@ namespace SystemMiami.CombatSystem
 
         #region IForceMoveReciever
         //============================================================
-        public bool IsCurrentlyMovable()
+        bool IForceMoveReceiver.IsCurrentlyMovable()
         {
-            throw new NotImplementedException();
+            return true;
         }
-        public void PreviewForceMove(int distance, Vector2Int direction)
+        void IForceMoveReceiver.PreviewForceMove(Vector2Int origin, int distance, MoveType type)
         {
-            throw new NotImplementedException();
+            Debug.LogWarning($"Force Movement preview is not yet implemented", this);
         }
 
-        public void ReceiveForceMove(int distance, Vector2Int direction)
+        void IForceMoveReceiver.ReceiveForceMove(Vector2Int origin, int distance, MoveType type)
         {
-            throw new NotImplementedException();
+            Debug.LogWarning($"Force Movement is not yet implemented", this);
         }
 
         //public Vector2Int GetTilePos()
@@ -563,6 +563,7 @@ namespace SystemMiami.CombatSystem
 
         #region ITargetable
         //============================================================
+        Vector2Int ITargetable.BoardPos => PositionTile.BoardPos;
         List<ISubactionCommand> ITargetable.TargetedBy { get; set; } = new();
         public string nameMessageForDB { get { return gameObject.name; } set { ; } }
         void ITargetable.SubscribeTo(

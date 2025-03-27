@@ -172,7 +172,7 @@ namespace SystemMiami
 
                                 GameObject newObstacleObj = new($"OBSTACLE {obstacleRunningTotal}");
                                 newObstacleObj.transform.SetParent(obstaclesTilemap.transform);
-                                Obstacle obst = newObstacleObj.AddComponent<StaticObstacle>();
+                                Obstacle obst = newObstacleObj.AddComponent<DynamicObstacle>();
                                 obst.Initialize(obstacleSprite);
                                 if (!TryPlaceOnTile(obst, overlayTile))
                                 {

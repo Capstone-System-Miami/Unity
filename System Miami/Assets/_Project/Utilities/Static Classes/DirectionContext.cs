@@ -60,14 +60,14 @@ namespace SystemMiami.Utilities
         public readonly ScreenDir ScreenDirection;
 
         /// <summary>
-        /// Game board (map) coordinates one tile "forward"
+        /// Game board (map) coordinates a specified number of tiles "forward"
         /// from BoardPositionA in whatever Direction
         /// we've calculated using the incoming points
         /// </summary>
         public readonly Vector2Int ForwardA;
 
         /// <summary>
-        /// Game board (map) coordinates one tile "forward"
+        /// Game board (map) coordinates a specified number of tiles "forward"
         /// from BoardPositionB in whatever Direction
         /// we've calculated using the incoming points
         /// </summary>
@@ -75,6 +75,24 @@ namespace SystemMiami.Utilities
 
 
         public DirectionContext(Vector2Int boardPositionA, Vector2Int boardPositionB)
+            : this (boardPositionA, boardPositionB, 1, 1)
+        { }
+
+        public DirectionContext(Vector2Int boardPositionA, Vector2Int boardPositionB, int fwdDistance)
+            : this (boardPositionA, boardPositionB, fwdDistance, fwdDistance)
+        { }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="boardPositionA"></param>
+        /// <param name="boardPositionB"></param>
+        /// <param name="fwdDistanceA">
+        /// Distance (in tile units) from <see cref="TilePositionA"/>
+        /// to place the <see cref="ForwardA"/></param>
+        /// <param name="fwdDistanceB">
+        /// Distance (in tile units) from <see cref="TilePositionB"/>
+        /// to place the <see cref="ForwardB"/></param>
+        public DirectionContext(Vector2Int boardPositionA, Vector2Int boardPositionB, int fwdDistanceA, int fwdDistanceB)
         {
             TilePositionA = boardPositionA;
             TilePositionB = boardPositionB;
@@ -85,8 +103,8 @@ namespace SystemMiami.Utilities
 
             ScreenDirection = DirectionHelper.GetScreenDir(BoardDirection);
 
-            ForwardA = TilePositionA + DirectionVec;
-            ForwardB = TilePositionB + DirectionVec;
+            ForwardA = TilePositionA + (DirectionVec * fwdDistanceA);
+            ForwardB = TilePositionB + (DirectionVec * fwdDistanceB);
         }
 
         public Vector2Int[] getlist()

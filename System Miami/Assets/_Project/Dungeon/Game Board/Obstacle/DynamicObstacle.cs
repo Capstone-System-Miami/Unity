@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using SystemMiami.Enums;
 using SystemMiami.Utilities;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem
@@ -13,6 +15,16 @@ namespace SystemMiami.CombatSystem
         private Resource health;
 
         private bool isDamageOnBump;
+
+        protected override void Update()
+        {
+            base.Update();
+            if (TRIGGER_ForceMovePreviewTest)
+            {
+                TRIGGER_ForceMovePreviewTest = false;
+                PreviewForceMove(TEST_origin, TEST_distance, TEST_moveType);
+            }
+        }
 
         public void Initialize(Sprite sprite, float maxHealth, bool isDamageOnBump)
         {
@@ -71,13 +83,15 @@ namespace SystemMiami.CombatSystem
 
         #region IForceMoveReceiver
         // ==================================================================
-        #endregion IForceMoveReceiver
-
-
         public bool IsCurrentlyMovable()
         {
             return true;
         }
+
+        public Vector2Int TEST_origin;
+        public int TEST_distance;
+        public MoveType TEST_moveType;
+        public bool TRIGGER_ForceMovePreviewTest;
 
         /// <summary>
         /// TODO: Implement, Test
@@ -89,6 +103,37 @@ namespace SystemMiami.CombatSystem
         /// <param name="directionVector">
         /// A direction in Worldspace (but really
         /// "BoardSpace" / "TileSpace" or whatever) </param>
+        public void PreviewForceMove(Vector2Int origin, int distance, MoveType type)
+        {
+            Vector2Int dirVec = DirectionHelper.GetDirectionVec(origin, (Vector2Int)PositionTile.GridLocation);
+
+            if (type == MoveType.PULL)
+            {
+                dirVec *= -1;
+            }
+
+            Vector2Int targetPos = (this as ITargetable).BoardPos + (dirVec * distance);
+
+            int adjustedX = System.Math.Clamp(targetPos.x, MapManager.MGR.Bounds.xMin, MapManager.MGR.Bounds.xMax);
+            int adjustedY = System.Math.Clamp(targetPos.y, MapManager.MGR.Bounds.yMin, MapManager.MGR.Bounds.yMax);
+
+            targetPos = new(adjustedX, adjustedY);
+
+            if (MapManager.MGR.TryGetTile(targetPos, out OverlayTile targetTile))
+            {
+                log.error($"{name} would move to {targetTile.gameObject.name}", targetTile);
+            }
+            else
+            {
+                log.error($"{name} didn't find a tile...", this);
+            }
+
+        }
+
+        public void ReceiveForceMove(Vector2Int origin, int distance, MoveType type)
+        {
+            throw new System.NotImplementedException();
+        }
         public void PreviewForceMove(int distance, Vector2Int directionVector)
         {
             // TODO: Should this param be Direction of attack, where we would
@@ -119,5 +164,7 @@ namespace SystemMiami.CombatSystem
                 $"an inflicted CombatAction\n" +
                 $"<NOT IMPLEMENTED>");
         }
+
+        #endregion IForceMoveReceiver
     }
 }

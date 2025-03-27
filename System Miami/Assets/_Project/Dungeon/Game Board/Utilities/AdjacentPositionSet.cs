@@ -7,9 +7,11 @@ using UnityEngine;
 
 namespace SystemMiami.CombatSystem
 {
-    // Take the direction that something is facing,
-    // and translate their local adjacent positions
-    // into static/unchanging positions on the Board/Map
+    /// <summary>
+    /// Take the direction that something is facing,
+    /// and translate its local adjacent positions
+    /// into static/unchanging positions on the Board/Map
+    /// </summary>
     public class AdjacentPositionSet
     {
         public readonly Dictionary<TileDir, Vector2Int>
@@ -31,7 +33,8 @@ namespace SystemMiami.CombatSystem
             // incoming object to the directions
             foreach(TileDir direction in BoardDirectionVectors.Keys)
             {
-                AdjacentBoardPositions[direction] = BoardDirectionVectors[direction] + info.TilePositionA;
+                AdjacentBoardPositions[direction]
+                    = info.TilePositionA + BoardDirectionVectors[direction];
             }
 
             //DirectionHelper.Print(AdjacentPositions, "Adjacent");
@@ -54,10 +57,10 @@ namespace SystemMiami.CombatSystem
         /// BoardDirectionVecByEnum[BACKWARD_L]</para>
         /// </summary>
         /// 
-        /// <param name="clockwiseQuarterTurns">
+        /// <param name="clockwiseEighthTurns">
         /// The amount of times to shift by 45 degrees
         /// </param>
-        private Dictionary<TileDir, Vector2Int> GetRotatedVectors(int clockwiseQuarterTurns)
+        private Dictionary<TileDir, Vector2Int> GetRotatedVectors(int clockwiseEighthTurns)
         {
             // Copy of the standard dictionary
             // of directions is stored to
@@ -73,7 +76,7 @@ namespace SystemMiami.CombatSystem
             int directionCount = Enum.GetValues(typeof(TileDir)).Length;
 
             int leftIndex = 0;
-            int rightIndex = clockwiseQuarterTurns;
+            int rightIndex = clockwiseEighthTurns;
             int catchBeginning = 0;
 
             int iterations = 0;
