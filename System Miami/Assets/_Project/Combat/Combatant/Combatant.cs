@@ -475,14 +475,21 @@ namespace SystemMiami.CombatSystem
         {
             return true;
         }
-        void IForceMoveReceiver.PreviewForceMove(Vector2Int origin, int distance, MoveType type)
+        void IForceMoveReceiver.PreviewForceMove(OverlayTile destinationTile)
         {
-            Debug.LogWarning($"Force Movement preview is not yet implemented", this);
+            Debug.LogError(
+                $"{name} is trying to priview movement to " +
+                $"{destinationTile.name}, but its RecieveForceMove() method " +
+                $"has not been implemented.",
+                destinationTile);
         }
 
-        void IForceMoveReceiver.ReceiveForceMove(Vector2Int origin, int distance, MoveType type)
+        void IForceMoveReceiver.RecieveForceMove(OverlayTile destinationTile)
         {
-            Debug.LogWarning($"Force Movement is not yet implemented", this);
+            Debug.LogError(
+                $"{name} is trying to move to {destinationTile.name}, but " +
+                $"its RecieveForceMove() method has not been implemented.",
+                destinationTile);
         }
 
         //public Vector2Int GetTilePos()

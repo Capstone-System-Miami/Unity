@@ -1,9 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using SystemMiami.Enums;
 using SystemMiami.Utilities;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem
@@ -22,7 +17,8 @@ namespace SystemMiami.CombatSystem
             if (TRIGGER_ForceMovePreviewTest)
             {
                 TRIGGER_ForceMovePreviewTest = false;
-                PreviewForceMove(TEST_origin, TEST_distance, TEST_moveType);
+                ForceMoveCommand testCommand = new(this, TEST_origin, TEST_moveType, TEST_distance);
+                testCommand.Preview();
             }
         }
 
@@ -103,36 +99,21 @@ namespace SystemMiami.CombatSystem
         /// <param name="directionVector">
         /// A direction in Worldspace (but really
         /// "BoardSpace" / "TileSpace" or whatever) </param>
-        public void PreviewForceMove(Vector2Int origin, int distance, MoveType type)
+        public void PreviewForceMove(OverlayTile destinationTile)
         {
-            Vector2Int dirVec = DirectionHelper.GetDirectionVec(origin, (Vector2Int)PositionTile.GridLocation);
-
-            if (type == MoveType.PULL)
-            {
-                dirVec *= -1;
-            }
-
-            Vector2Int targetPos = (this as ITargetable).BoardPos + (dirVec * distance);
-
-            int adjustedX = System.Math.Clamp(targetPos.x, MapManager.MGR.Bounds.xMin, MapManager.MGR.Bounds.xMax);
-            int adjustedY = System.Math.Clamp(targetPos.y, MapManager.MGR.Bounds.yMin, MapManager.MGR.Bounds.yMax);
-
-            targetPos = new(adjustedX, adjustedY);
-
-            if (MapManager.MGR.TryGetTile(targetPos, out OverlayTile targetTile))
-            {
-                log.error($"{name} would move to {targetTile.gameObject.name}", targetTile);
-            }
-            else
-            {
-                log.error($"{name} didn't find a tile...", this);
-            }
-
+            log.error(
+                $"{name} is trying to priview movement to " +
+                $"{destinationTile.name}, but its RecieveForceMove() method " +
+                $"has not been implemented.",
+                destinationTile);
         }
 
-        public void ReceiveForceMove(Vector2Int origin, int distance, MoveType type)
+        public void RecieveForceMove(OverlayTile destinationTile)
         {
-            throw new System.NotImplementedException();
+            log.error(
+                $"{name} is trying to move to {destinationTile.name}, but " +
+                $"its RecieveForceMove() method has not been implemented.",
+                destinationTile);
         }
         public void PreviewForceMove(int distance, Vector2Int directionVector)
         {
