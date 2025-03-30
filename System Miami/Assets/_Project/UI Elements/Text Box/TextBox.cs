@@ -21,7 +21,6 @@ namespace SystemMiami
             {
                 _background.enabled = true;
             }
-            
         }
 
         public void HideBackground()
@@ -30,7 +29,6 @@ namespace SystemMiami
             {
                 _background.enabled = false;
             }
-            
         }
 
         public void SetBackground(Sprite sprite)
@@ -39,7 +37,6 @@ namespace SystemMiami
             {
                 _background.sprite = sprite;
             }
-            
         }
 
         public void SetBackground(Color color)
@@ -48,7 +45,6 @@ namespace SystemMiami
             {
                 _background.color = color;
             }
-            
         }
 
         public void SetBackground(Sprite sprite, Color color)
@@ -58,7 +54,6 @@ namespace SystemMiami
                 _background.sprite = sprite;
                 _background.color = color;
             }
-            
         }
 
         public void ShowForeground()
@@ -70,7 +65,7 @@ namespace SystemMiami
             else if (_useTMP && _TextMeshPro != null)
             {
                 _TextMeshPro.enabled = true;
-            }            
+            }
         }
 
         public void HideForeground()
@@ -82,7 +77,7 @@ namespace SystemMiami
             else if (_useTMP && _TextMeshPro != null)
             {
                 _TextMeshPro.enabled = false;
-            }            
+            }
         }
 
         public void SetForeground(string text)
@@ -102,7 +97,7 @@ namespace SystemMiami
                 _TextMeshPro.text = text;
             }
             
-            Debug.Log(msg, this);
+            //Debug.Log(msg, this);
         }
 
         public void SetForeground(Color color)
@@ -116,7 +111,6 @@ namespace SystemMiami
             {
                 _TextMeshPro.color = color;
             }
-
         }
 
         public void SetForeground(string text, Color color)
@@ -131,7 +125,6 @@ namespace SystemMiami
                 _TextMeshPro.text = text;
                 _TextMeshPro.color = color;
             }
-           
         }
     }
 }

@@ -130,6 +130,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 18740023143509276, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
+      propertyPath: quickslotMagicalAbilityIDs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 18740023143509276, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
+      propertyPath: quickslotMagicalAbilityIDs.Array.data[0]
+      value: 2002
+      objectReference: {fileID: 0}
     - target: {fileID: 3561768479257745428, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
       propertyPath: quickslotConsumableIDs.Array.size
       value: 2
@@ -256,6 +264,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _preserveBetweenScenes: 0
+  inputPromptsOn: 1
   inputPromptPanel: {fileID: 0}
   physicalAbilitiesBar: {fileID: 0}
   magicalAbilitiesBar: {fileID: 0}
@@ -9012,10 +9021,30 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: 325584827e537574f87e9c204cceb703, type: 2}
     - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
       propertyPath: enemyPhysicalAbilityEntries.Array.size
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: enemyPhysicalAbilityEntries.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: c665fe02e1ebd4a4090e8510287e199b, type: 2}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: enemyPhysicalAbilityEntries.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: 0784bd47bf6a041418288067a69788dd, type: 2}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: enemyPhysicalAbilityEntries.Array.data[2]
+      value: 
+      objectReference: {fileID: 11400000, guid: 3c00588e6fc198640adfd59c9d3275cc, type: 2}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: enemyPhysicalAbilityEntries.Array.data[3]
+      value: 
+      objectReference: {fileID: 11400000, guid: a38d5318836002c44906ddc5808316d0, type: 2}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
       propertyPath: enemyPhysicalAbilityEntries.Array.data[4]
+      value: 
+      objectReference: {fileID: 11400000, guid: e174f1a19bb73304693b9b27f86b75d4, type: 2}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: enemyPhysicalAbilityEntries.Array.data[5]
       value: 
       objectReference: {fileID: 11400000, guid: 9a88aa5433b55c1498d0358ad41507fd, type: 2}
     - target: {fileID: 7984003600839781529, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
@@ -9072,6 +9101,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _preserveBetweenScenes: 1
+  log:
+    showMessages: 1
   streetPools:
   - {fileID: 11400000, guid: 1bb8ccc0cf177824787e246cb55ddde4, type: 2}
   - {fileID: 11400000, guid: 0c49fb2684c944044b6da7d8c1bf3190, type: 2}
