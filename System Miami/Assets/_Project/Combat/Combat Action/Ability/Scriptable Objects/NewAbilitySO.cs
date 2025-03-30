@@ -14,6 +14,7 @@ namespace SystemMiami.CombatRefactor
         [FormerlySerializedAs("Data")] public ItemData itemData;
         public CharacterClassType classType;
         public bool isEnemyAbility;
+        public bool isGeneralAbility;
 
     }
 }

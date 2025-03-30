@@ -5,71 +5,48 @@ using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Runtime.Remoting.Messaging;
 using SystemMiami;
 using SystemMiami.AbilitySystem;
-using SystemMiami.CombatRefactor;
 using SystemMiami.CombatSystem;
+using SystemMiami.CombatRefactor;
+
 
 public class CombatActionCreatorWindow : EditorWindow
 {
-    [SerializeField] private GlobalIDDatabase _idDatabase;
-
-    private static Type[] _allSubactionTypes;
-    private static string[] _allSubactionTypeNames;
-
-    private static Type[] _allPatternTypes;
-    private static string[] _allPatternTypeNames;
-
-    [System.Serializable]
-    private class SubactionCreationInfo
+    private enum WizardStep
     {
-        // For the subaction
-        public string subactionAssetName = "NewSubaction";
-        public int subactionTypeIndex = 0;
-
-        // For the pattern
-        public string patternAssetName = "NewPattern";
-        public int patternTypeIndex = 0;
-        public PatternOriginType patternOrigin = PatternOriginType.USER;
-        public Color targetedTileColor = Color.white;
-        public Color targetedCombatantColor = Color.white;
-
-        // Reflection-based custom fields
-        // Key   = Field name
-        // Value = The string representation of the user's input
-        public Dictionary<string, string> subactionFieldValues = new Dictionary<string, string>();
+        ChooseActionType,
+        FillActionInfo,
+        ManageSubactions,
+        Summary
     }
 
-    [Header("Abiliy Creation")]
-    private string _abilityName = "New Ability";
-    private string _abilityDescription = "";
-    private Sprite _abilityIcon;
+    private WizardStep _currentStep = WizardStep.ChooseActionType;
+
+    [Header("Global ID Database")]
+    [SerializeField] private GlobalIDDatabase _idDatabase;
+
+    // Which type of final asset are we making?
+    private enum ActionAssetType { Ability, Consumable, EquipmentMod }
+    private ActionAssetType _assetType;
+
+    // =========== Common Fields ==============
+    private string _assetName = "New Action";
+    private string _assetDescription = "";
+    private Sprite _assetIcon;
+    private AnimatorOverrideController _animOverride;
+    private int _price;
+    private bool _isEnemyAbility;
+
+    // =========== Ability-specific fields ==============
     private AbilityType _abilityType;
     private float _resourceCost;
     private int _cooldownTurns;
-    private AnimatorOverrideController _abilityAnimator;
 
-    private int _abilitySubactionCount = 0;
-    private List<SubactionCreationInfo> _abilitySubactions = new List<SubactionCreationInfo>();
+    // =========== Consumable-specific fields ==============
+    private int _consumableUses;
 
-    [Header("Consumable Creation")]
-    private string _consumableName = "New Consumable";
-    private string _consumableDescription = "";
-    private Sprite _consumableIcon;
-    private int _uses;
-    private AnimatorOverrideController _consumableAnimator;
-    private bool isEnemyAbility;
-    private int price;
-    
-    private int _consumableSubactionCount = 0;
-    private List<SubactionCreationInfo> _consumableSubactions = new List<SubactionCreationInfo>();
-
-    [Header("Equipment Mod Creation")]
-    private string _equipmentModName = "New Equipment Mod";
-    private string _equipmentModDescription = "";
-    private Sprite _equipmentModIcon;
-    private StatSetSO _equipmentModStatSet;
+    // =========== Equipment Mod fields ==============
     private float _equipmentModPhysicalPower;
     private float _equipmentModMagicalPower;
     private float _equipmentModPhysicalSlots;
@@ -80,21 +57,57 @@ public class CombatActionCreatorWindow : EditorWindow
     private float _equipmentModDamageRDX;
     private float _equipmentModSpeed;
 
-    [MenuItem("Window/Combat Action Creator")]
-    public static void ShowWindow()
+    // =========== Subaction Info ==============
+    private List<SubactionCreationData> _subactions = new List<SubactionCreationData>();
+
+    // For scrolling in the subaction list
+    private Vector2 _scrollPos;
+
+    #region Structs and Helpers
+
+    [Serializable]
+    private class SubactionCreationData
     {
-        var window = GetWindow<CombatActionCreatorWindow>("Combat Action Creator");
-        window.InitializeReflectionCaches();
-        window.Show();
+        public SubactionSource source = SubactionSource.Preset;
+        public SubactionPresetType presetType; // If using a preset
+        public CombatSubactionSO cloneSource;   // If cloning an existing asset
+
+        // Reflection-based (or direct) fields
+        // NOTE: We no longer rely on subactionName to set the final .name
+        public string subactionName;
+        public string patternName;
+        public PatternOriginType patternOrigin = PatternOriginType.USER;
+        public Color tileColor = Color.white;
+        public Color combatantColor = Color.white;
+
+        // The subaction class type we’re eventually creating
+        public Type subactionClassType;
+        public int subactionTypeIndex;  // for reflection-based approach
+
+        // Reflection-based fields
+        public Dictionary<string, string> fieldValues = new Dictionary<string, string>();
     }
 
-    private void OnFocus()
+    private enum SubactionSource
     {
-        InitializeReflectionCaches();
+        Preset,
+        Clone,
+        Custom
     }
 
+    private enum SubactionPresetType
+    {
+        Damage,
+        Heal,
+        InflictStatusEffect
+    }
 
-    private void InitializeReflectionCaches()
+    private static Type[] _allSubactionTypes;
+    private static string[] _allSubactionTypeNames;
+    private static Type[] _allPatternTypes;
+    private static string[] _allPatternTypeNames;
+
+    private static void InitializeReflectionCaches()
     {
         if (_allSubactionTypes == null || _allSubactionTypes.Length == 0)
         {
@@ -117,632 +130,784 @@ public class CombatActionCreatorWindow : EditorWindow
         }
     }
 
-    // ─────────────────────────────────────────────────────────────────────────────
-    // ▌ OnGUI
-    // ─────────────────────────────────────────────────────────────────────────────
+    private static string GetSelectedPathOrFallback()
+    {
+        string path = "Assets";
+        foreach (UnityEngine.Object obj in Selection.GetFiltered(typeof(UnityEngine.Object), SelectionMode.Assets))
+        {
+            path = AssetDatabase.GetAssetPath(obj);
+            if (!string.IsNullOrEmpty(path) && File.Exists(path))
+            {
+                path = Path.GetDirectoryName(path);
+            }
+            break;
+        }
+        return path;
+    }
+
+    #endregion
+
+    [MenuItem("Window/Combat Action Wizard")]
+    public static void ShowWindow()
+    {
+        var window = GetWindow<CombatActionCreatorWindow>("Combat Action Wizard");
+        InitializeReflectionCaches();
+        window.Show();
+    }
+
+    private void OnEnable()
+    {
+        InitializeReflectionCaches();
+    }
+
     private void OnGUI()
     {
-        EditorGUILayout.LabelField("Global ID Database", EditorStyles.boldLabel);
-        _idDatabase = (GlobalIDDatabase)EditorGUILayout.ObjectField(
-            "ID Database",
-            _idDatabase,
-            typeof(GlobalIDDatabase),
-            false
-        );
         if (_idDatabase == null)
         {
             EditorGUILayout.HelpBox("Please assign a GlobalIDDatabase to persist unique IDs.", MessageType.Warning);
         }
 
-        EditorGUILayout.Space(8);
+        _idDatabase = (GlobalIDDatabase)EditorGUILayout.ObjectField("Global ID Database", _idDatabase, typeof(GlobalIDDatabase), false);
 
-        DrawAbilitySection();
         EditorGUILayout.Space(10);
-        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
-        EditorGUILayout.Space(10);
-        DrawConsumableSection();
-        DrawEquipmentModSection();
+        switch (_currentStep)
+        {
+            case WizardStep.ChooseActionType:
+                DrawStepChooseActionType();
+                break;
+            case WizardStep.FillActionInfo:
+                DrawStepFillActionInfo();
+                break;
+            case WizardStep.ManageSubactions:
+                DrawStepManageSubactions();
+                break;
+            case WizardStep.Summary:
+                DrawStepSummary();
+                break;
+        }
     }
 
-    private void DrawAbilitySection()
+    #region Step 1: Choose Action Type
+
+    private void DrawStepChooseActionType()
     {
-        EditorGUILayout.LabelField("Create a New Ability", EditorStyles.boldLabel);
+        EditorGUILayout.LabelField("Step 1: Choose what kind of asset you want to create", EditorStyles.boldLabel);
+        _assetType = (ActionAssetType)EditorGUILayout.EnumPopup("Asset Type", _assetType);
 
-        _abilityName = EditorGUILayout.TextField("Name (ItemData.AbilityName)", _abilityName);
-        _abilityDescription = EditorGUILayout.TextField("Description (ItemData.Description)", _abilityDescription);
-        _abilityIcon = (Sprite)EditorGUILayout.ObjectField("Icon (ItemData.Icon)", _abilityIcon, typeof(Sprite), false);
+        EditorGUILayout.Space(10);
 
+        if (GUILayout.Button("Next →", GUILayout.Height(30)))
+        {
+            _currentStep = WizardStep.FillActionInfo;
+        }
+    }
+
+    #endregion
+
+    #region Step 2: Fill Basic Action Info
+
+    private void DrawStepFillActionInfo()
+    {
+        EditorGUILayout.LabelField("Step 2: Basic Info", EditorStyles.boldLabel);
+
+        _assetName = EditorGUILayout.TextField("Name", _assetName);
+        _assetDescription = EditorGUILayout.TextField("Description", _assetDescription);
+        _assetIcon = (Sprite)EditorGUILayout.ObjectField("Icon", _assetIcon, typeof(Sprite), false);
+
+        switch (_assetType)
+        {
+            case ActionAssetType.Ability:
+                DrawAbilityFields();
+                break;
+            case ActionAssetType.Consumable:
+                DrawConsumableFields();
+                break;
+            case ActionAssetType.EquipmentMod:
+                DrawEquipmentModFields();
+                break;
+        }
+
+        EditorGUILayout.Space(10);
+
+        EditorGUILayout.BeginHorizontal();
+        if (GUILayout.Button("← Back", GUILayout.Height(30)))
+        {
+            _currentStep = WizardStep.ChooseActionType;
+        }
+
+        if (GUILayout.Button("Next →", GUILayout.Height(30)))
+        {
+            // If no subactions exist yet (and we're not doing EquipmentMod),
+            // we add one subaction by default (Damage).
+            if (_subactions.Count == 0 && _assetType != ActionAssetType.EquipmentMod)
+            {
+                AddSubactionFromPreset(SubactionPresetType.Damage);
+            }
+            _currentStep = WizardStep.ManageSubactions;
+        }
+        EditorGUILayout.EndHorizontal();
+    }
+
+    private void DrawAbilityFields()
+    {
+        EditorGUILayout.LabelField("Ability-Specific Fields", EditorStyles.boldLabel);
         _abilityType = (AbilityType)EditorGUILayout.EnumPopup("Ability Type", _abilityType);
         _resourceCost = EditorGUILayout.FloatField("Resource Cost", _resourceCost);
         _cooldownTurns = EditorGUILayout.IntField("Cooldown Turns", _cooldownTurns);
-        isEnemyAbility = EditorGUILayout.Toggle("Is Enemy Ability", isEnemyAbility);
-        _abilityAnimator = (AnimatorOverrideController)EditorGUILayout.ObjectField(
+        _isEnemyAbility = EditorGUILayout.Toggle("Is Enemy Ability", _isEnemyAbility);
+
+        _animOverride = (AnimatorOverrideController)EditorGUILayout.ObjectField(
             "Animator Override",
-            _abilityAnimator,
+            _animOverride,
             typeof(AnimatorOverrideController),
             false
         );
-
-        EditorGUILayout.Space(5);
-        EditorGUILayout.LabelField("Subactions for this Ability", EditorStyles.boldLabel);
-
-        _abilitySubactionCount = EditorGUILayout.IntField("Number of Subactions", _abilitySubactionCount);
-        if (_abilitySubactionCount < 0) _abilitySubactionCount = 0;
-
-
-        while (_abilitySubactions.Count < _abilitySubactionCount)
-            _abilitySubactions.Add(new SubactionCreationInfo());
-        while (_abilitySubactions.Count > _abilitySubactionCount)
-            _abilitySubactions.RemoveAt(_abilitySubactions.Count - 1);
-
-        for (int i = 0; i < _abilitySubactions.Count; i++)
-        {
-            var info = _abilitySubactions[i];
-            EditorGUILayout.BeginVertical("box");
-            EditorGUILayout.LabelField($"Subaction {i + 1}", EditorStyles.miniBoldLabel);
-
-            info.subactionAssetName = EditorGUILayout.TextField("Subaction Asset Name", info.subactionAssetName);
-            info.subactionTypeIndex =
-                EditorGUILayout.Popup("Subaction Type", info.subactionTypeIndex, _allSubactionTypeNames);
-
-            EditorGUILayout.Space(5);
-
-            info.patternAssetName = EditorGUILayout.TextField("Pattern Asset Name", info.patternAssetName);
-            info.patternTypeIndex = EditorGUILayout.Popup("Pattern Type", info.patternTypeIndex, _allPatternTypeNames);
-            info.patternOrigin = (PatternOriginType)EditorGUILayout.EnumPopup("Pattern Origin", info.patternOrigin);
-
-            info.targetedTileColor = EditorGUILayout.ColorField("Tile Color", info.targetedTileColor);
-            info.targetedCombatantColor = EditorGUILayout.ColorField("Combatant Color", info.targetedCombatantColor);
-
-            EditorGUILayout.Space(5);
-
-
-            DrawSubactionFields(info);
-
-            EditorGUILayout.EndVertical();
-            EditorGUILayout.Space(5);
-        }
-
-        if (GUILayout.Button("Create Ability"))
-        {
-            CreateNewAbility();
-        }
     }
 
-    private void DrawConsumableSection()
+    private void DrawConsumableFields()
     {
-        EditorGUILayout.LabelField("Create a New Consumable", EditorStyles.boldLabel);
+        EditorGUILayout.LabelField("Consumable-Specific Fields", EditorStyles.boldLabel);
+        _consumableUses = EditorGUILayout.IntField("Uses", _consumableUses);
+        _price = EditorGUILayout.IntField("Price", _price);
 
-        _consumableName = EditorGUILayout.TextField("Name (ItemData.AbilityName)", _consumableName);
-        _consumableDescription = EditorGUILayout.TextField("Description (ItemData.Description)", _consumableDescription);
-        _consumableIcon =
-            (Sprite)EditorGUILayout.ObjectField("Icon (ItemData.Icon)", _consumableIcon, typeof(Sprite), false);
-
-        _uses = EditorGUILayout.IntField("Uses", _uses);
-        price = EditorGUILayout.IntField("Price", price);
-        _consumableAnimator = (AnimatorOverrideController)EditorGUILayout.ObjectField(
+        _animOverride = (AnimatorOverrideController)EditorGUILayout.ObjectField(
             "Animator Override",
-            _consumableAnimator,
+            _animOverride,
             typeof(AnimatorOverrideController),
             false
         );
-
-        EditorGUILayout.Space(5);
-        EditorGUILayout.LabelField("Subactions for this Consumable", EditorStyles.boldLabel);
-
-        _consumableSubactionCount = EditorGUILayout.IntField("Number of Subactions", _consumableSubactionCount);
-        if (_consumableSubactionCount < 0) _consumableSubactionCount = 0;
-
-        while (_consumableSubactions.Count < _consumableSubactionCount)
-            _consumableSubactions.Add(new SubactionCreationInfo());
-        while (_consumableSubactions.Count > _consumableSubactionCount)
-            _consumableSubactions.RemoveAt(_consumableSubactions.Count - 1);
-
-        for (int i = 0; i < _consumableSubactions.Count; i++)
-        {
-            var info = _consumableSubactions[i];
-            EditorGUILayout.BeginVertical("box");
-            EditorGUILayout.LabelField($"Subaction {i + 1}", EditorStyles.miniBoldLabel);
-
-            info.subactionAssetName = EditorGUILayout.TextField("Subaction Asset Name", info.subactionAssetName);
-            info.subactionTypeIndex =
-                EditorGUILayout.Popup("Subaction Type", info.subactionTypeIndex, _allSubactionTypeNames);
-
-            EditorGUILayout.Space(5);
-
-            info.patternAssetName = EditorGUILayout.TextField("Pattern Asset Name", info.patternAssetName);
-            info.patternTypeIndex = EditorGUILayout.Popup("Pattern Type", info.patternTypeIndex, _allPatternTypeNames);
-            info.patternOrigin = (PatternOriginType)EditorGUILayout.EnumPopup("Pattern Origin", info.patternOrigin);
-
-            info.targetedTileColor = EditorGUILayout.ColorField("Tile Color", info.targetedTileColor);
-            info.targetedCombatantColor = EditorGUILayout.ColorField("Combatant Color", info.targetedCombatantColor);
-
-            EditorGUILayout.Space(5);
-
-            // Draw reflection-based fields for this subaction
-            DrawSubactionFields(info);
-
-            EditorGUILayout.EndVertical();
-            EditorGUILayout.Space(5);
-        }
-
-        if (GUILayout.Button("Create Consumable"))
-        {
-            CreateNewConsumable();
-        }
     }
 
-    private void DrawEquipmentModSection()
+    private void DrawEquipmentModFields()
     {
-        EditorGUILayout.LabelField("Create a New Equipment Mod", EditorStyles.boldLabel);
+        EditorGUILayout.LabelField("Equipment Mod Fields", EditorStyles.boldLabel);
+        _price = EditorGUILayout.IntField("Price", _price);
 
-        _equipmentModName = EditorGUILayout.TextField("Name (ItemData.Name)", _equipmentModName);
-        _equipmentModDescription = EditorGUILayout.TextField("Description (ItemData.Description)", _equipmentModDescription);
-        _equipmentModIcon = (Sprite)EditorGUILayout.ObjectField("Icon (ItemData.Icon)", _equipmentModIcon, typeof(Sprite), false);
-        price = EditorGUILayout.IntField("Price", price);
-       
-
-       
         _equipmentModPhysicalPower = EditorGUILayout.FloatField("Physical Power", _equipmentModPhysicalPower);
         _equipmentModMagicalPower = EditorGUILayout.FloatField("Magical Power", _equipmentModMagicalPower);
         _equipmentModPhysicalSlots = EditorGUILayout.FloatField("Physical Slots", _equipmentModPhysicalSlots);
         _equipmentModMagicalSlots = EditorGUILayout.FloatField("Magical Slots", _equipmentModMagicalSlots);
-        _equipmentModStamina      = EditorGUILayout.FloatField("Stamina", _equipmentModStamina);
-        _equipmentModMana         = EditorGUILayout.FloatField("Mana", _equipmentModMana);
-        _equipmentModMaxHealth    = EditorGUILayout.FloatField("Max Health", _equipmentModMaxHealth);
-        _equipmentModDamageRDX    = EditorGUILayout.FloatField("Damage RDX", _equipmentModDamageRDX);
-        _equipmentModSpeed        = EditorGUILayout.FloatField("Speed", _equipmentModSpeed);
-        // ───────────────────────────
+        _equipmentModStamina = EditorGUILayout.FloatField("Stamina", _equipmentModStamina);
+        _equipmentModMana = EditorGUILayout.FloatField("Mana", _equipmentModMana);
+        _equipmentModMaxHealth = EditorGUILayout.FloatField("Max Health", _equipmentModMaxHealth);
+        _equipmentModDamageRDX = EditorGUILayout.FloatField("Damage RDX", _equipmentModDamageRDX);
+        _equipmentModSpeed = EditorGUILayout.FloatField("Speed", _equipmentModSpeed);
+    }
 
-        if (GUILayout.Button("Create Equipment Mod"))
+    #endregion
+
+    #region Step 3: Manage Subactions
+
+    private void DrawStepManageSubactions()
+    {
+        EditorGUILayout.LabelField("Step 3: Subactions for This Asset", EditorStyles.boldLabel);
+
+        if (_assetType == ActionAssetType.EquipmentMod)
         {
-            CreateEquipmentMod();
+            EditorGUILayout.HelpBox("Equipment Mods typically do not have subactions. Click Next.", MessageType.Info);
+        }
+        else
+        {
+            _scrollPos = EditorGUILayout.BeginScrollView(_scrollPos, GUILayout.MinHeight(200));
+            for (int i = 0; i < _subactions.Count; i++)
+            {
+                SubactionCreationData subData = _subactions[i];
+                EditorGUILayout.BeginVertical("box");
+
+                EditorGUILayout.LabelField($"Subaction {i + 1}", EditorStyles.boldLabel);
+
+                // Source
+                subData.source = (SubactionSource)EditorGUILayout.EnumPopup("Source", subData.source);
+
+                if (subData.source == SubactionSource.Preset)
+                {
+                    subData.presetType = (SubactionPresetType)EditorGUILayout.EnumPopup("Preset Type", subData.presetType);
+                }
+                else if (subData.source == SubactionSource.Clone)
+                {
+                    subData.cloneSource = (CombatSubactionSO)EditorGUILayout.ObjectField(
+                        "Clone From",
+                        subData.cloneSource,
+                        typeof(CombatSubactionSO),
+                        false
+                    );
+                }
+                else if (subData.source == SubactionSource.Custom)
+                {
+                    // Show a popup for subaction type
+                    subData.subactionTypeIndex = EditorGUILayout.Popup("Custom Subaction Type",
+                        subData.subactionTypeIndex, _allSubactionTypeNames);
+
+                    if (subData.subactionTypeIndex >= 0 && subData.subactionTypeIndex < _allSubactionTypes.Length)
+                    {
+                        subData.subactionClassType = _allSubactionTypes[subData.subactionTypeIndex];
+                    }
+                }
+
+                EditorGUILayout.Space(5);
+
+                // We do *not* rely on subactionName for final naming,
+                // but we'll still allow the user to see/edit it if they want.
+                subData.subactionName = EditorGUILayout.TextField("Subaction Name", subData.subactionName);
+
+                // Pattern info
+                subData.patternName = EditorGUILayout.TextField("Pattern Name", subData.patternName);
+                subData.patternOrigin = (PatternOriginType)EditorGUILayout.EnumPopup("Pattern Origin", subData.patternOrigin);
+                subData.tileColor = EditorGUILayout.ColorField("Tile Color", subData.tileColor);
+                subData.combatantColor = EditorGUILayout.ColorField("Combatant Color", subData.combatantColor);
+
+                // Reflection-based fields
+                if (subData.subactionClassType != null)
+                {
+                    DrawSubactionReflectionFields(subData);
+                }
+
+                // Buttons
+                EditorGUILayout.BeginHorizontal();
+                if (GUILayout.Button("Apply Preset/Clone Defaults"))
+                {
+                    ApplySourceDefaults(subData);
+                }
+                if (GUILayout.Button("Remove"))
+                {
+                    _subactions.RemoveAt(i);
+                    break;
+                }
+                EditorGUILayout.EndHorizontal();
+
+                EditorGUILayout.EndVertical();
+                EditorGUILayout.Space(5);
+            }
+            EditorGUILayout.EndScrollView();
+
+            EditorGUILayout.Space(10);
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("Add Subaction (Preset: Damage)"))
+            {
+                AddSubactionFromPreset(SubactionPresetType.Damage);
+            }
+            if (GUILayout.Button("Add Subaction (Preset: Heal)"))
+            {
+                AddSubactionFromPreset(SubactionPresetType.Heal);
+            }
+            if (GUILayout.Button("Add Subaction (Preset: Status)"))
+            {
+                AddSubactionFromPreset(SubactionPresetType.InflictStatusEffect);
+            }
+            if (GUILayout.Button("Add Subaction (Custom)"))
+            {
+                AddCustomSubaction();
+            }
+            EditorGUILayout.EndHorizontal();
+        }
+
+        EditorGUILayout.Space(20);
+        EditorGUILayout.BeginHorizontal();
+        if (GUILayout.Button("← Back", GUILayout.Height(30)))
+        {
+            _currentStep = WizardStep.FillActionInfo;
+        }
+
+        if (GUILayout.Button("Next →", GUILayout.Height(30)))
+        {
+            _currentStep = WizardStep.Summary;
+        }
+        EditorGUILayout.EndHorizontal();
+    }
+
+    private void AddSubactionFromPreset(SubactionPresetType presetType)
+    {
+        var data = new SubactionCreationData
+        {
+            source = SubactionSource.Preset,
+            presetType = presetType
+        };
+
+        // By default, guess a subaction class type
+        switch (presetType)
+        {
+            case SubactionPresetType.Damage:
+                data.subactionClassType = typeof(Damage);
+                break;
+            case SubactionPresetType.Heal:
+                data.subactionClassType = typeof(Heal);
+                break;
+            case SubactionPresetType.InflictStatusEffect:
+                data.subactionClassType = typeof(InflictStatusEffect);
+                break;
+        }
+        // Fill reflection-based fields with some defaults
+        ApplySourceDefaults(data);
+
+        _subactions.Add(data);
+    }
+
+    private void AddCustomSubaction()
+    {
+        var data = new SubactionCreationData
+        {
+            source = SubactionSource.Custom,
+            subactionTypeIndex = 0
+        };
+        data.subactionClassType = _allSubactionTypes[0];
+
+        _subactions.Add(data);
+    }
+
+    private void ApplySourceDefaults(SubactionCreationData data)
+    {
+        data.fieldValues.Clear();
+
+        if (data.source == SubactionSource.Preset)
+        {
+            switch (data.presetType)
+            {
+                case SubactionPresetType.Damage:
+                    data.subactionClassType = typeof(Damage);
+                    data.fieldValues["damageToDeal"] = "10";
+                    data.tileColor = Color.red;
+                    data.combatantColor = Color.red;
+                    break;
+                case SubactionPresetType.Heal:
+                    data.subactionClassType = typeof(Heal);
+                    data.fieldValues["healAmount"] = "12";
+                    data.tileColor = Color.green;
+                    data.combatantColor = Color.green;
+                    break;
+                case SubactionPresetType.InflictStatusEffect:
+                    data.subactionClassType = typeof(InflictStatusEffect);
+                    data.fieldValues["damagePerTurn"] = "2";
+                    data.fieldValues["healPerTurn"] = "0";
+                    data.fieldValues["durationTurns"] = "3";
+                    data.tileColor = Color.magenta;
+                    data.combatantColor = Color.magenta;
+                    break;
+            }
+        }
+        else if (data.source == SubactionSource.Clone && data.cloneSource != null)
+        {
+            data.subactionClassType = data.cloneSource.GetType();
+
+            var fields = data.subactionClassType.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            foreach (var f in fields)
+            {
+                if (f.FieldType == typeof(TargetingPattern)) continue;
+                object val = f.GetValue(data.cloneSource);
+                if (val != null)
+                {
+                    data.fieldValues[f.Name] = val.ToString();
+                }
+            }
+
+            var prop = data.cloneSource.GetType().GetProperty("TargetingPattern",
+                BindingFlags.Public | BindingFlags.Instance);
+            if (prop != null && prop.PropertyType == typeof(TargetingPattern))
+            {
+                var existingPattern = prop.GetValue(data.cloneSource) as TargetingPattern;
+                if (existingPattern != null)
+                {
+                    data.patternOrigin = existingPattern.PatternOrigin;
+                    data.tileColor = existingPattern.TargetedTileColor;
+                    data.combatantColor = existingPattern.TargetedCombatantColor;
+                }
+            }
         }
     }
-    /// <summary>
-    /// Draws public fields  for the selected subaction type
-    /// and stores/retrieves them in/from subactionFieldValues in SubactionCreationInfo.
-    /// </summary>
-    private void DrawSubactionFields(SubactionCreationInfo info)
+
+    private void DrawSubactionReflectionFields(SubactionCreationData data)
     {
-        // Make sure we have valid arrays
-        if (_allSubactionTypes == null || info.subactionTypeIndex < 0 ||
-            info.subactionTypeIndex >= _allSubactionTypes.Length)
+        if (data.subactionClassType == null) return;
+
+        var fields = data.subactionClassType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+        foreach (var f in fields)
         {
-            return;
-        }
+            bool isFieldSerialized = f.IsPublic ||
+                                     f.GetCustomAttributes(typeof(SerializeField), true).Length > 0;
+            if (!isFieldSerialized) continue;
+            if (f.FieldType == typeof(TargetingPattern)) continue;
 
-        Type subactionType = _allSubactionTypes[info.subactionTypeIndex];
-        // Get all public instance fields from this subaction type
-        FieldInfo[] fields = subactionType.GetFields(BindingFlags.Public | BindingFlags.Instance);
-
-        if (fields.Length > 0)
-        {
-            EditorGUILayout.LabelField("Subaction Fields", EditorStyles.boldLabel);
-        }
-
-        foreach (FieldInfo field in fields)
-        {
-            // Skip ScriptableObject defaults like 'name', 'hideFlags', etc.
-            if (field.DeclaringType == typeof(ScriptableObject) ||
-                field.DeclaringType == typeof(UnityEngine.Object))
-            {
-                continue;
-            }
-
-            // Skip if it's obviously the pattern field (we handle that separately)
-            if (field.FieldType == typeof(TargetingPattern))
-            {
-                continue;
-            }
-
-            // Get or initialize the stored string value
-            if (!info.subactionFieldValues.ContainsKey(field.Name))
-            {
-                info.subactionFieldValues[field.Name] = "";
-            }
-
-            string currentVal = info.subactionFieldValues[field.Name];
-            object parsedValue = null;
+            string currentVal;
+            data.fieldValues.TryGetValue(f.Name, out currentVal);
+            if (currentVal == null) currentVal = "";
 
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField(field.Name, GUILayout.Width(150));
+            EditorGUILayout.LabelField(f.Name, GUILayout.Width(120));
 
-            // Draw an appropriate GUI control based on field type
-            if (field.FieldType == typeof(int))
+            if (f.FieldType == typeof(int))
             {
-                int intVal;
-                int.TryParse(currentVal, out intVal);
-                intVal = EditorGUILayout.IntField(intVal);
-                info.subactionFieldValues[field.Name] = intVal.ToString();
+                int i; int.TryParse(currentVal, out i);
+                i = EditorGUILayout.IntField(i);
+                data.fieldValues[f.Name] = i.ToString();
             }
-            else if (field.FieldType == typeof(float))
+            else if (f.FieldType == typeof(float))
             {
-                float floatVal;
-                float.TryParse(currentVal, out floatVal);
-                floatVal = EditorGUILayout.FloatField(floatVal);
-                info.subactionFieldValues[field.Name] = floatVal.ToString();
+                float fl; float.TryParse(currentVal, out fl);
+                fl = EditorGUILayout.FloatField(fl);
+                data.fieldValues[f.Name] = fl.ToString();
             }
-            else if (field.FieldType == typeof(bool))
+            else if (f.FieldType == typeof(bool))
             {
-                bool boolVal;
-                bool.TryParse(currentVal, out boolVal);
-                boolVal = EditorGUILayout.Toggle(boolVal);
-                info.subactionFieldValues[field.Name] = boolVal.ToString();
+                bool b; bool.TryParse(currentVal, out b);
+                b = EditorGUILayout.Toggle(b);
+                data.fieldValues[f.Name] = b.ToString();
             }
-            else if (field.FieldType == typeof(string))
+            else if (f.FieldType.IsEnum)
             {
-                string stringVal = EditorGUILayout.TextField(currentVal);
-                info.subactionFieldValues[field.Name] = stringVal;
+                Enum eVal = null;
+                try { eVal = (Enum)Enum.Parse(f.FieldType, currentVal); }
+                catch { eVal = (Enum)Enum.GetValues(f.FieldType).GetValue(0); }
+                var newVal = EditorGUILayout.EnumPopup(eVal);
+                data.fieldValues[f.Name] = newVal.ToString();
             }
-            else if (field.FieldType.IsEnum)
+            else if (f.FieldType == typeof(string))
             {
-                // Attempt to parse the existing value as this enum
-                Enum enumVal = null;
-                try
-                {
-                    enumVal = (Enum)Enum.Parse(field.FieldType, currentVal);
-                }
-                catch
-                {
-                    // If parse fails, just pick the first value from the enum
-                    enumVal = (Enum)Enum.GetValues(field.FieldType).GetValue(0);
-                }
+                string sVal = EditorGUILayout.TextField(currentVal);
+                data.fieldValues[f.Name] = sVal;
+            }
+            else if (typeof(ScriptableObject).IsAssignableFrom(f.FieldType))
+            {
+                // For ScriptableObject fields, we can allow the user to drag-and-drop an asset:
+                ScriptableObject soVal = null;
+                data.fieldValues.TryGetValue(f.Name, out var soName);
 
-                Enum newEnumVal = EditorGUILayout.EnumPopup(enumVal);
-                info.subactionFieldValues[field.Name] = newEnumVal.ToString();
+                // We can’t reliably "get" the original SO from name alone. Typically you'd store a GUID/path 
+                // if you wanted to restore a reference. For simplicity, we'll just display a field:
+                ScriptableObject newSOVal = (ScriptableObject)EditorGUILayout.ObjectField(soVal, f.FieldType, false);
+
+                // We just store the name. (In a production scenario, you’d want to store and re-assign the actual object.)
+                data.fieldValues[f.Name] = newSOVal ? newSOVal.name : "";
             }
             else
             {
-                // For other itemData types, you could extend logic or skip
-                EditorGUILayout.LabelField($"(Type {field.FieldType.Name} not supported)");
+                EditorGUILayout.LabelField("(Unsupported type)");
             }
 
             EditorGUILayout.EndHorizontal();
         }
     }
 
+    #endregion
 
-    private void CreateNewAbility()
+    #region Step 4: Summary + Create
+
+    private void DrawStepSummary()
     {
-        if (_idDatabase == null)
+        EditorGUILayout.LabelField("Step 4: Summary & Creation", EditorStyles.boldLabel);
+
+        EditorGUILayout.HelpBox("Review your settings. If everything is good, click 'Create Asset'.", MessageType.Info);
+
+        EditorGUILayout.LabelField("Name:", _assetName);
+        EditorGUILayout.LabelField("Type:", _assetType.ToString());
+        EditorGUILayout.LabelField("Description:", _assetDescription);
+
+        if (_assetType == ActionAssetType.Ability)
         {
-            Debug.LogError("GlobalIDDatabase is not assigned. Please assign one in the window.");
-            return;
+            EditorGUILayout.LabelField("AbilityType:", _abilityType.ToString());
+            EditorGUILayout.LabelField("Resource Cost:", _resourceCost.ToString());
+            EditorGUILayout.LabelField("Cooldown Turns:", _cooldownTurns.ToString());
+            EditorGUILayout.LabelField("Enemy Ability?", _isEnemyAbility.ToString());
         }
-
-        string abilityPath = EditorUtility.SaveFilePanelInProject(
-            "Save New Ability",
-            _abilityName + ".asset",
-            "asset",
-            "Choose a location for your new Ability"
-        );
-        if (string.IsNullOrEmpty(abilityPath)) return;
-
-        NewAbilitySO newAbility = ScriptableObject.CreateInstance<NewAbilitySO>();
-        newAbility.name = _abilityName;
-
-
-        newAbility.itemData.Name = _abilityName;
-        newAbility.itemData.Description = _abilityDescription;
-        newAbility.itemData.Icon = _abilityIcon;
-        newAbility.itemData.itemType = ItemType.PhysicalAbility;
-        newAbility.isEnemyAbility = isEnemyAbility;
-
-        newAbility.Icon = _abilityIcon;
-        newAbility.AbilityType = _abilityType;
-        newAbility.ResourceCost = _resourceCost;
-        newAbility.CooldownTurns = _cooldownTurns;
-        newAbility.OverrideController = _abilityAnimator;
-
-
-        if (newAbility.itemData.ID == 0 && newAbility.AbilityType == AbilityType.PHYSICAL && !newAbility.isEnemyAbility)
+        else if (_assetType == ActionAssetType.Consumable)
         {
-            newAbility.itemData.ID = _idDatabase.nextPhysicalAbilityID;
-            _idDatabase.nextPhysicalAbilityID++;
-        }
-        else if (newAbility.itemData.ID == 0 && newAbility.AbilityType == AbilityType.MAGICAL  && !newAbility.isEnemyAbility)
-        {
-            newAbility.itemData.ID = _idDatabase.nextMagicalAbilityID;
-            _idDatabase.nextMagicalAbilityID++;
-        }
-        else if (newAbility.itemData.ID == 0 && newAbility.isEnemyAbility)
-        {
-            newAbility.itemData.ID = _idDatabase.nextEnemyAbilityID;
-            _idDatabase.nextEnemyAbilityID++;
-        }
-
-
-        string folderPath = Path.GetDirectoryName(abilityPath);
-        List<CombatSubactionSO> subactions = new List<CombatSubactionSO>();
-
-        foreach (var info in _abilitySubactions)
-        {
-            var subaction = CreateSubactionWithPattern(info, folderPath);
-            if (subaction != null)
-            {
-                subactions.Add(subaction);
-            }
-        }
-
-        newAbility.Actions = subactions.ToArray();
-
-        AssetDatabase.CreateAsset(newAbility, abilityPath);
-        EditorUtility.SetDirty(_idDatabase);
-
-        AssetDatabase.SaveAssets();
-        AssetDatabase.Refresh();
-        EditorUtility.FocusProjectWindow();
-        Selection.activeObject = newAbility;
-
-        Debug.Log($"Created new Ability '{_abilityName}' with ID: {newAbility.itemData.ID}");
-    }
-
-
-    private void CreateNewConsumable()
-    {
-        if (_idDatabase == null)
-        {
-            Debug.LogError("GlobalIDDatabase is not assigned. Please assign one in the window.");
-            return;
-        }
-
-        string consumablePath = EditorUtility.SaveFilePanelInProject(
-            "Save New Consumable",
-            _consumableName + ".asset",
-            "asset",
-            "Choose a location for your new Consumable"
-        );
-        if (string.IsNullOrEmpty(consumablePath)) return;
-
-        ConsumableSO newConsumable = ScriptableObject.CreateInstance<ConsumableSO>();
-        newConsumable.name = _consumableName;
-
-        newConsumable.itemData.Name = _consumableName;
-        newConsumable.itemData.Description = _consumableDescription;
-        newConsumable.itemData.Icon = _consumableIcon;
-        newConsumable.itemData.itemType = ItemType.Consumable;
-        newConsumable.itemData.Price = price;
-
-        newConsumable.Icon = _consumableIcon;
-        newConsumable.Uses = _uses;
-        
-        newConsumable.OverrideController = _consumableAnimator;
-
-        if (newConsumable.itemData.ID == 0)
-        {
-            newConsumable.itemData.ID = _idDatabase.nextConsumableID;
-            _idDatabase.nextConsumableID++;
-        }
-
-        string folderPath = Path.GetDirectoryName(consumablePath);
-        List<CombatSubactionSO> subactions = new List<CombatSubactionSO>();
-
-        foreach (var info in _consumableSubactions)
-        {
-            var subaction = CreateSubactionWithPattern(info, folderPath);
-            if (subaction != null)
-            {
-                subactions.Add(subaction);
-            }
-        }
-
-        newConsumable.Actions = subactions.ToArray();
-
-        AssetDatabase.CreateAsset(newConsumable, consumablePath);
-        EditorUtility.SetDirty(_idDatabase);
-
-        AssetDatabase.SaveAssets();
-        AssetDatabase.Refresh();
-        EditorUtility.FocusProjectWindow();
-        Selection.activeObject = newConsumable;
-
-        Debug.Log($"Created new Consumable '{_consumableName}' with ID: {newConsumable.itemData.ID}");
-    }
-
-    private void CreateEquipmentMod()
-{
-    if (_idDatabase == null)
-    {
-        Debug.LogError("GlobalIDDatabase is not assigned. Please assign one in the window.");
-        return;
-    }
-
-    string modPath = EditorUtility.SaveFilePanelInProject(
-        "Save New Equipment Mod",
-        _equipmentModName + ".asset",
-        "asset",
-        "Choose a location for your new Equipment Mod"
-    );
-    if (string.IsNullOrEmpty(modPath)) return;
-
-    
-    EquipmentModSO newMod = ScriptableObject.CreateInstance<EquipmentModSO>();
-    newMod.name = _equipmentModName;
-
-    // Fill out the ItemData
-    newMod.itemData.Name = _equipmentModName;
-    newMod.itemData.Description = _equipmentModDescription;
-    newMod.itemData.Icon = _equipmentModIcon;
-    newMod.itemData.itemType = ItemType.EquipmentMod;
-    newMod.itemData.Price = price;
-
-    // Assign a unique ID if it's still 0
-    if (newMod.itemData.ID == 0)
-    {
-        newMod.itemData.ID = _idDatabase.nextEquipmentModID;
-        _idDatabase.nextEquipmentModID++;
-    }
-
-    // 2) Create a new StatSetSO asset to hold the user-input stats
-    StatSetSO statSetAsset = ScriptableObject.CreateInstance<StatSetSO>();
-    statSetAsset.name = _equipmentModName + "_Stats";
-
-    // Fill the StatSetSO from the UI input
-    statSetAsset.PhysicalPower   = _equipmentModPhysicalPower;
-    statSetAsset.MagicalPower    = _equipmentModMagicalPower;
-    statSetAsset.PhysicalSlots   = _equipmentModPhysicalSlots;
-    statSetAsset.MagicalSlots    = _equipmentModMagicalSlots;
-    statSetAsset.Stamina         = _equipmentModStamina;
-    statSetAsset.Mana            = _equipmentModMana;
-    statSetAsset.MaxHealth       = _equipmentModMaxHealth;
-    statSetAsset.DamageRDX       = _equipmentModDamageRDX;
-    statSetAsset.Speed           = _equipmentModSpeed;
-
-    // Save the new StatSetSO in the same folder as the EquipmentMod
-    string folderPath = Path.GetDirectoryName(modPath);
-    string statAssetPath = AssetDatabase.GenerateUniqueAssetPath(
-        Path.Combine(folderPath, statSetAsset.name + ".asset")
-    );
-    AssetDatabase.CreateAsset(statSetAsset, statAssetPath);
-
-    
-    newMod.StatBonus = statSetAsset;
-
-    
-    AssetDatabase.CreateAsset(newMod, modPath);
-
-    // Mark the ID database as dirty ;)
-    EditorUtility.SetDirty(_idDatabase);
-
-    
-    AssetDatabase.SaveAssets();
-    AssetDatabase.Refresh();
-    EditorUtility.FocusProjectWindow();
-    Selection.activeObject = newMod;
-
-    Debug.Log($"Created new Equipment Mod '{_equipmentModName}' with ID: {newMod.itemData.ID}");
-}
-
-    private CombatSubactionSO CreateSubactionWithPattern(SubactionCreationInfo info, string folderPath)
-    {
-
-        if (_allPatternTypes == null || info.patternTypeIndex < 0 || info.patternTypeIndex >= _allPatternTypes.Length)
-        {
-            Debug.LogWarning("Invalid pattern type index.");
-            return null;
-        }
-
-        Type patternType = _allPatternTypes[info.patternTypeIndex];
-        var newPattern = ScriptableObject.CreateInstance(patternType) as TargetingPattern;
-        newPattern.name = info.patternAssetName;
-
-        newPattern.PatternOrigin = info.patternOrigin;
-        newPattern.TargetedTileColor = info.targetedTileColor;
-        newPattern.TargetedCombatantColor = info.targetedCombatantColor;
-
-
-        if (_allSubactionTypes == null || info.subactionTypeIndex < 0 ||
-            info.subactionTypeIndex >= _allSubactionTypes.Length)
-        {
-            Debug.LogWarning("Invalid subaction type index.");
-            return null;
-        }
-
-        Type subactionType = _allSubactionTypes[info.subactionTypeIndex];
-        var newSubaction = ScriptableObject.CreateInstance(subactionType) as CombatSubactionSO;
-        newSubaction.name = info.subactionAssetName;
-
-
-
-
-        PropertyInfo patternProp =
-            subactionType.GetProperty("TargetingPattern", BindingFlags.Public | BindingFlags.Instance);
-        if (patternProp != null && patternProp.PropertyType == typeof(TargetingPattern) && patternProp.CanWrite)
-        {
-            patternProp.SetValue(newSubaction, newPattern, null);
+            EditorGUILayout.LabelField("Uses:", _consumableUses.ToString());
+            EditorGUILayout.LabelField("Price:", _price.ToString());
         }
         else
         {
-            // Alternatively, try a field with the same name
-            FieldInfo patternField =
-                subactionType.GetField("TargetingPattern", BindingFlags.Public | BindingFlags.Instance);
-            if (patternField != null && patternField.FieldType == typeof(TargetingPattern))
+            EditorGUILayout.LabelField("Price:", _price.ToString());
+        }
+
+        if (_assetType != ActionAssetType.EquipmentMod)
+        {
+            EditorGUILayout.LabelField("Subactions:", _subactions.Count.ToString());
+            foreach (var s in _subactions)
             {
-                patternField.SetValue(newSubaction, newPattern);
+                EditorGUILayout.LabelField($"  - (Class: {s.subactionClassType?.Name}) Pattern: {s.patternName}");
             }
         }
 
+        EditorGUILayout.Space(20);
+        EditorGUILayout.BeginHorizontal();
+        if (GUILayout.Button("← Back", GUILayout.Height(30)))
+        {
+            _currentStep = WizardStep.ManageSubactions;
+        }
 
-        ApplySubactionFieldValues(newSubaction, info.subactionFieldValues);
-
-
-        string patternPath =
-            AssetDatabase.GenerateUniqueAssetPath(Path.Combine(folderPath, info.patternAssetName + ".asset"));
-        AssetDatabase.CreateAsset(newPattern, patternPath);
-
-        string subactionPath =
-            AssetDatabase.GenerateUniqueAssetPath(Path.Combine(folderPath, info.subactionAssetName + ".asset"));
-        AssetDatabase.CreateAsset(newSubaction, subactionPath);
-
-        AssetDatabase.SaveAssets();
-        AssetDatabase.Refresh();
-
-        return newSubaction;
+        if (GUILayout.Button("Create Asset", GUILayout.Height(30)))
+        {
+            CreateFinalAsset();
+        }
+        EditorGUILayout.EndHorizontal();
     }
 
     /// <summary>
-    /// Parses the strings in subactionFieldValues and assigns them to the
-    /// coresponding public fields on the subaction 
+    /// Creates the final asset (Ability, Consumable, or Equipment Mod), along with
+    /// its subactions/patterns if applicable. This version also creates a subfolder
+    /// named after _assetName to organize everything.
     /// </summary>
-    private void ApplySubactionFieldValues(CombatSubactionSO subaction, Dictionary<string, string> fieldValues)
+    private void CreateFinalAsset()
     {
-        if (subaction == null) return;
-
-        Type subactionType = subaction.GetType();
-        FieldInfo[] fields = subactionType.GetFields(BindingFlags.Public | BindingFlags.Instance);
-
-        foreach (FieldInfo field in fields)
+        if (_idDatabase == null)
         {
-            // Skip if it's the pattern field
-            if (field.FieldType == typeof(TargetingPattern))
-                continue;
+            Debug.LogError("No GlobalIDDatabase assigned. Cannot proceed.");
+            return;
+        }
 
-            if (!fieldValues.ContainsKey(field.Name))
-                continue;
+        // Get the currently selected folder (or "Assets" fallback).
+        string baseFolderPath = GetSelectedPathOrFallback();
 
-            string stringVal = fieldValues[field.Name];
+        // Create a new subfolder named after the asset.
+        // This returns a GUID we then convert back to a path.
+        string newFolderGUID = AssetDatabase.CreateFolder(baseFolderPath, _assetName);
+        string newFolderPath = AssetDatabase.GUIDToAssetPath(newFolderGUID);
 
-            object parsedValue = null;
-            if (field.FieldType == typeof(int))
+        if (_assetType == ActionAssetType.Ability)
+        {
+            CreateAbility(newFolderPath);
+        }
+        else if (_assetType == ActionAssetType.Consumable)
+        {
+            CreateConsumable(newFolderPath);
+        }
+        else
+        {
+            CreateEquipmentMod(newFolderPath);
+        }
+
+        _currentStep = WizardStep.ChooseActionType;
+        _subactions.Clear();
+        Debug.Log("Combat Action Created Successfully!");
+    }
+
+    private void CreateAbility(string folderPath)
+    {
+        NewAbilitySO ability = ScriptableObject.CreateInstance<NewAbilitySO>();
+        ability.name = _assetName;
+        ability.itemData.Name = _assetName;
+        ability.itemData.Description = _assetDescription;
+        ability.itemData.Icon = _assetIcon;
+        ability.itemData.itemType = ItemType.PhysicalAbility;
+        ability.isEnemyAbility = _isEnemyAbility;
+        ability.Icon = _assetIcon;
+        ability.AbilityType = _abilityType;
+        ability.ResourceCost = _resourceCost;
+        ability.CooldownTurns = _cooldownTurns;
+        ability.OverrideController = _animOverride;
+
+        // ID assignment
+        if (ability.itemData.ID == 0 && _abilityType == AbilityType.PHYSICAL && !_isEnemyAbility)
+        {
+            ability.itemData.ID = _idDatabase.nextPhysicalAbilityID++;
+        }
+        else if (ability.itemData.ID == 0 && _abilityType == AbilityType.MAGICAL && !_isEnemyAbility)
+        {
+            ability.itemData.ID = _idDatabase.nextMagicalAbilityID++;
+        }
+        else if (ability.itemData.ID == 0 && _isEnemyAbility)
+        {
+            ability.itemData.ID = _idDatabase.nextEnemyAbilityID++;
+        }
+
+        // Create subactions
+        List<CombatSubactionSO> subList = new List<CombatSubactionSO>();
+        for (int i = 0; i < _subactions.Count; i++)
+        {
+            var subData = _subactions[i];
+            var sub = CreateSubactionWithPattern(subData, folderPath, i + 1);
+            if (sub != null) subList.Add(sub);
+        }
+        ability.Actions = subList.ToArray();
+
+        string abilityPath = AssetDatabase.GenerateUniqueAssetPath(Path.Combine(folderPath, _assetName + ".asset"));
+        AssetDatabase.CreateAsset(ability, abilityPath);
+        EditorUtility.SetDirty(_idDatabase);
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+        Selection.activeObject = ability;
+    }
+
+    private void CreateConsumable(string folderPath)
+    {
+        ConsumableSO consumable = ScriptableObject.CreateInstance<ConsumableSO>();
+        consumable.name = _assetName;
+        consumable.itemData.Name = _assetName;
+        consumable.itemData.Description = _assetDescription;
+        consumable.itemData.Icon = _assetIcon;
+        consumable.itemData.itemType = ItemType.Consumable;
+        consumable.itemData.Price = _price;
+
+        consumable.Icon = _assetIcon;
+        consumable.Uses = _consumableUses;
+        consumable.OverrideController = _animOverride;
+
+        if (consumable.itemData.ID == 0)
+        {
+            consumable.itemData.ID = _idDatabase.nextConsumableID++;
+        }
+
+        List<CombatSubactionSO> subList = new List<CombatSubactionSO>();
+        for (int i = 0; i < _subactions.Count; i++)
+        {
+            var subData = _subactions[i];
+            var sub = CreateSubactionWithPattern(subData, folderPath, i + 1);
+            if (sub != null) subList.Add(sub);
+        }
+        consumable.Actions = subList.ToArray();
+
+        string path = AssetDatabase.GenerateUniqueAssetPath(Path.Combine(folderPath, _assetName + ".asset"));
+        AssetDatabase.CreateAsset(consumable, path);
+        EditorUtility.SetDirty(_idDatabase);
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+        Selection.activeObject = consumable;
+    }
+
+    private void CreateEquipmentMod(string folderPath)
+    {
+        EquipmentModSO mod = ScriptableObject.CreateInstance<EquipmentModSO>();
+        mod.name = _assetName;
+        mod.itemData.Name = _assetName;
+        mod.itemData.Description = _assetDescription;
+        mod.itemData.Icon = _assetIcon;
+        mod.itemData.itemType = ItemType.EquipmentMod;
+        mod.itemData.Price = _price;
+
+        if (mod.itemData.ID == 0)
+        {
+            mod.itemData.ID = _idDatabase.nextEquipmentModID++;
+        }
+
+        StatSetSO statAsset = ScriptableObject.CreateInstance<StatSetSO>();
+        statAsset.name = _assetName + "_Stats";
+        statAsset.PhysicalPower = _equipmentModPhysicalPower;
+        statAsset.MagicalPower = _equipmentModMagicalPower;
+        statAsset.PhysicalSlots = _equipmentModPhysicalSlots;
+        statAsset.MagicalSlots = _equipmentModMagicalSlots;
+        statAsset.Stamina = _equipmentModStamina;
+        statAsset.Mana = _equipmentModMana;
+        statAsset.MaxHealth = _equipmentModMaxHealth;
+        statAsset.DamageRDX = _equipmentModDamageRDX;
+        statAsset.Speed = _equipmentModSpeed;
+
+        string statPath = AssetDatabase.GenerateUniqueAssetPath(Path.Combine(folderPath, statAsset.name + ".asset"));
+        AssetDatabase.CreateAsset(statAsset, statPath);
+        mod.StatBonus = statAsset;
+
+        string modPath = AssetDatabase.GenerateUniqueAssetPath(Path.Combine(folderPath, _assetName + ".asset"));
+        AssetDatabase.CreateAsset(mod, modPath);
+        EditorUtility.SetDirty(_idDatabase);
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+        Selection.activeObject = mod;
+    }
+
+    /// <summary>
+    /// Creates and saves a subaction along with its TargetingPattern in the provided folderPath.
+    /// The subaction’s name follows the pattern: "<_assetName>_<SubactionClassName>_<Index>"
+    /// </summary>
+    private CombatSubactionSO CreateSubactionWithPattern(SubactionCreationData data, string folderPath, int subIndex)
+    {
+        if (data.subactionClassType == null)
+        {
+            Debug.LogWarning("Invalid subaction class type. Skipping creation.");
+            return null;
+        }
+
+        // Default to the first discovered pattern type if you don't have a direct mechanism
+        // to pick patterns. Or handle it differently if you wish.
+        Type patternType = _allPatternTypes.FirstOrDefault();
+        if (patternType == null)
+        {
+            Debug.LogWarning("No TargetingPattern types found. Cannot create pattern.");
+            return null;
+        }
+        var pattern = ScriptableObject.CreateInstance(patternType) as TargetingPattern;
+        pattern.name = string.IsNullOrEmpty(data.patternName) ? "Pattern_" + subIndex : data.patternName;
+        pattern.PatternOrigin = data.patternOrigin;
+        pattern.TargetedTileColor = data.tileColor;
+        pattern.TargetedCombatantColor = data.combatantColor;
+
+        string patternPath = AssetDatabase.GenerateUniqueAssetPath(
+            Path.Combine(folderPath, pattern.name + ".asset"));
+        AssetDatabase.CreateAsset(pattern, patternPath);
+
+        // Create the subaction
+        var subaction = ScriptableObject.CreateInstance(data.subactionClassType) as CombatSubactionSO;
+        subaction.name = _assetName + "_" + data.subactionClassType.Name + "_" + subIndex;
+
+        // Assign pattern
+        var prop = data.subactionClassType.GetProperty("TargetingPattern", BindingFlags.Public | BindingFlags.Instance);
+        if (prop != null && prop.PropertyType == typeof(TargetingPattern) && prop.CanWrite)
+        {
+            prop.SetValue(subaction, pattern, null);
+        }
+        else
+        {
+            var field = data.subactionClassType.GetField("_targetingPattern", BindingFlags.NonPublic | BindingFlags.Instance);
+            if (field != null && field.FieldType == typeof(TargetingPattern))
             {
-                int i;
-                int.TryParse(stringVal, out i);
-                parsedValue = i;
+                field.SetValue(subaction, pattern);
             }
-            else if (field.FieldType == typeof(float))
+        }
+
+        // Apply reflection-based fields
+        ApplyFieldValues(subaction, data.fieldValues);
+
+        string subactionPath = AssetDatabase.GenerateUniqueAssetPath(
+            Path.Combine(folderPath, subaction.name + ".asset"));
+        AssetDatabase.CreateAsset(subaction, subactionPath);
+
+        return subaction;
+    }
+
+    private void ApplyFieldValues(CombatSubactionSO subaction, Dictionary<string, string> values)
+    {
+        var fields = subaction.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+        foreach (var f in fields)
+        {
+            bool isFieldSerialized = f.IsPublic ||
+                                     f.GetCustomAttributes(typeof(SerializeField), true).Length > 0;
+            if (!isFieldSerialized) continue;
+            if (f.FieldType == typeof(TargetingPattern)) continue;
+
+            if (!values.ContainsKey(f.Name)) continue;
+            string strVal = values[f.Name];
+
+            object parsed = null;
+            if (f.FieldType == typeof(int))
             {
-                float f;
-                float.TryParse(stringVal, out f);
-                parsedValue = f;
+                int i; int.TryParse(strVal, out i);
+                parsed = i;
             }
-            else if (field.FieldType == typeof(bool))
+            else if (f.FieldType == typeof(float))
             {
-                bool b;
-                bool.TryParse(stringVal, out b);
-                parsedValue = b;
+                float fl; float.TryParse(strVal, out fl);
+                parsed = fl;
             }
-            else if (field.FieldType == typeof(string))
+            else if (f.FieldType == typeof(bool))
             {
-                parsedValue = stringVal;
+                bool b; bool.TryParse(strVal, out b);
+                parsed = b;
             }
-            else if (field.FieldType.IsEnum)
+            else if (f.FieldType.IsEnum)
             {
                 try
                 {
-                    parsedValue = Enum.Parse(field.FieldType, stringVal);
+                    parsed = Enum.Parse(f.FieldType, strVal);
                 }
-                catch
-                {
-                    // If parsing fails, do nothing
-                }
+                catch { }
+            }
+            else if (f.FieldType == typeof(string))
+            {
+                parsed = strVal;
             }
 
-            // If we successfully parsed something, set it
-            if (parsedValue != null)
+            if (parsed != null)
             {
-                field.SetValue(subaction, parsedValue);
+                f.SetValue(subaction, parsed);
             }
         }
     }
+
+    #endregion
 }
