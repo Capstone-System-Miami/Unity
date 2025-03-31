@@ -16,20 +16,21 @@ MonoBehaviour:
   Actions:
   - {fileID: 11400000, guid: 68647aefebdcc0e4ab6621523ff094c5, type: 2}
   - {fileID: 11400000, guid: 71429f1623225074da9693ed933b84ce, type: 2}
-  OverrideController: {fileID: 22100000, guid: 6a517d63575cd2f409d46b2014197ec1, type: 2}
+  OverrideController: {fileID: 22100000, guid: c9f80dcfefcdd954381173e3d2b700e5, type: 2}
   AbilityType: 0
-  ResourceCost: 5
-  CooldownTurns: 1
+  ResourceCost: 12
+  CooldownTurns: 4
   itemData:
     ID: 1017
-    Icon: {fileID: 21300130, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
+    Icon: {fileID: 21300000, guid: ff2d80141664d044c8bf8324bb3a22b8, type: 3}
     Name: Poisoned Blade
-    Description: The player coats their weapon with poison, causing their attack
-      to deal additional damage over time (DOT) for 3 turns
+    Description: Coat your weapon with poison dealing damage over time and lowering
+      the targets max health
     itemType: 1
     Price: 0
-    MinLevel: 0
-    MaxLevel: 0
+    MinLevel: 4
+    MaxLevel: 5
     rarity: 0
   classType: 2
   isEnemyAbility: 0
+  isGeneralAbility: 0

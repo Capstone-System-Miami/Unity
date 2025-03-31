@@ -15,20 +15,21 @@ MonoBehaviour:
   Icon: {fileID: 0}
   Actions:
   - {fileID: 11400000, guid: b36f44ba250040849b5a9c47caaa5e23, type: 2}
-  - {fileID: 0}
-  OverrideController: {fileID: 0}
+  - {fileID: 11400000, guid: a7a841dca1b9e5940b32f178deafda69, type: 2}
+  OverrideController: {fileID: 22100000, guid: c9f80dcfefcdd954381173e3d2b700e5, type: 2}
   AbilityType: 0
-  ResourceCost: 0
-  CooldownTurns: 0
+  ResourceCost: 12
+  CooldownTurns: 3
   itemData:
     ID: 1027
-    Icon: {fileID: 0}
+    Icon: {fileID: 21300000, guid: 382c32cf584cd694682a13a893bc9b4b, type: 3}
     Name: Bleeding Dance
-    Description: Deal AOE damage and apply Bleed (DOT) to all enemies hit.
+    Description: Deal AOE damage and apply Bleed to all targets
     itemType: 1
     Price: 0
-    MinLevel: 0
-    MaxLevel: 0
+    MinLevel: 3
+    MaxLevel: 5
     rarity: 0
-  classType: 0
+  classType: 2
   isEnemyAbility: 0
+  isGeneralAbility: 0
