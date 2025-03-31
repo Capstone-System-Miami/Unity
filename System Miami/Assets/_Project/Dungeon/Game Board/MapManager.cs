@@ -5,7 +5,11 @@ using SystemMiami.Utilities;
 using SystemMiami.CombatSystem;
 using SystemMiami.Dungeons;
 using UnityEngine;
+using System.Linq;
 using UnityEngine.Tilemaps;
+using UnityEngine.Assertions;
+using SystemMiami.Enums;
+using Unity.VisualScripting.Dependencies.NCalc;
 
 namespace SystemMiami
 {
@@ -35,7 +39,20 @@ namespace SystemMiami
         private BoundsInt bounds;
         private GameObject overlayContainer;
 
-        public BoundsInt Bounds { get { return bounds; } }
+        public TileCorners TileCorners { get; private set; }
+
+        public int SizeInTileUnits {
+            get
+            {
+                Assert.IsTrue(
+                    Mathf.Sqrt(map.Count) == (int)Mathf.Sqrt(map.Count),
+                    $"{name} is not using a square game board." +
+                    $"This breaks the game.");
+
+                return (int)Mathf.Sqrt(map.Count);
+            }
+        }
+
         public Dungeon Dungeon { get { return dungeon; } }
 
         protected override void Awake()
@@ -103,8 +120,6 @@ namespace SystemMiami
                 return;
             }
 
-
-
             // Construction
             gridTilesHeight = dungeon.BoardTilesHeight;
             overlayContainer = dungeon.OverlayTileContainer;
@@ -113,18 +128,6 @@ namespace SystemMiami
 
             // Get the bounds of tile map in BounsInt
             bounds = gameBoardTilemap.cellBounds;
-
-            log.print(
-                $"Bounds\n" +
-                $"| xmin {bounds.min.x}\n" +
-                $"| xmax {bounds.max.x}\n" +
-                $"| ymin {bounds.min.y}\n" +
-                $"| ymax { bounds.max.y}\n" +
-                $"|zmin { bounds.min.z}\n" +
-                $"| zmax {bounds.max.z}"
-                );
-
-            CenterPos = GetCenter(bounds);
 
             // Looping through all of our tiles.
             // For each tile found in the tilemap, it instantiates an overlay tile
@@ -187,6 +190,9 @@ namespace SystemMiami
                     }
                 }
             }
+
+            InitCenter();
+            InitCorners();
         }
 
         public bool TryGetTile(Vector2Int coordinates, out OverlayTile tile)
@@ -256,12 +262,44 @@ namespace SystemMiami
             return false;
         }
 
-        private Vector2Int GetCenter(BoundsInt bounds)
+        private void InitCorners()
         {
-            return new(
-                Mathf.RoundToInt(bounds.center.x),
-                Mathf.RoundToInt(bounds.center.y)
-                );
+            List<Vector2Int> orderByX = map.Keys.OrderBy(vec => vec.x).ToList();
+            List<Vector2Int> orderByY = map.Keys.OrderBy(vec => vec.y).ToList();
+
+            int lastTileIndex = map.Count - 1;
+
+            Vector2Int bottom = new(
+                orderByX[0].x,
+                orderByY[0].y
+            );
+
+            Vector2Int top = new(
+                orderByX[lastTileIndex].x,
+                orderByY[lastTileIndex].y
+            );
+
+            Vector2Int left = new(
+                orderByX[0].x,
+                orderByY[lastTileIndex].y
+            );
+
+            Vector2Int right = new(
+                orderByX[lastTileIndex].x,
+                orderByY[0].y
+            );
+
+            TileCorners = new(map[bottom], map[top], map[left], map[right]);
+        }
+
+        private void InitCenter()
+        {
+            Assert.IsTrue(
+                SizeInTileUnits % 2 != 0,
+                $"The game board's size is not odd. This could cause " +
+                $"issues with many systems.");
+
+            CenterPos = new(SizeInTileUnits, SizeInTileUnits);
         }
     }
 }

@@ -53,11 +53,17 @@ namespace SystemMiami.CombatSystem
 
             Vector2Int targetPos = reciever.BoardPos + (dirVec * distance);
 
-            int adjustedX = System.Math.Clamp(targetPos.x, MapManager.MGR.Bounds.xMin, MapManager.MGR.Bounds.xMax);
-            int adjustedY = System.Math.Clamp(targetPos.y, MapManager.MGR.Bounds.yMin, MapManager.MGR.Bounds.yMax);
+            int adjustedX = System.Math.Clamp(targetPos.x, MapManager.MGR.TileCorners.xMin, MapManager.MGR.TileCorners.xMax);
+            int adjustedY = System.Math.Clamp(targetPos.y, MapManager.MGR.TileCorners.yMin, MapManager.MGR.TileCorners.yMax);
 
+            string before = targetPos.ToString();
             targetPos = new(adjustedX, adjustedY);
+            string after = targetPos.ToString();
 
+            Debug.Log($"|  <color=red>targetPos {before}  </color>" +
+                $"|  <color=green>X bound: ({MapManager.MGR.TileCorners.xMin}, {MapManager.MGR.TileCorners.xMax})</color>" +
+                $"|  <color=green>Y bound: ({MapManager.MGR.TileCorners.yMin}, {MapManager.MGR.TileCorners.yMax})</color>\n" +
+                $"|  <color=red>adjusted: {after}</color>");
             if (MapManager.MGR.TryGetTile(targetPos, out OverlayTile targetTile))
             {
                 destinationTile = targetTile;

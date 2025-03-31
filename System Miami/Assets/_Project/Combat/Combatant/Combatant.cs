@@ -477,11 +477,13 @@ namespace SystemMiami.CombatSystem
         }
         void IForceMoveReceiver.PreviewForceMove(OverlayTile destinationTile)
         {
-            Debug.LogError(
-                $"{name} is trying to priview movement to " +
-                $"{destinationTile.name}, but its RecieveForceMove() method " +
-                $"has not been implemented.",
-                destinationTile);
+            //Debug.LogError(
+            //    $"{name} is trying to priview movement to " +
+            //    $"{destinationTile.name}, but its RecieveForceMove() method " +
+            //    $"has not been implemented.",
+            //    destinationTile);
+            MovementPath pathToTile = new(PositionTile, destinationTile, true);
+            pathToTile.HighlightValidMoves(Color.cyan);
         }
 
         void IForceMoveReceiver.RecieveForceMove(OverlayTile destinationTile)

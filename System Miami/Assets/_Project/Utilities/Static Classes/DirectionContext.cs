@@ -73,6 +73,9 @@ namespace SystemMiami.Utilities
         /// </summary>
         public readonly Vector2Int ForwardB;
 
+        public DirectionContext(Vector2Int boardPositionNoContext)
+            : this (boardPositionNoContext, boardPositionNoContext + new Vector2Int(1, 1))
+        { }
 
         public DirectionContext(Vector2Int boardPositionA, Vector2Int boardPositionB)
             : this (boardPositionA, boardPositionB, 1, 1)

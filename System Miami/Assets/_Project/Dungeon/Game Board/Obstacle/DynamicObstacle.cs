@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Collections;
 using SystemMiami.Utilities;
 using UnityEngine;
 
@@ -101,11 +104,31 @@ namespace SystemMiami.CombatSystem
         /// "BoardSpace" / "TileSpace" or whatever) </param>
         public void PreviewForceMove(OverlayTile destinationTile)
         {
-            log.error(
-                $"{name} is trying to priview movement to " +
-                $"{destinationTile.name}, but its RecieveForceMove() method " +
-                $"has not been implemented.",
-                destinationTile);
+            MovementPath pathToTile = new(PositionTile, destinationTile, true);
+
+            StartCoroutine(Fuck(pathToTile));
+            //log.error(
+            //    $"{name} is trying to priview movement to " +
+            //    $"{destinationTile.name}, but its RecieveForceMove() method " +
+            //    $"has not been implemented.",
+            //    destinationTile);
+        }
+
+        private IEnumerator Fuck(MovementPath path)
+        {
+            float duration = 1f;
+
+            path.HighlightValidMoves(Color.cyan);
+            path.DrawArrows();
+
+            while (duration > 0)
+            {
+                duration -= Time.deltaTime;
+                yield return new WaitForSeconds(Time.deltaTime);
+            }
+
+            path.Unhighlight();
+            path.UnDrawAll();
         }
 
         public void RecieveForceMove(OverlayTile destinationTile)
