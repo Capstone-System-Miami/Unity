@@ -5,6 +5,9 @@ using UnityEngine.Rendering.Universal;
 
 namespace SystemMiami
 {
+    /// <summary>
+    /// TODO: write a Building sub tilemap class or smth
+    /// </summary>
     public class Building : MonoBehaviour, ITransparency
     {
         [Header("Internal Refs")]
