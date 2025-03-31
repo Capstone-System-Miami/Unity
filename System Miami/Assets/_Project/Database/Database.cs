@@ -16,7 +16,7 @@ namespace SystemMiami
 
     public class Database : Singleton<Database>
     {
-       [SerializeField]private List<ItemData> PhysicalAbilityItemDatas = new List<ItemData>();
+        [SerializeField] private List<ItemData> PhysicalAbilityItemDatas = new List<ItemData>();
         [SerializeField] private List<ItemData> MagicalAbilityItemDatas = new List<ItemData>();
         [SerializeField] private List<ItemData> ConsumableItemDatas = new List<ItemData>();
         [SerializeField] private List<ItemData> EquipmentModItemDatas = new List<ItemData>();
@@ -25,12 +25,12 @@ namespace SystemMiami
         [SerializeField] private List<ItemData> AllItemDatas = new List<ItemData>();
 
 
-        private List<NewAbilitySO> physicalAbilityEntries = new();
-        private List<NewAbilitySO> magicalAbilityEntries = new();
-        private List<ConsumableSO> consumableEntries = new();
-        private List<NewAbilitySO> enemyPhysicalAbilityEntries = new();
-        private List<NewAbilitySO> enemyMagicalAbilityEntries = new();
-        private List<EquipmentModSO> equipmentModEntries = new();
+        [SerializeField]private List<NewAbilitySO> physicalAbilityEntries = new();
+        [SerializeField]private List<NewAbilitySO> magicalAbilityEntries = new();
+        [SerializeField]private List<ConsumableSO> consumableEntries = new();
+        [SerializeField]private List<NewAbilitySO> enemyPhysicalAbilityEntries = new();
+        [SerializeField]private List<NewAbilitySO> enemyMagicalAbilityEntries = new();
+        [SerializeField]private List<EquipmentModSO> equipmentModEntries = new();
        
 
        private Dictionary<int, NewAbilitySO> physicalAbilityDatabase;
@@ -181,15 +181,17 @@ namespace SystemMiami
        public ItemData GetDataWithJustID(int id)
        {
            int IDType = id / 1000;
-           
-           return IDType switch
-           {
-               1 => physicalAbilityDatabase.ContainsKey(id) ? physicalAbilityDatabase[id].itemData : default,
-               2 => magicalAbilityDatabase.ContainsKey(id) ? magicalAbilityDatabase[id].itemData : default,
-               3 => consumableDatabase.ContainsKey(id) ? consumableDatabase[id].itemData : default,
-               4 => equipmentModDatabase.ContainsKey(id) ? equipmentModDatabase[id].itemData : default,
-               _ => default
-           };
+            Debug.Log("Something is trying to get an ID SLOT");
+            return IDType switch
+            {
+                1 => physicalAbilityDatabase.ContainsKey(id) ? physicalAbilityDatabase[id].itemData : default,
+                2 => magicalAbilityDatabase.ContainsKey(id) ? magicalAbilityDatabase[id].itemData : default,
+                3 => consumableDatabase.ContainsKey(id) ? consumableDatabase[id].itemData : default,
+                4 => equipmentModDatabase.ContainsKey(id) ? equipmentModDatabase[id].itemData : default,
+                _ => default
+            };
+
+            
        }
 
        // Factory 
