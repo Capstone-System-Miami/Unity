@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using SystemMiami.CombatSystem;
 using SystemMiami.Utilities;
 using UnityEngine;
-using UnityEngine.Assertions;
 
 namespace SystemMiami.CombatRefactor
 {
@@ -232,7 +231,10 @@ namespace SystemMiami.CombatRefactor
 
         protected IEnumerator Execute()
         {
+            
             ExecutionStarted = true;
+            
+            
             PreExecution();
             yield return null;
 

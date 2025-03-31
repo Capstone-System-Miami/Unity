@@ -10,11 +10,15 @@ namespace SystemMiami
         public GameObject spawnerNPCPrefab { get; private set; }
         public GameObject npcPrefabInstance;
         
-        public void SpawnNPC(GameObject npcPrefab)
+        public GameObject SpawnNPC(GameObject npcPrefab)
         {
            
             this.spawnerNPCPrefab = npcPrefab;
             npcPrefabInstance = Instantiate(npcPrefab, transform.position, Quaternion.identity);
+            npcPrefabInstance.transform.SetParent(transform);
+            Debug.Log($"Spawned NPC: {this.gameObject.name}");
+            return npcPrefabInstance;
+           
         }
     }
 }

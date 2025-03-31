@@ -13,13 +13,13 @@ namespace SystemMiami.CombatRefactor
         public readonly int CooldownTurns;
 
         private Action<float> looseResource;
-        private int cooldownRemaining;
+        public int CooldownRemaining { get; private set; }
 
         public bool IsOnCooldown
         {
             get
             {
-                return cooldownRemaining > 0;
+                return CooldownRemaining > 0;
             }
         }
 
@@ -38,9 +38,9 @@ namespace SystemMiami.CombatRefactor
 
         public void ReduceCooldown()
         {
-            if (cooldownRemaining > 0)
+            if (CooldownRemaining > 0)
             {
-                cooldownRemaining--;
+                CooldownRemaining--;
             }
         }
 
@@ -51,11 +51,12 @@ namespace SystemMiami.CombatRefactor
 
         protected override void PostExecution()
         {
-            startCooldown();
+            StartCooldown();
         }
-        private void startCooldown()
+
+        private void StartCooldown()
         {
-            cooldownRemaining = CooldownTurns;
+            CooldownRemaining = CooldownTurns;
         }
     }
 }
