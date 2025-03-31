@@ -6,31 +6,25 @@ using UnityEditor.Animations;
 
 public class AnimationCreatorWindow : EditorWindow
 {
-   
-
     [Header("Sprite Source")]
     private Object spriteFolderOrSheet;
-    
 
     // How many frames per animation clip
     private int framesPerClip = 6;
 
-   
     private int clipCount = 8;
 
     // For naming each clip individually
     private List<string> clipNames = new List<string>();
 
     // The base Animator Controller
-    // If assigned, ither copy & replace or create an override
+    // If assigned, either copy & replace or create an override
     private AnimatorController baseAnimatorController;
     private bool useAsDefaultController = false; // If true => copy & replace
 
-   
     private string newControllerName = "NewController";
     private float frameRate = 12f;
 
-   
     private List<AnimationClip> createdClips = new List<AnimationClip>();
 
     [MenuItem("Window/Animation Creator")]
@@ -52,15 +46,10 @@ public class AnimationCreatorWindow : EditorWindow
             false
         );
 
-        
-     
         // Frames per clip
         framesPerClip = EditorGUILayout.IntField("Frames per Clip:", framesPerClip);
-        
-      
-        GUILayout.Label($"Clip Count: {clipCount}");
 
-        
+        GUILayout.Label($"Clip Count: {clipCount}");
         UpdateClipNamesList();
 
         GUILayout.Space(5);
@@ -76,6 +65,7 @@ public class AnimationCreatorWindow : EditorWindow
 
         GUILayout.Space(10);
         GUILayout.Label("Animator Controller Settings", EditorStyles.boldLabel);
+
         // Base Animator Controller
         baseAnimatorController = (AnimatorController)EditorGUILayout.ObjectField(
             "Base Animator Controller:",
@@ -123,10 +113,8 @@ public class AnimationCreatorWindow : EditorWindow
 
     private void CreateAnimations()
     {
-        
         createdClips.Clear();
 
-       
         if (spriteFolderOrSheet == null)
         {
             Debug.LogError("Please assign a folder of sprites or a sliced sprite sheet.");
@@ -138,7 +126,7 @@ public class AnimationCreatorWindow : EditorWindow
             return;
         }
 
-        
+        // Collect all Sprites
         List<Sprite> spritesFound = new List<Sprite>();
         string assetPath = AssetDatabase.GetAssetPath(spriteFolderOrSheet);
 
@@ -158,7 +146,7 @@ public class AnimationCreatorWindow : EditorWindow
         }
         else
         {
-            
+            // It's likely a single sprite sheet
             var objs = AssetDatabase.LoadAllAssetsAtPath(assetPath);
             foreach (var o in objs)
             {
@@ -167,8 +155,13 @@ public class AnimationCreatorWindow : EditorWindow
             }
         }
 
-        
-        spritesFound.Sort((a, b) => a.name.CompareTo(b.name));
+        // First: Sort the sprites numerically by their name => ensures correct frame order
+        spritesFound.Sort((a, b) =>
+        {
+            int numA = ExtractNumberFromName(a.name);
+            int numB = ExtractNumberFromName(b.name);
+            return numA.CompareTo(numB);
+        });
 
         if (spritesFound.Count == 0)
         {
@@ -176,18 +169,16 @@ public class AnimationCreatorWindow : EditorWindow
             return;
         }
 
-        
+        // Create a new folder for the controller + clips
         string parentFolder = Path.GetDirectoryName(assetPath);
         string newFolderPath = AssetDatabase.GenerateUniqueAssetPath(
             Path.Combine(parentFolder, newControllerName)
         );
         AssetDatabase.CreateFolder(parentFolder, newControllerName);
 
-        
         int actualTotal = spritesFound.Count;
         int actualClipCount = actualTotal / framesPerClip; // integer division
 
-        
         int usedClipCount = Mathf.Min(actualClipCount, clipNames.Count);
 
         int currentSpriteIndex = 0;
@@ -206,7 +197,7 @@ public class AnimationCreatorWindow : EditorWindow
             createdClips.Add(newClip);
         }
 
-        
+        // If no base controller, we’re done with just the clips
         if (baseAnimatorController == null)
         {
             AssetDatabase.SaveAssets();
@@ -215,71 +206,85 @@ public class AnimationCreatorWindow : EditorWindow
             return;
         }
 
-        // If we have a base controller, do the “default” or “override” logic
+        // ===============================
+        // ADD THE CLIPS TO AN OVERRIDE CONTROLLER 
+        // IN ALPHABETICAL ORDER
+        // ===============================
+
         if (useAsDefaultController)
         {
-            
+            // Copy base controller
             string baseControllerPath = AssetDatabase.GetAssetPath(baseAnimatorController);
             string copiedControllerPath = Path.Combine(newFolderPath, newControllerName + ".controller");
             AssetDatabase.CopyAsset(baseControllerPath, copiedControllerPath);
             AssetDatabase.ImportAsset(copiedControllerPath);
 
-            
             AnimatorController copiedController = AssetDatabase.LoadAssetAtPath<AnimatorController>(copiedControllerPath);
-
-
             AnimatorControllerLayer layer = copiedController.layers[0];
-            
-                AnimatorStateMachine sm = layer.stateMachine;
-                foreach (var childState in sm.states)
+            var sm = layer.stateMachine;
+
+            // Sort the newly created clips ALPHABETICALLY
+            createdClips.Sort((x, y) => x.name.CompareTo(y.name));
+
+            // Now go through each state in alphabetical order of the newly created clips
+            var states = sm.states;
+
+            // Option A: Just iterate over states in the order they appear,
+            // and match them up with clips in alphabetical order:
+            states = SortStateArrayByName(states);
+
+            for (int i = 0; i < states.Length; i++)
+            {
+                var state = states[i].state;
+                if (i < createdClips.Count)
                 {
-                    var state = childState.state;
-                    
-                    if (state.motion is AnimationClip)
-                    {
-                        AnimationClip bestClip = FindBestClipForState(state.name, createdClips);
-                        if (bestClip != null)
-                        {
-                            state.motion = bestClip;
-                        }
-                    }
+                    state.motion = createdClips[i];
                 }
-            
+            }
+
+            // (If you prefer to do partial if states < createdClips, you can tweak logic above)
 
             Debug.Log(
-                $"Copied base controller into '{copiedControllerPath}' and replaced states by name-matching with {createdClips.Count} new clips."
+                $"Copied base controller into '{copiedControllerPath}' " +
+                $"and assigned {createdClips.Count} new clips (alphabetically) to states."
             );
         }
         else
         {
-            
+            // Create an override controller
             AnimatorOverrideController newOverride = new AnimatorOverrideController(baseAnimatorController);
 
-           
-            List<KeyValuePair<AnimationClip, AnimationClip>> overridesList = new List<KeyValuePair<AnimationClip, AnimationClip>>();
+            // Sort the newly created clips ALPHABETICALLY
+            createdClips.Sort((x, y) => x.name.CompareTo(y.name));
+
+            // Retrieve the base override
+            List<KeyValuePair<AnimationClip, AnimationClip>> overridesList =
+                new List<KeyValuePair<AnimationClip, AnimationClip>>();
             newOverride.GetOverrides(overridesList);
 
-            // For each base clip, find the best new clip
+            // If you want, also sort "overridesList" by the base clip’s name so that
+            // the override list is shown in alphabetical order in the inspector:
+            overridesList.Sort((pair1, pair2) => pair1.Key.name.CompareTo(pair2.Key.name));
+
+            // Assign each override in alphabetical order of created clips
             for (int i = 0; i < overridesList.Count; i++)
             {
-                AnimationClip baseClip = overridesList[i].Key;
-                if (baseClip == null) continue;
-
-                AnimationClip matchedClip = FindBestClipForState(baseClip.name, createdClips);
-                if (matchedClip != null)
+                // If we have a new clip for this index, assign it
+                if (i < createdClips.Count)
                 {
-                    overridesList[i] = new KeyValuePair<AnimationClip, AnimationClip>(baseClip, matchedClip);
+                    AnimationClip baseClip = overridesList[i].Key;
+                    overridesList[i] = new KeyValuePair<AnimationClip, AnimationClip>(baseClip, createdClips[i]);
                 }
             }
 
-            // Apply & save
             newOverride.ApplyOverrides(overridesList);
 
+            // Save
             string overridePath = Path.Combine(newFolderPath, newControllerName + ".overrideController");
             AssetDatabase.CreateAsset(newOverride, overridePath);
 
             Debug.Log(
-                $"Created Animator Override Controller '{overridePath}' via name-matching. " +
+                $"Created Animator Override Controller '{overridePath}' in alphabetical order. " +
                 $"Overrode with {createdClips.Count} new clips."
             );
         }
@@ -287,7 +292,6 @@ public class AnimationCreatorWindow : EditorWindow
         // Final refresh
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
-
         Debug.Log($"Finished creating {createdClips.Count} animation clips in: {newFolderPath}");
     }
 
@@ -300,7 +304,6 @@ public class AnimationCreatorWindow : EditorWindow
         clip.name = clipName;
         clip.frameRate = fps;
 
-        
         EditorCurveBinding curveBinding = new EditorCurveBinding
         {
             type = typeof(SpriteRenderer),
@@ -322,80 +325,55 @@ public class AnimationCreatorWindow : EditorWindow
 
         AnimationUtility.SetObjectReferenceCurve(clip, curveBinding, keyFrames);
 
-       
         var settings = AnimationUtility.GetAnimationClipSettings(clip);
-        settings.loopTime = false;
+        settings.loopTime = false; // example: non-looping
         AnimationUtility.SetAnimationClipSettings(clip, settings);
 
         return clip;
     }
 
     /// <summary>
-    /// Finds the best matching clip out of 'candidates' for a given 'stateName'.
-    /// - If there's an EXACT canonical match, score = 2 (highest).
-    /// - Else if there's a partial match (clipCan contained in stateCan, or vice versa), score = 1.
-    /// - Otherwise, score = 0 (no match).
-    /// Returns the clip with the highest score. Ties go to the first found.
+    /// Helper method that tries to parse a trailing integer from a sprite name.
+    /// E.g. "sprite_10" => 10, "sprite_2" => 2. If no number is found, returns 0.
     /// </summary>
-    private AnimationClip FindBestClipForState(string stateName, List<AnimationClip> candidates)
+    private static int ExtractNumberFromName(string spriteName)
     {
-        // Convert the state's name
-        string stateCan = CanonicalName(stateName);
+        if (string.IsNullOrEmpty(spriteName))
+            return 0;
 
-        int bestScore = 0;
-        AnimationClip bestClip = null;
-
-        foreach (var clip in candidates)
+        // Walk backwards to find where digits end
+        for (int i = spriteName.Length - 1; i >= 0; i--)
         {
-            string clipCan = CanonicalName(clip.name);
-            int score = 0;
-
-            if (clipCan == stateCan)
+            if (!char.IsDigit(spriteName[i]))
             {
-                // EXACT match => highest priority
-                score = 2;
-            }
-            else
-            {
-                // PARTIAL match => if either name is contained in the other
-                if (stateCan.Contains(clipCan) || clipCan.Contains(stateCan))
+                // We've hit the first non-digit. If there are digits after it, parse them.
+                if (i < spriteName.Length - 1)
                 {
-                    score = 1;
+                    string numberString = spriteName.Substring(i + 1);
+                    if (int.TryParse(numberString, out int parsed))
+                        return parsed;
                 }
+                return 0;
             }
 
-            if (score > bestScore)
+            // If the entire string is numeric (e.g. "10"), and we never hit a non-digit:
+            if (i == 0)
             {
-                bestScore = score;
-                bestClip = clip;
-
-                // If we found an exact match (score=2), we can break immediately
-                if (bestScore == 2)
-                {
-                    break;
-                }
+                if (int.TryParse(spriteName, out int parsed))
+                    return parsed;
             }
         }
 
-        return bestClip;
+        return 0;
     }
 
     /// <summary>
-    /// Converts a string (like a clip or state name) to a "canonical" form
-    /// by lowercasing and removing underscores, spaces, and hyphens.
+    /// Sorts an array of ChildAnimatorState by the state's name, returning a new sorted array.
     /// </summary>
-    private string CanonicalName(string raw)
+    private static ChildAnimatorState[] SortStateArrayByName(ChildAnimatorState[] states)
     {
-        if (string.IsNullOrEmpty(raw)) return "";
-       
-        string result = raw.ToLower();
-        
-        result = result.Replace("_", "");
-        result = result.Replace(" ", "");
-        result = result.Replace("-", "");
-        return result;
+        List<ChildAnimatorState> list = new List<ChildAnimatorState>(states);
+        list.Sort((s1, s2) => s1.state.name.CompareTo(s2.state.name));
+        return list.ToArray();
     }
 }
-
-
-
