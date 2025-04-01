@@ -21037,7 +21037,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 8535713974320782374}
+  m_Father: {fileID: 2989114483048280560}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -180}
 --- !u!114 &4822874875381428004
 MonoBehaviour:
@@ -21119,7 +21119,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 8535713974320782374}
+  m_Father: {fileID: 2989114483048280560}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -180}
 --- !u!114 &5577011921226274225
 MonoBehaviour:
@@ -23499,9 +23499,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 3456608736579489018}
-  - {fileID: 5362788280488408567}
-  - {fileID: 1214658797568682178}
   - {fileID: 58683516602800037}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -23541,6 +23538,7 @@ GameObject:
   - component: {fileID: 7792311809860152557}
   - component: {fileID: 930253057877939092}
   - component: {fileID: 5191048595201474073}
+  - component: {fileID: 9081718032293708657}
   m_Layer: 0
   m_Name: DungeonEntrance
   m_TagString: Untagged
@@ -23829,6 +23827,27 @@ TilemapRenderer:
   m_Mode: 1
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
+--- !u!114 &9081718032293708657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5331995582403438986}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c94ab060c368be4b80a7d4a7e2771d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  log:
+    showMessages: 1
+  _excludedStyles: 0000000001000000020000000500000003000000
+  _dungeonData:
+    Prefab: {fileID: 0}
+    Enemies: []
+    ItemRewards: []
+    EXPToGive: 0
+    Credits: 0
 --- !u!1 &5808944237174383799
 GameObject:
   m_ObjectHideFlags: 0
@@ -25455,6 +25474,7 @@ GameObject:
   - component: {fileID: 8256014069090185445}
   - component: {fileID: 6131610236894777996}
   - component: {fileID: 7685799821703413296}
+  - component: {fileID: 7203972791106436360}
   m_Layer: 0
   m_Name: COLIDERS
   m_TagString: Untagged
@@ -25792,6 +25812,52 @@ TilemapCollider2D:
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0
   m_UseDelaunayMesh: 0
+--- !u!114 &7203972791106436360
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6819847250775757299}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07fa3f33fbd17914ea143396ad86933c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnEnter:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 9081718032293708657}
+        m_TargetAssemblyTypeName: SystemMiami.DungeonEntrance, Assembly-CSharp
+        m_MethodName: TurnOnDungeonColor
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnInteract:
+    m_PersistentCalls:
+      m_Calls: []
+  OnExit:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 9081718032293708657}
+        m_TargetAssemblyTypeName: SystemMiami.DungeonEntrance, Assembly-CSharp
+        m_MethodName: TurnOffDungeonColor
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  _promptAction: 
 --- !u!1 &7559236787677028529
 GameObject:
   m_ObjectHideFlags: 0
@@ -25904,7 +25970,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 8535713974320782374}
+  m_Father: {fileID: 2989114483048280560}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -180}
 --- !u!114 &3163640719327234032
 MonoBehaviour:
@@ -25986,7 +26052,10 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 3456608736579489018}
+  - {fileID: 5362788280488408567}
+  - {fileID: 1214658797568682178}
   m_Father: {fileID: 58683516602800037}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1839735485 &5096150460858227461
