@@ -122,9 +122,7 @@ namespace SystemMiami.InventorySystem
             Tabs.TabPhysical.ItemGrid.FillSlots(playerInventory.PhysicalAbilityIDs);
             Tabs.TabMagical.ItemGrid.FillSlots(playerInventory.MagicalAbilityIDs);
             Tabs.TabConsumable.ItemGrid.FillSlots(playerInventory.ConsumableIDs);
-
-            /// TODO:
-            //Tabs.TabEquipment.ItemGrid.FillSlots(playerInventory.[fill this in whenever]);
+            Tabs.TabEquipment.ItemGrid.FillSlots(playerInventory.EquipmentModIDs);
         }
 
         private void InitializeTabs()
