@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using SystemMiami.Enums;
 using SystemMiami.Utilities;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem
 {
+    public enum AdjacencyType { EDGE, CORNER, BOTH };
     public class AdjacentTileSet : AdjacentPositionSet
     {
         /// <summary>
@@ -44,15 +46,84 @@ namespace SystemMiami.CombatSystem
 
                 AdjacentTiles[direction] = tile;
 
-                // remember that board forward is FORWARD_R
+                if (direction == TileDir.FORWARD_C
+                    || direction == TileDir.MIDDLE_R
+                    || direction == TileDir.BACKWARD_C
+                    || direction == TileDir.MIDDLE_L)
+                {
+                    EdgeAdjacent[direction] = tile;
+                }
+
                 if (direction == TileDir.FORWARD_R
                     || direction == TileDir.BACKWARD_R
                     || direction == TileDir.BACKWARD_L
                     || direction == TileDir.FORWARD_L)
                 {
-                    EdgeAdjacent[direction] = tile;
+                    CornerAdjacent[direction] = tile;
                 }
             }
+        }
+
+        public Dictionary<TileDir, OverlayTile> GetAdjacent(AdjacencyType type)
+        {
+            return type switch {
+                AdjacencyType.EDGE      => EdgeAdjacent,
+                AdjacencyType.CORNER    => CornerAdjacent,
+                AdjacencyType.BOTH      => AdjacentTiles,
+                _                       => AdjacentTiles
+            };
+        }
+
+        public void UnhighlightAll()
+        {
+            foreach (TileDir direction in AdjacentTiles.Keys)
+            {
+                if (AdjacentTiles[direction] == null) { continue; }
+
+                AdjacentTiles[direction].UnHighlight();
+            }
+        }
+
+        public void HighlightAll()
+        {
+            HighlightCenter(Color.black);
+            HighlightEdges(Color.blue);
+            HighlightCorners(Color.magenta);
+        }
+
+        public void HighlightCenter(Color color)
+        {
+            if (MapManager.MGR.TryGetTile(center, out OverlayTile tile))
+            {
+                tile.Highlight(color);
+            }
+        }
+        public void HighlightCorners(Color color)
+        {
+            string dbugmsg = $"<color=cyan>this is intended to be the corners of {center}</color>\n";
+            foreach (TileDir key in CornerAdjacent.Keys)
+            {
+                if (CornerAdjacent[key] == null) { continue; }
+
+                dbugmsg += $"<color=magenta>| {key}:  {CornerAdjacent[key].name}</color>\n";
+                CornerAdjacent[key].Highlight(color);
+            }
+
+            Debug.Log(dbugmsg, MapManager.MGR.map[center]);
+        }
+
+        public void HighlightEdges(Color color)
+        {
+            string dbugmsg = $"<color=green>this is intended to be the corners of {center}</color>\n";
+            foreach (TileDir key in EdgeAdjacent.Keys)
+            {
+                if (EdgeAdjacent[key] == null) { continue; }
+
+                dbugmsg += $"<color=blue>| {key}:  {EdgeAdjacent[key].name}</color>\n";
+                EdgeAdjacent[key].Highlight(color);
+            }
+
+            Debug.Log(dbugmsg, MapManager.MGR.map[center]);
         }
     }
 }

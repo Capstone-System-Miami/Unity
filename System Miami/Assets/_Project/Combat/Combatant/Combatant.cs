@@ -21,6 +21,10 @@ namespace SystemMiami.CombatSystem
 
         #region Serialized Vars
         //============================================================
+        [Header("Debug")]
+        [SerializeField] private bool detailedFocusHighlight;
+        private AdjacentTileSet focusAdjacent;
+
         [Header("General Info")]
         [SerializeField] private Color _colorTag = Color.white;
 
@@ -142,6 +146,12 @@ namespace SystemMiami.CombatSystem
 
                 previousFocus = focusTile;
                 focusTile = value;
+                if (detailedFocusHighlight)
+                {
+                    focusAdjacent?.UnhighlightAll();
+                    focusAdjacent = new(value);
+                    focusAdjacent.HighlightAll();
+                }
                 OnFocusTileChanged();
             }
         }
@@ -355,14 +365,13 @@ namespace SystemMiami.CombatSystem
                 return result;
             }
 
-            if (MapManager.MGR.map.TryGetValue(MapManager.MGR.CenterPos, out result))
+            if (!MapManager.MGR.map.TryGetValue(MapManager.MGR.CenterPos, out result))
             {
-
-            }
                 Debug.LogError(
                     $"FATAL | {name}'s {this}" +
                     $"FOUND NO TILE TO FOCUS ON."
                     );
+            }
 
             return result;
         }

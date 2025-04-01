@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using SystemMiami.Utilities;
+using SystemMiami.CombatSystem;
 
 namespace SystemMiami
 {
@@ -32,15 +33,16 @@ namespace SystemMiami
         {
             get
             {
-                string dbugMsg = $"<color=yellow>Reading (& Loading) \'ForMovement\'</color>\n";
-                if (startInclusive != null)
-                {
-                    dbugMsg.Replace("(& Loading) ", "");
-                }
+                //string dbugMsg = $"<color=yellow>Reading (& Loading) \'ForMovement\'</color>\n";
+                //if (startInclusive != null)
+                //{
+                //    dbugMsg.Replace("(& Loading) ", "");
+                //}
+
                 startExclusive ??= GetTruncated(false);
 
-                dbugMsg += $"<color=red>{string.Join(" -> ", startExclusive.Select(tile => tile.name).ToArray())}</color>";
-                Debug.Log(dbugMsg);
+                //dbugMsg += $"<color=red>{string.Join(" -> ", startExclusive.Select(tile => tile.name).ToArray())}</color>";
+                //Debug.Log(dbugMsg);
                 return startExclusive;
             }
         }
@@ -96,12 +98,11 @@ namespace SystemMiami
             this.maxTiles = maxTiles;
 
             this.path = forced
-                                                         // TODO
-                                                         // This diag flag
-                                                         // shouldn't need
-                                                         // to be false.
-                                                         // vvvvv 
-                ? pathFinder.FindPath(this.start, this.end, false, true)
+                                                               // TODO
+                                                               // This shouldn't need
+                                                               // to be set to edge.
+                                                               // vvvvv 
+                ? pathFinder.FindPath(this.start, this.end, AdjacencyType.EDGE, true)
                 : pathFinder.FindPath(this.start, this.end);
 
             toRemove = path.Count - maxTiles;

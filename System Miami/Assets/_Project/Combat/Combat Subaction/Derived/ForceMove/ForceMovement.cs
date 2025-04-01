@@ -60,10 +60,11 @@ namespace SystemMiami.CombatSystem
             targetPos = new(adjustedX, adjustedY);
             string after = targetPos.ToString();
 
-            Debug.Log($"|  <color=red>targetPos {before}  </color>" +
-                $"|  <color=green>X bound: ({MapManager.MGR.TileCorners.xMin}, {MapManager.MGR.TileCorners.xMax})</color>" +
-                $"|  <color=green>Y bound: ({MapManager.MGR.TileCorners.yMin}, {MapManager.MGR.TileCorners.yMax})</color>\n" +
-                $"|  <color=red>adjusted: {after}</color>");
+            // Please keep for debug
+            //Debug.Log($"|  <color=red>targetPos {before}  </color>" +
+            //    $"|  <color=green>X bound: ({MapManager.MGR.TileCorners.xMin}, {MapManager.MGR.TileCorners.xMax})</color>" +
+            //    $"|  <color=green>Y bound: ({MapManager.MGR.TileCorners.yMin}, {MapManager.MGR.TileCorners.yMax})</color>\n" +
+            //    $"|  <color=red>adjusted: {after}</color>");
             if (MapManager.MGR.TryGetTile(targetPos, out OverlayTile targetTile))
             {
                 destinationTile = targetTile;

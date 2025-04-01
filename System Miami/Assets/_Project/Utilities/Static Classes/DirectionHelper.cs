@@ -127,8 +127,6 @@ namespace SystemMiami.Utilities
         {
             directionVec = GetNormalized(directionVec);
 
-            Debug.Log($"{directionVec}");
-
             Assert.IsTrue(BoardDirectionEnumByVector.ContainsKey(directionVec));
 
             return BoardDirectionEnumByVector[directionVec];

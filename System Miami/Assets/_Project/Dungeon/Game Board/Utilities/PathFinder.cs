@@ -11,10 +11,10 @@ namespace SystemMiami.Utilities
     {
         public List<OverlayTile> FindPath(OverlayTile start, OverlayTile end)
         {
-            return FindPath(start, end, false, false);
+            return FindPath(start, end, AdjacencyType.EDGE, false);
         }
         // Finds shortest path between two overlay tiles
-        public List<OverlayTile> FindPath(OverlayTile start, OverlayTile end, bool includeDiag, bool stopAtObstacle)
+        public List<OverlayTile> FindPath(OverlayTile start, OverlayTile end, AdjacencyType adjacencyType, bool stopAtObstacle)
         {
             //tiles to explore
             List<OverlayTile> openList = new List<OverlayTile>();
@@ -52,20 +52,21 @@ namespace SystemMiami.Utilities
 
                 //get all neighbor tiles to current tile
                 AdjacentTileSet neighbours = new(currentOverlayTile);
-                Dictionary<TileDir, OverlayTile> neighborDict = includeDiag
-                    ? neighbours.AdjacentTiles
-                    : neighbours.EdgeAdjacent;
-                //List<OverlayTile> neighbourTiles = GetNeighbourTiles(currentOverlayTile);
+
+                Dictionary<TileDir, OverlayTile> neighbourDict = neighbours.GetAdjacent(adjacencyType);
 
                 //loop through eac
-                foreach (OverlayTile neighbour in neighborDict.Values)
+                foreach (TileDir direction in neighbourDict.Keys)
                 {
+                    OverlayTile neighbour = neighbourDict[direction];
+
                     if (neighbour == null)
                     {
                         // Hit the edge of the board. Do something with this if
                         // you need to.
                         continue;
                     }
+
                     // skip any tiles already explored
                     if (closedList.Contains(neighbour)) { continue; }
 

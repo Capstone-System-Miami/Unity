@@ -20,14 +20,19 @@ namespace SystemMiami.CombatSystem
         public readonly Dictionary<TileDir, Vector2Int>
             AdjacentBoardPositions = new();
 
+        public readonly Vector2Int center;
+
         // Constructors
         public AdjacentPositionSet(DirectionContext info)
         {
+            this.center = info.TilePositionA;
             // Find the map directions by rotating an amount of
             // ticks equivalent to the enumerated direction
             // of the incoming object.
+
+            // Debug.LogWarning($"I am facing {info.BoardDirection}");
+            // Debug.LogWarning($"I am screen dir {info.ScreenDirection}");
             BoardDirectionVectors = GetRotatedVectors((int)info.BoardDirection);
-            //DirectionHelper.Print(_directionsRelativeToMap, "Map directions");
             
             // Get adjacent map positions by adding the map position of the
             // incoming object to the directions
@@ -104,7 +109,6 @@ namespace SystemMiami.CombatSystem
                     shifted = (TileDir)catchBeginning++;
                 }
 
-                //Debug.Log($"local pos {centered} is now original pos {shifted}");
                 // Result set to the shifted position.
                 result[centered] = localDirs[shifted];
             }

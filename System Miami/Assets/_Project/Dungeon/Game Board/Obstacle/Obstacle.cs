@@ -266,7 +266,7 @@ namespace SystemMiami.CombatSystem
         {
             if (colorSet.Highlighted.a != 0 && colorSet.Normal.a != 0)
             {
-                Debug.LogError("Returning original colors");
+                Debug.Log("Returning original colors", this);
                 return colorSet;
             }
 
