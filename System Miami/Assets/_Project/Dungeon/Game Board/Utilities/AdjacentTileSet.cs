@@ -21,7 +21,14 @@ namespace SystemMiami.CombatSystem
         /// excludes <c><see cref="OverlayTile"/></c> entries at
         /// <c><see cref="TileDir"/></c> Keys representing diagonal directions.
         /// </summary>
-        public readonly Dictionary<TileDir, OverlayTile> ExcludeDiagonals = new();
+        public readonly Dictionary<TileDir, OverlayTile> EdgeAdjacent = new();
+
+        /// <summary>
+        /// A modified version of <c><see cref="AdjacentTiles"/></c> which
+        /// includes ONLY <c><see cref="OverlayTile"/></c> entries at
+        /// <c><see cref="TileDir"/></c> Keys representing diagonal directions.
+        /// </summary>
+        public readonly Dictionary<TileDir, OverlayTile> CornerAdjacent = new();
 
         public AdjacentTileSet(OverlayTile tile)
             : this ( new DirectionContext(tile.BoardPos) )
@@ -43,7 +50,7 @@ namespace SystemMiami.CombatSystem
                     || direction == TileDir.BACKWARD_L
                     || direction == TileDir.FORWARD_L)
                 {
-                    ExcludeDiagonals[direction] = tile;
+                    EdgeAdjacent[direction] = tile;
                 }
             }
         }

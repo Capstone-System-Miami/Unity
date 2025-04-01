@@ -106,7 +106,7 @@ namespace SystemMiami.CombatSystem
         {
             MovementPath pathToTile = new(PositionTile, destinationTile, true);
 
-            StartCoroutine(Fuck(pathToTile));
+            StartCoroutine(TEST_ShowMovementPath(pathToTile));
             //log.error(
             //    $"{name} is trying to priview movement to " +
             //    $"{destinationTile.name}, but its RecieveForceMove() method " +
@@ -114,7 +114,7 @@ namespace SystemMiami.CombatSystem
             //    destinationTile);
         }
 
-        private IEnumerator Fuck(MovementPath path)
+        private IEnumerator TEST_ShowMovementPath(MovementPath path)
         {
             float duration = 1f;
 

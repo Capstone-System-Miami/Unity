@@ -29,10 +29,8 @@ namespace SystemMiami.Utilities
             //int i = 0;
             while(openList.Count > 0)
             {
-                //Debug.Log($"in loop. iteration {i++}");
-
                 //tile with lowest F score
-                OverlayTile currentOverlayTile = openList.OrderBy(x => x.F).First();
+                OverlayTile currentOverlayTile = openList.OrderBy(tile => tile.F).First();
 
                 //move current tile to closed list
                 openList.Remove(currentOverlayTile);
@@ -56,7 +54,7 @@ namespace SystemMiami.Utilities
                 AdjacentTileSet neighbours = new(currentOverlayTile);
                 Dictionary<TileDir, OverlayTile> neighborDict = includeDiag
                     ? neighbours.AdjacentTiles
-                    : neighbours.ExcludeDiagonals;
+                    : neighbours.EdgeAdjacent;
                 //List<OverlayTile> neighbourTiles = GetNeighbourTiles(currentOverlayTile);
 
                 //loop through eac
