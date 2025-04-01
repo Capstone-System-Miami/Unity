@@ -1,4 +1,5 @@
 // Authors: Layla Hoey
+using System;
 using System.Collections.Generic;
 using SystemMiami.Enums;
 using UnityEngine;
@@ -126,8 +127,6 @@ namespace SystemMiami.Utilities
         {
             directionVec = GetNormalized(directionVec);
 
-            Debug.Log($"{directionVec}");
-
             Assert.IsTrue(BoardDirectionEnumByVector.ContainsKey(directionVec));
 
             return BoardDirectionEnumByVector[directionVec];
@@ -150,6 +149,50 @@ namespace SystemMiami.Utilities
         public static ScreenDir GetScreenDir(TileDir tileDir)
         {
             return BoardToScreenEnumConversion[tileDir];
+        }
+
+        public static Dictionary<TileDir, TileDir> GetWorldDirectionKey(TileDir localDirection)
+        {
+            Dictionary<TileDir, TileDir>
+                result = new();
+
+            // Should always be 8
+            int directionCount = Enum.GetValues(typeof(TileDir)).Length;
+
+            int leftIndex = 0;
+            int rightIndex = (int)localDirection;
+            int catchBeginning = 0;
+
+            int iterations = 0;
+            const int LIMIT = 10; // ( while loops are scary ¯\_( )_/¯ )
+            while (leftIndex < directionCount && iterations++ <= LIMIT)
+            {
+                // At leftIndex == 0, centered is forward center.
+                // Increment the indexer after we read it.
+                TileDir centered = (TileDir)leftIndex++;
+                TileDir shifted;
+
+                // If right is less than the number of
+                // directions in the TileDir enum,
+                if (rightIndex < directionCount)
+                {
+                    // then the shifted index is that.
+                    // Increment the indexer after we read it.
+                    shifted = (TileDir)rightIndex++;
+                }
+                // If right is >= number of directions,
+                else
+                {
+                    // start using this as the shifted index.
+                    // Increment it after we read it.
+                    shifted = (TileDir)catchBeginning++;
+                }
+
+                //Debug.Log($"local pos {centered} is now original pos {shifted}");
+                // Result set to the shifted position.
+                result[centered] = shifted;
+            }
+            return result;
         }
 
         public static void Print(DirectionContext dirInfo, string objectName)

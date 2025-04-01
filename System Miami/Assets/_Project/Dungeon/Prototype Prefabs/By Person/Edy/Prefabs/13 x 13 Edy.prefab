@@ -4487,7 +4487,31 @@ MonoBehaviour:
   _boardTilesHeight: 2
   _gameBoard: {fileID: 2894473895507090195}
   _obstacles: {fileID: 5091000631032666433}
-  _overlayTileContainer: {fileID: 4658973384026208381}
+  staticUndamageable: {fileID: 0}
+  staticDamageable: {fileID: 0}
+  dynamicUndamageable: {fileID: 0}
+  dynamicDamageable: {fileID: 0}
+  DifficultyLevel: 0
+  Rewards:
+    _overrideByDifficulty: 1
+    _defaultDistributionMethod: 1
+    _easyMethod: 1
+    _mediumMethod: 2
+    _hardMethod: 0
+    _easyMinLevelOffset: -2
+    _easyMaxLevelOffset: -1
+    _mediumMinLevelOffset: 0
+    _mediumMaxLevelOffset: 0
+    _hardMinLevelOffset: 1
+    _hardMaxLevelOffset: 2
+    _includeAbilities: 1
+    _includeConsumables: 1
+    _includeEquipmentMods: 1
+    _abilityItemDatas: []
+    _consumableItemDatas: []
+    _equipmentItemDatas: []
+    log:
+      showMessages: 1
 --- !u!1 &4658973384026208381
 GameObject:
   m_ObjectHideFlags: 0

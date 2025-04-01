@@ -11,6 +11,7 @@ namespace SystemMiami.CombatSystem
         void UnsubscribeTo(ref EventHandler<TargetingEventArgs> combatActionEvent);
         void HandleTargetingEvent(object sender, TargetingEventArgs args);
 
+        Vector2Int BoardPos { get; }
         List<ISubactionCommand> TargetedBy { get; set; }
         string nameMessageForDB { get; set; }
         void PreviewOn();

@@ -49,8 +49,9 @@ namespace SystemMiami.CombatSystem
         {
             MovementPath pathToPlayerData = new(
                 PositionTile,
-                target.PositionTile
-                );
+                target.PositionTile,
+                false
+            );
 
             return pathToPlayerData.ForMovement.Count <= detectionRadius;
         }

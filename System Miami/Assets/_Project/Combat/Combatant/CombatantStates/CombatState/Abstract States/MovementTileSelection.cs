@@ -95,6 +95,7 @@ namespace SystemMiami.CombatRefactor
             path = new(
                 MapManager.MGR.map[args.directionContext.TilePositionA],
                 MapManager.MGR.map[args.directionContext.TilePositionB],
+                false,
                 currentSpeedStat
                 );
 

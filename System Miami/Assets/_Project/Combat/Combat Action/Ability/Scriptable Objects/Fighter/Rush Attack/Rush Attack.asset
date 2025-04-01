@@ -12,17 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58d728392c04c9a48a8a419a8ac94f33, type: 3}
   m_Name: Rush Attack
   m_EditorClassIdentifier: 
-  Icon: {fileID: 21300352, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
+  Icon: {fileID: 21300000, guid: 395b7b34b242d334cbd163896683a736, type: 3}
   Actions:
   - {fileID: 11400000, guid: c26bea999a9e0af4d9218c373eab036a, type: 2}
-  OverrideController: {fileID: 22100000, guid: af4e7cc03d52a4a84ab7bb28551c66b2, type: 2}
+  OverrideController: {fileID: 22100000, guid: 2e2a65cb437aaa24fa4ef17f04b23e7e, type: 2}
   AbilityType: 0
   ResourceCost: 5
   CooldownTurns: 2
   itemData:
     ID: 1007
-    Icon: {fileID: 21300352, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
+    Icon: {fileID: 21300000, guid: 395b7b34b242d334cbd163896683a736, type: 3}
     Name: Rush Attack
-    Description: 'TODO: Advance 1 space to get closer to an enemy, dealing moderate
-      damage '
-    itemType: 0
+    Description: Advance 1 space closer to target and deal damage
+    itemType: 1
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 3
+    rarity: 0
+  classType: 0
+  isEnemyAbility: 0
+  isGeneralAbility: 0

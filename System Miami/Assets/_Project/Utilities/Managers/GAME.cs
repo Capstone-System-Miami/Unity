@@ -168,5 +168,10 @@ namespace SystemMiami.Management
             Application.Quit();
             #endif
         }
+
+        public int ImmediateBreakpointSpace()
+        {
+            return 0;
+        }
     }
 }

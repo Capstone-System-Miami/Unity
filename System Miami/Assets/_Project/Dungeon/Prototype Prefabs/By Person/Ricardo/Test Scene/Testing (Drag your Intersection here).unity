@@ -137,6 +137,7 @@ MonoBehaviour:
   body: {fileID: 7700678278004945881}
   spriteRenderer: {fileID: 5148067105268423909}
   animator: {fileID: 7816087811522621038}
+  animControllers: []
   walkSpeed: 2
   frameRate: 30
 --- !u!1 &1568399377863264448
@@ -486,8 +487,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ff9527698754fa46bd93bb2ff5a7b10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _debugMessages: 0
+  log:
+    showMessages: 1
   _interactKey: 101
+  _promptBox: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

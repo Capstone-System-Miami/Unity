@@ -22,7 +22,7 @@ namespace SystemMiami.ui
         [Header("Internal Refs")]
         [SerializeField] private SpriteBox spriteBox;
 
-        private ItemData itemData;
+        [SerializeField]private ItemData itemData;
 
         private Image fallback;
         private bool usingFallback = false;
@@ -72,6 +72,8 @@ namespace SystemMiami.ui
                         $"anywhere on {name}");
                 }
             }
+            
+            
         }
 
         public bool TryFill(int itemID)
@@ -110,7 +112,7 @@ namespace SystemMiami.ui
 
         private void Refresh()
         {
-            if (itemData.failbit) { return; }
+            if (itemData.failbit) { log.error("Failed to get item data");  return; }
 
             if (!usingFallback)
             {

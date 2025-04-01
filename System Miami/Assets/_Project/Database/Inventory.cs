@@ -12,10 +12,11 @@ namespace SystemMiami.InventorySystem
         [SerializeField] private List<int> physicalAbilityIDs = new();
         [SerializeField] private List<int> magicalAbilityIDs = new();
         [SerializeField] private List<int> consumableIDs = new();
-        [SerializeField] private List<int> equipmentModIDs = new(); //TODO
-        [FormerlySerializedAs("quickslotPhysicalAbilities")] [SerializeField] private List<int> quickslotPhysicalAbilityIDs = new(); 
-        [FormerlySerializedAs("quickslotMagicalAbilities")] [SerializeField] private List<int> quickslotMagicalAbilityIDs = new(); 
-        [FormerlySerializedAs("quickslotConsumable")] [SerializeField] private List<int> quickslotConsumableIDs = new();
+        [SerializeField] private List<int> equipmentModIDs = new(); 
+        [SerializeField] private List<int> quickslotPhysicalAbilityIDs = new(); 
+        [SerializeField] private List<int> quickslotMagicalAbilityIDs = new(); 
+        [SerializeField] private List<int> quickslotConsumableIDs = new();
+        [SerializeField] private List<int> equippedEquipmentModIDs = new();
 
         [SerializeField] private int credits;
         
@@ -23,10 +24,12 @@ namespace SystemMiami.InventorySystem
         public List<int> PhysicalAbilityIDs { get => physicalAbilityIDs; private set => physicalAbilityIDs = value; }
         public List<int> MagicalAbilityIDs { get => magicalAbilityIDs; private set => magicalAbilityIDs = value; }
         public List<int> ConsumableIDs { get => consumableIDs; private set => consumableIDs = value; }
+        public List<int> EquipmentModIDs { get => equipmentModIDs; private set => equipmentModIDs = value; }
 
         public List<int> QuickslotPhysicalAbilityIDs { get => quickslotPhysicalAbilityIDs; private set => quickslotPhysicalAbilityIDs = value; }
         public List<int> QuickslotMagicalAbilityIDs { get => quickslotMagicalAbilityIDs; private set => quickslotMagicalAbilityIDs = value; }
         public List<int> QuickslotConsumableIDs { get => quickslotConsumableIDs; private set => quickslotConsumableIDs = value; }
+        public List<int> EquippedEquipmentModIDs { get =>  equippedEquipmentModIDs; private set =>  equippedEquipmentModIDs = value; }
 
         public List<int> AllValidInventoryItems
         {
@@ -98,7 +101,10 @@ namespace SystemMiami.InventorySystem
                     consumableIDs.Remove(ID);
                     quickslotConsumableIDs.Add(ID);
                     break;
-
+                case ItemType.EquipmentMod:
+                    equipmentModIDs.Remove(ID);
+                    equippedEquipmentModIDs.Add(ID);
+                    break;
                 default:
                     Debug.LogError(
                         $"Tried to move an item into a quickslot, but ID ({ID}) " +
@@ -125,6 +131,10 @@ namespace SystemMiami.InventorySystem
                     quickslotConsumableIDs.Remove(ID);
                     consumableIDs.Add(ID);
                     break;
+                case ItemType.EquipmentMod:
+                    equippedEquipmentModIDs.Remove(ID);
+                    equipmentModIDs.Add(ID);
+                    break;
 
                 default:
                     Debug.LogError(
@@ -135,6 +145,8 @@ namespace SystemMiami.InventorySystem
 
             OnInventoryChanged?.Invoke();
         }
+        
+        
 
         public void InitializeStartingAbility(CharacterClassType characterClass)
         {
