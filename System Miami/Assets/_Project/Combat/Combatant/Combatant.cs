@@ -314,7 +314,7 @@ namespace SystemMiami.CombatSystem
             float distanceToTarget = Vector2.Distance(
                 transform.position,
                 targetTile.transform.position
-                );
+            );
             return distanceToTarget < PLACEMENT_RANGE;
         }
         #endregion Movement

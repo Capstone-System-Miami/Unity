@@ -9,9 +9,6 @@ namespace SystemMiami.CombatRefactor
 {
     public class ForcedMovementExecution : CombatantState
     {
-        protected Conditions moveAgainConditions = new();
-        protected Conditions actionSelectionConditions = new();
-
         protected MovementPath path;
         protected List<OverlayTile> pathToConsume = new();
 
@@ -59,8 +56,7 @@ namespace SystemMiami.CombatRefactor
 
                 Debug.Log(
                     $"{combatant} moved along path. " +
-                    $"new speed: {combatant.Speed.Get()}"
-                    );
+                    $"new speed: {combatant.Speed.Get()}");
             }
         }
 
