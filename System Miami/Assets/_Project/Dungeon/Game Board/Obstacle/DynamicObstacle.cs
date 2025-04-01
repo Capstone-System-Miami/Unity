@@ -1,18 +1,37 @@
 using System.Collections;
 using System.Collections.Generic;
-using SystemMiami.Enums;
-using SystemMiami.Utilities;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem
 {
     public class DynamicObstacle : Obstacle, IDamageReceiver, IForceMoveReceiver
     {
+        protected const float PLACEMENT_RANGE = 0.0001f;
+
+        [SerializeField] private float moveSpeed = 2f;
+
         [SerializeField] private bool isDamageable;
 
         private Resource health;
 
         private bool isDamageOnBump;
+
+        protected override void Update()
+        {
+            base.Update();
+            if (TRIGGER_ForceMovePreviewTest)
+            {
+                TRIGGER_ForceMovePreviewTest = false;
+                ForceMoveCommand testCommand = new(this, TEST_origin, TEST_moveType, TEST_distance);
+                testCommand.Preview();
+            }
+            if (TRIGGER_ForceMoveExecuteTest)
+            {
+                TRIGGER_ForceMoveExecuteTest = false;
+                ForceMoveCommand testCommand = new(this, TEST_origin, TEST_moveType, TEST_distance);
+                testCommand.Execute();
+            }
+        }
 
         public void Initialize(Sprite sprite, float maxHealth, bool isDamageOnBump)
         {
@@ -70,14 +89,18 @@ namespace SystemMiami.CombatSystem
         #endregion IDamageable
 
         #region IForceMoveReceiver
-        // ==================================================================
-        #endregion IForceMoveReceiver
-
-
+        // =====================================================================
         public bool IsCurrentlyMovable()
         {
             return true;
         }
+
+        public Vector2Int TEST_origin;
+        public int TEST_distance;
+        public MoveType TEST_moveType;
+        public float TEST_movementTimeout;
+        public bool TRIGGER_ForceMovePreviewTest;
+        public bool TRIGGER_ForceMoveExecuteTest;
 
         /// <summary>
         /// TODO: Implement, Test
@@ -89,35 +112,103 @@ namespace SystemMiami.CombatSystem
         /// <param name="directionVector">
         /// A direction in Worldspace (but really
         /// "BoardSpace" / "TileSpace" or whatever) </param>
-        public void PreviewForceMove(int distance, Vector2Int directionVector)
+        public void PreviewForceMove(OverlayTile destinationTile)
         {
-            // TODO: Should this param be Direction of attack, where we would
-            directionVector = DirectionHelper.GetNormalized(directionVector);
+            MovementPath pathToTile = new(PositionTile, destinationTile, true);
 
-            // then have  vv this vv  ?
-            // TODO: Direction of movement is the opposite?
-            Vector2Int movementVector = directionVector * -1;
-
-            log.print(
-                $"{gameObject} will move {distance} " +
-                $"tiles in ({DirectionHelper.GetTileDir(movementVector)}) from this action.\n" +
-                $"<UI NOT IMPLEMENTED>");
+            StartCoroutine(TEST_ShowMovementPath(pathToTile));
+            //log.error(
+            //    $"{name} is trying to priview movement to " +
+            //    $"{destinationTile.name}, but its RecieveForceMove() method " +
+            //    $"has not been implemented.",
+            //    destinationTile);
         }
 
-        public void ReceiveForceMove(int distance, Vector2Int directionVector)
+
+        public void RecieveForceMove(OverlayTile destinationTile)
         {
-            // TODO: Should this param be Direction of attack, where we would
-            directionVector = DirectionHelper.GetNormalized(directionVector);
-
-            // then have  vv this vv  ?
-            // TODO: Direction of movement is the opposite?
-            Vector2Int movementVector = directionVector * -1;
-
-            log.print(
-                $"{gameObject} is moving {distance} " +
-                $"tiles in ({DirectionHelper.GetTileDir(movementVector)}) due to " +
-                $"an inflicted CombatAction\n" +
-                $"<NOT IMPLEMENTED>");
+            MovementPath pathToDestination = new(PositionTile, destinationTile, true);
+            StartCoroutine(ForcedMovementExecution(pathToDestination, TEST_movementTimeout));
         }
+
+        private IEnumerator TEST_ShowMovementPath(MovementPath path)
+        {
+            float duration = 1f;
+
+            path.HighlightValidMoves(Color.cyan);
+            path.DrawArrows();
+
+            while (duration > 0)
+            {
+                duration -= Time.deltaTime;
+                yield return new WaitForSeconds(Time.deltaTime);
+            }
+
+            path.Unhighlight();
+            path.UnDrawAll();
+        }
+        #endregion IForceMoveReceiver
+
+        #region Board Movement
+        // =====================================================================
+        public void StepTowards(OverlayTile target)
+        {
+            float stepDistance = moveSpeed * Time.deltaTime;
+
+            Vector2 positionAfterStep = Vector2.MoveTowards(
+                transform.position,
+                target.transform.position,
+                stepDistance
+            );
+
+            transform.position = positionAfterStep;
+        }
+
+        public bool InPlacementRangeOf(OverlayTile targetTile)
+        {
+            float distanceToTarget = Vector2.Distance(
+                transform.position,
+                targetTile.transform.position
+            );
+            return distanceToTarget < PLACEMENT_RANGE;
+        }
+
+        private IEnumerator ForcedMovementExecution(MovementPath pathToTile, float timeout)
+        {
+            /// Copy path so we can remove elements as we go.
+            List<OverlayTile> pathToConsume = new(pathToTile.ForMovement);
+
+            /// Highlight the path
+            pathToTile.HighlightValidMoves(Color.red);
+            pathToTile.DrawArrows();
+
+            while (pathToConsume.Count > 0 && timeout > 0)
+            {
+                StepTowards(pathToConsume[0]);
+
+                if (InPlacementRangeOf(pathToConsume[0]))
+                {
+                    Debug.Log($"{name} in placement range of {pathToConsume[0].name}");
+                    if (!MapManager.MGR.TryPlaceOnTile(this, pathToConsume[0]))
+                    {
+                        Debug.LogError(
+                            $"{name} " +
+                            $"was not able to be placed on" +
+                            $"{pathToConsume[0].gameObject}.");
+                        break;
+                    }
+
+                    pathToConsume.RemoveAt(0);
+
+                    Debug.Log($"{name} moved along path.");
+                }
+
+                timeout -= Time.deltaTime;
+                yield return new WaitForSeconds(Time.deltaTime);
+            }
+
+            pathToTile.UnDrawAll();
+        }
+        #endregion // Board Movement
     }
 }
