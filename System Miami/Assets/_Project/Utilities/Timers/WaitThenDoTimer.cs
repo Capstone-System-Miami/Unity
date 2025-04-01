@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace SystemMiami
 {
-    public class WaitThenDoTimer : MonoBehaviour
+    public class WaitThenDoTimer
     {
         private const string NONE = "Not running";
         private const string CANCELLED  = "Cancelled timer";

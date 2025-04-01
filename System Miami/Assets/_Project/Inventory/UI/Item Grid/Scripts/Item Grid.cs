@@ -112,6 +112,7 @@ namespace SystemMiami.ui
                 Assert.IsTrue(ids != null);
                 Assert.IsTrue(ids.Count > i);
                 // ItemData itemData = Database.Instance.GetData(id);
+                Debug.Log($"Filling slot {i} with {ids[i]}");
                 if (!Slots[i].TryFill(ids[i]))
                 {
                     log.error(

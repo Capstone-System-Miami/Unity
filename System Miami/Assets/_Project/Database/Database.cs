@@ -16,13 +16,21 @@ namespace SystemMiami
 
     public class Database : Singleton<Database>
     {
-      
-       [SerializeField] private List<NewAbilitySO> physicalAbilityEntries = new();
-       [SerializeField] private List<NewAbilitySO> magicalAbilityEntries = new();
-       [SerializeField] private List<ConsumableSO> consumableEntries = new();
-       [SerializeField] private List<NewAbilitySO> enemyPhysicalAbilityEntries = new();
-       [SerializeField] private List<NewAbilitySO> enemyMagicalAbilityEntries = new();
-       [FormerlySerializedAs("equipmentEntries")] [SerializeField] private List<EquipmentModSO> equipmentModEntries = new();
+        [SerializeField] private List<ItemData> PhysicalAbilityItemDatas = new List<ItemData>();
+        [SerializeField] private List<ItemData> MagicalAbilityItemDatas = new List<ItemData>();
+        [SerializeField] private List<ItemData> ConsumableItemDatas = new List<ItemData>();
+        [SerializeField] private List<ItemData> EquipmentModItemDatas = new List<ItemData>();
+        [SerializeField] private List<ItemData> EnemyPhysicalAbilityItemDatas = new List<ItemData>();
+        [SerializeField] private List<ItemData> EnemyMagicalAbilityItemDatas = new List<ItemData>();
+        [SerializeField] private List<ItemData> AllItemDatas = new List<ItemData>();
+
+
+        [SerializeField]private List<NewAbilitySO> physicalAbilityEntries = new();
+        [SerializeField]private List<NewAbilitySO> magicalAbilityEntries = new();
+        [SerializeField]private List<ConsumableSO> consumableEntries = new();
+        [SerializeField]private List<NewAbilitySO> enemyPhysicalAbilityEntries = new();
+        [SerializeField]private List<NewAbilitySO> enemyMagicalAbilityEntries = new();
+        [SerializeField]private List<EquipmentModSO> equipmentModEntries = new();
        
 
        private Dictionary<int, NewAbilitySO> physicalAbilityDatabase;
@@ -55,11 +63,11 @@ namespace SystemMiami
             if (!characterSelection)
             {
                 physicalAbilityEntries = physicalAbilityEntries
-                    .Where(entry => entry.classType == playerClassType).ToList();
+                    .Where(entry => entry.classType == playerClassType && !entry.isGeneralAbility).ToList();
 
                 // Filter magical abilities
                 magicalAbilityEntries = magicalAbilityEntries
-                    .Where(entry => entry.classType == playerClassType).ToList();
+                    .Where(entry => entry.classType == playerClassType && !entry.isGeneralAbility).ToList();
             }
 
             // Convert lists to dictionaries 
@@ -173,15 +181,17 @@ namespace SystemMiami
        public ItemData GetDataWithJustID(int id)
        {
            int IDType = id / 1000;
-           
-           return IDType switch
-           {
-               1 => physicalAbilityDatabase.ContainsKey(id) ? physicalAbilityDatabase[id].itemData : default,
-               2 => magicalAbilityDatabase.ContainsKey(id) ? magicalAbilityDatabase[id].itemData : default,
-               3 => consumableDatabase.ContainsKey(id) ? consumableDatabase[id].itemData : default,
-               4 => equipmentModDatabase.ContainsKey(id) ? equipmentModDatabase[id].itemData : default,
-               _ => default
-           };
+            Debug.Log("Something is trying to get an ID SLOT");
+            return IDType switch
+            {
+                1 => physicalAbilityDatabase.ContainsKey(id) ? physicalAbilityDatabase[id].itemData : default,
+                2 => magicalAbilityDatabase.ContainsKey(id) ? magicalAbilityDatabase[id].itemData : default,
+                3 => consumableDatabase.ContainsKey(id) ? consumableDatabase[id].itemData : default,
+                4 => equipmentModDatabase.ContainsKey(id) ? equipmentModDatabase[id].itemData : default,
+                _ => default
+            };
+
+            
        }
 
        // Factory 
@@ -295,6 +305,7 @@ namespace SystemMiami
         {
             string[] newAbilityGuids = AssetDatabase.FindAssets("t:NewAbilitySO");
             var allAbilities = new List<NewAbilitySO>();
+            var allAbilitiesData = new List<ItemData>();
 
             foreach (string guid in newAbilityGuids)
             {
@@ -303,12 +314,26 @@ namespace SystemMiami
                 if (ability != null)
                 {
                     allAbilities.Add(ability);
+                    
+
                 }
             }
             physicalAbilityEntries.Clear();
             magicalAbilityEntries.Clear();
+            equipmentModEntries.Clear();
             enemyPhysicalAbilityEntries.Clear();
             enemyMagicalAbilityEntries.Clear();
+
+
+
+            PhysicalAbilityItemDatas.Clear();
+            MagicalAbilityItemDatas.Clear();
+            ConsumableItemDatas.Clear();
+            EquipmentModItemDatas.Clear();
+            EnemyPhysicalAbilityItemDatas.Clear();
+            EnemyMagicalAbilityItemDatas.Clear();
+
+
             foreach (var ability in allAbilities)
             {
                 switch (ability.AbilityType)
@@ -317,11 +342,13 @@ namespace SystemMiami
                         if (ability.isEnemyAbility)
                         {
                             enemyPhysicalAbilityEntries.Add(ability);
+                            EnemyPhysicalAbilityItemDatas.Add(ability.itemData);
                         }
                         else
                         {
                             physicalAbilityEntries.Add(ability);
-                            
+                            PhysicalAbilityItemDatas.Add(ability.itemData);
+
                         }
                        
                         break;
@@ -330,11 +357,13 @@ namespace SystemMiami
                         if (ability.isEnemyAbility)
                         {
                             enemyMagicalAbilityEntries.Add(ability);
+                            EnemyMagicalAbilityItemDatas.Add(ability.itemData);
                         }
                         else
                         {
                             magicalAbilityEntries.Add(ability);
-                            
+                            MagicalAbilityItemDatas.Add(ability.itemData);
+
                         }
                         break;
                 }
@@ -354,15 +383,21 @@ namespace SystemMiami
             }
 
             consumableEntries = allConsumables;
+            ConsumableItemDatas = consumableEntries.Select(so => so.itemData).ToList();
             string[] guids = AssetDatabase.FindAssets("t:EquipmentModSO");
             var results = new List<EquipmentModSO>();
             foreach (string guid in guids)
             {
                 var path = AssetDatabase.GUIDToAssetPath(guid);
                 var modSo = AssetDatabase.LoadAssetAtPath<EquipmentModSO>(path);
-                if (modSo != null) results.Add(modSo);
+                if (modSo != null) 
+                {
+                    results.Add(modSo); 
+                    
+                }
             }
             equipmentModEntries = results;
+            EquipmentModItemDatas = equipmentModEntries.Select(so => so.itemData).ToList();
             // ================ 4) Mark the asset as dirty ================
             EditorUtility.SetDirty(this);
             optional: AssetDatabase.SaveAssets();

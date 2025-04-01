@@ -132,11 +132,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 18740023143509276, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
       propertyPath: quickslotMagicalAbilityIDs.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 18740023143509276, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
       propertyPath: quickslotMagicalAbilityIDs.Array.data[0]
-      value: 2002
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3561768479257745428, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
       propertyPath: quickslotConsumableIDs.Array.size
@@ -8952,12 +8952,28 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: ConsumableItemDatas.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: EquipmentModItemDatas.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
       propertyPath: magicalAbilityEntries.Array.size
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
       propertyPath: physicalAbilityEntries.Array.size
-      value: 18
+      value: 17
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.size
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.size
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
       propertyPath: magicalAbilityEntries.Array.data[0]
@@ -8980,53 +8996,1384 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: b83931741a10620478d1a51f140586be, type: 2}
     - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
-      propertyPath: physicalAbilityEntries.Array.data[8]
+      propertyPath: ConsumableItemDatas.Array.data[0].ID
+      value: 3001
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: ConsumableItemDatas.Array.data[1].ID
+      value: 3000
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: physicalAbilityEntries.Array.data[4]
+      value: 
+      objectReference: {fileID: 11400000, guid: b965290868d88024b8731998e76b66d6, type: 2}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: physicalAbilityEntries.Array.data[5]
+      value: 
+      objectReference: {fileID: 11400000, guid: 5f6b00dd99e640049b41e6f61aec1d23, type: 2}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: physicalAbilityEntries.Array.data[6]
+      value: 
+      objectReference: {fileID: 11400000, guid: 97272e9041f93b4428fb59ae8a8ad18a, type: 2}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: physicalAbilityEntries.Array.data[7]
       value: 
       objectReference: {fileID: 11400000, guid: ef92f4ce0dab11542addd4fb2775829b, type: 2}
     - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
-      propertyPath: physicalAbilityEntries.Array.data[9]
+      propertyPath: physicalAbilityEntries.Array.data[8]
       value: 
       objectReference: {fileID: 11400000, guid: f13da84b2fe421147889ca1b5a4f6552, type: 2}
     - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
-      propertyPath: physicalAbilityEntries.Array.data[10]
+      propertyPath: physicalAbilityEntries.Array.data[9]
       value: 
       objectReference: {fileID: 11400000, guid: acf2988e1de864944af7f4778f72d160, type: 2}
     - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
-      propertyPath: physicalAbilityEntries.Array.data[11]
+      propertyPath: physicalAbilityEntries.Array.data[10]
       value: 
       objectReference: {fileID: 11400000, guid: 9c10f724e7f6fc14bb91ab9dfdc4192f, type: 2}
     - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
-      propertyPath: physicalAbilityEntries.Array.data[12]
+      propertyPath: physicalAbilityEntries.Array.data[11]
       value: 
       objectReference: {fileID: 11400000, guid: e15880fcb4e966848af9e4e434c12c76, type: 2}
     - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
-      propertyPath: physicalAbilityEntries.Array.data[13]
+      propertyPath: physicalAbilityEntries.Array.data[12]
       value: 
       objectReference: {fileID: 11400000, guid: 471d54a93a4019441890d8b8fc41b9b0, type: 2}
     - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
-      propertyPath: physicalAbilityEntries.Array.data[14]
+      propertyPath: physicalAbilityEntries.Array.data[13]
       value: 
       objectReference: {fileID: 11400000, guid: a128cc3ae1832344b8be887961a12a0d, type: 2}
     - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
-      propertyPath: physicalAbilityEntries.Array.data[15]
+      propertyPath: physicalAbilityEntries.Array.data[14]
       value: 
       objectReference: {fileID: 11400000, guid: fb2583185e1b22a448065346662a5821, type: 2}
     - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
-      propertyPath: physicalAbilityEntries.Array.data[16]
+      propertyPath: physicalAbilityEntries.Array.data[15]
       value: 
       objectReference: {fileID: 11400000, guid: 573382dc8d082d14fbdc5c942cc4947d, type: 2}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: physicalAbilityEntries.Array.data[16]
+      value: 
+      objectReference: {fileID: 11400000, guid: 325584827e537574f87e9c204cceb703, type: 2}
     - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
       propertyPath: physicalAbilityEntries.Array.data[17]
       value: 
       objectReference: {fileID: 11400000, guid: 325584827e537574f87e9c204cceb703, type: 2}
     - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: ConsumableItemDatas.Array.data[0].Icon
+      value: 
+      objectReference: {fileID: 21300054, guid: 1033079a30e5c624e86332d39519f284, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: ConsumableItemDatas.Array.data[0].Name
+      value: Fire Bomb
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: ConsumableItemDatas.Array.data[1].Icon
+      value: 
+      objectReference: {fileID: 1348272354, guid: 796574b158e05b44c8f9deae75f9d1ec, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: ConsumableItemDatas.Array.data[1].Name
+      value: Minor Healing Potion
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: EquipmentModItemDatas.Array.data[0].ID
+      value: 4000
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
       propertyPath: enemyPhysicalAbilityEntries.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: EnemyPhysicalAbilityItemDatas.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: EquipmentModItemDatas.Array.data[0].Name
+      value: Test Equipment Mod
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[0].ID
+      value: 2005
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[1].ID
+      value: 2009
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[2].ID
+      value: 2010
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[3].ID
+      value: 2004
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[4].ID
+      value: 2000
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[5].ID
+      value: 2006
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[6].ID
+      value: 2002
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[7].ID
+      value: 2008
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[8].ID
+      value: 2001
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[9].ID
+      value: 2007
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: EquipmentModItemDatas.Array.data[0].Price
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[10].ID
+      value: 2011
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[11].ID
+      value: 2003
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[12].ID
+      value: 2012
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[0].ID
+      value: 1002
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[1].ID
+      value: 1006
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[2].ID
+      value: 1021
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[3].ID
+      value: 1022
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[4].ID
+      value: 1003
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[5].ID
+      value: 1023
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[6].ID
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[7].ID
+      value: 1007
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[8].ID
+      value: 1024
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[9].ID
+      value: 1044
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: enemyPhysicalAbilityEntries.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: c665fe02e1ebd4a4090e8510287e199b, type: 2}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: enemyPhysicalAbilityEntries.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: 0784bd47bf6a041418288067a69788dd, type: 2}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: enemyPhysicalAbilityEntries.Array.data[2]
+      value: 
+      objectReference: {fileID: 11400000, guid: 3c00588e6fc198640adfd59c9d3275cc, type: 2}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: enemyPhysicalAbilityEntries.Array.data[3]
+      value: 
+      objectReference: {fileID: 11400000, guid: a38d5318836002c44906ddc5808316d0, type: 2}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
       propertyPath: enemyPhysicalAbilityEntries.Array.data[4]
       value: 
+      objectReference: {fileID: 11400000, guid: e174f1a19bb73304693b9b27f86b75d4, type: 2}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: enemyPhysicalAbilityEntries.Array.data[5]
+      value: 
       objectReference: {fileID: 11400000, guid: 9a88aa5433b55c1498d0358ad41507fd, type: 2}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: ConsumableItemDatas.Array.data[0].itemType
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: ConsumableItemDatas.Array.data[1].itemType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[0].Name
+      value: Arcane Echo
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[1].Name
+      value: Astral Explosion
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[2].Name
+      value: 'Chilling Pulse '
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[3].Icon
+      value: 
+      objectReference: {fileID: -963576434, guid: 8bee6a2e50011a549bd74366f6bca472, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[3].Name
+      value: Exposure
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[4].Icon
+      value: 
+      objectReference: {fileID: 21300290, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[4].Name
+      value: Fireball
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[5].Name
+      value: Firestorm
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[6].Icon
+      value: 
+      objectReference: {fileID: 21300420, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[6].Name
+      value: Life Drainer
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[7].Name
+      value: Lightning Chain
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[8].Icon
+      value: 
+      objectReference: {fileID: 21300414, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[8].Name
+      value: Magic Shield
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[9].Name
+      value: Mana burst
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[10].ID
+      value: 1004
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[11].ID
+      value: 1005
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[12].ID
+      value: 1025
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[13].ID
+      value: 1026
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[14].ID
+      value: 1019
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[15].ID
+      value: 1027
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[16].ID
+      value: 1029
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[17].ID
+      value: 1030
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[18].ID
+      value: 1031
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[19].ID
+      value: 1018
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[20].ID
+      value: 1028
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[21].ID
+      value: 1017
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[22].ID
+      value: 1032
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[23].ID
+      value: 1034
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[24].ID
+      value: 1020
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[25].ID
+      value: 1043
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[26].ID
+      value: 1015
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[27].ID
+      value: 1035
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[28].ID
+      value: 1036
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[29].ID
+      value: 1016
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[30].ID
+      value: 1037
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[31].ID
+      value: 1038
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[32].ID
+      value: 1039
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[33].ID
+      value: 1014
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[34].ID
+      value: 1040
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[35].ID
+      value: 1009
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[36].ID
+      value: 1041
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[37].ID
+      value: 1042
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[38].ID
+      value: 1001
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[39].ID
+      value: 1012
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[10].Name
+      value: Mystic Shield
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[11].Icon
+      value: 
+      objectReference: {fileID: -963576434, guid: 8bee6a2e50011a549bd74366f6bca472, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[11].Name
+      value: Self Heal
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[12].Name
+      value: 'Void Step '
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[0].Icon
+      value: 
+      objectReference: {fileID: 21300000, guid: 13243c2e89bbd3049b129ff4334efcb2, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[0].Name
+      value: Fire Up
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[1].Icon
+      value: 
+      objectReference: {fileID: 21300000, guid: e2f58794d06dd2746bf200d054a9e4dc, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[1].Name
+      value: Flaming Blade
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[2].Icon
+      value: 
+      objectReference: {fileID: 21300000, guid: 24e568b35474c264e9264d0cb3da00a1, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[2].Name
+      value: Knockdown Smash
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[3].Icon
+      value: 
+      objectReference: {fileID: 21300000, guid: 947fb7ab9ef70774483633aed0c6c8f6, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[3].Name
+      value: Last Stand
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[4].Icon
+      value: 
+      objectReference: {fileID: 21300000, guid: 286eb932114897248b3ee7a9e87dd857, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[4].Name
+      value: Merciless Blows
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[5].Icon
+      value: 
+      objectReference: {fileID: 21300000, guid: c0f260ae4ca443244a0e8af450d25854, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[5].Name
+      value: Overpower
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[6].Icon
+      value: 
+      objectReference: {fileID: 21300000, guid: f994dfc38ae48f64ea928604caa05189, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[6].Name
+      value: Power Strike
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[7].Icon
+      value: 
+      objectReference: {fileID: 21300000, guid: 395b7b34b242d334cbd163896683a736, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[7].Name
+      value: Rush Attack
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[8].Icon
+      value: 
+      objectReference: {fileID: 21300000, guid: 9cee837af4aa7c046b961601e55dc5c9, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[8].Name
+      value: 'Second Wind '
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[9].Icon
+      value: 
+      objectReference: {fileID: 21300000, guid: 33676012c89f77746900e4935f48a669, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[9].Name
+      value: Shield Breaker
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: EquipmentModItemDatas.Array.data[0].itemType
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[10].Icon
+      value: 
+      objectReference: {fileID: 21300000, guid: 0fe7452028ddb6b48a54bced86efb56f, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[10].Name
+      value: Smash
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[11].Icon
+      value: 
+      objectReference: {fileID: 21300000, guid: bc7e559f696a64a4bb763ffcecfa9d0a, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[11].Name
+      value: Strike Through
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[12].Icon
+      value: 
+      objectReference: {fileID: 21300000, guid: 324f41c88fff6bc44a491098408b60e2, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[12].Name
+      value: 'Wounding Blow '
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[13].Icon
+      value: 
+      objectReference: {fileID: 21300000, guid: 36127f150f70db44abe87a729423061a, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[13].Name
+      value: 'Adrenaline Surge '
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[14].Icon
+      value: 
+      objectReference: {fileID: 21300000, guid: 079d8e6297a382c439b33970abdaef0e, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[14].Name
+      value: Arrow Rain
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[15].Icon
+      value: 
+      objectReference: {fileID: 21300000, guid: 382c32cf584cd694682a13a893bc9b4b, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[15].Name
+      value: Bleeding Dance
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[16].Icon
+      value: 
+      objectReference: {fileID: 21300000, guid: c0f260ae4ca443244a0e8af450d25854, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[16].Name
+      value: Disorienting Strike
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[17].Icon
+      value: 
+      objectReference: {fileID: 1874020819344461010, guid: b08c18d711b01dd47a6a2a6771fbaf51, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[17].Name
+      value: Evasive maneuver
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[18].Icon
+      value: 
+      objectReference: {fileID: 21300000, guid: 7794ab705f2fb8e46b98c36f566be895, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[18].Name
+      value: Fan of Blades
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[19].Icon
+      value: 
+      objectReference: {fileID: 21300000, guid: 825eb92b2e0c4a64f8f27b2fd7e1d275, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[19].Name
+      value: Knife throw
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[20].Icon
+      value: 
+      objectReference: {fileID: 21300000, guid: 9c5d41edde93b554fa83569ac7608367, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[20].Name
+      value: Marked Prey
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[21].Icon
+      value: 
+      objectReference: {fileID: 21300000, guid: ff2d80141664d044c8bf8324bb3a22b8, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[21].Name
+      value: Poisoned Blade
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[22].Icon
+      value: 
+      objectReference: {fileID: 21300000, guid: bc7e559f696a64a4bb763ffcecfa9d0a, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[22].Name
+      value: Quick Slash
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[23].Icon
+      value: 
+      objectReference: {fileID: 21300000, guid: b36e120b6ecdefc4ead8830aa9f3dddf, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[23].Name
+      value: Shadow Step
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[24].Icon
+      value: 
+      objectReference: {fileID: 21300000, guid: 6f246c4d5dcc00243bcf82730e2c9a08, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[24].Name
+      value: Vampiric Dagger
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[25].Name
+      value: Anchor slam
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[26].Icon
+      value: 
+      objectReference: {fileID: 21300270, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[26].Name
+      value: Axe Throw
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[27].Name
+      value: Burst of Vitality
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[28].Name
+      value: Crushing Grasp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[29].Icon
+      value: 
+      objectReference: {fileID: 21300264, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[29].Name
+      value: Defensive Stance
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[30].Name
+      value: 'Earthquake Slam '
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[31].Name
+      value: Iron Wall
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[32].Name
+      value: Juggernaut rush
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[33].Icon
+      value: 
+      objectReference: {fileID: -1305609843, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[33].Name
+      value: Rampage
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[34].Name
+      value: Self weld
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[35].Icon
+      value: 
+      objectReference: {fileID: 21300042, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[36].Name
+      value: Stoneblood
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[37].Name
+      value: Unbreakable will
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[38].Icon
+      value: 
+      objectReference: {fileID: 1560907362, guid: f3c637fbed5451e4c85c7195e80a0954, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[39].Icon
+      value: 
+      objectReference: {fileID: 1072186538, guid: 8bc6b693366d3ac41ae7f20723396814, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[39].Name
+      value: Stab
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: ConsumableItemDatas.Array.data[0].Description
+      value: Launch a bomb that explodes and harms all enemies in its radius
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: ConsumableItemDatas.Array.data[1].Description
+      value: Heals player for 5 health
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: EnemyPhysicalAbilityItemDatas.Array.data[0].ID
+      value: 5004
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: EnemyPhysicalAbilityItemDatas.Array.data[1].ID
+      value: 5000
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: EnemyPhysicalAbilityItemDatas.Array.data[2].ID
+      value: 5001
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: EnemyPhysicalAbilityItemDatas.Array.data[3].ID
+      value: 5002
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: EnemyPhysicalAbilityItemDatas.Array.data[4].ID
+      value: 5003
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: EnemyPhysicalAbilityItemDatas.Array.data[5].ID
+      value: 5005
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[0].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[1].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[2].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[3].itemType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[4].itemType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[5].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[6].itemType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[7].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[8].itemType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[9].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: EquipmentModItemDatas.Array.data[0].Description
+      value: Test Equipment Mod
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[10].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[11].itemType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[12].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[0].MaxLevel
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[0].MinLevel
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[0].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[1].MaxLevel
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[1].MinLevel
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[1].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[2].MaxLevel
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[2].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[3].MaxLevel
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[3].MinLevel
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[3].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[4].MaxLevel
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[4].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[5].MaxLevel
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[5].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[6].MaxLevel
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[6].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[7].MaxLevel
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[7].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[8].MaxLevel
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[8].MinLevel
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[8].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[9].MaxLevel
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[9].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: EnemyPhysicalAbilityItemDatas.Array.data[0].Icon
+      value: 
+      objectReference: {fileID: -839160664, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: EnemyPhysicalAbilityItemDatas.Array.data[0].Name
+      value: Goblin Attack
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: EnemyPhysicalAbilityItemDatas.Array.data[1].Icon
+      value: 
+      objectReference: {fileID: -839160664, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: EnemyPhysicalAbilityItemDatas.Array.data[1].Name
+      value: Goblin Attack
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: EnemyPhysicalAbilityItemDatas.Array.data[2].Icon
+      value: 
+      objectReference: {fileID: 820659288, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: EnemyPhysicalAbilityItemDatas.Array.data[2].Name
+      value: Goblin Attack
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: EnemyPhysicalAbilityItemDatas.Array.data[3].Icon
+      value: 
+      objectReference: {fileID: 1549921822, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: EnemyPhysicalAbilityItemDatas.Array.data[3].Name
+      value: Goblin Attack
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: EnemyPhysicalAbilityItemDatas.Array.data[4].Icon
+      value: 
+      objectReference: {fileID: -758795546, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: EnemyPhysicalAbilityItemDatas.Array.data[4].Name
+      value: Slime
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: EnemyPhysicalAbilityItemDatas.Array.data[5].Icon
+      value: 
+      objectReference: {fileID: 21300136, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: EnemyPhysicalAbilityItemDatas.Array.data[5].Name
+      value: Spider Attack
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[10].MaxLevel
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[10].MinLevel
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[10].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[11].MaxLevel
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[11].MinLevel
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[11].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[12].MaxLevel
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[12].MinLevel
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[12].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[13].MaxLevel
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[13].MinLevel
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[13].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[14].MaxLevel
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[14].MinLevel
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[14].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[15].MaxLevel
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[15].MinLevel
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[15].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[16].MaxLevel
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[16].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[17].MaxLevel
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[17].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[18].MaxLevel
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[18].MinLevel
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[18].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[19].MaxLevel
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[19].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[20].MaxLevel
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[20].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[21].MaxLevel
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[21].MinLevel
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[21].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[22].MaxLevel
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[22].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[23].MaxLevel
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[23].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[24].MaxLevel
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[24].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[25].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[26].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[27].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[28].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[29].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[30].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[31].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[32].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[33].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[34].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[36].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[37].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[38].itemType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[0].Description
+      value: Deal AOE damage that repeats next turn at 50% damage.
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[1].Description
+      value: 'Deal very high AOE damage. Consume all remaining Mana. '
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[2].Description
+      value: 'Deal AOE damage. Reduce Speed of all enemies hit for 2 turns. '
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[3].Description
+      value: "Reduces an enemy\u2019s defence by 5"
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[4].Description
+      value: Cast a fireball that explodes on impact, dealing high damage to the
+        target and nearby enemies
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[5].Description
+      value: Deal AOE damage and apply Burn (DOT) for 3 turns.
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[6].Description
+      value: The player absorbs HP equal to 50% of the damage they deal to enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[7].Description
+      value: Deal lightning damage in a line.
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[8].Description
+      value: The player summons a magical shield around themselves, absorbing a certain
+        amount of damage for 2 turns
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[9].Description
+      value: Deal AOE damage and restore an equal amount of Mana.
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[10].Description
+      value: 'Gain Damage Reduction and restore Mana each turn for 3 turns. '
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[11].Description
+      value: Heals you for a moderate amount of health
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: MagicalAbilityItemDatas.Array.data[12].Description
+      value: Teleport to target location and gain Magical Power for 1 turn.
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[0].Description
+      value: Increase Strength by 25% for 2 turns
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[1].Description
+      value: Launch a flaming sword that deals damagae and burns the target for 3
+        turns
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[2].Description
+      value: Deal damage and knock the enemy back 1 tile
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[3].Description
+      value: 'Gain Physical Power and Damage Reduction for 2 turns. '
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[4].Description
+      value: Deals damage to target & nearby tiles
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[5].Description
+      value: Deal damage and stun the target for 1 turn.
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[6].Description
+      value: Deal damage to 1 target
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[7].Description
+      value: Advance 1 space closer to target and deal damage
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[8].Description
+      value: Heal self and gain Physical Power for 2 turns.
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[9].Description
+      value: Deal damage and reduce targets damage reduction for 2 turns
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[10].Description
+      value: Deal Damage to all target within 3 tiles
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[11].Description
+      value: Deal damage to all targets in a line
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[12].Description
+      value: Deal damage and apply bleed to targets for 2 turns
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[13].Description
+      value: Restore Stamina and gain Speed for 2 turns.
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[14].Description
+      value: Launch a volley of arrows dealing AOE damage to 5 tiles
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[15].Description
+      value: Deal AOE damage and apply Bleed to all targets
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[16].Description
+      value: Deal damage and reduce target's physical and magical power for 2 turns
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[17].Description
+      value: Move 1 tile and gain speed for 2 turns
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[18].Description
+      value: Deal cone AOE damage, applying bleed for 2 turns
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[19].Description
+      value: Throws a knife at an enemy within a short range, dealing light damage
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[20].Description
+      value: 'Target takes bonus damage  for 3 turns. '
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[21].Description
+      value: Coat your weapon with poison dealing damage over time and lowering the
+        targets max health
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[22].Description
+      value: damage slash that deals damage to enemies
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[23].Description
+      value: Teleport to a tile behind target and gain speed for 1 turns
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[24].Description
+      value: Deal damage to an enemy and drain their health for yourself
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[25].Description
+      value: Deal damage and stun target for 2 turns
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[26].Description
+      value: Throws the shield at medium range towards the enemy and chains attacks
+        r
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[27].Description
+      value: Exchange a large amount of stamina for health
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[28].Description
+      value: Deal damage and apply immobilize and bleed for 2 turns
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[29].Description
+      value: The player adopts a defensive stance, reducing incoming damage by 5
+        for 2 turns
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[30].Description
+      value: Deal damage to all enemies within range and push them back
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[31].Description
+      value: Gain high damage reduction for 2 turns
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[32].Description
+      value: Move forward 3 tiles and push enemies out of the way dealing damage
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[33].Description
+      value: Deals moderate damage to an enemy and enemies nearby have their HP dropped
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[34].Description
+      value: Heal over time but reduce Speed and damage for the duration
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[35].Description
+      value: 'TODO: Charge forward a short distance, bashing an enemy with their
+        shield, dealing moderate damage and stunning the enemy for 2 turns'
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[36].Description
+      value: Heal over time and gain damage reduction for 3 turns
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[37].Description
+      value: 'Gain Health and stamina for 3 turns '
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[38].Description
+      value: Spin in place, dealing damage to all enemies within a small radius
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: PhysicalAbilityItemDatas.Array.data[39].Description
+      value: Stab Description
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: EnemyPhysicalAbilityItemDatas.Array.data[5].itemType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: EnemyPhysicalAbilityItemDatas.Array.data[0].Description
+      value: Goblin Attack
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: EnemyPhysicalAbilityItemDatas.Array.data[1].Description
+      value: Goblin Attack
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: EnemyPhysicalAbilityItemDatas.Array.data[2].Description
+      value: Goblin Attack
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: EnemyPhysicalAbilityItemDatas.Array.data[3].Description
+      value: Goblin Attack
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: EnemyPhysicalAbilityItemDatas.Array.data[4].Description
+      value: Slime
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477815178537449300, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
+      propertyPath: EnemyPhysicalAbilityItemDatas.Array.data[5].Description
+      value: A swift bite, but enough to inject poisonous venom.
+      objectReference: {fileID: 0}
     - target: {fileID: 7984003600839781529, guid: 62a0049159662c348a37bcb592bf190d, type: 3}
       propertyPath: m_Name
       value: Database

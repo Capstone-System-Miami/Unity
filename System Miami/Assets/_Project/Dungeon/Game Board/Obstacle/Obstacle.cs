@@ -121,6 +121,8 @@ namespace SystemMiami.CombatSystem
 
         #region ITargetable
         //============================================================
+        Vector2Int ITargetable.BoardPos => PositionTile.BoardPos;
+
         List<ISubactionCommand> ITargetable.TargetedBy { get; set; } = new();
         public string nameMessageForDB { get { return gameObject.name; } set {; } }
 
@@ -264,7 +266,7 @@ namespace SystemMiami.CombatSystem
         {
             if (colorSet.Highlighted.a != 0 && colorSet.Normal.a != 0)
             {
-                Debug.LogError("Returning original colors");
+                Debug.Log("Returning original colors", this);
                 return colorSet;
             }
 

@@ -14,15 +14,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Icon: {fileID: 21300000, guid: 73d3cc63327012249b4f98eb9289311d, type: 3}
   Actions:
-  - {fileID: 0}
-  - {fileID: 11400000, guid: a34f623c1202a0b45973f16d44096ca0, type: 2}
-  OverrideController: {fileID: 22100000, guid: 1a245a6d8b2a8fc46943e00bbeea03da, type: 2}
+  - {fileID: 11400000, guid: e7520278083e65e43b117981c493cb5f, type: 2}
+  OverrideController: {fileID: 22100000, guid: 64158dfc9d891fb4983d1ee41cc011d0, type: 2}
   AbilityType: 0
-  ResourceCost: 5
+  ResourceCost: 10
   CooldownTurns: 2
   itemData:
     ID: 1004
-    Icon: {fileID: 21300000, guid: 73d3cc63327012249b4f98eb9289311d, type: 3}
+    Icon: {fileID: 21300000, guid: 0fe7452028ddb6b48a54bced86efb56f, type: 3}
     Name: Smash
-    Description: 'Deals moderate damage (TODO: and pushes back the enemy by 3 spaces)'
-    itemType: 0
+    Description: Deal Damage to all target within 3 tiles
+    itemType: 1
+    Price: 0
+    MinLevel: 3
+    MaxLevel: 5
+    rarity: 0
+  classType: 0
+  isEnemyAbility: 0
+  isGeneralAbility: 0

@@ -1,14 +1,20 @@
 // Author: Alec, layla minor edits
 using System.Collections.Generic;
 using System.Linq;
+using SystemMiami.CombatSystem;
+using SystemMiami.Enums;
 using UnityEngine;
 
-namespace SystemMiami
+namespace SystemMiami.Utilities
 {
     public class PathFinder
     {
-        // Finds shortest path between two overlay tiles
         public List<OverlayTile> FindPath(OverlayTile start, OverlayTile end)
+        {
+            return FindPath(start, end, AdjacencyType.EDGE, false);
+        }
+        // Finds shortest path between two overlay tiles
+        public List<OverlayTile> FindPath(OverlayTile start, OverlayTile end, AdjacencyType adjacencyType, bool stopAtObstacle)
         {
             //tiles to explore
             List<OverlayTile> openList = new List<OverlayTile>();
@@ -23,10 +29,8 @@ namespace SystemMiami
             //int i = 0;
             while(openList.Count > 0)
             {
-                //Debug.Log($"in loop. iteration {i++}");
-
                 //tile with lowest F score
-                OverlayTile currentOverlayTile = openList.OrderBy(x => x.F).First();
+                OverlayTile currentOverlayTile = openList.OrderBy(tile => tile.F).First();
 
                 //move current tile to closed list
                 openList.Remove(currentOverlayTile);
@@ -38,13 +42,31 @@ namespace SystemMiami
                     //finalize out path.
                     return GetFinishedList(start, end, previousTilesMap);
                 }
+                
+                if (stopAtObstacle
+                    && currentOverlayTile != start
+                    && !currentOverlayTile.ValidForPlacement)
+                {
+                    return GetFinishedList(start, currentOverlayTile, previousTilesMap);
+                }
 
                 //get all neighbor tiles to current tile
-                List<OverlayTile> neighbourTiles = GetNeighbourTiles(currentOverlayTile);
+                AdjacentTileSet neighbours = new(currentOverlayTile);
+
+                Dictionary<TileDir, OverlayTile> neighbourDict = neighbours.GetAdjacent(adjacencyType);
 
                 //loop through eac
-                foreach (OverlayTile neighbour in neighbourTiles)
-                {                    
+                foreach (TileDir direction in neighbourDict.Keys)
+                {
+                    OverlayTile neighbour = neighbourDict[direction];
+
+                    if (neighbour == null)
+                    {
+                        // Hit the edge of the board. Do something with this if
+                        // you need to.
+                        continue;
+                    }
+
                     // skip any tiles already explored
                     if (closedList.Contains(neighbour)) { continue; }
 
@@ -52,8 +74,7 @@ namespace SystemMiami
                     if (Mathf.Abs(currentOverlayTile.GridLocation.z - neighbour.GridLocation.z) > 1) { continue; }
 
                     // skip blocked, unless it's the end tile
-                    if(!neighbour.ValidForPlacement && neighbour != end) { continue; }
-
+                    if(!neighbour.ValidForPlacement && neighbour != end && !stopAtObstacle) { continue; }
 
                     //calculate g and h
                     neighbour.G = GetManhattenDistance(start, neighbour);
@@ -149,5 +170,11 @@ namespace SystemMiami
             }
             return neighbours;
         }
+
+        //private List<OverlayTile> TestOtherGetNeighbourTiles(OverlayTile tile)
+        //{
+        //    List<OverlayTile> result = new();
+        //    AdjacentTileSet neighbours = new( tile );
+        //}
     }
 }
