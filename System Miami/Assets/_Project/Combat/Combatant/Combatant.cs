@@ -211,15 +211,15 @@ namespace SystemMiami.CombatSystem
 
         protected virtual void Start()
         {
-            InitResources();
-            InitLoadout();
-            InitDirection();
-            InitStateMachine();
+            Debug.LogWarning($"Start called", this);
+            InitAll();
         }
 
         private void Update()
         {
+            Debug.LogWarning($"Update called", this);
             if(this == null) return;
+            Debug.LogWarning($"Update called & not null", this);
             UpdateResources();
 
             CurrentState.Update();
@@ -300,6 +300,7 @@ namespace SystemMiami.CombatSystem
             stateFactory = new(this);
             currentState = stateFactory.Idle();
             currentState.OnEnter();
+            Debug.LogWarning($"{name} is initializing state machine");
         }
         #endregion Construction
 
