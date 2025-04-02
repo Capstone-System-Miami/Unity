@@ -6,6 +6,8 @@ using SystemMiami.CombatSystem;
 using SystemMiami.Management;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.Assertions;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -104,20 +106,24 @@ namespace SystemMiami
        {
            List<ItemData> result = new();
            
-           switch (type)
-           {
-               default:
-               case ItemType.PhysicalAbility:
-                   result = physicalAbilityEntries.Select(so => so.itemData).ToList();
-                   break;
-               case ItemType.MagicalAbility:
-                   result = magicalAbilityEntries.Select(so => so.itemData).ToList();
-                   break;
-               case ItemType.Consumable:
-                   result = consumableEntries.Select(so => so.itemData).ToList();
-                   break;
+            switch (type)
+            {
+                default:
+                 case ItemType.PhysicalAbility:
+                    Assert.IsNotNull(physicalAbilityEntries);
+                    Assert.IsTrue(physicalAbilityEntries.Count > 0);
+                    Assert.IsNotNull(result);
+                    Assert.IsTrue(result.Count > 0);
+                    result = physicalAbilityEntries.Select(so => so.itemData).ToList();
+                    break;
+                case ItemType.MagicalAbility:
+                    result = magicalAbilityEntries.Select(so => so.itemData).ToList();
+                    break;
+                case ItemType.Consumable:
+                    result = consumableEntries.Select(so => so.itemData).ToList();
+                    break;
                
-           }
+            }
            return result;
        }
 
