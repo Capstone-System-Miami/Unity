@@ -1,5 +1,6 @@
 // Authors: Layla Hoey, Lee St Louis
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using SystemMiami.AbilitySystem;
 using SystemMiami.CombatRefactor;
@@ -20,6 +21,10 @@ namespace SystemMiami.CombatSystem
 
         #region Serialized Vars
         //============================================================
+        [Header("Debug")]
+        [SerializeField] private bool detailedFocusHighlight;
+        private AdjacentTileSet focusAdjacent;
+
         [Header("General Info")]
         [SerializeField] private Color _colorTag = Color.white;
 
@@ -85,6 +90,9 @@ namespace SystemMiami.CombatSystem
         public Color ColorTag { get { return _colorTag; } }
 
         [SerializeField] public Inventory _inventory;
+
+        [SerializeField, ReadOnly] private string currentStateType;
+
         // State Machine
         public CombatantStateFactory Factory { get { return stateFactory; } }
         public CombatantState CurrentState
@@ -144,6 +152,12 @@ namespace SystemMiami.CombatSystem
 
                 previousFocus = focusTile;
                 focusTile = value;
+                if (detailedFocusHighlight)
+                {
+                    focusAdjacent?.UnhighlightAll();
+                    focusAdjacent = new(value);
+                    focusAdjacent.HighlightAll();
+                }
                 OnFocusTileChanged();
             }
         }
@@ -216,6 +230,23 @@ namespace SystemMiami.CombatSystem
 
             CurrentState.Update();
             CurrentState.MakeDecision();
+
+
+            currentStateType = CurrentState.GetType().ToString();
+            TEST_currentTile = PositionTile;
+
+            if (TRIGGER_ForceMovePreviewTest)
+            {
+                TRIGGER_ForceMovePreviewTest = false;
+                ForceMoveCommand testCommand = new(this, TEST_origin, TEST_moveType, TEST_distance);
+                testCommand.Preview();
+            }
+            if (TRIGGER_ForceMoveExecuteTest)
+            {
+                TRIGGER_ForceMoveExecuteTest = false;
+                ForceMoveCommand testCommand = new(this, TEST_origin, TEST_moveType, TEST_distance);
+                testCommand.Execute();
+            }
         }
 
         #endregion Unity Methods
@@ -299,7 +330,7 @@ namespace SystemMiami.CombatSystem
             float distanceToTarget = Vector2.Distance(
                 transform.position,
                 targetTile.transform.position
-                );
+            );
             return distanceToTarget < PLACEMENT_RANGE;
         }
         #endregion Movement
@@ -340,14 +371,13 @@ namespace SystemMiami.CombatSystem
                 return result;
             }
 
-            if (MapManager.MGR.map.TryGetValue(MapManager.MGR.CenterPos, out result))
+            if (!MapManager.MGR.map.TryGetValue(MapManager.MGR.CenterPos, out result))
             {
-
-            }
                 Debug.LogError(
                     $"FATAL | {name}'s {this}" +
                     $"FOUND NO TILE TO FOCUS ON."
                     );
+            }
 
             return result;
         }
@@ -537,56 +567,56 @@ namespace SystemMiami.CombatSystem
 
         #region IForceMoveReciever
         //============================================================
-        public bool IsCurrentlyMovable()
+        public Vector2Int TEST_origin;
+        public int TEST_distance;
+        public MoveType TEST_moveType;
+        public bool TRIGGER_ForceMovePreviewTest;
+        public bool TRIGGER_ForceMoveExecuteTest;
+        [field: ReadOnly] public OverlayTile TEST_currentTile;
+
+        bool IForceMoveReceiver.IsCurrentlyMovable()
         {
-            throw new NotImplementedException();
+            return true;
         }
-        public void PreviewForceMove(int distance, Vector2Int direction)
+        void IForceMoveReceiver.PreviewForceMove(OverlayTile destinationTile)
         {
-            throw new NotImplementedException();
+            //Debug.LogError(
+            //    $"{name} is trying to priview movement to " +
+            //    $"{destinationTile.name}, but its RecieveForceMove() method " +
+            //    $"has not been implemented.",
+            //    destinationTile);
+            MovementPath pathToTile = new(PositionTile, destinationTile, true);
+            StartCoroutine(TEST_ShowMovementPath(pathToTile));
         }
 
-        public void ReceiveForceMove(int distance, Vector2Int direction)
+        void IForceMoveReceiver.RecieveForceMove(OverlayTile destinationTile)
         {
-            throw new NotImplementedException();
+            MovementPath pathToTile = new(PositionTile, destinationTile, true);
+            CurrentState.SwitchState(Factory.ForcedMovementExecution(pathToTile));
+
+            
+            //Debug.LogError(
+            //    $"{name} is trying to move to {destinationTile.name}, but " +
+            //    $"its RecieveForceMove() method has not been implemented.",
+            //    destinationTile);
         }
 
-        //public Vector2Int GetTilePos()
-        //{
-        //    return (Vector2Int)PositionTile.GridLocation;
-        //}
+        private IEnumerator TEST_ShowMovementPath(MovementPath path)
+        {
+            float duration = 1f;
 
-        //public bool TryMoveTo(Vector2Int tilePos)
-        //{
-        //    if (isMovable)
-        //    {
-        //        // TODO: Implement movement logic
-        //        print($"{name} would move to {tilePos}, but this mechanic has not been implemented");
-        //        return true;
-        //    }
-        //    else
-        //    {
-        //        print($"{name} cannot move");
-        //        return false;
-        //    }
-        //}
+            path.HighlightValidMoves(Color.cyan);
+            path.DrawArrows();
 
-        //public bool TryMoveInDirection(Vector2Int boardDirection, int distance)
-        //{
-        //    if (isMovable)
-        //    {
-        //        // TODO: Implement directional movement logic
-        //        Vector2Int newPos = (Vector2Int)PositionTile.GridLocation + boardDirection * distance;
+            while (duration > 0)
+            {
+                duration -= Time.deltaTime;
+                yield return new WaitForSeconds(Time.deltaTime);
+            }
 
-        //        print($"{name} would move to {newPos}, but this mechanic has not been implemented");
-        //        return true;
-        //    }
-        //    else
-        //    {
-        //        print($"{name} cannot move");
-        //        return false;
-        //    }
-        //}
+            path.Unhighlight();
+            path.UnDrawAll();
+        }
         #endregion IForceMoveReciever
 
 
@@ -628,6 +658,7 @@ namespace SystemMiami.CombatSystem
 
         #region ITargetable
         //============================================================
+        Vector2Int ITargetable.BoardPos => PositionTile.BoardPos;
         List<ISubactionCommand> ITargetable.TargetedBy { get; set; } = new();
         public string nameMessageForDB { get { return gameObject.name; } set { ; } }
         void ITargetable.SubscribeTo(

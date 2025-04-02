@@ -1,52 +1,93 @@
 // Authors: Layla Hoey
 
 using SystemMiami.CombatRefactor;
+using SystemMiami.Enums;
+using SystemMiami.Utilities;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem
 {
+    public enum MoveType { PUSH, PULL };
     [System.Serializable]
     [CreateAssetMenu(fileName = "New Force Movement Subaction", menuName = "Combat Subaction/Force Movement")]
     public class ForceMovement : CombatSubactionSO
     {
         [SerializeField] private int distance;
         
-        // TODO MapForwardA, backward, etc.
-        // In reference to attacker or reciever though, idk.
-        [SerializeField] private Vector2Int direction;
+        [SerializeField] private MoveType type;
 
-        public override ISubactionCommand GenerateCommand(ITargetable target,CombatAction action)
+        public override ISubactionCommand GenerateCommand(ITargetable target, CombatAction action)
         {
-            return new ForceMoveData(target, distance, direction);
+            Vector2Int userBoardPos = action.User.CurrentDirectionContext.TilePositionA;
+
+            return new ForceMoveCommand(target, userBoardPos, type, distance);
         }
     }
 
-    public class ForceMoveData : ISubactionCommand
+    public class ForceMoveCommand : ISubactionCommand
     {
-        public readonly ITargetable receiver;
+        public readonly ITargetable reciever;
+        public readonly Vector2Int origin;
+        public readonly MoveType type;
         public readonly int distance;
-        public readonly Vector2Int direction;
 
-        public ForceMoveData(
+        public readonly OverlayTile destinationTile;
+
+        public ForceMoveCommand(
             ITargetable receiver,
-            int distance,
-            Vector2Int direction)
+            Vector2Int origin,
+            MoveType type,
+            int distance)
         {
-            this.receiver = receiver;
+            this.reciever = receiver;
+            this.origin = origin;
+            this.type = type;
             this.distance = distance;
-            this.direction = direction;
+
+            Vector2Int dirVec = DirectionHelper.GetDirectionVec(origin, receiver.BoardPos);
+
+            if (type == MoveType.PULL)
+            {
+                dirVec *= -1;
+            }
+
+            Vector2Int targetPos = reciever.BoardPos + (dirVec * distance);
+
+            int adjustedX = System.Math.Clamp(targetPos.x, MapManager.MGR.TileCorners.xMin, MapManager.MGR.TileCorners.xMax);
+            int adjustedY = System.Math.Clamp(targetPos.y, MapManager.MGR.TileCorners.yMin, MapManager.MGR.TileCorners.yMax);
+
+            string before = targetPos.ToString();
+            targetPos = new(adjustedX, adjustedY);
+            string after = targetPos.ToString();
+
+            // Please keep for debug
+            //Debug.Log($"|  <color=red>targetPos {before}  </color>" +
+            //    $"|  <color=green>X bound: ({MapManager.MGR.TileCorners.xMin}, {MapManager.MGR.TileCorners.xMax})</color>" +
+            //    $"|  <color=green>Y bound: ({MapManager.MGR.TileCorners.yMin}, {MapManager.MGR.TileCorners.yMax})</color>\n" +
+            //    $"|  <color=red>adjusted: {after}</color>");
+            if (MapManager.MGR.TryGetTile(targetPos, out OverlayTile targetTile))
+            {
+                destinationTile = targetTile;
+            }
+            else
+            {
+                Debug.LogError(
+                    $"Force Movement command error. The command " +
+                    $"could not find a target tile, even at the " +
+                    $"adjusted position. This shouldn't be executed no matter " +
+                    $"what the input is, so there is probably a " +
+                    $"logical error somewhere.");
+            }
         }
 
         public void Preview()
         {
-            receiver.GetMoveInterface()
-                ?.PreviewForceMove(distance, direction);
+            reciever.GetMoveInterface()?.PreviewForceMove(destinationTile);
         }
 
         public void Execute()
         {
-            receiver.GetMoveInterface()
-                ?.ReceiveForceMove(distance, direction);
+            reciever.GetMoveInterface()?.RecieveForceMove(destinationTile);
         }
     }
 
@@ -59,7 +100,7 @@ namespace SystemMiami.CombatSystem
     public interface IForceMoveReceiver
     {
         bool IsCurrentlyMovable();
-        void PreviewForceMove(int distance, Vector2Int direction);
-        void ReceiveForceMove(int distance, Vector2Int direction);
+        void PreviewForceMove(OverlayTile destinationTile);
+        void RecieveForceMove(OverlayTile destinationTile);
     }
 }
