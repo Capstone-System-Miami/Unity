@@ -65,11 +65,11 @@ namespace SystemMiami
             if (!characterSelection)
             {
                 physicalAbilityEntries = physicalAbilityEntries
-                    .Where(entry => entry.classType == playerClassType && !entry.isGeneralAbility).ToList();
+                    .Where(entry => entry.isGeneralAbility || entry.classType == playerClassType).ToList();
 
                 // Filter magical abilities
                 magicalAbilityEntries = magicalAbilityEntries
-                    .Where(entry => entry.classType == playerClassType && !entry.isGeneralAbility).ToList();
+                    .Where(entry => entry.isGeneralAbility || entry.classType == playerClassType).ToList();
             }
 
             // Convert lists to dictionaries 
@@ -112,9 +112,11 @@ namespace SystemMiami
                  case ItemType.PhysicalAbility:
                     Assert.IsNotNull(physicalAbilityEntries);
                     Assert.IsTrue(physicalAbilityEntries.Count > 0);
-                    Assert.IsNotNull(result);
-                    Assert.IsTrue(result.Count > 0);
                     result = physicalAbilityEntries.Select(so => so.itemData).ToList();
+                    Assert.IsNotNull(result);
+                    Assert.IsTrue(result.Count > 0,
+                        $"{PlayerManager.MGR.GetComponent<Attributes>()._characterClass} " +
+                        $"has no functioning Physical abilities.");
                     break;
                 case ItemType.MagicalAbility:
                     result = magicalAbilityEntries.Select(so => so.itemData).ToList();
