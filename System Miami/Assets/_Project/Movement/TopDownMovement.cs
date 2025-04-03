@@ -1,147 +1,112 @@
 //Author: Johnny, Layla Hoey
+using SystemMiami.Animation;
 using SystemMiami.Enums;
 using SystemMiami.Utilities;
 using UnityEngine;
+using SystemMiami.Drivers;
 
-
-public class TopDownMovement : MonoBehaviour
+namespace SystemMiami
 {
-    public Rigidbody2D body; // Fixed the case of Rigidbody2D
-    public SpriteRenderer spriteRenderer;
-    [SerializeField] private Animator animator;
-
-    //[SerializeField]private RuntimeAnimatorController controller;
-    public AnimatorOverrideController[] animControllers;
-
-    public float walkSpeed;
-    public float frameRate;
-
-    float idleTime;
-
-    Vector2 rawInput;
-    Vector2Int input;
-    Vector2 moveDirection;
-
-    // Start is called before the first frame update
-    void Start()
+    public class TopDownMovement : MonoBehaviour
     {
-        idleTime = Time.time; // Initialize idleTime at start
-    }
+        [Header("Debug")]
+        [SerializeField] private dbug log;
 
-    // Update is called once per frame
-    void Update()
-    {
-        updateDirections();
-        movePlayer();
+        public Rigidbody2D body;
+        public SpriteRenderer spriteRenderer;
+        public float walkSpeed;
+        public float frameRate;
 
-        if (input == Vector2.zero)
+        [SerializeField] private Animator animator;
+
+        /// <summary>
+        /// Must be assigned at runtime by <see cref="CharClassAnimationDriver"/>
+        /// </summary>
+        [SerializeField, ReadOnly] private StandardAnimSet animSet;
+
+
+        private Vector2 rawInput;
+        private Vector2Int input;
+        private Vector2 moveDirection;
+
+        private void Awake()
         {
-            animator.runtimeAnimatorController = animControllers[0];
+            if (body == null && !TryGetComponent(out body))
+            {
+                log.error($"{name}'s {this} couldnt find a Rigidbody2D");
+            }
+
+            if (spriteRenderer == null && !TryGetComponent(out spriteRenderer))
+            {
+                log.error($"{name}'s {this} couldnt find a SpriteRenderer");
+            }
+
+            if (animator == null && !TryGetComponent(out animator))
+            {
+                log.error($"{name}'s {this} couldnt find an animator");
+            }
         }
-        else
+
+        private void Update()
         {
-            animator.runtimeAnimatorController = animControllers[1];
-            setAnim();
+            if (animSet == null)
+            {
+                log.error(
+                    $"{name} has not been assigned a StandardAnimSet. " +
+                    $"Ensure the CharClassAnimationDriver is set up properly " +
+                    $"on the player.");
+                return;
+            }
+
+            UpdateDirections();
+            MovePlayer();
+
+            if (input == Vector2.zero)
+            {
+                animator.runtimeAnimatorController = animSet.idle;
+            }
+            else
+            {
+                animator.runtimeAnimatorController = animSet.walking;
+                SetAnim();
+            }
         }
 
-        //HandleSpriteFlip(); // Flips sprite based on movement moveDirection
-        //SetAll(); // Sets the current sprite
-    }
+        public void SetAnimSet(StandardAnimSet animSet)
+        {
+            log.print($"{name}'s animSet is being set publicly");
+            this.animSet = animSet;
+        }
 
-    private void updateDirections()
-    {
-        rawInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        private void UpdateDirections()
+        {
+            rawInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
-        int inputX = rawInput.x == 0f
+            int inputX = rawInput.x == 0f
             ? 0
             : rawInput.x < 0 ? -1 : 1;
-        int inputY = rawInput.y == 0f
+            int inputY = rawInput.y == 0f
             ? 0
             : rawInput.y < 0 ? -1 : 1;
-        input = new Vector2Int(inputX, inputY);
+            input = new Vector2Int(inputX, inputY);
 
-        moveDirection = new Vector2(rawInput.x, rawInput.y * .5f).normalized; // Handles input
+            moveDirection = new Vector2(rawInput.x, rawInput.y * .5f).normalized; // Handles input
+        }
+
+        private void MovePlayer()
+        {
+            body.velocity = moveDirection * walkSpeed; // Apply velocity to Rigidbody
+        }
+
+        private void SetAnim()
+        {
+            TileDir dir = DirectionHelper.GetTileDir(input);
+            animator.SetInteger("TileDir", (int)dir);
+        }
+
+        private void OnDisable()
+        {
+            animator.runtimeAnimatorController = animSet.idle;
+        }
     }
-
-    private void movePlayer()
-    {
-        body.velocity = moveDirection * walkSpeed; // Apply velocity to Rigidbody
-    }
-
-    private void setAnim()
-    {
-        TileDir dir = DirectionHelper.GetTileDir(input);
-        animator.SetInteger("TileDir", (int)dir);
-    }
-
-    private void OnDisable()
-    {
-        animator.runtimeAnimatorController = animControllers[0];
-    }
-
-    #region old (sprite-flipper)
-    //void SetAll()
-    //{
-    //    List<Sprite> directionSprites = GetSpriteDirection(); // Get the sprite list for the current moveDirection
-
-    //    if (directionSprites != null && directionSprites.Count > 0)
-    //    {
-    //        float playTime = Time.time - idleTime;
-    //        int totalFrames = (int)(playTime * frameRate);
-    //        int frame = totalFrames % directionSprites.Count; // Fixed indexing to the number of available sprites
-
-    //        spriteRenderer.sprite = directionSprites[frame];
-    //    }
-    //    else
-    //    {
-    //        idleTime = Time.time; // SetDefault idle time if no moveDirection is pressed
-    //    }
-    //}
-
-    //void HandleSpriteFlip()
-    //{
-    //    if (!spriteRenderer.flipX && moveDirection.x < 0)
-    //    {
-    //        spriteRenderer.flipX = true; // Flip the sprite when moving left
-    //    }
-    //    else if (spriteRenderer.flipX && moveDirection.x > 0)
-    //    {
-    //        spriteRenderer.flipX = false; // Flip back when moving right
-    //    }
-    //}
-
-    //List<Sprite> GetSpriteDirection() // Changed void to List<Sprite> to return the sprite list
-    //{
-    //    List<Sprite> selectedSprites = null;
-
-    //    if (moveDirection.y > 0) // North
-    //    {
-    //        if (Mathf.Abs(moveDirection.x) > 0) // Northeast or Northwest
-    //        {
-    //            selectedSprites = neSprite;
-    //        }
-    //        else // Straight North
-    //        {
-    //            selectedSprites = nSprite;
-    //        }
-    //    }
-    //    else if (moveDirection.y < 0) // South
-    //    {
-    //        if (Mathf.Abs(moveDirection.x) > 0) // Southeast or Southwest
-    //        {
-    //            selectedSprites = seSprite;
-    //        }
-    //        else // Straight South
-    //        {
-    //            selectedSprites = sSprite;
-    //        }
-    //    }
-    //    else if (Mathf.Abs(moveDirection.x) > 0) // East or West
-    //    {
-    //        selectedSprites = eSprite;
-    //    }
-
-    //    return selectedSprites; // Return the selected sprite list
-    //}
-    #endregion
 }

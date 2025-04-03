@@ -10,13 +10,13 @@ namespace SystemMiami
 {
     public class GiveDungeonRewards : MonoBehaviour
     {
-        [SerializeField]private Inventory playerInventory;
-        [SerializeField]private PlayerLevel playerLevel;
+        [SerializeField] private Inventory playerInventory;
+        [SerializeField] private PlayerLevel playerLevel;
         [SerializeField] private TextMeshProUGUI text;
 
         private void OnEnable()
         {
-            TurnManager.MGR.DungeonCleared += GiveReward;
+            TurnManager.MGR.AddDungeonClearedAction(this, GiveReward);
             playerInventory = PlayerManager.MGR.GetComponent<Inventory>();
             playerLevel = PlayerManager.MGR.GetComponent<PlayerLevel>();
         }
@@ -42,11 +42,6 @@ namespace SystemMiami
             }
             
            
-        }
-
-        private void OnDisable()
-        {
-            TurnManager.MGR.DungeonCleared -= GiveReward;
         }
     }
     

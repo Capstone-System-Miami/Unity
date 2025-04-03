@@ -86,7 +86,7 @@ namespace SystemMiami.Dungeons
         public List<ItemData> GenerateItemRewards(DifficultyLevel dungeonDifficulty)
         {
            Debug.Log("Generate Rewards");
-            int playerLevel = PlayerManager.MGR.GetPlayerLevel();
+            int playerLevel = PlayerManager.MGR.CurrentLevel;
 
             //  Determine the final distribution method
             RewardDistributionMethod finalMethod = _defaultDistributionMethod;
@@ -180,7 +180,7 @@ namespace SystemMiami.Dungeons
         public int GenerateCreditReward(DifficultyLevel dungeonDifficulty)
         {
             int creditReward = 0;
-            int playerLevel = PlayerManager.MGR.GetPlayerLevel();
+            int playerLevel = PlayerManager.MGR.CurrentLevel;
             switch (dungeonDifficulty)
             {
                 case DifficultyLevel.EASY:
