@@ -6,6 +6,12 @@ using SystemMiami.Management;
 using SystemMiami.CombatSystem;
 using System.Runtime.CompilerServices;
 using SystemMiami.InventorySystem;
+using SystemMiami.Utilities;
+using SystemMiami.Animation;
+using SystemMiami.Drivers;
+
+
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -18,20 +24,21 @@ namespace SystemMiami
     {
         #region SERIALIZED
         // ======================================
-
+        [Header("Debug")]
+        [SerializeField] private dbug log;
         [SerializeField] bool showDebug;
 
         [Header("Component Groups")]
         [Tooltip("Components active in all modes")]
-        [SerializeField] private List<Component> sharedComponents = new List<Component>(); // Always enabled
+        [SerializeField] private List<Component> sharedComponents = new(); // Always enabled
 
         [Tooltip("Components active in neighborhood mode")]
-        [SerializeField] private List<Component> neighborhoodComponents = new List<Component>();
+        [SerializeField] private List<Component> neighborhoodComponents = new();
         [SerializeField] private GameObject playerCamera;
         [SerializeField] private GameObject interactionUI;
 
         [Tooltip("Components active in Dungeon mode")]
-        [SerializeField] private List<Component> dungeonComponents = new List<Component>();
+        [SerializeField] private List<Component> dungeonComponents = new();
 
         [Header("Scene Names")]
         [SerializeField] private string neighborhoodSceneName = "Neighborhood"; // Name of the neighborhood scene
@@ -44,6 +51,10 @@ namespace SystemMiami
         #region PRIVATE VARS
         // ======================================
 
+        private PlayerLevel level;
+        private Attributes attributes;
+        private Inventory inventory;
+
         private bool beenToCombat;
         private Vector3 neighborhoodReturnPos;
 
@@ -52,25 +63,25 @@ namespace SystemMiami
 
         #region PROPERTIES
 
-        public int CurrentLevel { get; private set; }
-        public int CurrentCredits {get; private set;}
-
+        public int CurrentLevel => level.CurrentLevel;
+        public int CurrentCredits => inventory.Credits;
+        public CharacterClassType CharClass => attributes._characterClass;
+        public CharClassAnimationDriver AnimDriver;
         #endregion
-       
+
 
         #region UNITY METHODS
         // ======================================
-
         private void OnEnable()
         {
             // Subscribe to scene loaded event
-            SceneManager.sceneLoaded += onSceneLoaded;
+            SceneManager.sceneLoaded += HandleSceneLoaded;
         }
 
         private void OnDisable()
         {
             // Unsubscribe from scene loaded event
-            SceneManager.sceneLoaded -= onSceneLoaded;
+            SceneManager.sceneLoaded -= HandleSceneLoaded;
         }
 
         protected override void Awake()
@@ -83,16 +94,21 @@ namespace SystemMiami
 
             base.Awake();
             
-            PlayerLevel playerLevelscript = GetComponent<PlayerLevel>();
-            CurrentLevel = playerLevelscript.CurrentLevel;
-            Inventory playerInventory = GetComponent<Inventory>();
-            CurrentCredits = playerInventory.Credits;
+            if (!TryGetComponent(out level))
+            {
+                log.error($"{name}'s {this} didn't find a PlayerLevel");
+            }
+
+            if (!TryGetComponent(out inventory))
+            {
+                log.error($"{name}'s {this} didn't find an Inventory");
+            }
         }
 
         private void Start()
         {
             // Ensure shared components are always enabled
-            enableComponents(sharedComponents);
+            EnableComponents(sharedComponents);
         }
         // ======================================
         #endregion
@@ -100,7 +116,7 @@ namespace SystemMiami
 
         #region PRIVATE METHODS
         // ======================================
-        private void onSceneLoaded(Scene scene, LoadSceneMode mode)
+        private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             // Check the name of the loaded scene and adjust components accordingly
             if (scene.name.Contains(neighborhoodSceneName))
@@ -113,13 +129,13 @@ namespace SystemMiami
             }
             else
             {
-                disableComponents(neighborhoodComponents);
-                disableComponents(dungeonComponents);
+                DisableComponents(neighborhoodComponents);
+                DisableComponents(dungeonComponents);
             }
         }
 
         // Disables all components in the provided list
-        private void disableComponents(List<Component> componentList)
+        private void DisableComponents(List<Component> componentList)
         {
             foreach (Component component in componentList)
             {
@@ -137,7 +153,7 @@ namespace SystemMiami
         }
 
         // Enables all components in the provided list
-        private void enableComponents(List<Component> componentList)
+        private void EnableComponents(List<Component> componentList)
         {
             foreach (Component component in componentList)
             {
@@ -154,15 +170,12 @@ namespace SystemMiami
             }
         }
 
-        private void returnToStoredPos()
+        private void ReturnToStoredPos()
         {
             if (!beenToCombat) { return; }
 
-            if (showDebug)
-            {
-                Debug.Log($"{this} is returning to a previously stored position.\n" +
-                    $"Will return to: {neighborhoodReturnPos}");
-            }
+            log.print($"{this} is returning to a previously stored position.\n" +
+                $"Will return to: {neighborhoodReturnPos}");
 
             transform.position = neighborhoodReturnPos;
         }
@@ -178,23 +191,23 @@ namespace SystemMiami
         // Switches to Neighborhood Mode
         public void EnterNeighborhood()
         {
-            Debug.Log("Entering Neighborhood Mode");
+            log.print("Entering Neighborhood Mode");
 
             GetComponent<Rigidbody2D>().velocity = Vector2.zero;
             playerCamera.SetActive(true);
             interactionUI.SetActive(true);
             interactionUI.GetComponentInChildren<PromptBox>().Clear();
             
-            disableComponents(dungeonComponents);
-            enableComponents(neighborhoodComponents);
+            DisableComponents(dungeonComponents);
+            EnableComponents(neighborhoodComponents);
 
-            returnToStoredPos();
+            ReturnToStoredPos();
         }
 
         // Switches to Dungeon Mode
         public void EnterDungeon()
         {
-            Debug.Log("Entering Dungeon Mode");
+            log.print("Entering Dungeon Mode");
 
             beenToCombat = true;
 
@@ -202,32 +215,18 @@ namespace SystemMiami
             playerCamera.SetActive(false);
             interactionUI.SetActive(false);
 
-            disableComponents(neighborhoodComponents);
-            enableComponents(dungeonComponents);
+            DisableComponents(neighborhoodComponents);
+            EnableComponents(dungeonComponents);
         }
 
         public void StoreNeighborhoodPosition()
         {
-            if (showDebug)
-            {
-                Debug.Log($"{this}'s position is being stored for Neighborhood re-entry.\n" +
-                    $"Position is: {transform.position}");
-            }
+            log.print($"{this}'s position is being stored for Neighborhood re-entry.\n" +
+                $"Position is: {transform.position}");
 
             neighborhoodReturnPos = transform.position;
         }
         // ======================================
-        
-        /// <summary>
-        /// Utility method to get player's level.
-        /// 
-        /// </summary>
-        public int GetPlayerLevel()
-        {
-            PlayerLevel playerLevelscript = GetComponent<PlayerLevel>();
-            if (playerLevelscript == null) return 1;
-            return playerLevelscript.CurrentLevel; 
-        }
         #endregion
     }
 }

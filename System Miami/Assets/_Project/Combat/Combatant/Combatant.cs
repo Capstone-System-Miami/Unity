@@ -211,15 +211,12 @@ namespace SystemMiami.CombatSystem
 
         protected virtual void Start()
         {
-            Debug.LogWarning($"Start called", this);
             InitAll();
         }
 
         private void Update()
         {
-            Debug.LogWarning($"Update called", this);
             if(this == null) return;
-            Debug.LogWarning($"Update called & not null", this);
             UpdateResources();
 
             CurrentState.Update();

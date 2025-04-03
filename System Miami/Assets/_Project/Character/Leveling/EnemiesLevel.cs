@@ -26,7 +26,7 @@ namespace SystemMiami
 
         public void Initialize(DifficultyLevel difficulty, int playerLevel)
         {
-            playerCurrentLevel = PlayerManager.MGR.GetPlayerLevel();
+            playerCurrentLevel = PlayerManager.MGR.CurrentLevel;
             SetEnemyLevel(difficulty);
         }
         
