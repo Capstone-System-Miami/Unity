@@ -33,27 +33,15 @@ namespace SystemMiami.Drivers
             {
                 log.error($"{name}'s {this} didn't find a TopDownMovement");
             }
-            else
-            {
-                log.error($"yes did find {neighborhoodMovement}");
-            }
 
             if (!TryGetComponent(out player))
             {
                 log.error($"{name}'s {this} didn't find a PlayerCombatant");
             }
-            else
-            {
-                log.error($"yes did find {player}");
-            }
 
             if (!TryGetComponent(out playerAttributes))
             {
                 log.error($"{name}'s {this} didn't find an Inventory");
-            }
-            else
-            {
-                log.error($"yes did find {playerAttributes}");
             }
 
             if (assignOnStart)
