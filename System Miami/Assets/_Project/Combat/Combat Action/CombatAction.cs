@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using SystemMiami.CombatSystem;
 using SystemMiami.Utilities;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace SystemMiami.CombatRefactor
 {
@@ -57,7 +58,7 @@ namespace SystemMiami.CombatRefactor
                 out DirectionBasedSubactions);
 
             log = new();
-            log.off();
+            log.on();
         }
 
         public void Equip()
@@ -194,6 +195,9 @@ namespace SystemMiami.CombatRefactor
 
             foreach (CombatSubactionSO subactionSO in Subactions)
             {
+                Assert.IsNotNull(subactionSO);
+                Assert.IsNotNull(subactionSO.TargetingPattern);
+
                 if (subactionSO.TargetingPattern.PatternOrigin == PatternOriginType.FOCUS)
                 {
                     focusBased.Add(subactionSO);
