@@ -61,7 +61,10 @@ namespace SystemMiami.Dungeons
 
         public GameObject GameBoard { get { return _gameBoard; } }
 
-        public GameObject Obstacles { get { return _obstacles; } }
+        public Tilemap StaticUndamageable { get { return staticUndamageable; } }
+        public Tilemap StaticDamageable { get { return staticDamageable; } }
+        public Tilemap DynamicUndamageable { get { return dynamicUndamageable; } }
+        public Tilemap DynamicDamageable { get { return dynamicDamageable; } }
 
         public GameObject OverlayTileContainer { get { return overlayTileContainer; } }
     }

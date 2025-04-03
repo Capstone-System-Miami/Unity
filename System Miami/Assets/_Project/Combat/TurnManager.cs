@@ -8,6 +8,7 @@ using SystemMiami.Management;
 using SystemMiami.Utilities;
 using UnityEngine;
 using SystemMiami.ui;
+using UnityEditor.Build.Content;
 namespace SystemMiami
 {
     /// <summary>
@@ -268,9 +269,14 @@ namespace SystemMiami
         public void OnCombatantDeath(Combatant combatant)
         {
             Debug.Log("Combatant Death called" + combatant.name + " has died");
-            if (--enemiesRemaining == 0)
+
+            if (combatant is EnemyCombatant && --enemiesRemaining == 0)
             {
                 OnDungeonCleared();
+            }
+            else if (combatant is PlayerCombatant)
+            {
+                GAME.MGR.GoToCharacterSelect();
             }
         }
 
@@ -305,7 +311,7 @@ namespace SystemMiami
                 dungeonClearedActions[client].Invoke();
             }
 
-            goToNeighborhood.Go();
+            goToNeighborhood.Go(false);
         }
         //===============================
         #endregion // ^Spawning^
