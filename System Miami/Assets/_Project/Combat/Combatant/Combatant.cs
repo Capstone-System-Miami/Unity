@@ -15,7 +15,7 @@ namespace SystemMiami.CombatSystem
         typeof(Stats),
         typeof(Abilities)
         )]
-    public abstract class Combatant : MonoBehaviour, ITargetable, ITileOccupant, IHighlightable, IDamageReceiver, IHealReceiver, IForceMoveReceiver, IStatusEffectReceiver
+    public abstract class Combatant : MonoBehaviour, ITargetable, ITileOccupant, IHighlightable, IDamageReceiver, IResourceReceiver, IForceMoveReceiver, IStatusEffectReceiver
     {
         protected const float PLACEMENT_RANGE = 0.0001f;
 
@@ -59,8 +59,12 @@ namespace SystemMiami.CombatSystem
         private bool isMovable = true;
         private bool isStunned = false;
         private bool isInvisible = false;
-        private float _endOfTurnDamage;
-        private float _endOfTurnHeal;
+        public bool hasResourceEffect = false;
+        public Dictionary<ResourceType, int> restoreResourceEffects = new();
+        public float _endOfTurnDamage;
+        public float _endOfTurnHeal;
+        public float _endOfTurnStamina;
+        public float _endOfTurnMana;
 
         // Animator
         private Animator _animator;
@@ -71,6 +75,8 @@ namespace SystemMiami.CombatSystem
         private OverlayTile focusTile;
         private OverlayTile previousFocus;
         private DirectionContext directionContext;
+
+        public event Action<Combatant> DamageTaken;
 
         private object eventLock = new object();
         #endregion Private Vars
@@ -396,6 +402,7 @@ namespace SystemMiami.CombatSystem
             Stamina = new Resource(_stats.GetStat(StatType.STAMINA), Stamina.Get());
             Mana = new Resource(_stats.GetStat(StatType.MANA), Mana.Get());
             Speed = new Resource(_stats.GetStat(StatType.SPEED), Speed.Get());
+            Debug.Log($"{gameObject.name} has {Health.Get()} health.");
         }
         #endregion Resource Management
 
@@ -458,7 +465,7 @@ namespace SystemMiami.CombatSystem
             return isDamageable;
         }
 
-        public void PreviewDamage(float amount)
+        public void PreviewDamage(float amount, bool perTurn, int durationTurns)
         {
             float currentHealth = Health.Get();
             Debug.Log(
@@ -467,32 +474,91 @@ namespace SystemMiami.CombatSystem
                 $"{currentHealth - amount}");
         }
 
-        public void ReceiveDamage(float amount)
+        public void ReceiveDamage(float amount, bool perTurn, int durationTurns)
         {
-            Health.Lose(amount);
-            Debug.Log(
-                $"{gameObject.name} took {amount} damage,\n" +
-                $"its Health is now {Health.Get()}");
-           
+
+            if(perTurn)
+            {
+                hasResourceEffect = true;
+                _endOfTurnDamage -= amount;
+                restoreResourceEffects.Add(ResourceType.Health, durationTurns);
+            }
+            else
+            {
+                Health.Lose(amount);
+                Debug.Log(
+                    $"{gameObject.name} took {amount} damage,\n" +
+                    $"its Health is now {Health.Get()}");
+            }
+
         }
         #endregion IDamageReciever
 
 
-        #region IHealReceiver
+        #region IResourceReceiver
         //============================================================
         public bool IsCurrentlyHealable()
         {
             return isHealable;
         }
 
-        public void PreviewHeal(float amount)
+        public void PreviewResourceReceived(float amount, ResourceType type, bool perTurn, int duraationTurns)
         {
             // preview heal
         }
 
-        public void ReceiveHeal(float amount)
+        public void ReceiveResource(float amount, ResourceType type, bool perTurn, int durationTurns)
         {
-            Health.Gain(amount);
+
+            if (perTurn)
+            {
+                hasResourceEffect = true;
+                restoreResourceEffects.Add(type,durationTurns);
+                if(type == ResourceType.Health)
+                {
+                    _endOfTurnHeal += amount;
+                }
+                else if (type == ResourceType.Stamina)
+                {
+                    _endOfTurnStamina += amount;
+                }
+                else if (type == ResourceType.Mana)
+                {
+                    _endOfTurnMana += amount;
+                }
+            }
+            else
+            {
+               GainResource(type, amount);
+            }
+
+        }
+
+        public void GainResource(ResourceType type, float amount)
+        {
+            switch (type)
+            {
+                case ResourceType.Health:
+                    if (amount > 0)
+                    {
+                        Health.Gain(amount);
+                    }
+                    else
+                    {
+                        Health.Lose(-amount);
+                    }
+                    break;
+                case ResourceType.Stamina:
+                    Stamina.Gain(amount);
+                    break;
+                case ResourceType.Mana:
+                    Mana.Gain(amount);
+                    break;
+                default:
+                    Health.Gain(amount);
+                    break;
+
+            }
         }
         #endregion IHealReceiver
 
@@ -583,8 +649,7 @@ namespace SystemMiami.CombatSystem
             /// TODO:   (from layla)
             /// These are not implemented and I can't think
             /// too deeply about them right now, I'm sorry lol
-            _endOfTurnDamage = damagePerTurn;
-            _endOfTurnHeal = healPerTurn;
+            
         }
         #endregion // IStatusEffectReveiver
 
@@ -698,7 +763,7 @@ namespace SystemMiami.CombatSystem
         /// This way, states can decide what to do when
         /// Heal methods are called on the combatant.
         /// </remarks>
-        public virtual IHealReceiver GetHealInterface()
+        public virtual IResourceReceiver GetHealInterface()
         {
             return this;
         }

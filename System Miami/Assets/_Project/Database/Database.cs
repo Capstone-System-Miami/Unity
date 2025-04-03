@@ -27,12 +27,12 @@ namespace SystemMiami
         [SerializeField] private List<ItemData> AllItemDatas = new List<ItemData>();
 
 
-        [SerializeField]private List<NewAbilitySO> physicalAbilityEntries = new();
-        [SerializeField]private List<NewAbilitySO> magicalAbilityEntries = new();
-        [SerializeField]private List<ConsumableSO> consumableEntries = new();
-        [SerializeField]private List<NewAbilitySO> enemyPhysicalAbilityEntries = new();
-        [SerializeField]private List<NewAbilitySO> enemyMagicalAbilityEntries = new();
-        [SerializeField]private List<EquipmentModSO> equipmentModEntries = new();
+        [SerializeField] private List<NewAbilitySO> physicalAbilityEntries = new();
+        [SerializeField] private List<NewAbilitySO> magicalAbilityEntries = new();
+        [SerializeField] private List<ConsumableSO> consumableEntries = new();
+        [SerializeField] private List<NewAbilitySO> enemyPhysicalAbilityEntries = new();
+        [SerializeField] private List<NewAbilitySO> enemyMagicalAbilityEntries = new();
+        [SerializeField] private List<EquipmentModSO> equipmentModEntries = new();
        
 
        private Dictionary<int, NewAbilitySO> physicalAbilityDatabase;
@@ -65,11 +65,14 @@ namespace SystemMiami
             if (!characterSelection)
             {
                 physicalAbilityEntries = physicalAbilityEntries
-                    .Where(entry => entry.isGeneralAbility || entry.classType == playerClassType).ToList();
+                    .Where(entry => entry.classType == playerClassType && !entry.isGeneralAbility).ToList();
+                PhysicalAbilityItemDatas = physicalAbilityEntries.Select(so => so.itemData).ToList();
+
 
                 // Filter magical abilities
                 magicalAbilityEntries = magicalAbilityEntries
-                    .Where(entry => entry.isGeneralAbility || entry.classType == playerClassType).ToList();
+                    .Where(entry => entry.classType == playerClassType && !entry.isGeneralAbility).ToList();
+                PhysicalAbilityItemDatas = physicalAbilityEntries.Select(so => so.itemData).ToList();
             }
 
             // Convert lists to dictionaries 
