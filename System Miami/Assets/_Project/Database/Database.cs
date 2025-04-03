@@ -216,26 +216,24 @@ namespace SystemMiami
            // Check if it's an ability
            if (physicalAbilityDatabase.TryGetValue(id, out NewAbilitySO abilityEntry))
            {
-             return new AbilityPhysical(abilityEntry, user);
+                return new AbilityPhysical(abilityEntry, user);
            }
-
            if (magicalAbilityDatabase.TryGetValue(id, out abilityEntry))
            {
-               return new AbilityMagical(abilityEntry, user);
+                return new AbilityMagical(abilityEntry, user);
            }
            // Check if it's a consumable
            if (consumableDatabase.TryGetValue(id, out ConsumableSO consumableEntry))
            {
-               return new Consumable(consumableEntry, user);
+                return new Consumable(consumableEntry, user);
            }
            if (enemyPhysicalAbilityDatabase.TryGetValue(id, out  abilityEntry))
            {
-               return new AbilityPhysical(abilityEntry, user);
+                return new AbilityPhysical(abilityEntry, user);
            }
-
            if (enemyMagicalAbilityDatabase.TryGetValue(id, out abilityEntry))
            {
-               return new AbilityMagical(abilityEntry, user);
+                return new AbilityMagical(abilityEntry, user);
            }
            else
            {
