@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using SystemMiami.CombatSystem;
 using SystemMiami.InventorySystem;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace SystemMiami.CombatRefactor
 {
@@ -117,6 +118,7 @@ namespace SystemMiami.CombatRefactor
             foreach (int id in consumableIDs)
             {
                 CombatAction action = Database.MGR.CreateInstance(id, user);
+                Assert.IsNotNull(action);
                 if (action is Consumable consumable)
                 {
                     result.Add(consumable);
