@@ -14,20 +14,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Icon: {fileID: 0}
   Actions:
-  - {fileID: 0}
+  - {fileID: 11400000, guid: b905a3a990ce2134c962941e28ccba5e, type: 2}
   OverrideController: {fileID: 0}
   AbilityType: 1
-  ResourceCost: 0
-  CooldownTurns: 0
+  ResourceCost: 50
+  CooldownTurns: 8
   itemData:
     ID: 2009
     Icon: {fileID: 0}
     Name: Astral Explosion
     Description: 'Deal very high AOE damage. Consume all remaining Mana. '
-    itemType: 1
+    itemType: 2
     Price: 0
-    MinLevel: 0
-    MaxLevel: 0
+    MinLevel: 4
+    MaxLevel: 5
     rarity: 0
-  classType: 0
+  classType: 1
   isEnemyAbility: 0
+  isGeneralAbility: 0
