@@ -147,6 +147,14 @@ public class IntersectionManager : Singleton<IntersectionManager>
     // Unity's Start method is called before the first frame update.
     void Start()
     {
+        if (GAME.MGR.NoNpcs)
+        {
+            Debug.LogWarning($"Game Manager setting for NoNpcs was true. " +
+                $"Setting all NPC max values to zero.");
+            maxNpcsTotal = 0;
+            maxNpcsShops = 0;
+            maxNpcsQuests = 0;
+        }
         playerPrefab = GameObject.Find("Player");
         InitializeStreetPoolDictionary(); // Prepare the dictionary mapping StreetTypes to StreetPools.
         InitializeStreetGrid(); // SetAll up the grid itemData structure for street generation.
@@ -538,6 +546,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
             GameObject npcInstance = allNPCs[i].SpawnNPC(npcPrefab);
             AssignRole(npcInstance);
         }
+        
         Debug.Log("Spawned NPCs");
     }
 
