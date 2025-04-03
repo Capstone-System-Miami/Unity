@@ -8,8 +8,6 @@ using UnityEngine;
 using System.Linq;
 using UnityEngine.Tilemaps;
 using UnityEngine.Assertions;
-using SystemMiami.Enums;
-using Unity.VisualScripting.Dependencies.NCalc;
 
 namespace SystemMiami
 {
@@ -35,7 +33,12 @@ namespace SystemMiami
 
         private Dungeon dungeon;
         private Tilemap gameBoardTilemap;
-        private Tilemap obstaclesTilemap; // This will change, possibly to Obstacle[]
+        private Tilemap staticUndamageable;
+        private Tilemap staticDamageable;
+        private Tilemap dynamicUndamageable;
+        private Tilemap dynamicDamageable;
+        private int obstacleTotal;
+
         private BoundsInt bounds;
         private GameObject overlayContainer;
 
@@ -107,24 +110,53 @@ namespace SystemMiami
                 return;
             }
 
-            if (dungeon.Obstacles == null)
+
+            if (dungeon.StaticUndamageable != null)
+            {
+                this.staticUndamageable = dungeon.StaticUndamageable;
+            }
+            else
             {
                 log.error($"{name}'s {this} didn't find " +
                     $"a GameBoard object in {environment}'s {dungeon}");
                 return;
             }
-            else if (!dungeon.Obstacles.TryGetComponent(out obstaclesTilemap))
+            if (dungeon.StaticDamageable != null)
+            {
+                this.staticDamageable = dungeon.StaticUndamageable;
+            }
+            else
             {
                 log.error($"{name}'s {this} didn't find " +
-                    $"a tilemap component on {dungeon}'s {dungeon.GameBoard}");
+                    $"a GameBoard object in {environment}'s {dungeon}");
                 return;
             }
+            if (dungeon.DynamicUndamageable != null)
+            {
+                this.staticUndamageable = dungeon.StaticUndamageable;
+            }
+            else
+            {
+                log.error($"{name}'s {this} didn't find " +
+                    $"a GameBoard object in {environment}'s {dungeon}");
+                return;
+            }
+            if (dungeon.DynamicDamageable != null)
+            {
+                this.staticUndamageable = dungeon.StaticUndamageable;
+            }
+            else
+            {
+                log.error($"{name}'s {this} didn't find " +
+                    $"a GameBoard object in {environment}'s {dungeon}");
+                return;
+            }
+
 
             // Construction
             gridTilesHeight = dungeon.BoardTilesHeight;
             overlayContainer = dungeon.OverlayTileContainer;
             map = new Dictionary<Vector2Int, OverlayTile> ();
-            int obstacleRunningTotal = 0;
 
             // Get the bounds of tile map in BounsInt
             bounds = gameBoardTilemap.cellBounds;
@@ -155,31 +187,31 @@ namespace SystemMiami
                             overlayTile.GridLocation = tileLocation;
                             map.Add(tileKey, overlayTile);
 
-                            // obstacle placement
-                            Vector3Int obstacleCoords = new (tileLocation.x, tileLocation.y, 2);
-
-                            if (obstaclesTilemap.HasTile(obstacleCoords))
+                            if (GAME.MGR.IgnoreObstacles)
                             {
-                                obstacleRunningTotal++;
-
-                                TileData tileData = new();
-                                TileBase tile = obstaclesTilemap.GetTile(obstacleCoords);
-                                tile.GetTileData(obstacleCoords, obstaclesTilemap, ref tileData);
-                                obstaclesTilemap.SetTile(obstacleCoords, null);
-
-                                Sprite obstacleSprite = tileData.sprite;
-
-                                GameObject newObstacleObj = new($"OBSTACLE {obstacleRunningTotal}");
-                                newObstacleObj.transform.SetParent(obstaclesTilemap.transform);
-                                Obstacle obst = newObstacleObj.AddComponent<DynamicObstacle>();
-                                obst.Initialize(obstacleSprite);
-                                if (!TryPlaceOnTile(obst, overlayTile))
+                                staticUndamageable?.gameObject.SetActive(false);
+                                staticDamageable?.gameObject.SetActive(false);
+                                dynamicUndamageable?.gameObject.SetActive(false);
+                                dynamicDamageable?.gameObject.SetActive(false);
+                            }
+                            else
+                            {
+                                Obstacle obstacle = null;
+                                if (!TryPlaceObstacle(staticUndamageable, overlayTile, out obstacle))
                                 {
-                                    log.error($"Obstacle placement failed at {obstacleCoords}", overlayTile);
+                                    log.warn($"Couldn't place su obst on {overlayTile}.");
                                 }
-                                else
+                                else if (!TryPlaceObstacle(staticDamageable, overlayTile, out obstacle))
                                 {
-                                    log.print($"Obstacle placement successful", overlayTile);
+                                    log.warn($"Couldn't place sd obst on {overlayTile}.");
+                                }
+                                else if (!TryPlaceObstacle(dynamicUndamageable, overlayTile, out obstacle))
+                                {
+                                    log.warn($"Couldn't place du obst on {overlayTile}.");
+                                }
+                                else if (!TryPlaceObstacle(dynamicDamageable, overlayTile, out obstacle))
+                                {
+                                    log.warn($"Couldn't place dd obst on {overlayTile}.");
                                 }
                             }
                         }
@@ -253,9 +285,32 @@ namespace SystemMiami
             return Coordinates.IsoToScreen(tileLocation, gridTilesHeight);
         }
 
-        private bool TryPlaceObstacle(Vector3Int tileLocation, int currentTotal)
+        private bool TryPlaceObstacle(Tilemap obstacleMap, OverlayTile tile, out Obstacle obstacle)
         {
-            return false;
+            obstacle = null;
+
+            // obstacle placement
+            Vector3Int posToCheck = new (tile.BoardPos.x, tile.BoardPos.y, 2);
+
+            if (!obstacleMap.HasTile(posToCheck))
+            {
+                return false;
+            }
+            else
+            {
+                TileData tileData = new();
+                TileBase tileBase = obstacleMap.GetTile(posToCheck);
+                tileBase.GetTileData(posToCheck, obstacleMap, ref tileData);
+                obstacleMap.SetTile(posToCheck, null);
+
+                Sprite obstacleSprite = tileData.sprite;
+
+                GameObject newObstacleObj = new($"OBSTACLE {obstacleTotal}");
+                newObstacleObj.transform.SetParent(obstacleMap.transform);
+                obstacle = newObstacleObj.AddComponent<DynamicObstacle>();
+                obstacle.Initialize(obstacleSprite);
+                return TryPlaceOnTile(obstacle, tile);
+            }
         }
 
         private void InitCorners()

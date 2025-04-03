@@ -318,7 +318,7 @@ MonoBehaviour:
         - m_Target: {fileID: 96613464}
           m_TargetAssemblyTypeName: SystemMiami.ui.GoToNeighborhood, Assembly-CSharp
           m_MethodName: Go
-          m_Mode: 1
+          m_Mode: 6
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -8324,7 +8324,10 @@ MonoBehaviour:
   _preserveBetweenScenes: 1
   _dungeonSceneName: Dungeon
   _neighborhoodSceneName: NEIGHBORHOOD
+  characterSelectSceneName: CharacterSelector
   _regenerateDungeonDataOnInteract: 0
+  <IgnoreObstacles>k__BackingField: 1
+  <NoNpcs>k__BackingField: 1
 --- !u!224 &1523799289 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8515660109222632797, guid: 87efd5d5b9050d34e842c7063b3798a0, type: 3}
@@ -12259,7 +12262,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7807098622259035460, guid: 4a1c621d5a6d50d4180980db21227599, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

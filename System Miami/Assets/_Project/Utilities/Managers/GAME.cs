@@ -17,6 +17,7 @@ namespace SystemMiami.Management
 
         [SerializeField] string _dungeonSceneName;
         [SerializeField] string _neighborhoodSceneName;
+        [SerializeField] string characterSelectSceneName;
 
         [Tooltip(
             "This should really only be checked on while " +
@@ -29,18 +30,13 @@ namespace SystemMiami.Management
 
         public bool RegenerateDungeonDataOnInteract { get { return _regenerateDungeonDataOnInteract; } }
 
+        [field: SerializeField] public bool IgnoreObstacles { get; private set; }
+
+        [field: SerializeField] public bool NoNpcs { get; private set; }
+
         protected override void Awake()
         {
             base.Awake();
-        }
-        private void switchScene(int buildIndex)
-        {
-            SceneManager.LoadScene(buildIndex);
-        }
-
-        private void switchScene(string buildName)
-        {
-            SceneManager.LoadScene(buildName);
         }
 
         /// <summary>
@@ -61,7 +57,13 @@ namespace SystemMiami.Management
             }
 
             Debug.Log($"Going to {_dungeonSceneName}");
-            switchScene(_dungeonSceneName);
+            SceneManager.LoadScene(_dungeonSceneName);
+        }
+
+        public void GoToCharacterSelect()
+        {
+            Debug.Log($"Going to {characterSelectSceneName}");
+            SceneManager.LoadScene(characterSelectSceneName);
         }
 
         public void GoToDungeon(DungeonData data)
@@ -138,7 +140,7 @@ namespace SystemMiami.Management
             return true;
         }
 
-        public void GoToNeighborhood()
+        public void GoToNeighborhood(bool regenerate)
         {
             _dungeonData = null;
 
@@ -148,13 +150,17 @@ namespace SystemMiami.Management
             // before we load the scene. This ensures that the IntersectionManager
             // present in the scene to-be-loaded will destroy itself after it detects
             // the pre-existing IntersectionManager we're carrying with us between scenes.
-            if (IntersectionManager.MGR != null)
+            if (IntersectionManager.MGR != null && regenerate)
             {
-                IntersectionManager.MGR.gameObject.SetActive(true);            
+                Destroy(IntersectionManager.MGR);
+            }
+            else if (IntersectionManager.MGR != null && !regenerate)
+            {
+                IntersectionManager.MGR.gameObject.SetActive(true);
             }
 
             Debug.Log($"Going to {_neighborhoodSceneName}");
-            switchScene(_neighborhoodSceneName);
+            SceneManager.LoadScene(_neighborhoodSceneName);
         }
 
         public void Quit()
