@@ -44,17 +44,11 @@ namespace SystemMiami
 
        [SerializeField] private bool characterSelection;
 
-
-       
-       
-       
        private void OnEnable()
        {
            Initialize();
        }
 
-    
-       
        public void Initialize()
        {
             // Filter database to only include abilities matching the player's class type.
@@ -62,18 +56,18 @@ namespace SystemMiami
             CharacterClassType playerClassType = playerAttributes._characterClass;
             
             // Filter physical abilities if not in character selection screen
-            if (!characterSelection)
-            {
-                physicalAbilityEntries = physicalAbilityEntries
-                    .Where(entry => entry.classType == playerClassType && !entry.isGeneralAbility).ToList();
-                PhysicalAbilityItemDatas = physicalAbilityEntries.Select(so => so.itemData).ToList();
+            //if (!characterSelection)
+            //{
+            //    physicalAbilityEntries = physicalAbilityEntries
+            //        .Where(entry => entry.classType == playerClassType && !entry.isGeneralAbility).ToList();
+            //    PhysicalAbilityItemDatas = physicalAbilityEntries.Select(so => so.itemData).ToList();
 
 
-                // Filter magical abilities
-                magicalAbilityEntries = magicalAbilityEntries
-                    .Where(entry => entry.classType == playerClassType && !entry.isGeneralAbility).ToList();
-                PhysicalAbilityItemDatas = physicalAbilityEntries.Select(so => so.itemData).ToList();
-            }
+            //    // Filter magical abilities
+            //    magicalAbilityEntries = magicalAbilityEntries
+            //        .Where(entry => entry.classType == playerClassType && !entry.isGeneralAbility).ToList();
+            //    PhysicalAbilityItemDatas = physicalAbilityEntries.Select(so => so.itemData).ToList();
+            //}
 
             // Convert lists to dictionaries 
             physicalAbilityDatabase = physicalAbilityEntries.ToDictionary(entry => entry.itemData.ID);
