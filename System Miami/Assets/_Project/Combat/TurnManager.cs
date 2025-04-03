@@ -46,6 +46,7 @@ namespace SystemMiami
         [SerializeField] private GoToNeighborhood goToNeighborhood;
 
         [SerializeField, ReadOnly] private int enemiesRemaining;
+        public event Action MapManagerReady;
 
         public bool IsPlayerTurn
         {
@@ -78,11 +79,28 @@ namespace SystemMiami
         private void OnEnable()
         {
             GAME.MGR.CombatantDeath += OnCombatantDeath;
+
         }
         private void Start()
         {
+            StartCoroutine(InitializeAfterMapManagerIsReady());
+            StartCoroutine(TurnSequence());
+            
+        }
+
+        protected override void Awake()
+        {
+            base.Awake();
+           
+        }
+
+        private IEnumerator InitializeAfterMapManagerIsReady()
+        {
+            yield return new WaitUntil(() => MapManager.MGR != null);
+            Debug.Log("Turn manager being intialized");
             if (playerCharacter != null)
             {
+                Debug.Log("Player character is not null combatTest");
                 Vector3Int charTilePos = Coordinates.ScreenToIso(playerCharacter.transform.position, 0);
 
                 if (!MapManager.MGR.map.TryGetValue((Vector2Int)charTilePos, out OverlayTile charTile))
@@ -92,7 +110,7 @@ namespace SystemMiami
                         Debug.LogError(
                             $"{this} failed to find a tile " +
                             $"to place the player on.");
-                        return;
+                        yield break;
                     }
                 }
 
@@ -101,10 +119,12 @@ namespace SystemMiami
                     Debug.LogError(
                         $"{this} tried to place {playerCharacter} " +
                         $"through the MapManager, but it failed.");
-                    return;
+                    yield break;
                 }
 
-                playerCharacter.InitAll();
+               StartCoroutine( playerCharacter.InitAll());
+                Debug.Log("Reached init all coroutine" + playerCharacter.name);
+                playerCharacter.EnterDungeon();
             }
 
             combatants.Add(playerCharacter);
@@ -114,12 +134,15 @@ namespace SystemMiami
             }
             else
             {
+                Debug.LogWarning(
+                    $"{this} couldn't find any enemies " +
+                    $"in the GameManager. Spawning default enemies.");
                 SpawnEnemies();
             }
 
             combatants.AddRange(enemyCharacters);
 
-            StartCoroutine(TurnSequence());
+
         }
 
         private void Update()
@@ -147,6 +170,7 @@ namespace SystemMiami
         /// </summary>
         private IEnumerator TurnSequence()
         {
+            yield return new WaitUntil(() => MapManager.MGR != null && MapManager.MGR.map != null && MapManager.MGR.map.Count > 0);
             bool combatantsReady = true;
 
             do
