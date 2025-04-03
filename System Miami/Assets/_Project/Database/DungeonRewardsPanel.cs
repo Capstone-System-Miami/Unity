@@ -1,19 +1,16 @@
-using System;
 using System.Collections.Generic;
+using System.Linq;
+using SystemMiami.InventorySystem;
+using SystemMiami.Management;
+using SystemMiami.ui;
+using SystemMiami.Utilities;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
-using SystemMiami.InventorySystem;
-using SystemMiami.Dungeons;
-using SystemMiami.Management;
-using SystemMiami.Utilities;
-using SystemMiami.ui;
-using UnityEngine.Serialization;
-using System.Linq;
 
 namespace SystemMiami
 {
-  
+
     public class DungeonRewardsPanel : Singleton<DungeonRewardsPanel>
     {
       

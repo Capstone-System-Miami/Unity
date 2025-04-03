@@ -8,8 +8,9 @@ namespace SystemMiami.CombatSystem
     public class InflictStatusEffect : CombatSubactionSO
     {
         [SerializeField] StatSetSO effectStats;
-        [SerializeField] float damagePerTurn;
-        [SerializeField] float healPerTurn;
+     
+        float damagePerTurn;
+        float healPerTurn;
         [SerializeField] int durationTurns;
 
         public override ISubactionCommand GenerateCommand(ITargetable target, CombatAction action)

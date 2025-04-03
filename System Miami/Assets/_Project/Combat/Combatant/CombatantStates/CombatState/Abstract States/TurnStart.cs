@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using SystemMiami.AbilitySystem;
 using SystemMiami.CombatSystem;
 using SystemMiami.Utilities;
@@ -50,8 +51,57 @@ namespace SystemMiami.CombatRefactor
         public void ResetTurn()
         {
             combatant.Loadout.ReduceCooldowns();
+            GainResource();
             combatant.Stats.DecrementStatusEffectDurations();
+            DecrementRestoreResourceDurations();
             combatant.Speed = new Resource(combatant.Stats.GetStat(StatType.SPEED));
+        }
+        private void GainResource()
+        {
+            if(combatant.hasResourceEffect)
+            {
+                if (combatant.restoreResourceEffects.ContainsKey(ResourceType.Health))
+                {
+                    combatant.GainResource(ResourceType.Health,combatant._endOfTurnHeal);
+                    combatant.GainResource(ResourceType.Health,combatant._endOfTurnDamage);
+                }
+                else if(combatant.restoreResourceEffects.ContainsKey(ResourceType.Mana))
+                {
+                    combatant.GainResource(ResourceType.Mana, combatant._endOfTurnMana);
+                }
+                else if (combatant.restoreResourceEffects.ContainsKey(ResourceType.Stamina))
+                {
+                    combatant.GainResource(ResourceType.Stamina, combatant._endOfTurnStamina);
+                }
+                
+            }
+        }
+        public void DecrementRestoreResourceDurations()
+        {
+            if (combatant.restoreResourceEffects.Count > 0 && combatant != null)
+            {
+                List<ResourceType> keysToRemove = new List<ResourceType>();
+
+                // First pass: decide which keys need changing / removing
+                foreach (var kvp in combatant.restoreResourceEffects)
+                {
+                    if (kvp.Value > 0)
+                    {
+                        combatant.restoreResourceEffects[kvp.Key] = kvp.Value - 1;
+                    }
+                    if (kvp.Value <= 0)
+                    {
+                        keysToRemove.Add(kvp.Key);
+                    }
+                }
+
+                // Second pass: remove them outside the iteration
+                foreach (var key in keysToRemove)
+                {
+                    combatant.restoreResourceEffects.Remove(key);
+                }
+            }
+           
         }
     }
 }
