@@ -435,6 +435,7 @@ GameObject:
   - component: {fileID: 137947715004459473}
   - component: {fileID: 18740023143509276}
   - component: {fileID: 8518758834218037015}
+  - component: {fileID: 2619156366695561887}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -472,6 +473,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _preserveBetweenScenes: 1
+  log:
+    showMessages: 1
   showDebug: 0
   sharedComponents:
   - {fileID: 4476760992286927676}
@@ -482,6 +485,7 @@ MonoBehaviour:
   - {fileID: 2705490712565707672}
   - {fileID: 8518758834218037015}
   - {fileID: 18740023143509276}
+  - {fileID: 2619156366695561887}
   neighborhoodComponents:
   - {fileID: 8219263611542528465}
   - {fileID: 6386089713510983124}
@@ -492,6 +496,7 @@ MonoBehaviour:
   - {fileID: 137947715004459473}
   neighborhoodSceneName: NEIGHBORHOOD
   dungeonSceneName: Dungeon
+  AnimDriver: {fileID: 0}
 --- !u!114 &2859284793658147475
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -691,14 +696,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4829dd79e1e8bb945bca6365f9355dcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  log:
+    showMessages: 1
   body: {fileID: 3666472161562640362}
   spriteRenderer: {fileID: 4476760992286927676}
-  animator: {fileID: 2705490712565707672}
-  animControllers:
-  - {fileID: 22100000, guid: decd93ce417d8f74fa9d4dc0cfe24f90, type: 2}
-  - {fileID: 22100000, guid: fa6e08b1c92be634090b672d4f4f3230, type: 2}
   walkSpeed: 5
   frameRate: 30
+  animator: {fileID: 2705490712565707672}
 --- !u!114 &6386089713510983124
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -772,12 +776,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e496e3e20fe77e6439ec6809d0c51888, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  detailedFocusHighlight: 0
   _colorTag: {r: 0.6948949, g: 1, b: 0.5896226, a: 1}
   _printUItoConsole: 1
   _movementSpeed: 2
   idleController: {fileID: 22100000, guid: decd93ce417d8f74fa9d4dc0cfe24f90, type: 2}
   walkingController: {fileID: 22100000, guid: fa6e08b1c92be634090b672d4f4f3230, type: 2}
   _inventory: {fileID: 18740023143509276}
+  currentStateType: 
+  TEST_origin: {x: 0, y: 0}
+  TEST_distance: 0
+  TEST_moveType: 0
+  TRIGGER_ForceMovePreviewTest: 0
+  TRIGGER_ForceMoveExecuteTest: 0
+  TEST_currentTile: {fileID: 0}
   test: {fileID: 11400000, guid: 325584827e537574f87e9c204cceb703, type: 2}
 --- !u!114 &18740023143509276
 MonoBehaviour:
@@ -798,6 +810,7 @@ MonoBehaviour:
   quickslotPhysicalAbilityIDs: 
   quickslotMagicalAbilityIDs: 
   quickslotConsumableIDs: 
+  equippedEquipmentModIDs: 
   credits: 0
 --- !u!114 &8518758834218037015
 MonoBehaviour:
@@ -818,3 +831,28 @@ MonoBehaviour:
   debugMode: 0
   debug_GainExpKey: 0
   debug_amountToGain: 50
+--- !u!114 &2619156366695561887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6453553769002132252}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7c4f42825924ac43adcdda0c5e4ebd9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  log:
+    showMessages: 1
+  characterClass: 0
+  usePreExistingClass: 1
+  assignOnStart: 1
+  neighborhoodMovement: {fileID: 0}
+  player: {fileID: 0}
+  playerAttributes: {fileID: 0}
+  fighterAnimSet: {fileID: 11400000, guid: 302e5cee91713724b9724c529de5674c, type: 2}
+  mageAnimSet: {fileID: 11400000, guid: 20cb6b84e4b70b44c8c8346d0c5b4192, type: 2}
+  rogueAnimSet: {fileID: 11400000, guid: d279112d26394af4d968acb5f3810844, type: 2}
+  tankAnimSet: {fileID: 11400000, guid: 5832dea540e5aff4cb50e0b80a0f2ce6, type: 2}
+  noClassAnimSet: {fileID: 11400000, guid: 7b40cc861de981b4ab9da4950ba620c7, type: 2}

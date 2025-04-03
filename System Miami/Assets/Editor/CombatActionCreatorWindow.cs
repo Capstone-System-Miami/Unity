@@ -430,7 +430,7 @@ public class CombatActionCreatorWindow : EditorWindow
                 data.subactionClassType = typeof(Damage);
                 break;
             case SubactionPresetType.Heal:
-                data.subactionClassType = typeof(Heal);
+                data.subactionClassType = typeof(AddResource);
                 break;
             case SubactionPresetType.InflictStatusEffect:
                 data.subactionClassType = typeof(InflictStatusEffect);
@@ -469,7 +469,7 @@ public class CombatActionCreatorWindow : EditorWindow
                     data.combatantColor = Color.red;
                     break;
                 case SubactionPresetType.Heal:
-                    data.subactionClassType = typeof(Heal);
+                    data.subactionClassType = typeof(AddResource);
                     data.fieldValues["healAmount"] = "12";
                     data.tileColor = Color.green;
                     data.combatantColor = Color.green;

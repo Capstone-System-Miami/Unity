@@ -17,7 +17,8 @@ namespace SystemMiami.Shop
         
         public string myName;
         public GameObject shopPanel;
-        
+        [SerializeField] private ShopImage shopImage;
+
 
         void Start()
         {
@@ -34,8 +35,11 @@ namespace SystemMiami.Shop
             this.shopPanel = Instantiate(shopPanel);
             this.shopPanel.SetActive(false);
             slots.AddRange(this.shopPanel.GetComponentsInChildren<ShopItemSlot>());
-            
-           // Debug.Log(shopPanel.GetComponentsInChildren<ShopItemSlot>());
+            shopImage = shopPanel.GetComponent<ShopImage>();
+            shopImage.SetImage(GetComponent<SpriteRenderer>().sprite);
+
+
+            // Debug.Log(shopPanel.GetComponentsInChildren<ShopItemSlot>());
             for (int i = 0; i < slots.Count; i++)
             {
                Add(Database.MGR.GetRandomDataOfType(shop.shopType));

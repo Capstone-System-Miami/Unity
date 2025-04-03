@@ -23,7 +23,7 @@ namespace SystemMiami.CombatSystem
         protected override void Start()
         {
             base.Start();
-            int playerLevel = PlayerManager.MGR.GetPlayerLevel();
+            int playerLevel = PlayerManager.MGR.CurrentLevel;
             DifficultyLevel difficultyLevel = MapManager.MGR.Dungeon.DifficultyLevel;
             GetComponent<EnemiesLevel>().Initialize(difficultyLevel, playerLevel);
         }

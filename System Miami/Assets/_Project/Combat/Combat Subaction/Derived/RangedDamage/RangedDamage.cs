@@ -11,6 +11,8 @@ public class RangedDamageSubactionSO : CombatSubactionSO
     [SerializeField] private float damageToDeal;
     [SerializeField] private GameObject projectilePrefab; // Projectile prefab
     [SerializeField] private float projectileSpeed = 5f; // Projectile speed
+    private bool perTurn;
+    private int durationTurns;
 
     public override ISubactionCommand GenerateCommand(ITargetable target, CombatAction action)
     {
@@ -25,7 +27,7 @@ public class RangedDamageSubactionSO : CombatSubactionSO
         }
 
         float finalDamage = damageToDeal + power;
-        return new RangedDamageCommand(target, action, projectilePrefab, projectileSpeed, finalDamage);
+        return new RangedDamageCommand(target, action, projectilePrefab, projectileSpeed, finalDamage, perTurn, durationTurns);
     }
 }
 
@@ -37,14 +39,18 @@ public class RangedDamageCommand : ISubactionCommand
     private GameObject projectilePrefab;
     private float speed;
     private float damage;
+    private bool perTurn;
+    private int durationTurns;
 
-    public RangedDamageCommand(ITargetable target, CombatAction action, GameObject projectilePrefab, float speed, float damage)
+    public RangedDamageCommand(ITargetable target, CombatAction action, GameObject projectilePrefab, float speed, float damage, bool perTurn, int durationTurns)
     {
         this.target = target;
         this.action = action;
         this.projectilePrefab = projectilePrefab;
         this.speed = speed;
         this.damage = damage;
+        this.perTurn = perTurn;
+        this.durationTurns = durationTurns;
     }
 
     public void Execute()
@@ -71,7 +77,7 @@ public class RangedDamageCommand : ISubactionCommand
                 {
                     return;
                 }
-                target.GetDamageInterface()?.ReceiveDamage(damage);
+                target.GetDamageInterface()?.ReceiveDamage(damage,perTurn,durationTurns);
                 Debug.Log(target);
             });
         }
@@ -83,6 +89,6 @@ public class RangedDamageCommand : ISubactionCommand
         {
             return;
         }
-        target.GetDamageInterface()?.PreviewDamage(damage);
+        target.GetDamageInterface()?.PreviewDamage(damage, perTurn, durationTurns);
     }
 }

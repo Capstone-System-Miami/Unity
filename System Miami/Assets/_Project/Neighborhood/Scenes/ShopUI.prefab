@@ -101,6 +101,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 1108668990014707378}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -219,6 +229,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 1115255878024713205}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -412,6 +432,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 1134483721676998466}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -1088,6 +1118,140 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &324674634483041732
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2855246769852510517}
+  - component: {fileID: 4063128211296083065}
+  - component: {fileID: 8508161665413538394}
+  m_Layer: 5
+  m_Name: Cost
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2855246769852510517
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 324674634483041732}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 959190358310880651}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -0.00012207031, y: -139.32}
+  m_SizeDelta: {x: 226.475, y: 92.882}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &4063128211296083065
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 324674634483041732}
+  m_CullTransparentMesh: 1
+--- !u!114 &8508161665413538394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 324674634483041732}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: 
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 303fdf2f21f5eab47949f5c3806da193, type: 2}
+  m_sharedMaterial: {fileID: 1836521152029091587, guid: 303fdf2f21f5eab47949f5c3806da193, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 52
+  m_fontSizeBase: 52
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_enableWordWrapping: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 1
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &399533014645339062
 GameObject:
   m_ObjectHideFlags: 0
@@ -1383,6 +1547,8 @@ GameObject:
   - component: {fileID: 7752078196955964728}
   - component: {fileID: 6985681639373371930}
   - component: {fileID: 4096369133980958080}
+  - component: {fileID: 6003096664905306785}
+  - component: {fileID: 3194588435967452245}
   m_Layer: 5
   m_Name: Panel (2)
   m_TagString: Untagged
@@ -1447,6 +1613,69 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &6003096664905306785
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 456204248930044181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71922e3c5227d3e4896c5afeccba1a15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  titleTxt: {fileID: 6305104740129061081}
+  descriptionTxt: {fileID: 8514582837358030367}
+  costTxt: {fileID: 8508161665413538394}
+  itemImage: {fileID: 4096369133980958080}
+  buyButton: {fileID: 7902065467597225372}
+  seeItemButton: {fileID: 3194588435967452245}
+  playerInventory: {fileID: 0}
+--- !u!114 &3194588435967452245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 456204248930044181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 4096369133980958080}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &462281082285724538
 GameObject:
   m_ObjectHideFlags: 0
@@ -1548,6 +1777,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 649110515202464084}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -1666,6 +1905,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 718767793894801995}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -1970,6 +2219,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 545203237348379242}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -2298,6 +2557,8 @@ GameObject:
   - component: {fileID: 2413594046256946847}
   - component: {fileID: 4402380116481362257}
   - component: {fileID: 8521781067902405258}
+  - component: {fileID: 2382905192588453639}
+  - component: {fileID: 7071057694582181833}
   m_Layer: 5
   m_Name: Panel (4)
   m_TagString: Untagged
@@ -2362,6 +2623,69 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2382905192588453639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 859945790293410356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71922e3c5227d3e4896c5afeccba1a15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  titleTxt: {fileID: 6305104740129061081}
+  descriptionTxt: {fileID: 8514582837358030367}
+  costTxt: {fileID: 8508161665413538394}
+  itemImage: {fileID: 8521781067902405258}
+  buyButton: {fileID: 7902065467597225372}
+  seeItemButton: {fileID: 7071057694582181833}
+  playerInventory: {fileID: 0}
+--- !u!114 &7071057694582181833
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 859945790293410356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 8521781067902405258}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &885233108540185887
 GameObject:
   m_ObjectHideFlags: 0
@@ -2615,6 +2939,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 203817429712302233}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -2733,6 +3067,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 96116958088265192}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -3076,6 +3420,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 42203280316753528}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -3346,6 +3700,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 2191842026957489835}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -4004,6 +4368,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 2149684812930878034}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -4122,6 +4496,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 2046240071415162047}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -4315,6 +4699,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 2002037081730157598}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -4508,6 +4902,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 1986119148154820839}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -4851,6 +5255,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 1836235653104628940}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -5119,6 +5533,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 1853228723652444411}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -5312,6 +5736,140 @@ MonoBehaviour:
   m_fontStyle: 0
   m_HorizontalAlignment: 32
   m_VerticalAlignment: 8192
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_enableWordWrapping: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 1
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &1752056588868618402
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2011192240431105019}
+  - component: {fileID: 5032437368437075871}
+  - component: {fileID: 8514582837358030367}
+  m_Layer: 5
+  m_Name: Description
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2011192240431105019
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1752056588868618402}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 959190358310880651}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -0.0038757324, y: 33.617004}
+  m_SizeDelta: {x: 814.01, y: 252.99}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &5032437368437075871
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1752056588868618402}
+  m_CullTransparentMesh: 1
+--- !u!114 &8514582837358030367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1752056588868618402}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: 
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 303fdf2f21f5eab47949f5c3806da193, type: 2}
+  m_sharedMaterial: {fileID: 1836521152029091587, guid: 303fdf2f21f5eab47949f5c3806da193, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 52
+  m_fontSizeBase: 52
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -5596,6 +6154,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 1627051293798742668}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -5714,6 +6282,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 1542341211646887892}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -6207,6 +6785,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 1431848251082807216}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -6325,6 +6913,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 1315851126417658332}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -6710,6 +7308,140 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &2186317123394987804
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3240965658757360472}
+  - component: {fileID: 5140169596595070450}
+  - component: {fileID: 6305104740129061081}
+  m_Layer: 5
+  m_Name: Title
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &3240965658757360472
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2186317123394987804}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 959190358310880651}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -0.000061035156, y: 206}
+  m_SizeDelta: {x: 283.536, y: 91.768}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &5140169596595070450
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2186317123394987804}
+  m_CullTransparentMesh: 1
+--- !u!114 &6305104740129061081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2186317123394987804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: New Text
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 303fdf2f21f5eab47949f5c3806da193, type: 2}
+  m_sharedMaterial: {fileID: 1836521152029091587, guid: 303fdf2f21f5eab47949f5c3806da193, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 80
+  m_fontSizeBase: 80
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_enableWordWrapping: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 1
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &2189315053375186205
 GameObject:
   m_ObjectHideFlags: 0
@@ -6886,6 +7618,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 1231869806581898916}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -7004,6 +7746,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 1264534806797202317}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -7197,6 +7949,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 1207953415186781178}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -7465,6 +8227,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 3390067854291111395}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -8183,6 +8955,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 3066590801294008315}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -8301,6 +9083,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 3071161631581919565}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -8569,6 +9361,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 2765374594978133737}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -8687,6 +9489,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 2770024568309889092}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -9180,6 +9992,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 2597729845269221653}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -9272,6 +10094,140 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &3188897600658502763
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5469440756782936094}
+  - component: {fileID: 8149401073577665661}
+  - component: {fileID: 3100112637451539130}
+  m_Layer: 5
+  m_Name: Text (TMP)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &5469440756782936094
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3188897600658502763}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6981730113708010488}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &8149401073577665661
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3188897600658502763}
+  m_CullTransparentMesh: 1
+--- !u!114 &3100112637451539130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3188897600658502763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: Buy
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 303fdf2f21f5eab47949f5c3806da193, type: 2}
+  m_sharedMaterial: {fileID: 1836521152029091587, guid: 303fdf2f21f5eab47949f5c3806da193, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4281479730
+  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 45
+  m_fontSizeBase: 45
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_enableWordWrapping: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 1
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &3237724137925471091
 GameObject:
   m_ObjectHideFlags: 0
@@ -9523,6 +10479,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 2521351107980378119}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -9641,6 +10607,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 2424859956712862706}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -9759,6 +10735,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 2334895806347729848}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -9952,6 +10938,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 2306283238947858026}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -10213,6 +11209,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 2342025189273643741}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -10556,6 +11562,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 4462642890157840604}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -10899,6 +11915,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 4439569640694706379}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -10927,6 +11953,8 @@ GameObject:
   - component: {fileID: 8171482648627922588}
   - component: {fileID: 5376244385684196630}
   - component: {fileID: 307479415783246932}
+  - component: {fileID: 4066343171546347898}
+  - component: {fileID: 8602683595388345844}
   m_Layer: 5
   m_Name: Panel (6)
   m_TagString: Untagged
@@ -10991,6 +12019,69 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &4066343171546347898
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3673521075826781225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71922e3c5227d3e4896c5afeccba1a15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  titleTxt: {fileID: 6305104740129061081}
+  descriptionTxt: {fileID: 8514582837358030367}
+  costTxt: {fileID: 8508161665413538394}
+  itemImage: {fileID: 307479415783246932}
+  buyButton: {fileID: 7902065467597225372}
+  seeItemButton: {fileID: 8602683595388345844}
+  playerInventory: {fileID: 0}
+--- !u!114 &8602683595388345844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3673521075826781225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 307479415783246932}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &3680672599048984846
 GameObject:
   m_ObjectHideFlags: 0
@@ -11002,6 +12093,8 @@ GameObject:
   - component: {fileID: 1158903391863746907}
   - component: {fileID: 4146972965560480678}
   - component: {fileID: 8308521480520677663}
+  - component: {fileID: 2144232698265718162}
+  - component: {fileID: 4678522656770283689}
   m_Layer: 5
   m_Name: Panel
   m_TagString: Untagged
@@ -11066,6 +12159,69 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2144232698265718162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3680672599048984846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71922e3c5227d3e4896c5afeccba1a15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  titleTxt: {fileID: 6305104740129061081}
+  descriptionTxt: {fileID: 8514582837358030367}
+  costTxt: {fileID: 8508161665413538394}
+  itemImage: {fileID: 8308521480520677663}
+  buyButton: {fileID: 7902065467597225372}
+  seeItemButton: {fileID: 4678522656770283689}
+  playerInventory: {fileID: 0}
+--- !u!114 &4678522656770283689
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3680672599048984846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 8308521480520677663}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &3697454583857917499
 GameObject:
   m_ObjectHideFlags: 0
@@ -11242,6 +12398,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 4386897146897189402}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -11660,6 +12826,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 4160860006358168677}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -11928,6 +13104,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 4064097074422954768}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -12196,6 +13382,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 3985543340297019320}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -12539,6 +13735,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 3948039534821972331}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -12657,6 +13863,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 3927496296569489269}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -12850,6 +14066,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 3865681933642734942}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -13043,6 +14269,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 3750575831238735579}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -13236,6 +14472,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 3669290083002211438}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -13354,6 +14600,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 3668114753145998263}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -14069,6 +15325,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 5651427034532225591}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -14187,6 +15453,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 5643959436210636082}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -14305,6 +15581,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 5615821690607954926}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -14798,6 +16084,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 5456154967113540733}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -14916,6 +16212,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 5355397051560696879}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -15259,6 +16565,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 5369190320108379187}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -15452,6 +16768,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 5297765380268587484}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -15720,6 +17046,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 5199272949895092851}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -16063,6 +17399,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 5120701437674984760}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -16181,6 +17527,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 5099508293644005494}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -16374,6 +17730,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 5092147673460421290}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -16642,6 +18008,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 4998636220385021967}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -16910,6 +18286,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 5024255573338063962}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -17048,7 +18434,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1128660395031711325}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.21302745
+  m_Size: 0.21302746
   m_NumberOfSteps: 1
   m_OnValueChanged:
     m_PersistentCalls:
@@ -17304,6 +18690,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 4946169284256739150}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -17812,6 +19208,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 4818541727782319392}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -17930,6 +19336,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 4814973619262001226}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -18183,6 +19599,8 @@ GameObject:
   - component: {fileID: 1259984800489502065}
   - component: {fileID: 6368690619307101658}
   - component: {fileID: 6001684230146136551}
+  - component: {fileID: 1547034592488910755}
+  - component: {fileID: 5138739496451132811}
   m_Layer: 5
   m_Name: Panel (1)
   m_TagString: Untagged
@@ -18247,6 +19665,69 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1547034592488910755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5688109596599553969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71922e3c5227d3e4896c5afeccba1a15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  titleTxt: {fileID: 6305104740129061081}
+  descriptionTxt: {fileID: 8514582837358030367}
+  costTxt: {fileID: 8508161665413538394}
+  itemImage: {fileID: 6001684230146136551}
+  buyButton: {fileID: 7902065467597225372}
+  seeItemButton: {fileID: 5138739496451132811}
+  playerInventory: {fileID: 0}
+--- !u!114 &5138739496451132811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5688109596599553969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 6001684230146136551}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &5715986821104300475
 GameObject:
   m_ObjectHideFlags: 0
@@ -18606,6 +20087,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 6789230704517967700}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -18724,6 +20215,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 6841872235330837188}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -18917,6 +20418,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 6765182407883204319}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -19185,6 +20696,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 6647950216265101179}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -19489,6 +21010,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 6594310707714838947}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -19682,6 +21213,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 6536838356684902155}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -19800,6 +21341,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 6430900938239252874}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -20458,6 +22009,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 6325996719518608639}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -20801,6 +22362,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 6254815508520499258}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -21420,6 +22991,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 6047714706381183580}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -21672,6 +23253,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 5913886983672436449}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -22015,6 +23606,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 5813976745722410787}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -22226,6 +23827,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 8027598377907048950}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -22344,6 +23955,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 8052907180971000076}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -22537,6 +24158,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 8039328194166427298}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -22566,7 +24197,7 @@ GameObject:
   - component: {fileID: 4872744289526402753}
   - component: {fileID: 4243383462995261900}
   m_Layer: 5
-  m_Name: CharacterInfo
+  m_Name: ItemInfo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -22583,7 +24214,11 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 3240965658757360472}
+  - {fileID: 2011192240431105019}
+  - {fileID: 2855246769852510517}
+  - {fileID: 6981730113708010488}
   m_Father: {fileID: 1207355951869749378}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
@@ -22640,6 +24275,8 @@ GameObject:
   - component: {fileID: 3217957100387328195}
   - component: {fileID: 5780736470509463669}
   - component: {fileID: 6290643067849324248}
+  - component: {fileID: 7421315524229462954}
+  - component: {fileID: 2500490766382215877}
   m_Layer: 5
   m_Name: Panel (7)
   m_TagString: Untagged
@@ -22704,6 +24341,69 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &7421315524229462954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7006429686169102881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71922e3c5227d3e4896c5afeccba1a15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  titleTxt: {fileID: 6305104740129061081}
+  descriptionTxt: {fileID: 8514582837358030367}
+  costTxt: {fileID: 8508161665413538394}
+  itemImage: {fileID: 6290643067849324248}
+  buyButton: {fileID: 7902065467597225372}
+  seeItemButton: {fileID: 2500490766382215877}
+  playerInventory: {fileID: 0}
+--- !u!114 &2500490766382215877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7006429686169102881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 6290643067849324248}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &7012837214422599905
 GameObject:
   m_ObjectHideFlags: 0
@@ -23108,6 +24808,8 @@ GameObject:
   - component: {fileID: 5013153886461321796}
   - component: {fileID: 5793374677942508248}
   - component: {fileID: 7359749796831276208}
+  - component: {fileID: 8709616951851566459}
+  - component: {fileID: 653467807430565934}
   m_Layer: 5
   m_Name: Panel (5)
   m_TagString: Untagged
@@ -23172,6 +24874,69 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &8709616951851566459
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7184858875981014514}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71922e3c5227d3e4896c5afeccba1a15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  titleTxt: {fileID: 6305104740129061081}
+  descriptionTxt: {fileID: 8514582837358030367}
+  costTxt: {fileID: 8508161665413538394}
+  itemImage: {fileID: 7359749796831276208}
+  buyButton: {fileID: 7902065467597225372}
+  seeItemButton: {fileID: 653467807430565934}
+  playerInventory: {fileID: 0}
+--- !u!114 &653467807430565934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7184858875981014514}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 7359749796831276208}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &7185351891796575828
 GameObject:
   m_ObjectHideFlags: 0
@@ -23273,6 +25038,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 7845059286373518458}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -23541,6 +25316,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 7750828054359290564}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -23659,6 +25444,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 7667462642275566198}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -24152,6 +25947,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 7607788935773787824}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -24420,6 +26225,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 7538220300536871670}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -24538,6 +26353,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 7443844699690033101}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -24881,6 +26706,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 7364458029736389882}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -25209,6 +27044,8 @@ GameObject:
   - component: {fileID: 7226545026972043870}
   - component: {fileID: 1670654665312399213}
   - component: {fileID: 2804453967720941759}
+  - component: {fileID: 7551304349422411438}
+  - component: {fileID: 2150433464104786868}
   m_Layer: 5
   m_Name: Panel (3)
   m_TagString: Untagged
@@ -25273,6 +27110,69 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &7551304349422411438
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7696492510439397824}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71922e3c5227d3e4896c5afeccba1a15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  titleTxt: {fileID: 6305104740129061081}
+  descriptionTxt: {fileID: 8514582837358030367}
+  costTxt: {fileID: 8508161665413538394}
+  itemImage: {fileID: 2804453967720941759}
+  buyButton: {fileID: 7902065467597225372}
+  seeItemButton: {fileID: 2150433464104786868}
+  playerInventory: {fileID: 0}
+--- !u!114 &2150433464104786868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7696492510439397824}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 2804453967720941759}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &7738409606984144570
 GameObject:
   m_ObjectHideFlags: 0
@@ -25374,6 +27274,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 7209165876981505172}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -25853,6 +27763,7 @@ GameObject:
   - component: {fileID: 3438055085179834198}
   - component: {fileID: 8195751216508704569}
   - component: {fileID: 7761853113971090007}
+  - component: {fileID: 1332286364429120905}
   m_Layer: 5
   m_Name: ShopUI
   m_TagString: Untagged
@@ -25943,6 +27854,19 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &1332286364429120905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7988264297809411989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59bee0e1244e58542bb6527cb1792e59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 6391244095896093109}
 --- !u!1 &8019823754605817325
 GameObject:
   m_ObjectHideFlags: 0
@@ -26269,6 +28193,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 6955216841853266233}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -26912,6 +28846,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 8880000726799100440}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -27030,6 +28974,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 8928871115072227478}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -27223,6 +29177,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 8900927708432202125}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -27416,6 +29380,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 8839213005743034875}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -27609,6 +29583,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 8762664767542650987}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -27877,6 +29861,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 8618241994409867598}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -28288,6 +30282,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 8554499436809968479}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -28781,6 +30785,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 8410440881075019758}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -29049,6 +31063,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 8178156759065322639}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0
@@ -29325,6 +31349,127 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &9214109325950637067
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6981730113708010488}
+  - component: {fileID: 3914245709899824625}
+  - component: {fileID: 5637621415261884826}
+  - component: {fileID: 7902065467597225372}
+  m_Layer: 5
+  m_Name: buyButton
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &6981730113708010488
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9214109325950637067}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 5469440756782936094}
+  m_Father: {fileID: 959190358310880651}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -0.000030517578, y: -236}
+  m_SizeDelta: {x: 231.927, y: 58.946}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &3914245709899824625
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9214109325950637067}
+  m_CullTransparentMesh: 1
+--- !u!114 &5637621415261884826
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9214109325950637067}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!114 &7902065467597225372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9214109325950637067}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 5637621415261884826}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &9217459273496686663
 GameObject:
   m_ObjectHideFlags: 0
@@ -29426,6 +31571,16 @@ MonoBehaviour:
     highlighted: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     unhighlighted: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   spriteBox: {fileID: 8107252275186858601}
+  itemData:
+    ID: 0
+    Icon: {fileID: 0}
+    Name: 
+    Description: 
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
   IsEnabled: 0
   currentItemStr: 
   doubleClick: 0

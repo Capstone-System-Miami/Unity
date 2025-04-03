@@ -36,10 +36,10 @@ namespace SystemMiami.CombatSystem
         /// interface from the targeted object.
         /// </summary>
         /// <returns>
-        /// The <see cref="IHealReceiver"/> (IF ANY)
+        /// The <see cref="IResourceReceiver"/> (IF ANY)
         /// provided by the targeted object.
         /// </returns>
-        IHealReceiver GetHealInterface();
+        IResourceReceiver GetHealInterface();
 
         /// <summary>
         /// The method by which a targeting

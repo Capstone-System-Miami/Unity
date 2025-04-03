@@ -357,7 +357,7 @@ namespace SystemMiami
             return null;
         }
 
-        public virtual IHealReceiver GetHealInterface()
+        public virtual IResourceReceiver GetHealInterface()
         {
             return null;
         }

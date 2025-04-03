@@ -11,6 +11,8 @@ namespace SystemMiami.CombatSystem
         menuName = "Combat Subaction/Damage")]
     public class Damage : CombatSubactionSO
     {
+        [SerializeField] private bool perTurn;
+        [SerializeField] private int durationTurns;
         [SerializeField] private float damageToDeal;
 
         public override ISubactionCommand GenerateCommand(ITargetable target,CombatAction action)
@@ -26,7 +28,7 @@ namespace SystemMiami.CombatSystem
             }
 
             float finalDamage = damageToDeal + power;
-            return new DamageCommand(target, finalDamage);
+            return new DamageCommand(target, finalDamage,perTurn,durationTurns);
         }
     }
 
@@ -38,29 +40,31 @@ namespace SystemMiami.CombatSystem
     public interface IDamageReceiver
     {
         bool IsCurrentlyDamageable();
-        void PreviewDamage(float amount);
-        void ReceiveDamage(float amount);
+        void PreviewDamage(float amount,bool perTurn,int durationTurns);
+        void ReceiveDamage(float amount,bool perTurn,int durationTurns);
     }
 
     public class DamageCommand : ISubactionCommand
     {
         public readonly ITargetable target;
         public readonly float amount;
-
-        public DamageCommand(ITargetable target, float amount)
+        public readonly bool perTurn;
+        public readonly int durationTurns;
+        public DamageCommand(ITargetable target, float amount, bool perTurn,int durationTurns)
         {
             this.target = target;
-            this.amount = amount ;
+            this.amount = amount;
+            this.perTurn = perTurn;
         }
 
         public void Preview()
         {           
-            target.GetDamageInterface()?.PreviewDamage(amount);
+            target.GetDamageInterface()?.PreviewDamage(amount, perTurn, durationTurns);
         }
 
         public void Execute()
         {
-            target.GetDamageInterface()?.ReceiveDamage(amount);
+            target.GetDamageInterface()?.ReceiveDamage(amount,perTurn, durationTurns);
         }
     }
 }

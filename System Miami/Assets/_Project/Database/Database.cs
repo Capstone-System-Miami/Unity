@@ -6,6 +6,8 @@ using SystemMiami.CombatSystem;
 using SystemMiami.Management;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.Assertions;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -25,12 +27,12 @@ namespace SystemMiami
         [SerializeField] private List<ItemData> AllItemDatas = new List<ItemData>();
 
 
-        [SerializeField]private List<NewAbilitySO> physicalAbilityEntries = new();
-        [SerializeField]private List<NewAbilitySO> magicalAbilityEntries = new();
-        [SerializeField]private List<ConsumableSO> consumableEntries = new();
-        [SerializeField]private List<NewAbilitySO> enemyPhysicalAbilityEntries = new();
-        [SerializeField]private List<NewAbilitySO> enemyMagicalAbilityEntries = new();
-        [SerializeField]private List<EquipmentModSO> equipmentModEntries = new();
+        [SerializeField] private List<NewAbilitySO> physicalAbilityEntries = new();
+        [SerializeField] private List<NewAbilitySO> magicalAbilityEntries = new();
+        [SerializeField] private List<ConsumableSO> consumableEntries = new();
+        [SerializeField] private List<NewAbilitySO> enemyPhysicalAbilityEntries = new();
+        [SerializeField] private List<NewAbilitySO> enemyMagicalAbilityEntries = new();
+        [SerializeField] private List<EquipmentModSO> equipmentModEntries = new();
        
 
        private Dictionary<int, NewAbilitySO> physicalAbilityDatabase;
@@ -64,10 +66,13 @@ namespace SystemMiami
             {
                 physicalAbilityEntries = physicalAbilityEntries
                     .Where(entry => entry.classType == playerClassType && !entry.isGeneralAbility).ToList();
+                PhysicalAbilityItemDatas = physicalAbilityEntries.Select(so => so.itemData).ToList();
+
 
                 // Filter magical abilities
                 magicalAbilityEntries = magicalAbilityEntries
                     .Where(entry => entry.classType == playerClassType && !entry.isGeneralAbility).ToList();
+                PhysicalAbilityItemDatas = physicalAbilityEntries.Select(so => so.itemData).ToList();
             }
 
             // Convert lists to dictionaries 
@@ -104,20 +109,26 @@ namespace SystemMiami
        {
            List<ItemData> result = new();
            
-           switch (type)
-           {
-               default:
-               case ItemType.PhysicalAbility:
-                   result = physicalAbilityEntries.Select(so => so.itemData).ToList();
-                   break;
-               case ItemType.MagicalAbility:
-                   result = magicalAbilityEntries.Select(so => so.itemData).ToList();
-                   break;
-               case ItemType.Consumable:
-                   result = consumableEntries.Select(so => so.itemData).ToList();
-                   break;
+            switch (type)
+            {
+                default:
+                 case ItemType.PhysicalAbility:
+                    Assert.IsNotNull(physicalAbilityEntries);
+                    Assert.IsTrue(physicalAbilityEntries.Count > 0);
+                    result = physicalAbilityEntries.Select(so => so.itemData).ToList();
+                    Assert.IsNotNull(result);
+                    Assert.IsTrue(result.Count > 0,
+                        $"{PlayerManager.MGR.GetComponent<Attributes>()._characterClass} " +
+                        $"has no functioning Physical abilities.");
+                    break;
+                case ItemType.MagicalAbility:
+                    result = magicalAbilityEntries.Select(so => so.itemData).ToList();
+                    break;
+                case ItemType.Consumable:
+                    result = consumableEntries.Select(so => so.itemData).ToList();
+                    break;
                
-           }
+            }
            return result;
        }
 

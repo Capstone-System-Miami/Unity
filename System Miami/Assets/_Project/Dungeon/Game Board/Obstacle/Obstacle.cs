@@ -232,7 +232,7 @@ namespace SystemMiami.CombatSystem
         /// <remarks>
         /// Game board obstacles will never be healable
         /// </remarks>
-        public IHealReceiver GetHealInterface()
+        public IResourceReceiver GetHealInterface()
         {
             return null;
         }

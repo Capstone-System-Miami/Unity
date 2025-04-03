@@ -67,14 +67,14 @@ namespace SystemMiami.CombatSystem
         {
             return isDamageable;
         }
-        public void PreviewDamage(float amount)
+        public void PreviewDamage(float amount,bool perTurn,int durationTurns)
         {
             // TODO: Implement
             log.print(
                 $"{gameObject} will take {amount} damage from this action.\n" +
                 $"<UI NOT IMPLEMENTED>");
         }
-        public void ReceiveDamage(float amount)
+        public void ReceiveDamage(float amount, bool perTurn, int durationTurns)
         {
             float prev = health.Get();
             health.Lose(amount);

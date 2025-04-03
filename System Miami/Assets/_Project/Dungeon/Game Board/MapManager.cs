@@ -160,10 +160,6 @@ namespace SystemMiami
 
                             if (obstaclesTilemap.HasTile(obstacleCoords))
                             {
-                                log.error(
-                                    $"Tile found at {obstacleCoords}" +
-                                    $"in obstacles tilemap",
-                                    obstaclesTilemap);
                                 obstacleRunningTotal++;
 
                                 TileData tileData = new();
@@ -183,7 +179,7 @@ namespace SystemMiami
                                 }
                                 else
                                 {
-                                    log.error($"Obstacle placement successful", overlayTile);
+                                    log.print($"Obstacle placement successful", overlayTile);
                                 }
                             }
                         }
