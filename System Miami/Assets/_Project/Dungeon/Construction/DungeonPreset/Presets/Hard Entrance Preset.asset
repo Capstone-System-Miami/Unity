@@ -21,27 +21,6 @@ MonoBehaviour:
     _maxCount: 1
     _elements:
     - _isDefault: 1
-      _elementPrefab: {fileID: 1334785682855372644, guid: 4a1c621d5a6d50d4180980db21227599, type: 3}
-      _maxCount: 1
-    - _isDefault: 0
-      _elementPrefab: {fileID: 6131545446203729284, guid: c16e2fd2c88ec1b409dab54b5675a620, type: 3}
-      _maxCount: 1
-    - _isDefault: 0
-      _elementPrefab: {fileID: 6131545446203729284, guid: f8565666e67757f44886e2413f7884c6, type: 3}
-      _maxCount: 1
-    - _isDefault: 0
-      _elementPrefab: {fileID: 6131545446203729284, guid: f1ff4270e3bc011489734d3284f99ab1, type: 3}
-      _maxCount: 1
-    - _isDefault: 0
-      _elementPrefab: {fileID: 6131545446203729284, guid: 588bd66c1c9c82c43a596887cae5f3bd, type: 3}
-      _maxCount: 1
-    - _isDefault: 0
-      _elementPrefab: {fileID: 6131545446203729284, guid: 7da1c10f00cfde14fa69d6bd028b9e81, type: 3}
-      _maxCount: 1
-    - _isDefault: 0
-      _elementPrefab: {fileID: 6131545446203729284, guid: f6e99e85e3e3f4a4f9c07fe9ac422efb, type: 3}
-      _maxCount: 1
-    - _isDefault: 0
       _elementPrefab: {fileID: 5478403791188214871, guid: e06f0d678d794ff4aa0827b5bab3bac3, type: 3}
       _maxCount: 1
     - _isDefault: 0
@@ -82,95 +61,479 @@ MonoBehaviour:
     _includeConsumables: 1
     _includeEquipmentMods: 1
     _abilityItemDatas:
-    - ID: 1002
-      Icon: {fileID: 1560907362, guid: f3c637fbed5451e4c85c7195e80a0954, type: 3}
-      Name: Fire Up
-      Description: Rally yourself, increasing Strength by 25% for 2 turns
-      itemType: 0
+    - ID: 2005
+      Icon: {fileID: 21300000, guid: b36e120b6ecdefc4ead8830aa9f3dddf, type: 3}
+      Name: Arcane Echo
+      Description: Deal AOE damage that repeats next turn at 50% damage.
+      itemType: 2
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 3
+      rarity: 0
+    - ID: 2009
+      Icon: {fileID: 0}
+      Name: Astral Explosion
+      Description: 'Deal very high AOE damage. Consume all remaining Mana. '
+      itemType: 2
+      Price: 0
+      MinLevel: 4
+      MaxLevel: 5
+      rarity: 0
+    - ID: 2010
+      Icon: {fileID: 21300000, guid: 1ebabc930545f014f949c6b653aa10cc, type: 3}
+      Name: 'Chilling Pulse '
+      Description: 'Deal AOE damage. Reduce Speed of all enemies hit for 2 turns. '
+      itemType: 2
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 3
+      rarity: 0
+    - ID: 2004
+      Icon: {fileID: 21300000, guid: 33676012c89f77746900e4935f48a669, type: 3}
+      Name: Exposure
+      Description: "Reduces an enemy\u2019s defence by 5"
+      itemType: 2
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 3
+      rarity: 0
+    - ID: 2000
+      Icon: {fileID: 21300000, guid: 64628b0f68f6dae48ae440ad22b34f27, type: 3}
+      Name: Fireball
+      Description: Cast a fireball that explodes on impact, dealing high damage to
+        the target and nearby enemies
+      itemType: 2
+      Price: 0
+      MinLevel: 2
+      MaxLevel: 4
+      rarity: 0
+    - ID: 2006
+      Icon: {fileID: 21300000, guid: e6af8422c90162d428b2f2f6cb4ac914, type: 3}
+      Name: Firestorm
+      Description: Deal AOE damage and apply Burn (DOT) for 3 turns.
+      itemType: 2
+      Price: 0
+      MinLevel: 3
+      MaxLevel: 5
+      rarity: 0
+    - ID: 2002
+      Icon: {fileID: 3094277118089727538, guid: b08c18d711b01dd47a6a2a6771fbaf51, type: 3}
+      Name: Life Drainer
+      Description: The player absorbs HP equal to 50% of the damage they deal to
+        enemy
+      itemType: 2
+      Price: 0
+      MinLevel: 2
+      MaxLevel: 4
+      rarity: 0
+    - ID: 2008
+      Icon: {fileID: 21300000, guid: 7e5d8eb7d12d96943a8a8deb34e07496, type: 3}
+      Name: Lightning Chain
+      Description: Deal lightning damage in a line.
+      itemType: 2
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 3
+      rarity: 0
+    - ID: 2001
+      Icon: {fileID: 21300414, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
+      Name: Magic Shield
+      Description: The player summons a magical shield around themselves, absorbing
+        a certain amount of damage for 2 turns
+      itemType: 2
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 27
+      rarity: 0
+    - ID: 2007
+      Icon: {fileID: 21300000, guid: 8fcdf9aa89d2f47439d10d9c3a6cd8ff, type: 3}
+      Name: Mana burst
+      Description: Deal AOE damage and restore an equal amount of Mana.
+      itemType: 2
       Price: 0
       MinLevel: 0
       MaxLevel: 0
+      rarity: 0
+    - ID: 2011
+      Icon: {fileID: 0}
+      Name: Mystic Shield
+      Description: 'Gain Damage Reduction and restore Mana each turn for 3 turns. '
+      itemType: 1
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 0
+      rarity: 0
+    - ID: 2003
+      Icon: {fileID: 21300000, guid: c860170f35113cf40acad5a10c88b4bc, type: 3}
+      Name: Self Heal
+      Description: Heals you for a moderate amount of health
+      itemType: 2
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 3
+      rarity: 0
+    - ID: 2012
+      Icon: {fileID: 0}
+      Name: 'Void Step '
+      Description: Teleport to target location and gain Magical Power for 1 turn.
+      itemType: 1
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 0
+      rarity: 0
+    - ID: 1002
+      Icon: {fileID: 21300000, guid: 13243c2e89bbd3049b129ff4334efcb2, type: 3}
+      Name: Fire Up
+      Description: Increase Strength by 25% for 2 turns
+      itemType: 1
+      Price: 0
+      MinLevel: 3
+      MaxLevel: 5
       rarity: 0
     - ID: 1006
-      Icon: {fileID: 21300306, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
+      Icon: {fileID: 21300000, guid: e2f58794d06dd2746bf200d054a9e4dc, type: 3}
       Name: Flaming Blade
-      Description: A high-damage fireball that burns the enemy for 2 turns
-      itemType: 0
+      Description: Launch a flaming sword that deals damage and burns the target
+        for 3 turns
+      itemType: 1
+      Price: 0
+      MinLevel: 3
+      MaxLevel: 5
+      rarity: 0
+    - ID: 1021
+      Icon: {fileID: 21300000, guid: 24e568b35474c264e9264d0cb3da00a1, type: 3}
+      Name: Knockdown Smash
+      Description: Deal damage and knock the enemy back 1 tile
+      itemType: 1
       Price: 0
       MinLevel: 0
-      MaxLevel: 0
+      MaxLevel: 3
+      rarity: 0
+    - ID: 1022
+      Icon: {fileID: 21300000, guid: 947fb7ab9ef70774483633aed0c6c8f6, type: 3}
+      Name: Last Stand
+      Description: 'Gain Physical Power and Damage Reduction for 2 turns. '
+      itemType: 1
+      Price: 0
+      MinLevel: 3
+      MaxLevel: 5
       rarity: 0
     - ID: 1003
-      Icon: {fileID: -811106580, guid: e395485de996e754d9b1dd212fd50f3d, type: 3}
+      Icon: {fileID: 21300000, guid: 286eb932114897248b3ee7a9e87dd857, type: 3}
       Name: Merciless Blows
-      Description: Deals moderate damage to target & nearby tiles
-      itemType: 0
+      Description: Deals damage to target & nearby tiles
+      itemType: 1
       Price: 0
       MinLevel: 0
-      MaxLevel: 0
+      MaxLevel: 3
+      rarity: 0
+    - ID: 1023
+      Icon: {fileID: 21300000, guid: c0f260ae4ca443244a0e8af450d25854, type: 3}
+      Name: Overpower
+      Description: Deal damage and stun the target for 1 turn.
+      itemType: 1
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 3
       rarity: 0
     - ID: 1000
-      Icon: {fileID: 1560907362, guid: f3c637fbed5451e4c85c7195e80a0954, type: 3}
+      Icon: {fileID: 21300000, guid: f994dfc38ae48f64ea928604caa05189, type: 3}
       Name: Power Strike
-      Description: 'Deliver a powerful strike, (TODO: dealing double damage to a
-        single enemy)'
-      itemType: 0
+      Description: Deal damage to 1 target
+      itemType: 1
       Price: 0
       MinLevel: 0
-      MaxLevel: 0
-      rarity: 0
-    - ID: 1008
-      Icon: {fileID: 21300356, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
-      Name: Retaliation
-      Description: 'Deals damage (TODO: based on most recent HP loss)'
-      itemType: 0
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 0
+      MaxLevel: 3
       rarity: 0
     - ID: 1007
-      Icon: {fileID: 21300352, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
+      Icon: {fileID: 21300000, guid: 395b7b34b242d334cbd163896683a736, type: 3}
       Name: Rush Attack
-      Description: 'TODO: Advance 1 space to get closer to an enemy, dealing moderate
-        damage '
-      itemType: 0
+      Description: Advance 1 space closer to target and deal damage
+      itemType: 1
       Price: 0
       MinLevel: 0
-      MaxLevel: 0
+      MaxLevel: 3
+      rarity: 0
+    - ID: 1024
+      Icon: {fileID: 21300000, guid: 9cee837af4aa7c046b961601e55dc5c9, type: 3}
+      Name: 'Second Wind '
+      Description: Heal self and gain Physical Power for 2 turns.
+      itemType: 1
+      Price: 0
+      MinLevel: 2
+      MaxLevel: 4
+      rarity: 0
+    - ID: 1044
+      Icon: {fileID: 21300000, guid: 33676012c89f77746900e4935f48a669, type: 3}
+      Name: Shield Breaker
+      Description: Deal damage and reduce targets damage reduction for 2 turns
+      itemType: 1
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 3
       rarity: 0
     - ID: 1004
-      Icon: {fileID: 21300000, guid: 73d3cc63327012249b4f98eb9289311d, type: 3}
+      Icon: {fileID: 21300000, guid: 0fe7452028ddb6b48a54bced86efb56f, type: 3}
       Name: Smash
-      Description: 'Deals moderate damage (TODO: and pushes back the enemy by 3 spaces)'
-      itemType: 0
+      Description: Deal Damage to all target within 3 tiles
+      itemType: 1
       Price: 0
-      MinLevel: 0
-      MaxLevel: 0
+      MinLevel: 3
+      MaxLevel: 5
       rarity: 0
     - ID: 1005
-      Icon: {fileID: 21300060, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
+      Icon: {fileID: 21300000, guid: bc7e559f696a64a4bb763ffcecfa9d0a, type: 3}
       Name: Strike Through
-      Description: 'Deals moderate damage (TODO: and moves through a line of adjacent
-        enemies)'
-      itemType: 0
+      Description: Deal damage to all targets in a line
+      itemType: 1
+      Price: 0
+      MinLevel: 2
+      MaxLevel: 4
+      rarity: 0
+    - ID: 1025
+      Icon: {fileID: 21300000, guid: 324f41c88fff6bc44a491098408b60e2, type: 3}
+      Name: 'Wounding Blow '
+      Description: Deal damage and apply bleed to targets for 2 turns
+      itemType: 1
+      Price: 0
+      MinLevel: 2
+      MaxLevel: 4
+      rarity: 0
+    - ID: 1026
+      Icon: {fileID: 21300000, guid: 36127f150f70db44abe87a729423061a, type: 3}
+      Name: 'Adrenaline Surge '
+      Description: Restore Stamina and gain Speed for 2 turns.
+      itemType: 1
+      Price: 0
+      MinLevel: 3
+      MaxLevel: 5
+      rarity: 0
+    - ID: 1019
+      Icon: {fileID: 21300000, guid: 079d8e6297a382c439b33970abdaef0e, type: 3}
+      Name: Arrow Rain
+      Description: Launch a volley of arrows dealing AOE damage to 5 tiles
+      itemType: 1
+      Price: 0
+      MinLevel: 2
+      MaxLevel: 4
+      rarity: 0
+    - ID: 1027
+      Icon: {fileID: 21300000, guid: 382c32cf584cd694682a13a893bc9b4b, type: 3}
+      Name: Bleeding Dance
+      Description: Deal AOE damage and apply Bleed to all targets
+      itemType: 1
+      Price: 0
+      MinLevel: 3
+      MaxLevel: 5
+      rarity: 0
+    - ID: 1029
+      Icon: {fileID: 21300000, guid: c0f260ae4ca443244a0e8af450d25854, type: 3}
+      Name: Disorienting Strike
+      Description: Deal damage and reduce target's physical and magical power for
+        2 turns
+      itemType: 1
       Price: 0
       MinLevel: 0
-      MaxLevel: 0
+      MaxLevel: 3
+      rarity: 0
+    - ID: 1030
+      Icon: {fileID: 1874020819344461010, guid: b08c18d711b01dd47a6a2a6771fbaf51, type: 3}
+      Name: Evasive maneuver
+      Description: Move 1 tile and gain speed for 2 turns
+      itemType: 1
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 3
+      rarity: 0
+    - ID: 1031
+      Icon: {fileID: 21300000, guid: 7794ab705f2fb8e46b98c36f566be895, type: 3}
+      Name: Fan of Blades
+      Description: Deal cone AOE damage, applying bleed for 2 turns
+      itemType: 1
+      Price: 0
+      MinLevel: 2
+      MaxLevel: 4
+      rarity: 0
+    - ID: 1018
+      Icon: {fileID: 21300000, guid: 825eb92b2e0c4a64f8f27b2fd7e1d275, type: 3}
+      Name: Knife throw
+      Description: Throws a knife at an enemy within a short range, dealing light
+        damage
+      itemType: 1
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 3
+      rarity: 0
+    - ID: 1028
+      Icon: {fileID: 21300000, guid: 9c5d41edde93b554fa83569ac7608367, type: 3}
+      Name: Marked Prey
+      Description: 'Target takes bonus damage  for 3 turns. '
+      itemType: 1
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 3
+      rarity: 0
+    - ID: 1017
+      Icon: {fileID: 21300000, guid: ff2d80141664d044c8bf8324bb3a22b8, type: 3}
+      Name: Poisoned Blade
+      Description: Coat your weapon with poison dealing damage over time and lowering
+        the targets max health
+      itemType: 1
+      Price: 0
+      MinLevel: 4
+      MaxLevel: 5
+      rarity: 0
+    - ID: 1032
+      Icon: {fileID: 21300000, guid: bc7e559f696a64a4bb763ffcecfa9d0a, type: 3}
+      Name: Quick Slash
+      Description: damage slash that deals damage to enemies
+      itemType: 1
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 3
+      rarity: 0
+    - ID: 1034
+      Icon: {fileID: 21300000, guid: b36e120b6ecdefc4ead8830aa9f3dddf, type: 3}
+      Name: Shadow Step
+      Description: Teleport to a tile behind target and gain speed for 1 turns
+      itemType: 1
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 3
+      rarity: 0
+    - ID: 1020
+      Icon: {fileID: 21300000, guid: 6f246c4d5dcc00243bcf82730e2c9a08, type: 3}
+      Name: Vampiric Dagger
+      Description: Deal damage to an enemy and drain their health for yourself
+      itemType: 1
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 3
+      rarity: 0
+    - ID: 1043
+      Icon: {fileID: 21300000, guid: 8091e83f0f4651942bc5627b008703a8, type: 3}
+      Name: Anchor slam
+      Description: Deal damage and stun target for 2 turns
+      itemType: 1
+      Price: 0
+      MinLevel: 2
+      MaxLevel: 4
+      rarity: 0
+    - ID: 1015
+      Icon: {fileID: 21300000, guid: 1a417538a6a19c2409c9e7044b4b5e6e, type: 3}
+      Name: Axe Throw
+      Description: Throws the shield at medium range towards the enemy and chains
+        attacks r
+      itemType: 1
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 3
+      rarity: 0
+    - ID: 1035
+      Icon: {fileID: 21300000, guid: 1f7dbd9e5a9fcfb4aaeb9b2d5cc3ff84, type: 3}
+      Name: Burst of Vitality
+      Description: Exchange a large amount of stamina for health
+      itemType: 1
+      Price: 0
+      MinLevel: 2
+      MaxLevel: 4
+      rarity: 0
+    - ID: 1036
+      Icon: {fileID: 21300000, guid: 83b25b6d6a54cb9429200239b7b9f4d1, type: 3}
+      Name: Crushing Grasp
+      Description: Deal damage and apply immobilize and bleed for 2 turns
+      itemType: 1
+      Price: 0
+      MinLevel: 4
+      MaxLevel: 5
       rarity: 0
     - ID: 1016
-      Icon: {fileID: 21300264, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
+      Icon: {fileID: 21300000, guid: 5f6df661043c3c145b90a320ff866c94, type: 3}
       Name: Defensive Stance
       Description: The player adopts a defensive stance, reducing incoming damage
         by 5 for 2 turns
       itemType: 1
       Price: 0
       MinLevel: 0
+      MaxLevel: 3
+      rarity: 0
+    - ID: 1037
+      Icon: {fileID: 21300000, guid: 6169e8f0f91d66e4cb88e641d0575a39, type: 3}
+      Name: 'Earthquake Slam '
+      Description: Deal damage to all enemies within range and push them back
+      itemType: 1
+      Price: 0
+      MinLevel: 2
+      MaxLevel: 4
+      rarity: 0
+    - ID: 1038
+      Icon: {fileID: 21300000, guid: b6ad25495d50e4e499d963702f3b5b40, type: 3}
+      Name: Iron Wall
+      Description: Gain high damage reduction for 2 turns
+      itemType: 1
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 3
+      rarity: 0
+    - ID: 1039
+      Icon: {fileID: 0}
+      Name: Juggernaut rush
+      Description: Move forward 3 tiles and push enemies out of the way dealing damage
+      itemType: 1
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 3
+      rarity: 0
+    - ID: 1014
+      Icon: {fileID: 21300000, guid: 04a8d2aaa90e9b94eb8af76f3e29f6ed, type: 3}
+      Name: Rampage
+      Description: Deals moderate damage to an enemy and enemies nearby have their
+        HP dropped
+      itemType: 1
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 3
+      rarity: 0
+    - ID: 1040
+      Icon: {fileID: 21300000, guid: 80f03ff2000a53e4da57fbea91c49d45, type: 3}
+      Name: Self weld
+      Description: Heal over time but reduce Speed and damage for the duration
+      itemType: 1
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 3
+      rarity: 0
+    - ID: 1041
+      Icon: {fileID: 21300000, guid: 4f44a877e7db58843925ad6297492845, type: 3}
+      Name: Stoneblood
+      Description: Heal over time and gain damage reduction for 3 turns
+      itemType: 1
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 3
+      rarity: 0
+    - ID: 1042
+      Icon: {fileID: 21300000, guid: 308310d28990b9644b9092bd8672dd5d, type: 3}
+      Name: Unbreakable will
+      Description: 'Gain Health and stamina for 3 turns '
+      itemType: 1
+      Price: 0
+      MinLevel: 2
+      MaxLevel: 4
+      rarity: 0
+    - ID: 1001
+      Icon: {fileID: 1560907362, guid: f3c637fbed5451e4c85c7195e80a0954, type: 3}
+      Name: 
+      Description: Spin in place, dealing damage to all enemies within a small radius
+      itemType: 2
+      Price: 0
+      MinLevel: 0
       MaxLevel: 0
       rarity: 0
     - ID: 1012
-      Icon: {fileID: 1072186538, guid: 8bc6b693366d3ac41ae7f20723396814, type: 3}
+      Icon: {fileID: 21300000, guid: e7c202328efa2a4449364129f63a81c5, type: 3}
       Name: Stab
-      Description: Stab Description
+      Description: A simple jab with a common knife.
       itemType: 0
       Price: 0
       MinLevel: 0
@@ -178,113 +541,377 @@ MonoBehaviour:
       rarity: 0
     _consumableItemDatas:
     - ID: 3001
-      Icon: {fileID: 21300054, guid: 1033079a30e5c624e86332d39519f284, type: 3}
+      Icon: {fileID: 21300000, guid: c39df32eaa071cf42867a6201652fbd8, type: 3}
       Name: Fire Bomb
       Description: Launch a bomb that explodes and harms all enemies in its radius
       itemType: 3
       Price: 0
-      MinLevel: 0
+      MinLevel: 10
       MaxLevel: 0
       rarity: 0
     - ID: 3000
-      Icon: {fileID: 1348272354, guid: 796574b158e05b44c8f9deae75f9d1ec, type: 3}
+      Icon: {fileID: 840374211, guid: bf348cbba4063294c8498102360c892d, type: 3}
       Name: Minor Healing Potion
       Description: Heals player for 5 health
       itemType: 2
       Price: 0
       MinLevel: 0
-      MaxLevel: 0
+      MaxLevel: 10
       rarity: 0
     _equipmentItemDatas:
     - ID: 1002
-      Icon: {fileID: 1560907362, guid: f3c637fbed5451e4c85c7195e80a0954, type: 3}
+      Icon: {fileID: 21300000, guid: 13243c2e89bbd3049b129ff4334efcb2, type: 3}
       Name: Fire Up
-      Description: Rally yourself, increasing Strength by 25% for 2 turns
-      itemType: 0
+      Description: Increase Strength by 25% for 2 turns
+      itemType: 1
       Price: 0
-      MinLevel: 0
-      MaxLevel: 0
+      MinLevel: 3
+      MaxLevel: 5
       rarity: 0
     - ID: 1006
-      Icon: {fileID: 21300306, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
+      Icon: {fileID: 21300000, guid: e2f58794d06dd2746bf200d054a9e4dc, type: 3}
       Name: Flaming Blade
-      Description: A high-damage fireball that burns the enemy for 2 turns
-      itemType: 0
+      Description: Launch a flaming sword that deals damage and burns the target
+        for 3 turns
+      itemType: 1
+      Price: 0
+      MinLevel: 3
+      MaxLevel: 5
+      rarity: 0
+    - ID: 1021
+      Icon: {fileID: 21300000, guid: 24e568b35474c264e9264d0cb3da00a1, type: 3}
+      Name: Knockdown Smash
+      Description: Deal damage and knock the enemy back 1 tile
+      itemType: 1
       Price: 0
       MinLevel: 0
-      MaxLevel: 0
+      MaxLevel: 3
+      rarity: 0
+    - ID: 1022
+      Icon: {fileID: 21300000, guid: 947fb7ab9ef70774483633aed0c6c8f6, type: 3}
+      Name: Last Stand
+      Description: 'Gain Physical Power and Damage Reduction for 2 turns. '
+      itemType: 1
+      Price: 0
+      MinLevel: 3
+      MaxLevel: 5
       rarity: 0
     - ID: 1003
-      Icon: {fileID: -811106580, guid: e395485de996e754d9b1dd212fd50f3d, type: 3}
+      Icon: {fileID: 21300000, guid: 286eb932114897248b3ee7a9e87dd857, type: 3}
       Name: Merciless Blows
-      Description: Deals moderate damage to target & nearby tiles
-      itemType: 0
+      Description: Deals damage to target & nearby tiles
+      itemType: 1
       Price: 0
       MinLevel: 0
-      MaxLevel: 0
+      MaxLevel: 3
+      rarity: 0
+    - ID: 1023
+      Icon: {fileID: 21300000, guid: c0f260ae4ca443244a0e8af450d25854, type: 3}
+      Name: Overpower
+      Description: Deal damage and stun the target for 1 turn.
+      itemType: 1
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 3
       rarity: 0
     - ID: 1000
-      Icon: {fileID: 1560907362, guid: f3c637fbed5451e4c85c7195e80a0954, type: 3}
+      Icon: {fileID: 21300000, guid: f994dfc38ae48f64ea928604caa05189, type: 3}
       Name: Power Strike
-      Description: 'Deliver a powerful strike, (TODO: dealing double damage to a
-        single enemy)'
-      itemType: 0
+      Description: Deal damage to 1 target
+      itemType: 1
       Price: 0
       MinLevel: 0
-      MaxLevel: 0
-      rarity: 0
-    - ID: 1008
-      Icon: {fileID: 21300356, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
-      Name: Retaliation
-      Description: 'Deals damage (TODO: based on most recent HP loss)'
-      itemType: 0
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 0
+      MaxLevel: 3
       rarity: 0
     - ID: 1007
-      Icon: {fileID: 21300352, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
+      Icon: {fileID: 21300000, guid: 395b7b34b242d334cbd163896683a736, type: 3}
       Name: Rush Attack
-      Description: 'TODO: Advance 1 space to get closer to an enemy, dealing moderate
-        damage '
-      itemType: 0
+      Description: Advance 1 space closer to target and deal damage
+      itemType: 1
       Price: 0
       MinLevel: 0
-      MaxLevel: 0
+      MaxLevel: 3
+      rarity: 0
+    - ID: 1024
+      Icon: {fileID: 21300000, guid: 9cee837af4aa7c046b961601e55dc5c9, type: 3}
+      Name: 'Second Wind '
+      Description: Heal self and gain Physical Power for 2 turns.
+      itemType: 1
+      Price: 0
+      MinLevel: 2
+      MaxLevel: 4
+      rarity: 0
+    - ID: 1044
+      Icon: {fileID: 21300000, guid: 33676012c89f77746900e4935f48a669, type: 3}
+      Name: Shield Breaker
+      Description: Deal damage and reduce targets damage reduction for 2 turns
+      itemType: 1
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 3
       rarity: 0
     - ID: 1004
-      Icon: {fileID: 21300000, guid: 73d3cc63327012249b4f98eb9289311d, type: 3}
+      Icon: {fileID: 21300000, guid: 0fe7452028ddb6b48a54bced86efb56f, type: 3}
       Name: Smash
-      Description: 'Deals moderate damage (TODO: and pushes back the enemy by 3 spaces)'
-      itemType: 0
+      Description: Deal Damage to all target within 3 tiles
+      itemType: 1
       Price: 0
-      MinLevel: 0
-      MaxLevel: 0
+      MinLevel: 3
+      MaxLevel: 5
       rarity: 0
     - ID: 1005
-      Icon: {fileID: 21300060, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
+      Icon: {fileID: 21300000, guid: bc7e559f696a64a4bb763ffcecfa9d0a, type: 3}
       Name: Strike Through
-      Description: 'Deals moderate damage (TODO: and moves through a line of adjacent
-        enemies)'
-      itemType: 0
+      Description: Deal damage to all targets in a line
+      itemType: 1
+      Price: 0
+      MinLevel: 2
+      MaxLevel: 4
+      rarity: 0
+    - ID: 1025
+      Icon: {fileID: 21300000, guid: 324f41c88fff6bc44a491098408b60e2, type: 3}
+      Name: 'Wounding Blow '
+      Description: Deal damage and apply bleed to targets for 2 turns
+      itemType: 1
+      Price: 0
+      MinLevel: 2
+      MaxLevel: 4
+      rarity: 0
+    - ID: 1026
+      Icon: {fileID: 21300000, guid: 36127f150f70db44abe87a729423061a, type: 3}
+      Name: 'Adrenaline Surge '
+      Description: Restore Stamina and gain Speed for 2 turns.
+      itemType: 1
+      Price: 0
+      MinLevel: 3
+      MaxLevel: 5
+      rarity: 0
+    - ID: 1019
+      Icon: {fileID: 21300000, guid: 079d8e6297a382c439b33970abdaef0e, type: 3}
+      Name: Arrow Rain
+      Description: Launch a volley of arrows dealing AOE damage to 5 tiles
+      itemType: 1
+      Price: 0
+      MinLevel: 2
+      MaxLevel: 4
+      rarity: 0
+    - ID: 1027
+      Icon: {fileID: 21300000, guid: 382c32cf584cd694682a13a893bc9b4b, type: 3}
+      Name: Bleeding Dance
+      Description: Deal AOE damage and apply Bleed to all targets
+      itemType: 1
+      Price: 0
+      MinLevel: 3
+      MaxLevel: 5
+      rarity: 0
+    - ID: 1029
+      Icon: {fileID: 21300000, guid: c0f260ae4ca443244a0e8af450d25854, type: 3}
+      Name: Disorienting Strike
+      Description: Deal damage and reduce target's physical and magical power for
+        2 turns
+      itemType: 1
       Price: 0
       MinLevel: 0
-      MaxLevel: 0
+      MaxLevel: 3
+      rarity: 0
+    - ID: 1030
+      Icon: {fileID: 1874020819344461010, guid: b08c18d711b01dd47a6a2a6771fbaf51, type: 3}
+      Name: Evasive maneuver
+      Description: Move 1 tile and gain speed for 2 turns
+      itemType: 1
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 3
+      rarity: 0
+    - ID: 1031
+      Icon: {fileID: 21300000, guid: 7794ab705f2fb8e46b98c36f566be895, type: 3}
+      Name: Fan of Blades
+      Description: Deal cone AOE damage, applying bleed for 2 turns
+      itemType: 1
+      Price: 0
+      MinLevel: 2
+      MaxLevel: 4
+      rarity: 0
+    - ID: 1018
+      Icon: {fileID: 21300000, guid: 825eb92b2e0c4a64f8f27b2fd7e1d275, type: 3}
+      Name: Knife throw
+      Description: Throws a knife at an enemy within a short range, dealing light
+        damage
+      itemType: 1
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 3
+      rarity: 0
+    - ID: 1028
+      Icon: {fileID: 21300000, guid: 9c5d41edde93b554fa83569ac7608367, type: 3}
+      Name: Marked Prey
+      Description: 'Target takes bonus damage  for 3 turns. '
+      itemType: 1
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 3
+      rarity: 0
+    - ID: 1017
+      Icon: {fileID: 21300000, guid: ff2d80141664d044c8bf8324bb3a22b8, type: 3}
+      Name: Poisoned Blade
+      Description: Coat your weapon with poison dealing damage over time and lowering
+        the targets max health
+      itemType: 1
+      Price: 0
+      MinLevel: 4
+      MaxLevel: 5
+      rarity: 0
+    - ID: 1032
+      Icon: {fileID: 21300000, guid: bc7e559f696a64a4bb763ffcecfa9d0a, type: 3}
+      Name: Quick Slash
+      Description: damage slash that deals damage to enemies
+      itemType: 1
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 3
+      rarity: 0
+    - ID: 1034
+      Icon: {fileID: 21300000, guid: b36e120b6ecdefc4ead8830aa9f3dddf, type: 3}
+      Name: Shadow Step
+      Description: Teleport to a tile behind target and gain speed for 1 turns
+      itemType: 1
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 3
+      rarity: 0
+    - ID: 1020
+      Icon: {fileID: 21300000, guid: 6f246c4d5dcc00243bcf82730e2c9a08, type: 3}
+      Name: Vampiric Dagger
+      Description: Deal damage to an enemy and drain their health for yourself
+      itemType: 1
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 3
+      rarity: 0
+    - ID: 1043
+      Icon: {fileID: 21300000, guid: 8091e83f0f4651942bc5627b008703a8, type: 3}
+      Name: Anchor slam
+      Description: Deal damage and stun target for 2 turns
+      itemType: 1
+      Price: 0
+      MinLevel: 2
+      MaxLevel: 4
+      rarity: 0
+    - ID: 1015
+      Icon: {fileID: 21300000, guid: 1a417538a6a19c2409c9e7044b4b5e6e, type: 3}
+      Name: Axe Throw
+      Description: Throws the shield at medium range towards the enemy and chains
+        attacks r
+      itemType: 1
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 3
+      rarity: 0
+    - ID: 1035
+      Icon: {fileID: 21300000, guid: 1f7dbd9e5a9fcfb4aaeb9b2d5cc3ff84, type: 3}
+      Name: Burst of Vitality
+      Description: Exchange a large amount of stamina for health
+      itemType: 1
+      Price: 0
+      MinLevel: 2
+      MaxLevel: 4
+      rarity: 0
+    - ID: 1036
+      Icon: {fileID: 21300000, guid: 83b25b6d6a54cb9429200239b7b9f4d1, type: 3}
+      Name: Crushing Grasp
+      Description: Deal damage and apply immobilize and bleed for 2 turns
+      itemType: 1
+      Price: 0
+      MinLevel: 4
+      MaxLevel: 5
       rarity: 0
     - ID: 1016
-      Icon: {fileID: 21300264, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
+      Icon: {fileID: 21300000, guid: 5f6df661043c3c145b90a320ff866c94, type: 3}
       Name: Defensive Stance
       Description: The player adopts a defensive stance, reducing incoming damage
         by 5 for 2 turns
       itemType: 1
       Price: 0
       MinLevel: 0
+      MaxLevel: 3
+      rarity: 0
+    - ID: 1037
+      Icon: {fileID: 21300000, guid: 6169e8f0f91d66e4cb88e641d0575a39, type: 3}
+      Name: 'Earthquake Slam '
+      Description: Deal damage to all enemies within range and push them back
+      itemType: 1
+      Price: 0
+      MinLevel: 2
+      MaxLevel: 4
+      rarity: 0
+    - ID: 1038
+      Icon: {fileID: 21300000, guid: b6ad25495d50e4e499d963702f3b5b40, type: 3}
+      Name: Iron Wall
+      Description: Gain high damage reduction for 2 turns
+      itemType: 1
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 3
+      rarity: 0
+    - ID: 1039
+      Icon: {fileID: 0}
+      Name: Juggernaut rush
+      Description: Move forward 3 tiles and push enemies out of the way dealing damage
+      itemType: 1
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 3
+      rarity: 0
+    - ID: 1014
+      Icon: {fileID: 21300000, guid: 04a8d2aaa90e9b94eb8af76f3e29f6ed, type: 3}
+      Name: Rampage
+      Description: Deals moderate damage to an enemy and enemies nearby have their
+        HP dropped
+      itemType: 1
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 3
+      rarity: 0
+    - ID: 1040
+      Icon: {fileID: 21300000, guid: 80f03ff2000a53e4da57fbea91c49d45, type: 3}
+      Name: Self weld
+      Description: Heal over time but reduce Speed and damage for the duration
+      itemType: 1
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 3
+      rarity: 0
+    - ID: 1041
+      Icon: {fileID: 21300000, guid: 4f44a877e7db58843925ad6297492845, type: 3}
+      Name: Stoneblood
+      Description: Heal over time and gain damage reduction for 3 turns
+      itemType: 1
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 3
+      rarity: 0
+    - ID: 1042
+      Icon: {fileID: 21300000, guid: 308310d28990b9644b9092bd8672dd5d, type: 3}
+      Name: Unbreakable will
+      Description: 'Gain Health and stamina for 3 turns '
+      itemType: 1
+      Price: 0
+      MinLevel: 2
+      MaxLevel: 4
+      rarity: 0
+    - ID: 1001
+      Icon: {fileID: 1560907362, guid: f3c637fbed5451e4c85c7195e80a0954, type: 3}
+      Name: 
+      Description: Spin in place, dealing damage to all enemies within a small radius
+      itemType: 2
+      Price: 0
+      MinLevel: 0
       MaxLevel: 0
       rarity: 0
     - ID: 1012
-      Icon: {fileID: 1072186538, guid: 8bc6b693366d3ac41ae7f20723396814, type: 3}
+      Icon: {fileID: 21300000, guid: e7c202328efa2a4449364129f63a81c5, type: 3}
       Name: Stab
-      Description: Stab Description
+      Description: A simple jab with a common knife.
       itemType: 0
       Price: 0
       MinLevel: 0

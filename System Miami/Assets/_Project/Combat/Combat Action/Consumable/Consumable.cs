@@ -24,11 +24,13 @@ namespace SystemMiami.CombatRefactor
 
         public Consumable(ConsumableSO preset, Combatant user)
             : base(
-                  preset.Icon,
-                  preset.itemData.ID,
-                  preset.Actions.ToList(),
-                  preset.OverrideController,
-                  user)
+                preset.Icon,
+                preset.itemData.ID,
+                preset.Actions.ToList(),
+                preset.OverrideController,
+                preset.FighterOverrideController,preset.MageOverrideController,
+                preset.TankOverrideController, preset.RogueOverrideController,false,
+                user)
         {
             MaxUses = (int)Mathf.Clamp(preset.Uses, 1, Mathf.Infinity);
             UsesRemaining = MaxUses;

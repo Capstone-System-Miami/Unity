@@ -18,7 +18,7 @@ namespace SystemMiami.Shop
 
         private void Start()
         {
-            buyButton.onClick.AddListener(addItemToInventory);
+            
             seeItemButton.onClick.AddListener(ShowItemInfo);
             playerInventory = PlayerManager.MGR.GetComponent<Inventory>();
             
@@ -36,6 +36,8 @@ namespace SystemMiami.Shop
             titleTxt.text = item.Name;
             descriptionTxt.text = item.Description;
             costTxt.text = item.Price.ToString();
+            buyButton.onClick.RemoveAllListeners();
+            buyButton.onClick.AddListener(() => addItemToInventory());
         }
 
         public bool ItemIsPurchaseable(int playerCurrency)
@@ -53,6 +55,7 @@ namespace SystemMiami.Shop
             if (PlayerManager.MGR.CurrentCredits >= item.Price)
             {
                 playerInventory.AddToInventory(item.ID);
+                Debug.Log("Player has bought " + item.Name);
             }
         }
 

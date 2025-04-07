@@ -18,6 +18,7 @@ namespace SystemMiami.CombatRefactor
         public override void OnEnter()
         {
             base.OnEnter();
+          
             InputPrompts =
                 $"{combatant.name} Turn Start!";
 

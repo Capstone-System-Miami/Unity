@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using SystemMiami.Utilities;
 using UnityEngine;
+using System.Linq;
 using UnityEngine.Serialization;
 
 
@@ -153,6 +154,12 @@ namespace SystemMiami.Dungeons
                 }
             }
 
+            for (int i = 0; i < rewards.Count; i++)
+            {
+                List<int> playerItemIDs = PlayerManager.MGR.inventory.AllValidInventoryItems;
+                
+                return rewards.Where(reward => !playerItemIDs.Contains(reward.ID)).ToList();
+            }
             return rewards;
         }
 

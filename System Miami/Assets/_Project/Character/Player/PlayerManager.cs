@@ -53,7 +53,7 @@ namespace SystemMiami
 
         private PlayerLevel level;
         private Attributes attributes;
-        private Inventory inventory;
+        public Inventory inventory;
 
         private bool beenToCombat;
         private Vector3 neighborhoodReturnPos;
