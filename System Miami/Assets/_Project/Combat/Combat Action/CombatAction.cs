@@ -257,9 +257,11 @@ namespace SystemMiami.CombatRefactor
             RuntimeAnimatorController temp = User.Animator.runtimeAnimatorController;
 
             User.Animator.runtimeAnimatorController = ClassOverrideController();
-            yield return null;
             AnimatorStateInfo stateInfo = User.Animator.GetCurrentAnimatorStateInfo(0);
             AnimatorClipInfo clipInfo = User.Animator.GetCurrentAnimatorClipInfo(0)[0];
+            ForceReenterState();
+            yield return null;
+           
 
             Debug.Log("Current Clip time: " + clipInfo.clip.length.ToString());
             Debug.Log("Current Clip Info: " + clipInfo.clip.name);
@@ -291,6 +293,15 @@ namespace SystemMiami.CombatRefactor
             yield return null;
 
             ExecutionFinished = true;
+        }
+
+        private void ForceReenterState()
+        {
+            int tileDirHash = Animator.StringToHash("TileDir");
+            int tileDir = User.Animator.GetInteger(tileDirHash);
+            int tempTileDir = tileDir == 0 ? 7 : 0;
+            User.Animator.SetInteger(tileDirHash, tempTileDir);
+            User.Animator.SetInteger(tileDirHash, tileDir);
         }
 
         private AnimatorOverrideController ClassOverrideController()
