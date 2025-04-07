@@ -7,14 +7,15 @@ namespace SystemMiami
     public class EnemyHealthBar : MonoBehaviour
     {
 
-       // void OnEnable
-       // {
-         //   GAME.MGR.damageTaken += 
+       /* void OnEnable
+        {
+            GAME.MGR.damageTaken +=
 
-        // }
+        }
+        */
         // Start is called before the first frame update
         void Start()
-        {
+         {
         
         }
 
