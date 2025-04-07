@@ -201,11 +201,21 @@ namespace SystemMiami.CombatSystem
         private void Awake()
         {
             InitComponents();
+
+            
+        }
+        public void EnterDungeon()
+        {
+            stateFactory = new(this);
+            currentState = stateFactory.Idle();
+            currentState.OnEnter();
+            Debug.Log("Enter Dungeon Called");
         }
 
         private void OnEnable()
         {
             UI.MGR.CombatantLoadoutCreated += HandleLoadoutCreated;
+          
         }
 
 
@@ -217,7 +227,8 @@ namespace SystemMiami.CombatSystem
 
         protected virtual void Start()
         {
-            InitAll();
+            StartCoroutine(InitAll());
+            Debug.Log("Combatant started initializing all components");
         }
 
         private void Update()
@@ -225,11 +236,13 @@ namespace SystemMiami.CombatSystem
             if(this == null) return;
             UpdateResources();
 
-            CurrentState.Update();
-            CurrentState.MakeDecision();
+            CurrentState?.Update();
+            CurrentState?.MakeDecision();
+            
 
 
-            currentStateType = CurrentState.GetType().ToString();
+            currentStateType = CurrentState?.GetType().ToString();
+            Debug.Log($"{this.name} Current state is {currentStateType}");
             TEST_currentTile = PositionTile;
 
             if (TRIGGER_ForceMovePreviewTest)
@@ -251,12 +264,16 @@ namespace SystemMiami.CombatSystem
 
         #region Construction
         //============================================================
-        public void InitAll()
+        public IEnumerator InitAll()
         {
+            yield return new WaitUntil(() => MapManager.MGR != null && MapManager.MGR.map != null && MapManager.MGR.map.Count > 0);
             InitResources();
+            Debug.Log("Resources initialized.");
+            yield return new WaitUntil(() => _stats != null && Health != null && Stamina != null && Speed !=null && Mana != null);
             InitLoadout();
             InitDirection();
             InitStateMachine();
+            Debug.Log($"{name} is initializing all components");
         }
 
         private void InitComponents()
@@ -288,6 +305,7 @@ namespace SystemMiami.CombatSystem
 
         private void InitDirection()
         {
+            
             Vector2Int currentPos
                 = (Vector2Int)PositionTile.GridLocation;
 
@@ -398,6 +416,7 @@ namespace SystemMiami.CombatSystem
         //============================================================
         private void UpdateResources()
         {
+            if(Health == null || Stamina == null || Mana == null || Speed == null) { return; }
             Health = new Resource(_stats.GetStat(StatType.MAX_HEALTH), Health.Get());
             Stamina = new Resource(_stats.GetStat(StatType.STAMINA), Stamina.Get());
             Mana = new Resource(_stats.GetStat(StatType.MANA), Mana.Get());
