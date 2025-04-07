@@ -25,11 +25,13 @@ namespace SystemMiami.CombatRefactor
 
         protected NewAbility(NewAbilitySO preset, Combatant user, Action<float> looseResource)
             : base(
-                  preset.Icon,
-                  preset.itemData.ID,
-                  preset.Actions.ToList(),
-                  preset.OverrideController,
-                  user)
+                preset.Icon,
+                preset.itemData.ID,
+                preset.Actions.ToList(),
+                preset.OverrideController,
+                preset.FighterOverrideController,preset.MageOverrideController,
+                preset.TankOverrideController, preset.RogueOverrideController,preset.isGeneralAbility,
+                user)
         {
             this.ResourceCost = preset.ResourceCost;
             this.CooldownTurns = preset.CooldownTurns;
