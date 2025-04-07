@@ -490,6 +490,7 @@ namespace SystemMiami.CombatSystem
                     $"{gameObject.name} took {amount} damage,\n" +
                     $"its Health is now {Health.Get()}");
             }
+            GAME.MGR.damageTaken.Invoke(this);
 
         }
         #endregion IDamageReciever

@@ -15,6 +15,8 @@ namespace SystemMiami.Management
     {
         public Action<Combatant> CombatantDeath;
 
+        public event Action<Combatant> damageTaken;
+
         [SerializeField] string _dungeonSceneName;
         [SerializeField] string _neighborhoodSceneName;
         [SerializeField] string characterSelectSceneName;
