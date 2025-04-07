@@ -13,10 +13,16 @@ namespace SystemMiami.CombatRefactor
     public abstract class CombatAction
     {
         public readonly Sprite Icon;
-        public readonly AnimatorOverrideController OverrideController;
+        
+        public readonly AnimatorOverrideController DefaultOverrideController;
+        public readonly AnimatorOverrideController FighterOverrideController;
+        public readonly AnimatorOverrideController MageOverrideController;
+        public readonly AnimatorOverrideController TankOverrideController;
+        public readonly AnimatorOverrideController RogueOverrideController;
         public readonly Combatant User;
         public readonly int ID;
         public readonly ItemType type;
+        public readonly bool IsGeneralAbility;
 
         public readonly List<CombatSubactionSO> Subactions = new();
         public readonly List<CombatSubactionSO> DirectionBasedSubactions = new();
@@ -42,14 +48,20 @@ namespace SystemMiami.CombatRefactor
         protected CombatAction(
             Sprite icon,
             int ActionID,
-            List<CombatSubactionSO> subactions,
-            AnimatorOverrideController overrideController,
+            List<CombatSubactionSO> subactions, AnimatorOverrideController defaultOverrideController,
+            AnimatorOverrideController fighterOverrideController,AnimatorOverrideController mageOverrideController,
+            AnimatorOverrideController tankOverrideController, AnimatorOverrideController rogueOverrideController,bool isGeneralAbility,
             Combatant user)
         {
             ID = ActionID;
             Icon = icon;
             Subactions = subactions;
-            OverrideController = overrideController;
+            DefaultOverrideController = defaultOverrideController;
+            FighterOverrideController = fighterOverrideController;
+            MageOverrideController = mageOverrideController;
+            TankOverrideController = tankOverrideController;
+            RogueOverrideController = rogueOverrideController;
+            IsGeneralAbility = isGeneralAbility;
             User = user;
 
             SortByPatternOrigin(
@@ -244,7 +256,7 @@ namespace SystemMiami.CombatRefactor
 
             RuntimeAnimatorController temp = User.Animator.runtimeAnimatorController;
 
-            User.Animator.runtimeAnimatorController = OverrideController;
+            User.Animator.runtimeAnimatorController = ClassOverrideController();
 
             CountdownTimer timer = new(User, 2f);
             timer.Start();
@@ -276,6 +288,36 @@ namespace SystemMiami.CombatRefactor
             yield return null;
 
             ExecutionFinished = true;
+        }
+
+        private AnimatorOverrideController ClassOverrideController()
+        {
+            CharacterClassType userClass = User.gameObject.GetComponent<Attributes>()._characterClass;
+            if (IsGeneralAbility || this is Consumable)
+            {
+                switch (userClass)
+                {
+                    case CharacterClassType.MAGE:
+                        Debug.Log($"User class is {userClass}, returning {MageOverrideController.name}");
+                        return MageOverrideController;
+                    case CharacterClassType.ROGUE:
+                        Debug.Log($"User class is {userClass}, returning {RogueOverrideController.name}");
+                        return RogueOverrideController;
+                    case CharacterClassType.TANK:
+                        Debug.Log($"User class is {userClass}, returning {TankOverrideController.name}");
+                        return TankOverrideController;
+                    case CharacterClassType.FIGHTER:
+                        Debug.Log($"User class is {userClass}, returning {FighterOverrideController.name}");
+                        return FighterOverrideController;
+                    default:
+                        Debug.Log($"User class is {userClass},Defaulting returning {TankOverrideController.name}");
+                        return TankOverrideController;
+                }
+            }
+            else
+            {
+                return DefaultOverrideController;
+            }
         }
 
         protected abstract void PreExecution();
