@@ -257,25 +257,28 @@ namespace SystemMiami.CombatRefactor
             RuntimeAnimatorController temp = User.Animator.runtimeAnimatorController;
 
             User.Animator.runtimeAnimatorController = ClassOverrideController();
+            yield return null;
+            AnimatorStateInfo stateInfo = User.Animator.GetCurrentAnimatorStateInfo(0);
+            AnimatorClipInfo clipInfo = User.Animator.GetCurrentAnimatorClipInfo(0)[0];
 
-            CountdownTimer timer = new(User, 2f);
+            Debug.Log("Current Clip time: " + clipInfo.clip.length.ToString());
+            Debug.Log("Current Clip Info: " + clipInfo.clip.name);
+
+            CountdownTimer timer = new(User, clipInfo.clip.length);
             timer.Start();
 
             yield return new WaitUntil(() => timer.IsStarted);
-
+            
             string timeMsg =
-                $"An action is starting an Anim simulation timer, " +
-                $"time remaining is {timer.StatusMsg}";
+                $"Time is {Time.time}\n";
             do
             {
-                if (timeMsg != timer.StatusMsg)
-                {
-                    timeMsg = timer.StatusMsg;
-                    Debug.LogWarning(timeMsg);
-                }
+                
                 yield return null;
             } while (!timer.IsFinished);
+            timeMsg += $"Time is {Time.time}";
 
+            Debug.LogWarning(timeMsg);
             OnTargetingEvent(TargetingEventType.EXECUTING);
             yield return null;
 
