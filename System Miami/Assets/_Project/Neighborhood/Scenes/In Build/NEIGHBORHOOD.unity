@@ -342,7 +342,7 @@ MonoBehaviour:
   characterSelectSceneName: 
   _regenerateDungeonDataOnInteract: 0
   <IgnoreObstacles>k__BackingField: 1
-  <NoNpcs>k__BackingField: 1
+  <NoNpcs>k__BackingField: 0
 --- !u!4 &765166754
 Transform:
   m_ObjectHideFlags: 0
@@ -5227,6 +5227,10 @@ PrefabInstance:
     - target: {fileID: 8302595197955040100, guid: b0f9e43186d66dc459115f0dacd32ed2, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -70
+      objectReference: {fileID: 0}
+    - target: {fileID: 8308521480520677663, guid: b0f9e43186d66dc459115f0dacd32ed2, type: 3}
+      propertyPath: m_PreserveAspect
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8531935082416020763, guid: b0f9e43186d66dc459115f0dacd32ed2, type: 3}
       propertyPath: m_AnchorMax.y
@@ -13132,8 +13136,8 @@ MonoBehaviour:
   hardDungeonReward: 
   <allNPCs>k__BackingField: []
   npcPrefab: {fileID: 8476462788968368805, guid: 3988a39c08151eb4ca6432a338ae8c26, type: 3}
-  maxNpcsTotal: 20
-  maxNpcsShops: 20
+  maxNpcsTotal: 50
+  maxNpcsShops: 30
   maxNpcsQuests: 20
   dialogueChance: 0
   questChance: 0
