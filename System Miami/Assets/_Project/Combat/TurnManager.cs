@@ -96,13 +96,16 @@ namespace SystemMiami
 
         private IEnumerator InitializeAfterMapManagerIsReady()
         {
-            yield return new WaitUntil(() => MapManager.MGR != null);
+            yield return new WaitUntil(() => MapManager.MGR != null && MapManager.MGR.map != null);
             Debug.Log("Turn manager being intialized");
             if (playerCharacter != null)
             {
                 Debug.Log("Player character is not null combatTest");
                 Vector3Int charTilePos = Coordinates.ScreenToIso(playerCharacter.transform.position, 0);
-
+                if (MapManager.MGR.map == null)
+                {
+                    Debug.LogError("Map manager is not initialized");
+                }
                 if (!MapManager.MGR.map.TryGetValue((Vector2Int)charTilePos, out OverlayTile charTile))
                 {
                     if (!MapManager.MGR.map.TryGetValue((Vector2Int.zero), out charTile))
