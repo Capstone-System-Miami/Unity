@@ -2,8 +2,6 @@ using UnityEngine;
 using SystemMiami.CombatRefactor;
 using SystemMiami.CombatSystem;
 using SystemMiami;
-using FunkyCode.LightingSettings;
-using static UnityEngine.GraphicsBuffer;
 
 [CreateAssetMenu(menuName = "Combat Subaction/Ranged Damage")]
 public class RangedDamageSubactionSO : CombatSubactionSO
@@ -77,7 +75,7 @@ public class RangedDamageCommand : ISubactionCommand
                 {
                     return;
                 }
-                target.GetDamageInterface()?.ReceiveDamage(damage,perTurn,durationTurns);
+                target.GetDamageInterface()?.ReceiveDamage(damage, perTurn, durationTurns);
                 Debug.Log(target);
             });
         }
