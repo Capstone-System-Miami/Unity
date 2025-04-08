@@ -27,6 +27,7 @@ namespace SystemMiami.Drivers
         [SerializeField] private StandardAnimSetSO tankAnimSet;
         [SerializeField] private StandardAnimSetSO noClassAnimSet;
 
+
         private void Awake()
         {
             if (!TryGetComponent(out neighborhoodMovement))
@@ -50,6 +51,12 @@ namespace SystemMiami.Drivers
             }
         }
 
+        public void SetUseExistingClass(bool val)
+        {
+            usePreExistingClass = val;
+            log.print($"{gameObject}'s Anim class is being set from the selection menu.");
+        }
+
         public void SetPlayerStandardAnims()
         {
             CharacterClassType usingCaracterClass = usePreExistingClass
@@ -57,13 +64,13 @@ namespace SystemMiami.Drivers
                 : characterClass;
 
             StandardAnimSet playerAnimSet = usingCaracterClass switch
-                {
-                    CharacterClassType.FIGHTER  => fighterAnimSet.CreateSet(),
-                    CharacterClassType.ROGUE    => rogueAnimSet.CreateSet(),
-                    CharacterClassType.MAGE     => mageAnimSet.CreateSet(),
-                    CharacterClassType.TANK     => tankAnimSet.CreateSet(),
-                    _                           => noClassAnimSet.CreateSet()
-                };
+            {
+                CharacterClassType.FIGHTER => fighterAnimSet.CreateSet(),
+                CharacterClassType.ROGUE => rogueAnimSet.CreateSet(),
+                CharacterClassType.MAGE => mageAnimSet.CreateSet(),
+                CharacterClassType.TANK => tankAnimSet.CreateSet(),
+                _ => noClassAnimSet.CreateSet()
+            };
 
             neighborhoodMovement.SetAnimSet(playerAnimSet);
             player.SetAnimSet(playerAnimSet);

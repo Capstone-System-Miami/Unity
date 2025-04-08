@@ -54,7 +54,7 @@ namespace SystemMiami
 
         private void updateHealth()
         {
-           /* if (_health == null) { return; }
+           if (_player.Health == null) { return; } /*
 
             string result = $"{_player.Health.Get()} / {_player.Health.GetMax()}";
 
@@ -65,7 +65,7 @@ namespace SystemMiami
 
         private void updateStamina()
         {
-           /* if (_stamina == null) { return; }
+            if (_player.Stamina == null) { return; } /*
 
             string result = $"{_player.Stamina.Get()} / {_player.Stamina.GetMax()}";
 
@@ -76,7 +76,7 @@ namespace SystemMiami
 
         private void updateMana()
         {
-          /*  if (_mana == null) { return; }
+            if (_player.Mana == null) { return; } /*
 
             string result = $"{_player.Mana.Get()} / {_player.Mana.GetMax()}";
 
@@ -87,7 +87,7 @@ namespace SystemMiami
 
         private void updateSpeed()
         {
-           /* if (_speed == null) { return; }
+            if (_player.Speed == null) { return; } /*
 
             string result = $"{_player.Speed.Get()} / {_player.Speed.GetMax()}";
 

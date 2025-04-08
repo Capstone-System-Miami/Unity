@@ -11,8 +11,11 @@ namespace SystemMiami.CombatRefactor
         public override void OnEnter()
         {
             base.OnEnter();
-            combatant.Animator.runtimeAnimatorController
-                = combatant.AnimControllerIdle;
+            if (combatant.Animator != null)
+            {
+                combatant.Animator.runtimeAnimatorController
+                    = combatant.AnimControllerIdle;
+            }
         }
 
         public override void MakeDecision()
@@ -27,7 +30,7 @@ namespace SystemMiami.CombatRefactor
 
         protected bool DyingRequested()
         {
-            return combatant.Health.Get() == 0;
+            return combatant.Health?.Get() == 0;
         }
     }
 }
