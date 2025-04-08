@@ -10,24 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3e15ceed8cb262b4f93d5a16ddc74b1f, type: 3}
-  m_Name: Minor Healing Potion
+  m_Name: Major Healing Potion
   m_EditorClassIdentifier: 
-  Icon: {fileID: 840374211, guid: bf348cbba4063294c8498102360c892d, type: 3}
+  Icon: {fileID: 1425436850, guid: bf348cbba4063294c8498102360c892d, type: 3}
   Actions:
-  - {fileID: 11400000, guid: bf97ef693573f3e428473a66d92cae6c, type: 2}
-  OverrideController: {fileID: 22100000, guid: decd93ce417d8f74fa9d4dc0cfe24f90, type: 2}
+  - {fileID: 11400000, guid: 739b60b52b2e2b145b0e8472cfba5518, type: 2}
+  OverrideController: {fileID: 0}
   MageOverrideController: {fileID: 22100000, guid: e31d81d351c932544a9d436867598fbb, type: 2}
   FighterOverrideController: {fileID: 22100000, guid: 98f413964bd22ca4d8543c4662936c31, type: 2}
   TankOverrideController: {fileID: 22100000, guid: fadfb8c50a1c9854a91e263b95863a2a, type: 2}
   RogueOverrideController: {fileID: 22100000, guid: 1e692281f2f785745a6e781225189e6d, type: 2}
   Uses: 1
   itemData:
-    ID: 3000
-    Icon: {fileID: 840374211, guid: bf348cbba4063294c8498102360c892d, type: 3}
-    Name: Minor Healing Potion
-    Description: Heals player for 5 health
-    itemType: 2
-    Price: 0
+    ID: 3004
+    Icon: {fileID: 1425436850, guid: bf348cbba4063294c8498102360c892d, type: 3}
+    Name: Major Healing Potion
+    Description: Heals player for 20 health
+    itemType: 3
+    Price: 20
     MinLevel: 0
-    MaxLevel: 10
+    MaxLevel: 30
     rarity: 0

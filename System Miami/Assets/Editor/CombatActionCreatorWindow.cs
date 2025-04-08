@@ -35,13 +35,21 @@ public class CombatActionCreatorWindow : EditorWindow
     private string _assetDescription = "";
     private Sprite _assetIcon;
     private AnimatorOverrideController _animOverride;
+    private AnimatorOverrideController _fighterAnimOverride;
+    private AnimatorOverrideController _tankAnimOverride;
+    private AnimatorOverrideController _mageAnimOverride;
+    private AnimatorOverrideController _rogueAnimOverride;
     private int _price;
+    private int _minLevel;
+    private int _maxLevel;
     private bool _isEnemyAbility;
+    
 
     // =========== Ability-specific fields ==============
     private AbilityType _abilityType;
     private float _resourceCost;
     private int _cooldownTurns;
+    private bool _isGeneralAbility;
 
     // =========== Consumable-specific fields ==============
     private int _consumableUses;
@@ -59,6 +67,7 @@ public class CombatActionCreatorWindow : EditorWindow
 
     // =========== Subaction Info ==============
     private List<SubactionCreationData> _subactions = new List<SubactionCreationData>();
+    private enum TargetingPatternType {SingleTile, AreaOfEffect}
 
     // For scrolling in the subaction list
     private Vector2 _scrollPos;
@@ -76,12 +85,14 @@ public class CombatActionCreatorWindow : EditorWindow
         // NOTE: We no longer rely on subactionName to set the final .name
         public string subactionName;
         public string patternName;
+        public TargetingPatternType targetingPattern;
         public PatternOriginType patternOrigin = PatternOriginType.USER;
         public Color tileColor = Color.white;
         public Color combatantColor = Color.white;
 
         // The subaction class type we’re eventually creating
         public Type subactionClassType;
+        public Type TargetingType;
         public int subactionTypeIndex;  // for reflection-based approach
 
         // Reflection-based fields
@@ -98,13 +109,15 @@ public class CombatActionCreatorWindow : EditorWindow
     private enum SubactionPresetType
     {
         Damage,
-        Heal,
+        RestoreResource,
         InflictStatusEffect
     }
 
     private static Type[] _allSubactionTypes;
     private static string[] _allSubactionTypeNames;
-    private static Type[] _allPatternTypes;
+    private static Type AOE = typeof(AreaOfEffectPattern);
+    private static Type SingleTile = typeof(SingleTilePattern);
+      
     private static string[] _allPatternTypeNames;
 
     private static void InitializeReflectionCaches()
@@ -118,16 +131,7 @@ public class CombatActionCreatorWindow : EditorWindow
 
             _allSubactionTypeNames = _allSubactionTypes.Select(t => t.Name).ToArray();
         }
-
-        if (_allPatternTypes == null || _allPatternTypes.Length == 0)
-        {
-            _allPatternTypes = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(a => a.GetTypes())
-                .Where(t => t.IsClass && !t.IsAbstract && t.IsSubclassOf(typeof(TargetingPattern)))
-                .ToArray();
-
-            _allPatternTypeNames = _allPatternTypes.Select(t => t.Name).ToArray();
-        }
+        
     }
 
     private static string GetSelectedPathOrFallback()
@@ -213,6 +217,9 @@ public class CombatActionCreatorWindow : EditorWindow
         _assetName = EditorGUILayout.TextField("Name", _assetName);
         _assetDescription = EditorGUILayout.TextField("Description", _assetDescription);
         _assetIcon = (Sprite)EditorGUILayout.ObjectField("Icon", _assetIcon, typeof(Sprite), false);
+        _minLevel = EditorGUILayout.IntField("Min Level", _minLevel);
+        _maxLevel = EditorGUILayout.IntField("Max Level", _maxLevel);
+      
 
         switch (_assetType)
         {
@@ -255,10 +262,38 @@ public class CombatActionCreatorWindow : EditorWindow
         _resourceCost = EditorGUILayout.FloatField("Resource Cost", _resourceCost);
         _cooldownTurns = EditorGUILayout.IntField("Cooldown Turns", _cooldownTurns);
         _isEnemyAbility = EditorGUILayout.Toggle("Is Enemy Ability", _isEnemyAbility);
+        _isGeneralAbility = EditorGUILayout.Toggle("Is General Ability", _isGeneralAbility);
 
         _animOverride = (AnimatorOverrideController)EditorGUILayout.ObjectField(
             "Animator Override",
             _animOverride,
+            typeof(AnimatorOverrideController),
+            false
+        );
+        
+        _fighterAnimOverride = (AnimatorOverrideController)EditorGUILayout.ObjectField(
+            "Fighter Animator Override",
+            _fighterAnimOverride,
+            typeof(AnimatorOverrideController),
+            false
+        );
+        
+        _mageAnimOverride = (AnimatorOverrideController)EditorGUILayout.ObjectField(
+            "Mage Animator Override",
+            _mageAnimOverride,
+            typeof(AnimatorOverrideController),
+            false
+        );
+        _tankAnimOverride = (AnimatorOverrideController)EditorGUILayout.ObjectField(
+            "Tank Animator Override",
+            _tankAnimOverride,
+            typeof(AnimatorOverrideController),
+            false
+        );
+        
+        _rogueAnimOverride = (AnimatorOverrideController)EditorGUILayout.ObjectField(
+            "Rogue Animator Override",
+            _rogueAnimOverride,
             typeof(AnimatorOverrideController),
             false
         );
@@ -273,6 +308,33 @@ public class CombatActionCreatorWindow : EditorWindow
         _animOverride = (AnimatorOverrideController)EditorGUILayout.ObjectField(
             "Animator Override",
             _animOverride,
+            typeof(AnimatorOverrideController),
+            false
+        );
+        
+        _fighterAnimOverride = (AnimatorOverrideController)EditorGUILayout.ObjectField(
+            "Fighter Animator Override",
+            _fighterAnimOverride,
+            typeof(AnimatorOverrideController),
+            false
+        );
+        
+        _mageAnimOverride = (AnimatorOverrideController)EditorGUILayout.ObjectField(
+            "Mage Animator Override",
+            _mageAnimOverride,
+            typeof(AnimatorOverrideController),
+            false
+        );
+        _tankAnimOverride = (AnimatorOverrideController)EditorGUILayout.ObjectField(
+            "Tank Animator Override",
+            _tankAnimOverride,
+            typeof(AnimatorOverrideController),
+            false
+        );
+        
+        _rogueAnimOverride = (AnimatorOverrideController)EditorGUILayout.ObjectField(
+            "Rogue Animator Override",
+            _rogueAnimOverride,
             typeof(AnimatorOverrideController),
             false
         );
@@ -346,13 +408,12 @@ public class CombatActionCreatorWindow : EditorWindow
 
                 EditorGUILayout.Space(5);
 
-                // We do *not* rely on subactionName for final naming,
-                // but we'll still allow the user to see/edit it if they want.
-                subData.subactionName = EditorGUILayout.TextField("Subaction Name", subData.subactionName);
+                
 
                 // Pattern info
                 subData.patternName = EditorGUILayout.TextField("Pattern Name", subData.patternName);
                 subData.patternOrigin = (PatternOriginType)EditorGUILayout.EnumPopup("Pattern Origin", subData.patternOrigin);
+                subData.targetingPattern = (TargetingPatternType)EditorGUILayout.EnumPopup("Pattern Type", subData.targetingPattern);
                 subData.tileColor = EditorGUILayout.ColorField("Tile Color", subData.tileColor);
                 subData.combatantColor = EditorGUILayout.ColorField("Combatant Color", subData.combatantColor);
 
@@ -388,7 +449,7 @@ public class CombatActionCreatorWindow : EditorWindow
             }
             if (GUILayout.Button("Add Subaction (Preset: Heal)"))
             {
-                AddSubactionFromPreset(SubactionPresetType.Heal);
+                AddSubactionFromPreset(SubactionPresetType.RestoreResource);
             }
             if (GUILayout.Button("Add Subaction (Preset: Status)"))
             {
@@ -429,7 +490,7 @@ public class CombatActionCreatorWindow : EditorWindow
             case SubactionPresetType.Damage:
                 data.subactionClassType = typeof(Damage);
                 break;
-            case SubactionPresetType.Heal:
+            case SubactionPresetType.RestoreResource:
                 data.subactionClassType = typeof(AddResource);
                 break;
             case SubactionPresetType.InflictStatusEffect:
@@ -468,7 +529,7 @@ public class CombatActionCreatorWindow : EditorWindow
                     data.tileColor = Color.red;
                     data.combatantColor = Color.red;
                     break;
-                case SubactionPresetType.Heal:
+                case SubactionPresetType.RestoreResource:
                     data.subactionClassType = typeof(AddResource);
                     data.fieldValues["healAmount"] = "12";
                     data.tileColor = Color.green;
@@ -687,12 +748,19 @@ public class CombatActionCreatorWindow : EditorWindow
         ability.itemData.Description = _assetDescription;
         ability.itemData.Icon = _assetIcon;
         ability.itemData.itemType = ItemType.PhysicalAbility;
+        ability.itemData.MinLevel = _minLevel;
+        ability.itemData.MaxLevel = _maxLevel;
+        ability.isGeneralAbility = _isGeneralAbility;
         ability.isEnemyAbility = _isEnemyAbility;
         ability.Icon = _assetIcon;
         ability.AbilityType = _abilityType;
         ability.ResourceCost = _resourceCost;
         ability.CooldownTurns = _cooldownTurns;
         ability.OverrideController = _animOverride;
+        ability.FighterOverrideController = _fighterAnimOverride;
+        ability.MageOverrideController = _mageAnimOverride;
+        ability.RogueOverrideController = _rogueAnimOverride;
+        ability.TankOverrideController = _tankAnimOverride;
 
         // ID assignment
         if (ability.itemData.ID == 0 && _abilityType == AbilityType.PHYSICAL && !_isEnemyAbility)
@@ -734,11 +802,17 @@ public class CombatActionCreatorWindow : EditorWindow
         consumable.itemData.Description = _assetDescription;
         consumable.itemData.Icon = _assetIcon;
         consumable.itemData.itemType = ItemType.Consumable;
+        consumable.itemData.MinLevel = _minLevel;
+        consumable.itemData.MaxLevel = _maxLevel;
         consumable.itemData.Price = _price;
 
         consumable.Icon = _assetIcon;
         consumable.Uses = _consumableUses;
         consumable.OverrideController = _animOverride;
+        consumable.FighterOverrideController = _fighterAnimOverride;
+        consumable.MageOverrideController = _mageAnimOverride;
+        consumable.RogueOverrideController = _rogueAnimOverride;
+        consumable.TankOverrideController = _tankAnimOverride;
 
         if (consumable.itemData.ID == 0)
         {
@@ -771,6 +845,8 @@ public class CombatActionCreatorWindow : EditorWindow
         mod.itemData.Icon = _assetIcon;
         mod.itemData.itemType = ItemType.EquipmentMod;
         mod.itemData.Price = _price;
+        mod.itemData.MinLevel = _minLevel;
+        mod.itemData.MaxLevel = _maxLevel;
 
         if (mod.itemData.ID == 0)
         {
@@ -813,9 +889,8 @@ public class CombatActionCreatorWindow : EditorWindow
             return null;
         }
 
-        // Default to the first discovered pattern type if you don't have a direct mechanism
-        // to pick patterns. Or handle it differently if you wish.
-        Type patternType = _allPatternTypes.FirstOrDefault();
+        
+        Type patternType = data.targetingPattern == TargetingPatternType.SingleTile ? SingleTile : AOE;
         if (patternType == null)
         {
             Debug.LogWarning("No TargetingPattern types found. Cannot create pattern.");
