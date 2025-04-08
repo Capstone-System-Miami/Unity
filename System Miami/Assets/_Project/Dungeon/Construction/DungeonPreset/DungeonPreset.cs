@@ -62,31 +62,29 @@ namespace SystemMiami.Dungeons
         private GameObject getPrefab(List<Dungeons.Style> excludedStyles)
         {
             List<GameObject> golist = new();
-            Dungeon dungeon;
+            Dungeon dungeon = null;
 
             bool success = false;
             int iterationsRemaining = 100;
             do {
-                iterationsRemaining--;
-
                 golist = _prefabPool.GetNewList();
 
                 if (golist == null)
                 {
                     Debug.LogError(
                         $"{this} {name} {_prefabPool} " +
-                        $"returned null instead of a list"
-                        );
-                    return null;
+                        $"returned null instead of a list",
+                        this);
+                    continue;
                 }
 
                 if (golist.Count == 0)
                 {
                     Debug.LogError(
                         $"{this} {name} {_prefabPool} " +
-                        $"returned an empty list."
-                        );
-                    return null;
+                        $"returned an empty list.",
+                        this);
+                    continue;
                 }
 
                 if (golist[0] == null)
@@ -94,9 +92,9 @@ namespace SystemMiami.Dungeons
                     Debug.LogError(
                         $"{this} {name} {_prefabPool} " +
                         $"returned a list with a null " +
-                        $"GameObject at [0]."
-                        );
-                    return null;
+                        $"GameObject at [0].",
+                        this);
+                    continue;
                 }
 
                 if (!golist[0].TryGetComponent(out dungeon))
@@ -104,9 +102,9 @@ namespace SystemMiami.Dungeons
                     Debug.LogError(
                         $"{this} {name} {_prefabPool} " +
                         $"returned {golist[0]}, " +
-                        $"which is missing a Dungeon script."
-                        );
-                    return null;
+                        $"which is missing a Dungeon script.",
+                        this);
+                    continue;
                 }
 
                 bool isExcludedStyle = false;
@@ -121,7 +119,7 @@ namespace SystemMiami.Dungeons
 
                 success = !isExcludedStyle;
 
-            } while (!success && iterationsRemaining > 0);
+            } while (!success && --iterationsRemaining > 0);
 
             if (iterationsRemaining == 0)
             {

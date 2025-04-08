@@ -12,16 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58d728392c04c9a48a8a419a8ac94f33, type: 3}
   m_Name: Merciless Blows
   m_EditorClassIdentifier: 
-  Icon: {fileID: -811106580, guid: e395485de996e754d9b1dd212fd50f3d, type: 3}
+  Icon: {fileID: 0}
   Actions:
   - {fileID: 11400000, guid: 7670f647b427ee342a73e12679693a13, type: 2}
-  OverrideController: {fileID: 22100000, guid: 1a245a6d8b2a8fc46943e00bbeea03da, type: 2}
+  OverrideController: {fileID: 22100000, guid: 2e2a65cb437aaa24fa4ef17f04b23e7e, type: 2}
   AbilityType: 0
-  ResourceCost: 5
+  ResourceCost: 6
   CooldownTurns: 2
   itemData:
     ID: 1003
-    Icon: {fileID: -811106580, guid: e395485de996e754d9b1dd212fd50f3d, type: 3}
+    Icon: {fileID: 21300000, guid: 286eb932114897248b3ee7a9e87dd857, type: 3}
     Name: Merciless Blows
-    Description: Deals moderate damage to target & nearby tiles
-    itemType: 0
+    Description: Deals damage to target & nearby tiles
+    itemType: 1
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 3
+    rarity: 0
+  classType: 0
+  isEnemyAbility: 0
+  isGeneralAbility: 0

@@ -2,11 +2,10 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using SystemMiami.CombatSystem;
 using UnityEngine.EventSystems;
 using SystemMiami.Utilities;
 
-namespace SystemMiami
+namespace SystemMiami.ui
 {
     [RequireComponent(typeof(RectTransform))]
     public class InventoryItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
@@ -23,7 +22,7 @@ namespace SystemMiami
         [Header("Internal Refs")]
         [SerializeField] private SpriteBox spriteBox;
 
-        private ItemData itemData;
+        [SerializeField]private ItemData itemData;
 
         private Image fallback;
         private bool usingFallback = false;
@@ -73,6 +72,8 @@ namespace SystemMiami
                         $"anywhere on {name}");
                 }
             }
+            
+            
         }
 
         public bool TryFill(int itemID)
@@ -111,7 +112,7 @@ namespace SystemMiami
 
         private void Refresh()
         {
-            if (itemData.failbit) { return; }
+            if (itemData.failbit) { log.error("Failed to get item data");  return; }
 
             if (!usingFallback)
             {

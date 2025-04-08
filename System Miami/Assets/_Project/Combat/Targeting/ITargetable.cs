@@ -11,6 +11,7 @@ namespace SystemMiami.CombatSystem
         void UnsubscribeTo(ref EventHandler<TargetingEventArgs> combatActionEvent);
         void HandleTargetingEvent(object sender, TargetingEventArgs args);
 
+        Vector2Int BoardPos { get; }
         List<ISubactionCommand> TargetedBy { get; set; }
         string nameMessageForDB { get; set; }
         void PreviewOn();
@@ -35,10 +36,10 @@ namespace SystemMiami.CombatSystem
         /// interface from the targeted object.
         /// </summary>
         /// <returns>
-        /// The <see cref="IHealReceiver"/> (IF ANY)
+        /// The <see cref="IResourceReceiver"/> (IF ANY)
         /// provided by the targeted object.
         /// </returns>
-        IHealReceiver GetHealInterface();
+        IResourceReceiver GetHealInterface();
 
         /// <summary>
         /// The method by which a targeting

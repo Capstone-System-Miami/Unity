@@ -3,6 +3,7 @@ using System.Linq;
 using SystemMiami.CombatSystem;
 using SystemMiami.Utilities;
 using UnityEngine;
+using System;
 
 namespace SystemMiami.CombatRefactor
 {
@@ -11,49 +12,53 @@ namespace SystemMiami.CombatRefactor
         public readonly float ResourceCost;
         public readonly int CooldownTurns;
 
-        private Resource targetResource;
-        private int cooldownRemaining;
+        private Action<float> looseResource;
+        public int CooldownRemaining { get; private set; }
 
         public bool IsOnCooldown
         {
             get
             {
-                return cooldownRemaining > 0;
+                return CooldownRemaining > 0;
             }
         }
 
-        protected NewAbility(NewAbilitySO preset, Combatant user, Resource targetResource)
+        protected NewAbility(NewAbilitySO preset, Combatant user, Action<float> looseResource)
             : base(
-                  preset.Icon, preset.itemData.ID,
-                  preset.Actions.ToList(),
-                  preset.OverrideController,
-                  user)
+                preset.Icon,
+                preset.itemData.ID,
+                preset.Actions.ToList(),
+                preset.OverrideController,
+                preset.FighterOverrideController,preset.MageOverrideController,
+                preset.TankOverrideController, preset.RogueOverrideController,preset.isGeneralAbility,
+                user)
         {
             this.ResourceCost = preset.ResourceCost;
             this.CooldownTurns = preset.CooldownTurns;
-            this.targetResource = targetResource;
+            this.looseResource = looseResource;
         }
 
         public void ReduceCooldown()
         {
-            if (cooldownRemaining > 0)
+            if (CooldownRemaining > 0)
             {
-                cooldownRemaining--;
+                CooldownRemaining--;
             }
         }
 
         protected override void PreExecution()
         {
-            targetResource.Lose(ResourceCost);
+            looseResource?.Invoke(ResourceCost);
         }
 
         protected override void PostExecution()
         {
-            startCooldown();
+            StartCooldown();
         }
-        private void startCooldown()
+
+        private void StartCooldown()
         {
-            cooldownRemaining = CooldownTurns;
+            CooldownRemaining = CooldownTurns;
         }
     }
 }

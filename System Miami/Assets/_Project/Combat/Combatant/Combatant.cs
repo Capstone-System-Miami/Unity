@@ -1,12 +1,12 @@
 // Authors: Layla Hoey, Lee St Louis
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using SystemMiami.AbilitySystem;
 using SystemMiami.CombatRefactor;
+using SystemMiami.InventorySystem;
 using SystemMiami.Management;
 using SystemMiami.Utilities;
-using SystemMiami.InventorySystem;
-using UnityEngine.Animations;
 using UnityEngine;
 
 namespace SystemMiami.CombatSystem
@@ -15,12 +15,16 @@ namespace SystemMiami.CombatSystem
         typeof(Stats),
         typeof(Abilities)
         )]
-    public abstract class Combatant : MonoBehaviour, ITargetable, ITileOccupant, IHighlightable, IDamageReceiver, IHealReceiver, IForceMoveReceiver, IStatusEffectReceiver
+    public abstract class Combatant : MonoBehaviour, ITargetable, ITileOccupant, IHighlightable, IDamageReceiver, IResourceReceiver, IForceMoveReceiver, IStatusEffectReceiver
     {
         protected const float PLACEMENT_RANGE = 0.0001f;
 
         #region Serialized Vars
         //============================================================
+        [Header("Debug")]
+        [SerializeField] private bool detailedFocusHighlight;
+        private AdjacentTileSet focusAdjacent;
+
         [Header("General Info")]
         [SerializeField] private Color _colorTag = Color.white;
 
@@ -55,8 +59,12 @@ namespace SystemMiami.CombatSystem
         private bool isMovable = true;
         private bool isStunned = false;
         private bool isInvisible = false;
-        private float _endOfTurnDamage;
-        private float _endOfTurnHeal;
+        public bool hasResourceEffect = false;
+        public Dictionary<ResourceType, int> restoreResourceEffects = new();
+        public float _endOfTurnDamage;
+        public float _endOfTurnHeal;
+        public float _endOfTurnStamina;
+        public float _endOfTurnMana;
 
         // Animator
         private Animator _animator;
@@ -67,6 +75,8 @@ namespace SystemMiami.CombatSystem
         private OverlayTile focusTile;
         private OverlayTile previousFocus;
         private DirectionContext directionContext;
+
+        public event Action<Combatant> DamageTaken;
 
         private object eventLock = new object();
         #endregion Private Vars
@@ -80,6 +90,9 @@ namespace SystemMiami.CombatSystem
         public Color ColorTag { get { return _colorTag; } }
 
         [SerializeField] public Inventory _inventory;
+
+        [SerializeField, ReadOnly] private string currentStateType;
+
         // State Machine
         public CombatantStateFactory Factory { get { return stateFactory; } }
         public CombatantState CurrentState
@@ -139,6 +152,12 @@ namespace SystemMiami.CombatSystem
 
                 previousFocus = focusTile;
                 focusTile = value;
+                if (detailedFocusHighlight)
+                {
+                    focusAdjacent?.UnhighlightAll();
+                    focusAdjacent = new(value);
+                    focusAdjacent.HighlightAll();
+                }
                 OnFocusTileChanged();
             }
         }
@@ -198,10 +217,7 @@ namespace SystemMiami.CombatSystem
 
         protected virtual void Start()
         {
-            InitResources();
-            InitLoadout();
-            InitDirection();
-            InitStateMachine();
+            InitAll();
         }
 
         private void Update()
@@ -211,6 +227,23 @@ namespace SystemMiami.CombatSystem
 
             CurrentState.Update();
             CurrentState.MakeDecision();
+
+
+            currentStateType = CurrentState.GetType().ToString();
+            TEST_currentTile = PositionTile;
+
+            if (TRIGGER_ForceMovePreviewTest)
+            {
+                TRIGGER_ForceMovePreviewTest = false;
+                ForceMoveCommand testCommand = new(this, TEST_origin, TEST_moveType, TEST_distance);
+                testCommand.Preview();
+            }
+            if (TRIGGER_ForceMoveExecuteTest)
+            {
+                TRIGGER_ForceMoveExecuteTest = false;
+                ForceMoveCommand testCommand = new(this, TEST_origin, TEST_moveType, TEST_distance);
+                testCommand.Execute();
+            }
         }
 
         #endregion Unity Methods
@@ -270,6 +303,7 @@ namespace SystemMiami.CombatSystem
             stateFactory = new(this);
             currentState = stateFactory.Idle();
             currentState.OnEnter();
+            Debug.LogWarning($"{name} is initializing state machine");
         }
         #endregion Construction
 
@@ -294,7 +328,7 @@ namespace SystemMiami.CombatSystem
             float distanceToTarget = Vector2.Distance(
                 transform.position,
                 targetTile.transform.position
-                );
+            );
             return distanceToTarget < PLACEMENT_RANGE;
         }
         #endregion Movement
@@ -335,14 +369,13 @@ namespace SystemMiami.CombatSystem
                 return result;
             }
 
-            if (MapManager.MGR.map.TryGetValue(MapManager.MGR.CenterPos, out result))
+            if (!MapManager.MGR.map.TryGetValue(MapManager.MGR.CenterPos, out result))
             {
-
-            }
                 Debug.LogError(
                     $"FATAL | {name}'s {this}" +
                     $"FOUND NO TILE TO FOCUS ON."
                     );
+            }
 
             return result;
         }
@@ -369,6 +402,7 @@ namespace SystemMiami.CombatSystem
             Stamina = new Resource(_stats.GetStat(StatType.STAMINA), Stamina.Get());
             Mana = new Resource(_stats.GetStat(StatType.MANA), Mana.Get());
             Speed = new Resource(_stats.GetStat(StatType.SPEED), Speed.Get());
+            Debug.Log($"{gameObject.name} has {Health.Get()} health.");
         }
         #endregion Resource Management
 
@@ -431,7 +465,7 @@ namespace SystemMiami.CombatSystem
             return isDamageable;
         }
 
-        public void PreviewDamage(float amount)
+        public void PreviewDamage(float amount, bool perTurn, int durationTurns)
         {
             float currentHealth = Health.Get();
             Debug.Log(
@@ -440,88 +474,148 @@ namespace SystemMiami.CombatSystem
                 $"{currentHealth - amount}");
         }
 
-        public void ReceiveDamage(float amount)
+        public void ReceiveDamage(float amount, bool perTurn, int durationTurns)
         {
-            Health.Lose(amount);
-            Debug.Log(
-                $"{gameObject.name} took {amount} damage,\n" +
-                $"its Health is now {Health.Get()}");
-           
+
+            if(perTurn)
+            {
+                hasResourceEffect = true;
+                _endOfTurnDamage -= amount;
+                restoreResourceEffects.Add(ResourceType.Health, durationTurns);
+            }
+            else
+            {
+                Health.Lose(amount);
+                Debug.Log(
+                    $"{gameObject.name} took {amount} damage,\n" +
+                    $"its Health is now {Health.Get()}");
+            }
+            // GAME.MGR.damageTaken.Invoke(this);  //Undo this when I get home
+
         }
         #endregion IDamageReciever
 
 
-        #region IHealReceiver
+        #region IResourceReceiver
         //============================================================
         public bool IsCurrentlyHealable()
         {
             return isHealable;
         }
 
-        public void PreviewHeal(float amount)
+        public void PreviewResourceReceived(float amount, ResourceType type, bool perTurn, int duraationTurns)
         {
             // preview heal
         }
 
-        public void ReceiveHeal(float amount)
+        public void ReceiveResource(float amount, ResourceType type, bool perTurn, int durationTurns)
         {
-            Health.Gain(amount);
+
+            if (perTurn)
+            {
+                hasResourceEffect = true;
+                restoreResourceEffects.Add(type,durationTurns);
+                if(type == ResourceType.Health)
+                {
+                    _endOfTurnHeal += amount;
+                }
+                else if (type == ResourceType.Stamina)
+                {
+                    _endOfTurnStamina += amount;
+                }
+                else if (type == ResourceType.Mana)
+                {
+                    _endOfTurnMana += amount;
+                }
+            }
+            else
+            {
+               GainResource(type, amount);
+            }
+
+        }
+
+        public void GainResource(ResourceType type, float amount)
+        {
+            switch (type)
+            {
+                case ResourceType.Health:
+                    if (amount > 0)
+                    {
+                        Health.Gain(amount);
+                    }
+                    else
+                    {
+                        Health.Lose(-amount);
+                    }
+                    break;
+                case ResourceType.Stamina:
+                    Stamina.Gain(amount);
+                    break;
+                case ResourceType.Mana:
+                    Mana.Gain(amount);
+                    break;
+                default:
+                    Health.Gain(amount);
+                    break;
+
+            }
         }
         #endregion IHealReceiver
 
 
         #region IForceMoveReciever
         //============================================================
-        public bool IsCurrentlyMovable()
+        public Vector2Int TEST_origin;
+        public int TEST_distance;
+        public MoveType TEST_moveType;
+        public bool TRIGGER_ForceMovePreviewTest;
+        public bool TRIGGER_ForceMoveExecuteTest;
+        [field: ReadOnly] public OverlayTile TEST_currentTile;
+
+        bool IForceMoveReceiver.IsCurrentlyMovable()
         {
-            throw new NotImplementedException();
+            return true;
         }
-        public void PreviewForceMove(int distance, Vector2Int direction)
+        void IForceMoveReceiver.PreviewForceMove(OverlayTile destinationTile)
         {
-            throw new NotImplementedException();
+            //Debug.LogError(
+            //    $"{name} is trying to priview movement to " +
+            //    $"{destinationTile.name}, but its RecieveForceMove() method " +
+            //    $"has not been implemented.",
+            //    destinationTile);
+            MovementPath pathToTile = new(PositionTile, destinationTile, true);
+            StartCoroutine(TEST_ShowMovementPath(pathToTile));
         }
 
-        public void ReceiveForceMove(int distance, Vector2Int direction)
+        void IForceMoveReceiver.RecieveForceMove(OverlayTile destinationTile)
         {
-            throw new NotImplementedException();
+            MovementPath pathToTile = new(PositionTile, destinationTile, true);
+            CurrentState.SwitchState(Factory.ForcedMovementExecution(pathToTile));
+
+            
+            //Debug.LogError(
+            //    $"{name} is trying to move to {destinationTile.name}, but " +
+            //    $"its RecieveForceMove() method has not been implemented.",
+            //    destinationTile);
         }
 
-        //public Vector2Int GetTilePos()
-        //{
-        //    return (Vector2Int)PositionTile.GridLocation;
-        //}
+        private IEnumerator TEST_ShowMovementPath(MovementPath path)
+        {
+            float duration = 1f;
 
-        //public bool TryMoveTo(Vector2Int tilePos)
-        //{
-        //    if (isMovable)
-        //    {
-        //        // TODO: Implement movement logic
-        //        print($"{name} would move to {tilePos}, but this mechanic has not been implemented");
-        //        return true;
-        //    }
-        //    else
-        //    {
-        //        print($"{name} cannot move");
-        //        return false;
-        //    }
-        //}
+            path.HighlightValidMoves(Color.cyan);
+            path.DrawArrows();
 
-        //public bool TryMoveInDirection(Vector2Int boardDirection, int distance)
-        //{
-        //    if (isMovable)
-        //    {
-        //        // TODO: Implement directional movement logic
-        //        Vector2Int newPos = (Vector2Int)PositionTile.GridLocation + boardDirection * distance;
+            while (duration > 0)
+            {
+                duration -= Time.deltaTime;
+                yield return new WaitForSeconds(Time.deltaTime);
+            }
 
-        //        print($"{name} would move to {newPos}, but this mechanic has not been implemented");
-        //        return true;
-        //    }
-        //    else
-        //    {
-        //        print($"{name} cannot move");
-        //        return false;
-        //    }
-        //}
+            path.Unhighlight();
+            path.UnDrawAll();
+        }
         #endregion IForceMoveReciever
 
 
@@ -556,14 +650,14 @@ namespace SystemMiami.CombatSystem
             /// TODO:   (from layla)
             /// These are not implemented and I can't think
             /// too deeply about them right now, I'm sorry lol
-            _endOfTurnDamage = damagePerTurn;
-            _endOfTurnHeal = healPerTurn;
+            
         }
         #endregion // IStatusEffectReveiver
 
 
         #region ITargetable
         //============================================================
+        Vector2Int ITargetable.BoardPos => PositionTile.BoardPos;
         List<ISubactionCommand> ITargetable.TargetedBy { get; set; } = new();
         public string nameMessageForDB { get { return gameObject.name; } set { ; } }
         void ITargetable.SubscribeTo(
@@ -582,7 +676,6 @@ namespace SystemMiami.CombatSystem
 
         public void HandleTargetingEvent(object sender, TargetingEventArgs args)
         {
-            if(this == null) return;
            // Debug.Log($"Trying to process a TargetingEvent of type {args.EventType}", gameObject);
            if (this is not ITargetable me) { return; }
             
@@ -671,7 +764,7 @@ namespace SystemMiami.CombatSystem
         /// This way, states can decide what to do when
         /// Heal methods are called on the combatant.
         /// </remarks>
-        public virtual IHealReceiver GetHealInterface()
+        public virtual IResourceReceiver GetHealInterface()
         {
             return this;
         }

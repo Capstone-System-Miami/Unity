@@ -6,12 +6,17 @@ using SystemMiami.Management;
 using SystemMiami.Dungeons;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using UnityEngine.Assertions;
+using UnityEngine.Tilemaps;
+using SystemMiami.Utilities;
 
 //Made By Antony (Layla edited)
 
 // The main class responsible for generating and managing streets in the game.
 public class IntersectionManager : Singleton<IntersectionManager>
 {
+    [SerializeField] private dbug log = new();
+
     // Serialized fields allow these private variables to be set in the Unity Editor.
     [Header("Street Generation Settings")] [SerializeField]
     private IntersectionPool[] streetPools; // Array of StreetPools, which contain prefabs for different street types.
@@ -39,6 +44,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
 
     // List to keep track of instantiated street GameObjects.
     private List<GameObject> streetObjects = new List<GameObject>();
+
 
     // Queue used for breadth-first street generation.
     private Queue<Vector2Int> streetQueue = new Queue<Vector2Int>();
@@ -71,10 +77,14 @@ public class IntersectionManager : Singleton<IntersectionManager>
     
     [Header("NPC Settings")]
     [SerializeField] private GameObject npcPrefab;
+    [SerializeField] private int maxNpcsTotal;
+    [SerializeField] private int maxNpcsShops;
+    [SerializeField] private int maxNpcsQuests;
 
-   
-    
-    [Header("NPC Spawn Settings")]
+    private int currentNpcCount = 0;
+    private int currentShopCount = 0;
+    private int currentQuestCount = 0;
+
     [Range(0,1)]
     [SerializeField] private float dialogueChance = 0.5f;
     [Range(0,1)]
@@ -82,7 +92,6 @@ public class IntersectionManager : Singleton<IntersectionManager>
     [Range(0,1)]
     [SerializeField] private float shopChance = 0.2f;
     public NPCInfoSO npcInfo;
-    public event Action GenerationComplete;
 
     // Possible directions to check for neighboring streets (up, down, right, left).
     private Vector2Int[] directions =
@@ -129,10 +138,23 @@ public class IntersectionManager : Singleton<IntersectionManager>
     // Reference to the last StreetData object generated.
     private StreetData lastStreetGenerated;
 
+    [field: SerializeField, ReadOnly] public GameObject FarthestIntersetion { get; private set; }
+
+
+    public event Action GenerationComplete;
+
 
     // Unity's Start method is called before the first frame update.
     void Start()
     {
+        if (GAME.MGR.NoNpcs)
+        {
+            Debug.LogWarning($"Game Manager setting for NoNpcs was true. " +
+                $"Setting all NPC max values to zero.");
+            maxNpcsTotal = 0;
+            maxNpcsShops = 0;
+            maxNpcsQuests = 0;
+        }
         playerPrefab = GameObject.Find("Player");
         InitializeStreetPoolDictionary(); // Prepare the dictionary mapping StreetTypes to StreetPools.
         InitializeStreetGrid(); // SetAll up the grid itemData structure for street generation.
@@ -379,13 +401,16 @@ public class IntersectionManager : Singleton<IntersectionManager>
             int firstEntranceIndex = allEntrances.IndexOf(firstEntrance);
             allEntrances.RemoveRange(firstEntranceIndex, dataEntrances.Length - 1);
         }
-        NPCSpawner[] NPCs = streetData.streetInstance.GetComponentsInChildren<NPCSpawner>();
-        if (NPCs.Length > 0)
+
+        NPCSpawner[] NpcSpawners = streetData.streetInstance.GetComponentsInChildren<NPCSpawner>();
+
+        if (NpcSpawners.Length > 0)
         {
-            Debug.Log("Found NPCs");
-            NPCSpawner firstNPC = NPCs[0];
+            Debug.Log("Found NpcSpawners");
+
+            NPCSpawner firstNPC = NpcSpawners[0];
             int firstNPCIndex = allNPCs.IndexOf(firstNPC);
-            allNPCs.RemoveRange(firstNPCIndex, NPCs.Length - 1);
+            allNPCs.RemoveRange(firstNPCIndex, NpcSpawners.Length - 1);
         }
 
         // Destroy the old street instance.
@@ -407,15 +432,36 @@ public class IntersectionManager : Singleton<IntersectionManager>
 
     private void InstantiateFromPool(StreetData streetData, IntersectionPool pool)
     {
-
         // Randomly select a prefab from the pool.
-        GameObject prefabToInstantiate = pool.streetPrefabs[Random.Range(0, pool.streetPrefabs.Length)];
+        GameObject rawPrefab = pool.streetPrefabs[Random.Range(0, pool.streetPrefabs.Length)];
+        GameObject prefabToInstantiate;
+
+        if (rawPrefab.TryGetComponent(out Grid grid))
+        {
+            prefabToInstantiate = GetStrippedPrefab(grid.transform);
+        }
+        else
+        {
+            log.warn(
+                $"{rawPrefab.name} is using an outdated format. It will work, " +
+                $"but consider using the new format (with the Grid-containing " +
+                $"object as the root) instead.");
+
+            prefabToInstantiate = rawPrefab;
+        }
 
         // Calculate the position in the world for this grid index.
         Vector3 position = GetPositionFromGridIndex(streetData.gridIndex);
 
         // Instantiate the new street prefab.
         GameObject streetInstance = Instantiate(prefabToInstantiate, position, Quaternion.identity, transform);
+
+        if (rawPrefab.TryGetComponent(out Author auth)
+            && !streetInstance.TryGetComponent(out Author instanceAuth))
+        {
+            instanceAuth = streetInstance.AddComponent<Author>();
+            instanceAuth.Name = $"{auth.Name} (From prefab: \'{rawPrefab.name}\')";
+        }
 
         // Name the street instance based on its index in the grid.
         streetInstance.name = $"Street [{streetData.gridIndex.x}, {streetData.gridIndex.y}]";
@@ -440,8 +486,6 @@ public class IntersectionManager : Singleton<IntersectionManager>
         DungeonEntrance[] dungeonEntrances = instance.GetComponentsInChildren<DungeonEntrance>();
        
         allEntrances.AddRange(dungeonEntrances);
-        
-        
 
         if (dungeonEntrances.Length != streetData.dungeonEntranceDifficulties.Count)
         {
@@ -487,35 +531,42 @@ public class IntersectionManager : Singleton<IntersectionManager>
         GameObject instance = streetData.streetInstance;
         NPCSpawner[] npcSpawners = instance.GetComponentsInChildren<NPCSpawner>();
         allNPCs.AddRange(npcSpawners);
-
-        
     }
 
     public void SpawnNPCs()
     {
+        int maxNpcs = Mathf.Min(maxNpcsTotal, allNPCs.Count);
+
+        int npcsToSpawn = Random.Range(0, maxNpcs);
         
-        foreach(NPCSpawner spawner in allNPCs)
+        for (int i = 0; i < npcsToSpawn; i++)
         {
-            spawner.SpawnNPC(npcPrefab);
-            AssignRoles(spawner.npcPrefabInstance);
+            Assert.IsTrue(i < maxNpcsTotal);
+
+            GameObject npcInstance = allNPCs[i].SpawnNPC(npcPrefab);
+            AssignRole(npcInstance);
         }
-       
         
+        Debug.Log("Spawned NPCs");
     }
 
-    private void AssignRoles(GameObject spawnerNpcPrefab)
+    private void AssignRole(GameObject spawnerNpcPrefab)
     {
         NPC npc = spawnerNpcPrefab.GetComponent<NPC>();
      
        float roll = Random.value;
 
-       if (roll < shopChance)
+       if (roll < shopChance
+            && currentShopCount < maxNpcsShops)
        {
-          npc.Initialize(NPCType.ShopKeeper);
+            currentShopCount++;
+            npc.Initialize(NPCType.ShopKeeper);
        }
-       else if (roll < shopChance + questChance)
-       {
-         npc.Initialize(NPCType.QuestGiver);
+       else if (roll < shopChance + questChance
+            && currentQuestCount < maxNpcsQuests)
+        {
+            currentQuestCount++;
+            npc.Initialize(NPCType.QuestGiver);
        }
         else
         {
@@ -681,6 +732,32 @@ public class IntersectionManager : Singleton<IntersectionManager>
         }
     }
 
+    private GameObject GetStrippedPrefab(Transform prefabRoot)
+    {
+        if (prefabRoot.childCount == 0)
+        {
+            log.error(
+                $"{prefabRoot.name} didn't have any children, " +
+                $"and had to return the original prefab... " +
+                $"Ensure that {prefabRoot.name} is formatted correctly");
+
+            return prefabRoot.gameObject;
+        }
+        else if (!prefabRoot.GetChild(0).TryGetComponent(out Tilemap map))
+        {
+            log.error(
+                $"{prefabRoot.GetChild(0).name} didn't have a tilemap, " +
+                $"and had to return the original prefab..." +
+                $"Ensure that {prefabRoot.name} is formatted correctly");
+
+            return prefabRoot.gameObject;
+        }
+        else
+        {
+            return map.gameObject;
+        }
+    }
+
     private string getGridReport()
     {
         string report = "GRID REPORT\n";
@@ -750,6 +827,16 @@ public class IntersectionManager : Singleton<IntersectionManager>
     {
         CleanupExits(); // Adjust exits to ensure consistency between connected streets.
         SetEntranceLists();
+
+
+        Dictionary<GameObject, int> manhattan = new();
+        streetObjects.ForEach(
+            intersection => manhattan[intersection] =
+                (int)(intersection.transform.position.y + intersection.transform.position.x));
+
+        //List<GameObject> intersectionsByManhattan = manhattan.OrderBy(pair => pair.Value).ToList();
+        //FarthestIntersetion = intersectionsByPosY[intersectionsByPosY.Count - 1];
+
         easyDungeonReward = SetEXPReward(easyDungeons);
         mediumDungeonReward = SetEXPReward(mediumDungeons);
         hardDungeonReward = SetEXPReward(hardDungeons);

@@ -6,12 +6,14 @@ using SystemMiami.CombatSystem;
 using System.Collections.Generic;
 using SystemMiami.ui;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace SystemMiami.Management
 {
     public class UI : Singleton<UI>
     {
         [Header("Messages")]
+        [SerializeField] private bool inputPromptsOn = true;
         [SerializeField] private TextBox inputPromptPanel;
 
 
@@ -35,6 +37,12 @@ namespace SystemMiami.Management
 
         public void UpdateInputPrompt(string msg)
         {
+            if (!inputPromptsOn)
+            {
+                ClearInputPrompt();
+                return ;
+            }
+
             inputPromptPanel.ShowBackground();
             inputPromptPanel.ShowForeground();
             inputPromptPanel.SetForeground(msg);
@@ -93,12 +101,14 @@ namespace SystemMiami.Management
                 combatant._inventory,
                 combatant);
 
+            Assert.IsNotNull(combatantLoadout);
+
             if (combatant is PlayerCombatant)
             {
                 FillLoadoutBars(combatantLoadout);
             }
 
-            CombatantLoadoutCreated.Invoke(combatantLoadout, combatant);
+            CombatantLoadoutCreated?.Invoke(combatantLoadout, combatant);
         }
 
         protected virtual void OnSlotClicked(ActionQuickslot slot)

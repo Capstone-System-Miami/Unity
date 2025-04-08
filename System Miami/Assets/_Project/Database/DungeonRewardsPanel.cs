@@ -1,19 +1,16 @@
-using System;
 using System.Collections.Generic;
+using System.Linq;
+using SystemMiami.InventorySystem;
+using SystemMiami.Management;
+using SystemMiami.ui;
+using SystemMiami.Utilities;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
-using SystemMiami.InventorySystem;
-using SystemMiami.Dungeons;
-using SystemMiami.Management;
-using SystemMiami.Utilities;
-using SystemMiami.ui;
-using UnityEngine.Serialization;
-using System.Linq;
 
 namespace SystemMiami
 {
-  
+
     public class DungeonRewardsPanel : Singleton<DungeonRewardsPanel>
     {
       
@@ -65,10 +62,10 @@ namespace SystemMiami
                 playerInventory.OnInventoryChanged += RefreshPanel;
                 
             }
-            SubscribeToGrid(inventoryUI.TabConsumable.ItemGrid);
-            SubscribeToGrid(inventoryUI.TabPhysical.ItemGrid);
-            SubscribeToGrid(inventoryUI.TabMagical.ItemGrid);
-            SubscribeToGrid(inventoryUI.TabEquipment.ItemGrid);
+            SubscribeToGrid(inventoryUI.Tabs.TabConsumable.ItemGrid);
+            SubscribeToGrid(inventoryUI.Tabs.TabPhysical.ItemGrid);
+            SubscribeToGrid(inventoryUI.Tabs.TabMagical.ItemGrid);
+            SubscribeToGrid(inventoryUI.Tabs.TabEquipment.ItemGrid);
             SubscribeToGrid(loadoutGridPhysical);
             SubscribeToGrid(loadoutGridMagical);
             SubscribeToGrid(loadoutGridConsumable);
@@ -83,10 +80,10 @@ namespace SystemMiami
             {
                 playerInventory.OnInventoryChanged -= RefreshPanel;
             }
-            UnsubscribeToGrid(inventoryUI.TabConsumable.ItemGrid);
-            UnsubscribeToGrid(inventoryUI.TabPhysical.ItemGrid);
-            UnsubscribeToGrid(inventoryUI.TabMagical.ItemGrid);
-            UnsubscribeToGrid(inventoryUI.TabEquipment.ItemGrid);
+            UnsubscribeToGrid(inventoryUI.Tabs.TabConsumable.ItemGrid);
+            UnsubscribeToGrid(inventoryUI.Tabs.TabPhysical.ItemGrid);
+            UnsubscribeToGrid(inventoryUI.Tabs.TabMagical.ItemGrid);
+            UnsubscribeToGrid(inventoryUI.Tabs.TabEquipment.ItemGrid);
             UnsubscribeToGrid(loadoutGridPhysical);
             UnsubscribeToGrid(loadoutGridMagical);
             UnsubscribeToGrid(loadoutGridConsumable);

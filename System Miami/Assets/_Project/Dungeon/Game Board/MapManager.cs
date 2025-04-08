@@ -5,7 +5,9 @@ using SystemMiami.Utilities;
 using SystemMiami.CombatSystem;
 using SystemMiami.Dungeons;
 using UnityEngine;
+using System.Linq;
 using UnityEngine.Tilemaps;
+using UnityEngine.Assertions;
 
 namespace SystemMiami
 {
@@ -14,6 +16,8 @@ namespace SystemMiami
     // so I switched it to inherit from that for consistency.
     public class MapManager : Singleton<MapManager>
     {
+        [SerializeField] private dbug log;
+
         // Just an enum for the height of the block,
         // which is distinct from the zIndex
         public BlockHeight gridTilesHeight;
@@ -29,11 +33,29 @@ namespace SystemMiami
 
         private Dungeon dungeon;
         private Tilemap gameBoardTilemap;
-        private Tilemap obstaclesTilemap; // This will change, possibly to Obstacle[]
+        private Tilemap staticUndamageable;
+        private Tilemap staticDamageable;
+        private Tilemap dynamicUndamageable;
+        private Tilemap dynamicDamageable;
+        private int obstacleTotal;
+
         private BoundsInt bounds;
         private GameObject overlayContainer;
 
-        public BoundsInt Bounds { get { return bounds; } }
+        public TileCorners TileCorners { get; private set; }
+
+        public int SizeInTileUnits {
+            get
+            {
+                Assert.IsTrue(
+                    Mathf.Sqrt(map.Count) == (int)Mathf.Sqrt(map.Count),
+                    $"{name} is not using a square game board." +
+                    $"This breaks the game.");
+
+                return (int)Mathf.Sqrt(map.Count);
+            }
+        }
+
         public Dungeon Dungeon { get { return dungeon; } }
 
         protected override void Awake()
@@ -56,51 +78,79 @@ namespace SystemMiami
 
             if (environment == null)
             {
-                Debug.LogError($"{name}'s {this} didn't find " +
+                log.error($"{name}'s {this} didn't find " +
                     $"an environment to use");
                 return;
             }
 
             if (!environment.TryGetComponent(out dungeon))
             {
-                Debug.LogError($"{name}'s {this} didn't find " +
+                log.error($"{name}'s {this} didn't find " +
                     $"a Dungeon on the environment object");
                 return;
             }
 
             if (dungeon.OverlayTileContainer == null)
             {
-                Debug.LogError($"{name}'s {this} didn't find " +
+                log.error($"{name}'s {this} didn't find " +
                     $"an Overlay Container in {environment}'s {dungeon}");
                 return;
             }
 
             if (dungeon.GameBoard == null)
             {
-                Debug.LogError($"{name}'s {this} didn't find " +
+                log.error($"{name}'s {this} didn't find " +
                     $"a GameBoard object in {environment}'s {dungeon}");
                 return;
             }
             else if (!dungeon.GameBoard.TryGetComponent(out gameBoardTilemap))
             {
-                Debug.LogError($"{name}'s {this} didn't find " +
+                log.error($"{name}'s {this} didn't find " +
                     $"a tilemap component on {dungeon}'s {dungeon.GameBoard}");
                 return;
             }
 
-            if (dungeon.Obstacles == null)
+
+            if (dungeon.StaticUndamageable != null)
             {
-                Debug.LogError($"{name}'s {this} didn't find " +
+                this.staticUndamageable = dungeon.StaticUndamageable;
+            }
+            else
+            {
+                log.error($"{name}'s {this} didn't find " +
                     $"a GameBoard object in {environment}'s {dungeon}");
                 return;
             }
-            else if (!dungeon.Obstacles.TryGetComponent(out obstaclesTilemap))
+            if (dungeon.StaticDamageable != null)
             {
-                Debug.LogError($"{name}'s {this} didn't find " +
-                    $"a tilemap component on {dungeon}'s {dungeon.GameBoard}");
+                this.staticDamageable = dungeon.StaticUndamageable;
+            }
+            else
+            {
+                log.error($"{name}'s {this} didn't find " +
+                    $"a GameBoard object in {environment}'s {dungeon}");
                 return;
             }
-
+            if (dungeon.DynamicUndamageable != null)
+            {
+                this.staticUndamageable = dungeon.StaticUndamageable;
+            }
+            else
+            {
+                log.error($"{name}'s {this} didn't find " +
+                    $"a GameBoard object in {environment}'s {dungeon}");
+                return;
+            }
+            if (dungeon.DynamicDamageable != null)
+            {
+                this.staticUndamageable = dungeon.StaticUndamageable;
+            }
+            else
+            {
+                log.error($"{name}'s {this} didn't find " +
+                    $"a GameBoard object in {environment}'s {dungeon}");
+                return;
+            }
 
 
             // Construction
@@ -110,18 +160,6 @@ namespace SystemMiami
 
             // Get the bounds of tile map in BounsInt
             bounds = gameBoardTilemap.cellBounds;
-
-            Debug.Log(
-                $"Bounds\n" +
-                $"| xmin {bounds.min.x}\n" +
-                $"| xmax {bounds.max.x}\n" +
-                $"| ymin {bounds.min.y}\n" +
-                $"| ymax { bounds.max.y}\n" +
-                $"|zmin { bounds.min.z}\n" +
-                $"| zmax {bounds.max.z}"
-                );
-
-            CenterPos = GetCenter(bounds);
 
             // Looping through all of our tiles.
             // For each tile found in the tilemap, it instantiates an overlay tile
@@ -148,10 +186,41 @@ namespace SystemMiami
                             //overlayTile.GetComponent<SpriteRenderer>().sortingOrder = gameBoardTilemap.GetComponent<TilemapRenderer>().sortingOrder;
                             overlayTile.GridLocation = tileLocation;
                             map.Add(tileKey, overlayTile);
+
+                            if (GAME.MGR.IgnoreObstacles)
+                            {
+                                staticUndamageable?.gameObject.SetActive(false);
+                                staticDamageable?.gameObject.SetActive(false);
+                                dynamicUndamageable?.gameObject.SetActive(false);
+                                dynamicDamageable?.gameObject.SetActive(false);
+                            }
+                            else
+                            {
+                                Obstacle obstacle = null;
+                                if (!TryPlaceObstacle(staticUndamageable, overlayTile, out obstacle))
+                                {
+                                    log.warn($"Couldn't place su obst on {overlayTile}.");
+                                }
+                                else if (!TryPlaceObstacle(staticDamageable, overlayTile, out obstacle))
+                                {
+                                    log.warn($"Couldn't place sd obst on {overlayTile}.");
+                                }
+                                else if (!TryPlaceObstacle(dynamicUndamageable, overlayTile, out obstacle))
+                                {
+                                    log.warn($"Couldn't place du obst on {overlayTile}.");
+                                }
+                                else if (!TryPlaceObstacle(dynamicDamageable, overlayTile, out obstacle))
+                                {
+                                    log.warn($"Couldn't place dd obst on {overlayTile}.");
+                                }
+                            }
                         }
                     }
                 }
             }
+
+            InitCenter();
+            InitCorners();
         }
 
         public bool TryGetTile(Vector2Int coordinates, out OverlayTile tile)
@@ -198,7 +267,7 @@ namespace SystemMiami
         {
             if (!tile.ValidForPlacement)
             {
-                Debug.LogError(
+                log.error(
                     $"Trying to place {occupant} " +
                     $"on {tile.gameObject}. " +
                     $"This placement is invalid.");
@@ -216,12 +285,72 @@ namespace SystemMiami
             return Coordinates.IsoToScreen(tileLocation, gridTilesHeight);
         }
 
-        private Vector2Int GetCenter(BoundsInt bounds)
+        private bool TryPlaceObstacle(Tilemap obstacleMap, OverlayTile tile, out Obstacle obstacle)
         {
-            return new(
-                Mathf.RoundToInt(bounds.center.x),
-                Mathf.RoundToInt(bounds.center.y)
-                );
+            obstacle = null;
+
+            // obstacle placement
+            Vector3Int posToCheck = new (tile.BoardPos.x, tile.BoardPos.y, 2);
+
+            if (!obstacleMap.HasTile(posToCheck))
+            {
+                return false;
+            }
+            else
+            {
+                TileData tileData = new();
+                TileBase tileBase = obstacleMap.GetTile(posToCheck);
+                tileBase.GetTileData(posToCheck, obstacleMap, ref tileData);
+                obstacleMap.SetTile(posToCheck, null);
+
+                Sprite obstacleSprite = tileData.sprite;
+
+                GameObject newObstacleObj = new($"OBSTACLE {obstacleTotal}");
+                newObstacleObj.transform.SetParent(obstacleMap.transform);
+                obstacle = newObstacleObj.AddComponent<DynamicObstacle>();
+                obstacle.Initialize(obstacleSprite);
+                return TryPlaceOnTile(obstacle, tile);
+            }
+        }
+
+        private void InitCorners()
+        {
+            List<Vector2Int> orderByX = map.Keys.OrderBy(vec => vec.x).ToList();
+            List<Vector2Int> orderByY = map.Keys.OrderBy(vec => vec.y).ToList();
+
+            int lastTileIndex = map.Count - 1;
+
+            Vector2Int bottom = new(
+                orderByX[0].x,
+                orderByY[0].y
+            );
+
+            Vector2Int top = new(
+                orderByX[lastTileIndex].x,
+                orderByY[lastTileIndex].y
+            );
+
+            Vector2Int left = new(
+                orderByX[0].x,
+                orderByY[lastTileIndex].y
+            );
+
+            Vector2Int right = new(
+                orderByX[lastTileIndex].x,
+                orderByY[0].y
+            );
+
+            TileCorners = new(map[bottom], map[top], map[left], map[right]);
+        }
+
+        private void InitCenter()
+        {
+            Assert.IsTrue(
+                SizeInTileUnits % 2 != 0,
+                $"The game board's size is not odd. This could cause " +
+                $"issues with many systems.");
+
+            CenterPos = new(SizeInTileUnits, SizeInTileUnits);
         }
     }
 }

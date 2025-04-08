@@ -6,6 +6,8 @@ using SystemMiami.CombatSystem;
 using SystemMiami.Management;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.Assertions;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -16,13 +18,21 @@ namespace SystemMiami
 
     public class Database : Singleton<Database>
     {
-      
-       [SerializeField] private List<NewAbilitySO> physicalAbilityEntries = new();
-       [SerializeField] private List<NewAbilitySO> magicalAbilityEntries = new();
-       [SerializeField] private List<ConsumableSO> consumableEntries = new();
-       [SerializeField] private List<NewAbilitySO> enemyPhysicalAbilityEntries = new();
-       [SerializeField] private List<NewAbilitySO> enemyMagicalAbilityEntries = new();
-       [FormerlySerializedAs("equipmentEntries")] [SerializeField] private List<EquipmentModSO> equipmentModEntries = new();
+        [SerializeField] private List<ItemData> PhysicalAbilityItemDatas = new List<ItemData>();
+        [SerializeField] private List<ItemData> MagicalAbilityItemDatas = new List<ItemData>();
+        [SerializeField] private List<ItemData> ConsumableItemDatas = new List<ItemData>();
+        [SerializeField] private List<ItemData> EquipmentModItemDatas = new List<ItemData>();
+        [SerializeField] private List<ItemData> EnemyPhysicalAbilityItemDatas = new List<ItemData>();
+        [SerializeField] private List<ItemData> EnemyMagicalAbilityItemDatas = new List<ItemData>();
+        [SerializeField] private List<ItemData> AllItemDatas = new List<ItemData>();
+
+
+        [SerializeField] private List<NewAbilitySO> physicalAbilityEntries = new();
+        [SerializeField] private List<NewAbilitySO> magicalAbilityEntries = new();
+        [SerializeField] private List<ConsumableSO> consumableEntries = new();
+        [SerializeField] private List<NewAbilitySO> enemyPhysicalAbilityEntries = new();
+        [SerializeField] private List<NewAbilitySO> enemyMagicalAbilityEntries = new();
+        [SerializeField] private List<EquipmentModSO> equipmentModEntries = new();
        
 
        private Dictionary<int, NewAbilitySO> physicalAbilityDatabase;
@@ -34,17 +44,11 @@ namespace SystemMiami
 
        [SerializeField] private bool characterSelection;
 
-
-       
-       
-       
        private void OnEnable()
        {
            Initialize();
        }
 
-    
-       
        public void Initialize()
        {
             // Filter database to only include abilities matching the player's class type.
@@ -52,15 +56,18 @@ namespace SystemMiami
             CharacterClassType playerClassType = playerAttributes._characterClass;
             
             // Filter physical abilities if not in character selection screen
-            if (!characterSelection)
-            {
-                physicalAbilityEntries = physicalAbilityEntries
-                    .Where(entry => entry.classType == playerClassType).ToList();
+            //if (!characterSelection)
+            //{
+            //    physicalAbilityEntries = physicalAbilityEntries
+            //        .Where(entry => entry.classType == playerClassType && !entry.isGeneralAbility).ToList();
+            //    PhysicalAbilityItemDatas = physicalAbilityEntries.Select(so => so.itemData).ToList();
 
-                // Filter magical abilities
-                magicalAbilityEntries = magicalAbilityEntries
-                    .Where(entry => entry.classType == playerClassType).ToList();
-            }
+
+            //    // Filter magical abilities
+            //    magicalAbilityEntries = magicalAbilityEntries
+            //        .Where(entry => entry.classType == playerClassType && !entry.isGeneralAbility).ToList();
+            //    PhysicalAbilityItemDatas = physicalAbilityEntries.Select(so => so.itemData).ToList();
+            //}
 
             // Convert lists to dictionaries 
             physicalAbilityDatabase = physicalAbilityEntries.ToDictionary(entry => entry.itemData.ID);
@@ -96,20 +103,26 @@ namespace SystemMiami
        {
            List<ItemData> result = new();
            
-           switch (type)
-           {
-               default:
-               case ItemType.PhysicalAbility:
-                   result = physicalAbilityEntries.Select(so => so.itemData).ToList();
-                   break;
-               case ItemType.MagicalAbility:
-                   result = magicalAbilityEntries.Select(so => so.itemData).ToList();
-                   break;
-               case ItemType.Consumable:
-                   result = consumableEntries.Select(so => so.itemData).ToList();
-                   break;
+            switch (type)
+            {
+                default:
+                 case ItemType.PhysicalAbility:
+                    Assert.IsNotNull(physicalAbilityEntries);
+                    Assert.IsTrue(physicalAbilityEntries.Count > 0);
+                    result = physicalAbilityEntries.Select(so => so.itemData).ToList();
+                    Assert.IsNotNull(result);
+                    Assert.IsTrue(result.Count > 0,
+                        $"{PlayerManager.MGR.GetComponent<Attributes>()._characterClass} " +
+                        $"has no functioning Physical abilities.");
+                    break;
+                case ItemType.MagicalAbility:
+                    result = magicalAbilityEntries.Select(so => so.itemData).ToList();
+                    break;
+                case ItemType.Consumable:
+                    result = consumableEntries.Select(so => so.itemData).ToList();
+                    break;
                
-           }
+            }
            return result;
        }
 
@@ -173,15 +186,17 @@ namespace SystemMiami
        public ItemData GetDataWithJustID(int id)
        {
            int IDType = id / 1000;
-           
-           return IDType switch
-           {
-               1 => physicalAbilityDatabase.ContainsKey(id) ? physicalAbilityDatabase[id].itemData : default,
-               2 => magicalAbilityDatabase.ContainsKey(id) ? magicalAbilityDatabase[id].itemData : default,
-               3 => consumableDatabase.ContainsKey(id) ? consumableDatabase[id].itemData : default,
-               4 => equipmentModDatabase.ContainsKey(id) ? equipmentModDatabase[id].itemData : default,
-               _ => default
-           };
+            Debug.Log("Something is trying to get an ID SLOT");
+            return IDType switch
+            {
+                1 => physicalAbilityDatabase.ContainsKey(id) ? physicalAbilityDatabase[id].itemData : default,
+                2 => magicalAbilityDatabase.ContainsKey(id) ? magicalAbilityDatabase[id].itemData : default,
+                3 => consumableDatabase.ContainsKey(id) ? consumableDatabase[id].itemData : default,
+                4 => equipmentModDatabase.ContainsKey(id) ? equipmentModDatabase[id].itemData : default,
+                _ => default
+            };
+
+            
        }
 
        // Factory 
@@ -195,26 +210,24 @@ namespace SystemMiami
            // Check if it's an ability
            if (physicalAbilityDatabase.TryGetValue(id, out NewAbilitySO abilityEntry))
            {
-             return new AbilityPhysical(abilityEntry, user);
+                return new AbilityPhysical(abilityEntry, user);
            }
-
            if (magicalAbilityDatabase.TryGetValue(id, out abilityEntry))
            {
-               return new AbilityMagical(abilityEntry, user);
+                return new AbilityMagical(abilityEntry, user);
            }
            // Check if it's a consumable
            if (consumableDatabase.TryGetValue(id, out ConsumableSO consumableEntry))
            {
-               return new Consumable(consumableEntry, user);
+                return new Consumable(consumableEntry, user);
            }
            if (enemyPhysicalAbilityDatabase.TryGetValue(id, out  abilityEntry))
            {
-               return new AbilityPhysical(abilityEntry, user);
+                return new AbilityPhysical(abilityEntry, user);
            }
-
            if (enemyMagicalAbilityDatabase.TryGetValue(id, out abilityEntry))
            {
-               return new AbilityMagical(abilityEntry, user);
+                return new AbilityMagical(abilityEntry, user);
            }
            else
            {
@@ -295,6 +308,7 @@ namespace SystemMiami
         {
             string[] newAbilityGuids = AssetDatabase.FindAssets("t:NewAbilitySO");
             var allAbilities = new List<NewAbilitySO>();
+            var allAbilitiesData = new List<ItemData>();
 
             foreach (string guid in newAbilityGuids)
             {
@@ -303,12 +317,26 @@ namespace SystemMiami
                 if (ability != null)
                 {
                     allAbilities.Add(ability);
+                    
+
                 }
             }
             physicalAbilityEntries.Clear();
             magicalAbilityEntries.Clear();
+            equipmentModEntries.Clear();
             enemyPhysicalAbilityEntries.Clear();
             enemyMagicalAbilityEntries.Clear();
+
+
+
+            PhysicalAbilityItemDatas.Clear();
+            MagicalAbilityItemDatas.Clear();
+            ConsumableItemDatas.Clear();
+            EquipmentModItemDatas.Clear();
+            EnemyPhysicalAbilityItemDatas.Clear();
+            EnemyMagicalAbilityItemDatas.Clear();
+
+
             foreach (var ability in allAbilities)
             {
                 switch (ability.AbilityType)
@@ -317,11 +345,13 @@ namespace SystemMiami
                         if (ability.isEnemyAbility)
                         {
                             enemyPhysicalAbilityEntries.Add(ability);
+                            EnemyPhysicalAbilityItemDatas.Add(ability.itemData);
                         }
                         else
                         {
                             physicalAbilityEntries.Add(ability);
-                            
+                            PhysicalAbilityItemDatas.Add(ability.itemData);
+
                         }
                        
                         break;
@@ -330,11 +360,13 @@ namespace SystemMiami
                         if (ability.isEnemyAbility)
                         {
                             enemyMagicalAbilityEntries.Add(ability);
+                            EnemyMagicalAbilityItemDatas.Add(ability.itemData);
                         }
                         else
                         {
                             magicalAbilityEntries.Add(ability);
-                            
+                            MagicalAbilityItemDatas.Add(ability.itemData);
+
                         }
                         break;
                 }
@@ -354,15 +386,21 @@ namespace SystemMiami
             }
 
             consumableEntries = allConsumables;
+            ConsumableItemDatas = consumableEntries.Select(so => so.itemData).ToList();
             string[] guids = AssetDatabase.FindAssets("t:EquipmentModSO");
             var results = new List<EquipmentModSO>();
             foreach (string guid in guids)
             {
                 var path = AssetDatabase.GUIDToAssetPath(guid);
                 var modSo = AssetDatabase.LoadAssetAtPath<EquipmentModSO>(path);
-                if (modSo != null) results.Add(modSo);
+                if (modSo != null) 
+                {
+                    results.Add(modSo); 
+                    
+                }
             }
             equipmentModEntries = results;
+            EquipmentModItemDatas = equipmentModEntries.Select(so => so.itemData).ToList();
             // ================ 4) Mark the asset as dirty ================
             EditorUtility.SetDirty(this);
             optional: AssetDatabase.SaveAssets();

@@ -1,7 +1,10 @@
 ﻿// Author: Layla
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using SystemMiami.Utilities;
+using SystemMiami.CombatSystem;
 
 namespace SystemMiami
 {
@@ -30,7 +33,16 @@ namespace SystemMiami
         {
             get
             {
+                //string dbugMsg = $"<color=yellow>Reading (& Loading) \'ForMovement\'</color>\n";
+                //if (startInclusive != null)
+                //{
+                //    dbugMsg.Replace("(& Loading) ", "");
+                //}
+
                 startExclusive ??= GetTruncated(false);
+
+                //dbugMsg += $"<color=red>{string.Join(" -> ", startExclusive.Select(tile => tile.name).ToArray())}</color>";
+                //Debug.Log(dbugMsg);
                 return startExclusive;
             }
         }
@@ -69,20 +81,29 @@ namespace SystemMiami
 
         public MovementPath(
             OverlayTile start,
-            OverlayTile end)
-                : this(start, end, -1)
+            OverlayTile end,
+            bool forced)
+                : this(start, end, forced, int.MaxValue)
         { }
 
         public MovementPath(
             OverlayTile start,
             OverlayTile end,
+            bool forced,
             int maxTiles)
         {
             this.start = start;
             this.end = end;
             this.pathFinder = new();
             this.maxTiles = maxTiles;
-            this.path = pathFinder.FindPath(this.start, this.end);
+
+            this.path = forced
+                                                               // TODO
+                                                               // This shouldn't need
+                                                               // to be set to edge.
+                                                               // vvvvv 
+                ? pathFinder.FindPath(this.start, this.end, AdjacencyType.EDGE, true)
+                : pathFinder.FindPath(this.start, this.end);
 
             toRemove = path.Count - maxTiles;
         }
@@ -92,8 +113,8 @@ namespace SystemMiami
             Color outsideRange)
         {
             DrawArrows();
-            HighlightValidMoves(Color.yellow);
-            HighlightInvalidMoves(Color.red);
+            HighlightValidMoves(withinRange);
+            HighlightInvalidMoves(outsideRange);
         }
 
         public void UnDrawAll()
@@ -163,16 +184,14 @@ namespace SystemMiami
                 Color.red,
                 Color.yellow,
             };
+
             int i = 0;
-
-
             foreach(OverlayTile tile in tiles)
             {
                 i++;
                 tile?.Highlight(colors[i % 5]);
             }
         }
-
 
         /// <summary>
         /// Calculate a path to the tile arg.

@@ -1,10 +1,10 @@
 using SystemMiami.Management;
-using SystemMiami.ui;
 using SystemMiami.Utilities;
 using UnityEngine;
 using UnityEngine.UI;
+using SystemMiami.CombatRefactor;
 
-namespace SystemMiami
+namespace SystemMiami.ui
 {
     public class PopUpHandler : Singleton<PopUpHandler>
     {
@@ -13,6 +13,10 @@ namespace SystemMiami
         public RectTransform Popup;
         public Text ItemName;
         public Text DescriptionText;
+        public Text StatusIndicator;
+        [TextArea] public string enabledStr;
+        [TextArea] public string cooldownStr;
+        [TextArea] public string usesRemainingStr;
 
         public ItemData CurrentItemData;
         public Vector2 offset;
@@ -41,8 +45,28 @@ namespace SystemMiami
             OpenPopup(itemData, slot.RT, true);
         }
 
+        public void OpenPopup(CombatAction combatAction, ActionQuickslot slot)
+        {
+            ItemData itemData = Database.MGR.GetDataWithJustID(combatAction.ID);
+
+            if (combatAction is NewAbility ability)
+            {
+                StatusIndicator.text = ability.IsOnCooldown
+                    ? cooldownStr.Replace("<>", ability.CooldownRemaining.ToString())
+                    : enabledStr;
+            }
+            else if (combatAction is Consumable consumable)
+            {
+                StatusIndicator.text = usesRemainingStr.Replace("<>", consumable.UsesRemaining.ToString());
+            }
+
+            OpenPopup(itemData, slot.RT, true);
+        }
+
         public void OpenPopup(ItemData itemData, InventoryItemSlot slot)
         {
+            StatusIndicator.text = "";
+
             OpenPopup(itemData, slot.RT, false);
         }
 
@@ -70,7 +94,7 @@ namespace SystemMiami
                 Vector2 slotposScreen = (Vector2)Camera.main.WorldToScreenPoint(rt.position);
 
                 Canvas slotCanvas;
-                TryGetCanvasInParents(rt, out slotCanvas);
+                UiHelpers.TryGetCanvasInParents(rt, out slotCanvas);
 
                 // TODO: This is really bad I have no idea why 50 works and I'm a little scared about it
                 Vector2 myPosScreen = new(slotposScreen.x, slotposScreen.y + (rt.rect.height * slotCanvas.scaleFactor) * 50);
@@ -82,10 +106,9 @@ namespace SystemMiami
                     //);
             }
 
-
             // Set the text in the popup
             BindText();
-        }
+        }        
 
         public void ClosePopup()
         {
@@ -116,11 +139,11 @@ namespace SystemMiami
         {
             // Get the first canvas in a
             // recursive search of the popup's parents.
-            if (Popup != null && TryGetCanvasInParents(Popup.transform, out Canvas existingPopupCanvas))
+            if (Popup != null && UiHelpers.TryGetCanvasInParents(Popup, out Canvas existingPopupCanvas))
             {
                 currentCanvas = existingPopupCanvas;
             }
-            else if (TryGetCanvasInParents(transform, out Canvas thisParentCanvas))
+            else if (UiHelpers.TryGetCanvasInParents(transform, out Canvas thisParentCanvas))
             {
                 currentCanvas = thisParentCanvas;
             }
@@ -133,28 +156,6 @@ namespace SystemMiami
                     $"the {this} script");
                 return;
             }
-        }
-
-        private bool TryGetCanvasInParents(Transform child, out Canvas canvas)
-        {
-            Transform searchTarget = child;
-
-            int maxDepth = 100;
-            int depth = 0;
-
-            while ( (++depth < maxDepth) && (searchTarget != null) )
-            {
-                // Update search target
-                searchTarget = searchTarget.parent;
-
-                if (searchTarget.TryGetComponent(out canvas))
-                {
-                    return true;
-                }
-            }
-
-            canvas = null;
-            return false;
         }
     }
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using SystemMiami.CombatSystem;
 using SystemMiami.Outdated;
+using UnityEngine.Assertions;
 
 namespace SystemMiami.InventorySystem
 {
@@ -12,20 +13,23 @@ namespace SystemMiami.InventorySystem
         [SerializeField] private List<int> physicalAbilityIDs = new();
         [SerializeField] private List<int> magicalAbilityIDs = new();
         [SerializeField] private List<int> consumableIDs = new();
-        [SerializeField] private List<int> equipmentModIDs = new(); //TODO
-        [FormerlySerializedAs("quickslotPhysicalAbilities")] [SerializeField] private List<int> quickslotPhysicalAbilityIDs = new(); 
-        [FormerlySerializedAs("quickslotMagicalAbilities")] [SerializeField] private List<int> quickslotMagicalAbilityIDs = new(); 
-        [FormerlySerializedAs("quickslotConsumable")] [SerializeField] private List<int> quickslotConsumableIDs = new();
+        [SerializeField] private List<int> equipmentModIDs = new();
+        [SerializeField] private List<int> quickslotPhysicalAbilityIDs = new();
+        [SerializeField] private List<int> quickslotMagicalAbilityIDs = new();
+        [SerializeField] private List<int> quickslotConsumableIDs = new();
+        [SerializeField] private List<int> equippedEquipmentModIDs = new();
 
         [SerializeField] private int credits;
 
         public List<int> PhysicalAbilityIDs { get => physicalAbilityIDs; private set => physicalAbilityIDs = value; }
         public List<int> MagicalAbilityIDs { get => magicalAbilityIDs; private set => magicalAbilityIDs = value; }
         public List<int> ConsumableIDs { get => consumableIDs; private set => consumableIDs = value; }
+        public List<int> EquipmentModIDs { get => equipmentModIDs; private set => equipmentModIDs = value; }
 
         public List<int> QuickslotPhysicalAbilityIDs { get => quickslotPhysicalAbilityIDs; private set => quickslotPhysicalAbilityIDs = value; }
         public List<int> QuickslotMagicalAbilityIDs { get => quickslotMagicalAbilityIDs; private set => quickslotMagicalAbilityIDs = value; }
         public List<int> QuickslotConsumableIDs { get => quickslotConsumableIDs; private set => quickslotConsumableIDs = value; }
+        public List<int> EquippedEquipmentModIDs { get => equippedEquipmentModIDs; private set => equippedEquipmentModIDs = value; }
 
         public List<int> AllValidInventoryItems
         {
@@ -42,7 +46,6 @@ namespace SystemMiami.InventorySystem
 
         public int Credits { get => credits; private set => credits = value; }
 
-        
         public event System.Action OnInventoryChanged;
 
 
@@ -75,11 +78,10 @@ namespace SystemMiami.InventorySystem
                     Debug.LogError($"Tried to add an invalid ID: {ID}", this);
                     break;
             }
-            
             OnInventoryChanged?.Invoke();
         }
-        
-        public  void MoveToQuickslot(int ID)
+
+        public void MoveToQuickslot(int ID)
         {
             switch (Database.MGR.GetDataType(ID))
             {
@@ -97,7 +99,10 @@ namespace SystemMiami.InventorySystem
                     consumableIDs.Remove(ID);
                     quickslotConsumableIDs.Add(ID);
                     break;
-
+                case ItemType.EquipmentMod:
+                    equipmentModIDs.Remove(ID);
+                    equippedEquipmentModIDs.Add(ID);
+                    break;
                 default:
                     Debug.LogError(
                         $"Tried to move an item into a quickslot, but ID ({ID}) " +
@@ -124,6 +129,10 @@ namespace SystemMiami.InventorySystem
                     quickslotConsumableIDs.Remove(ID);
                     consumableIDs.Add(ID);
                     break;
+                case ItemType.EquipmentMod:
+                    equippedEquipmentModIDs.Remove(ID);
+                    equipmentModIDs.Add(ID);
+                    break;
 
                 default:
                     Debug.LogError(
@@ -144,26 +153,24 @@ namespace SystemMiami.InventorySystem
             quickslotMagicalAbilityIDs.Clear();
             quickslotPhysicalAbilityIDs.Clear();
             quickslotConsumableIDs.Clear();
-            
-            
-            switch (characterClass)
+            int startingAbilityID = characterClass switch
             {
-                case CharacterClassType.MAGE:
-                    AddToInventory(2000);
-                    break;
-                case CharacterClassType.TANK:
-                    AddToInventory(1015);
-                    break;
-                case CharacterClassType.ROGUE:
-                    AddToInventory(1019);
-                    break;
-                case CharacterClassType.FIGHTER:
-                    AddToInventory(1012);
-                    break;
-                    
-                    
-            }
-            
+                CharacterClassType.MAGE => 2000,
+                CharacterClassType.TANK => 1015,
+                CharacterClassType.ROGUE => 1019,
+                CharacterClassType.FIGHTER => 1012,
+            };
+
+            Debug.Log(
+                $"Init starting ability called on {gameObject} with args {characterClass}." +
+                $"<color = green>Adding starting Ability " +
+                $"{Database.MGR.GetDataWithJustID(startingAbilityID).Name}</color>",
+                this);
+
+            Assert.IsFalse(Database.MGR.GetDataWithJustID(startingAbilityID).failbit,
+                $"Data Corrupted. Database returned a starting ItemData with a 'true' failbit.");
+
+            AddToInventory(startingAbilityID);
         }
 
         // Gain Credits from quests and other sources

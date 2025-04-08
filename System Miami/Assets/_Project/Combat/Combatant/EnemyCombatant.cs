@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.Design;
+using SystemMiami.Animation;
 using SystemMiami.CombatRefactor;
 using SystemMiami.Dungeons;
 using UnityEngine;
@@ -21,7 +23,7 @@ namespace SystemMiami.CombatSystem
         protected override void Start()
         {
             base.Start();
-            int playerLevel = PlayerManager.MGR.GetPlayerLevel();
+            int playerLevel = PlayerManager.MGR.CurrentLevel;
             DifficultyLevel difficultyLevel = MapManager.MGR.Dungeon.DifficultyLevel;
             GetComponent<EnemiesLevel>().Initialize(difficultyLevel, playerLevel);
         }
@@ -47,8 +49,9 @@ namespace SystemMiami.CombatSystem
         {
             MovementPath pathToPlayerData = new(
                 PositionTile,
-                target.PositionTile
-                );
+                target.PositionTile,
+                false
+            );
 
             return pathToPlayerData.ForMovement.Count <= detectionRadius;
         }

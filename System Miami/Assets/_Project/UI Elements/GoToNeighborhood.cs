@@ -5,9 +5,9 @@ namespace SystemMiami.ui
 {
     public class GoToNeighborhood : MonoBehaviour
     {
-        public void Go()
+        public void Go(bool regenerate)
         {
-            GAME.MGR.GoToNeighborhood();
+            GAME.MGR.GoToNeighborhood(regenerate);
         }
     }
 }

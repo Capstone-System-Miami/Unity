@@ -1,7 +1,9 @@
 // Authors: Layla Hoey
+using System;
 using System.Collections.Generic;
 using SystemMiami.Enums;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace SystemMiami.Utilities
 {
@@ -74,7 +76,13 @@ namespace SystemMiami.Utilities
             // Force a magnitude of 1.
             // ex1. | difference = (-1.0,  0.25)
             // ex2. | difference = (-1.0, -0.75)
-            difference.Normalize();
+
+            // i guess this doesnt work the way you'd expect
+            // keeping it here incase changing it breaks everything.
+            // VV
+            //difference.Normalize();
+            // ^^
+            difference = ScaledClamp(difference);
 
             // Round both values to int
             // ex1. | x = -1, y = 0
@@ -90,19 +98,38 @@ namespace SystemMiami.Utilities
             return new Vector2Int(x, y);
         }
 
+        public static Vector2 ScaledClamp(Vector2 vec)
+        {
+            return ScaledClamp(vec, 1f);
+        }
+
+        public static Vector2 ScaledClamp(Vector2 vec, float targetRadius)
+        {
+            float currentRadius = Mathf.Max(Mathf.Abs(vec.x), Mathf.Abs(vec.y));
+            float scaleDivisor = currentRadius / targetRadius;
+            return vec / scaleDivisor;
+        }
+
+        public static Vector2Int GetNormalized(Vector2Int intVec)
+        {
+            Vector2 floatVec = ((Vector2)intVec);
+            Vector2 floatVecScaled = ScaledClamp(floatVec);
+
+            Vector2Int result = new(
+                Mathf.RoundToInt(floatVecScaled.x),
+                Mathf.RoundToInt(floatVecScaled.y)
+            );
+
+            return result;
+        }
+
         public static TileDir GetTileDir(Vector2Int directionVec)
         {
-            if (BoardDirectionEnumByVector.TryGetValue(
-                directionVec,
-                out TileDir dir)
-                )
-            {
-                return dir;
-            }
-            else // default
-            {
-                return TileDir.FORWARD_C;
-            }
+            directionVec = GetNormalized(directionVec);
+
+            Assert.IsTrue(BoardDirectionEnumByVector.ContainsKey(directionVec));
+
+            return BoardDirectionEnumByVector[directionVec];
         }
 
         public static TileDir GetTileDir(ScreenDir screenDir)
@@ -122,6 +149,50 @@ namespace SystemMiami.Utilities
         public static ScreenDir GetScreenDir(TileDir tileDir)
         {
             return BoardToScreenEnumConversion[tileDir];
+        }
+
+        public static Dictionary<TileDir, TileDir> GetWorldDirectionKey(TileDir localDirection)
+        {
+            Dictionary<TileDir, TileDir>
+                result = new();
+
+            // Should always be 8
+            int directionCount = Enum.GetValues(typeof(TileDir)).Length;
+
+            int leftIndex = 0;
+            int rightIndex = (int)localDirection;
+            int catchBeginning = 0;
+
+            int iterations = 0;
+            const int LIMIT = 10; // ( while loops are scary ¯\_( )_/¯ )
+            while (leftIndex < directionCount && iterations++ <= LIMIT)
+            {
+                // At leftIndex == 0, centered is forward center.
+                // Increment the indexer after we read it.
+                TileDir centered = (TileDir)leftIndex++;
+                TileDir shifted;
+
+                // If right is less than the number of
+                // directions in the TileDir enum,
+                if (rightIndex < directionCount)
+                {
+                    // then the shifted index is that.
+                    // Increment the indexer after we read it.
+                    shifted = (TileDir)rightIndex++;
+                }
+                // If right is >= number of directions,
+                else
+                {
+                    // start using this as the shifted index.
+                    // Increment it after we read it.
+                    shifted = (TileDir)catchBeginning++;
+                }
+
+                //Debug.Log($"local pos {centered} is now original pos {shifted}");
+                // Result set to the shifted position.
+                result[centered] = shifted;
+            }
+            return result;
         }
 
         public static void Print(DirectionContext dirInfo, string objectName)

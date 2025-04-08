@@ -1,16 +1,21 @@
 using System.Collections.Generic;
 using SystemMiami.Animation;
 using SystemMiami.CombatSystem;
+using SystemMiami.Utilities;
 using UnityEngine;
 
 namespace SystemMiami.Drivers
 {
     public class CharClassAnimationDriver : MonoBehaviour
     {
+        [Header("Debug")]
+        [SerializeField] private dbug log;
+
         [SerializeField] private CharacterClassType characterClass;
         [SerializeField] private bool usePreExistingClass;
         [SerializeField] private bool assignOnStart;
 
+        [SerializeField] private TopDownMovement neighborhoodMovement;
         [SerializeField] private PlayerCombatant player;
         [SerializeField] private Attributes playerAttributes;
 
@@ -22,41 +27,52 @@ namespace SystemMiami.Drivers
         [SerializeField] private StandardAnimSetSO tankAnimSet;
         [SerializeField] private StandardAnimSetSO noClassAnimSet;
 
+
         private void Awake()
         {
+            if (!TryGetComponent(out neighborhoodMovement))
+            {
+                log.error($"{name}'s {this} didn't find a TopDownMovement");
+            }
+
+            if (!TryGetComponent(out player))
+            {
+                log.error($"{name}'s {this} didn't find a PlayerCombatant");
+            }
+
+            if (!TryGetComponent(out playerAttributes))
+            {
+                log.error($"{name}'s {this} didn't find an Inventory");
+            }
+
             if (assignOnStart)
             {
                 SetPlayerStandardAnims();
             }
         }
 
+        public void SetUseExistingClass(bool val)
+        {
+            usePreExistingClass = val;
+            log.print($"{gameObject}'s Anim class is being set from the selection menu.");
+        }
+
         public void SetPlayerStandardAnims()
         {
-            StandardAnimSet playerAnimSet;
+            CharacterClassType usingCaracterClass = usePreExistingClass
+                ? playerAttributes._characterClass
+                : characterClass;
 
-            if (usePreExistingClass)
+            StandardAnimSet playerAnimSet = usingCaracterClass switch
             {
-                playerAnimSet = playerAttributes._characterClass switch
-                {
-                    CharacterClassType.FIGHTER  => fighterAnimSet.CreateSet(),
-                    CharacterClassType.ROGUE    => rogueAnimSet.CreateSet(),
-                    CharacterClassType.MAGE     => mageAnimSet.CreateSet(),
-                    CharacterClassType.TANK     => tankAnimSet.CreateSet(),
-                    _                           => noClassAnimSet.CreateSet()
-                };
-            }
-            else
-            {
-                playerAnimSet = characterClass switch
-                {
-                    CharacterClassType.FIGHTER => fighterAnimSet.CreateSet(),
-                    CharacterClassType.ROGUE => rogueAnimSet.CreateSet(),
-                    CharacterClassType.MAGE => mageAnimSet.CreateSet(),
-                    CharacterClassType.TANK => tankAnimSet.CreateSet(),
-                    _ => noClassAnimSet.CreateSet()
-                };
-            }
+                CharacterClassType.FIGHTER => fighterAnimSet.CreateSet(),
+                CharacterClassType.ROGUE => rogueAnimSet.CreateSet(),
+                CharacterClassType.MAGE => mageAnimSet.CreateSet(),
+                CharacterClassType.TANK => tankAnimSet.CreateSet(),
+                _ => noClassAnimSet.CreateSet()
+            };
 
+            neighborhoodMovement.SetAnimSet(playerAnimSet);
             player.SetAnimSet(playerAnimSet);
         }
     }

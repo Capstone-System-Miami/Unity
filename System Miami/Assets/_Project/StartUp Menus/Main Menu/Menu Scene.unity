@@ -152,6 +152,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _preserveBetweenScenes: 0
+  inputPromptsOn: 1
+  inputPromptPanel: {fileID: 0}
+  physicalAbilitiesBar: {fileID: 0}
+  magicalAbilitiesBar: {fileID: 0}
+  consumablesBar: {fileID: 0}
+  <CurrentClient>k__BackingField: {fileID: 0}
 --- !u!4 &729239034
 Transform:
   m_ObjectHideFlags: 0
@@ -721,7 +727,10 @@ MonoBehaviour:
   _preserveBetweenScenes: 0
   _dungeonSceneName: Dungeon
   _neighborhoodSceneName: NEIGHBORHOOD
+  characterSelectSceneName: CharacterSelector
   _regenerateDungeonDataOnInteract: 0
+  <IgnoreObstacles>k__BackingField: 1
+  <NoNpcs>k__BackingField: 0
 --- !u!4 &1443152305
 Transform:
   m_ObjectHideFlags: 0

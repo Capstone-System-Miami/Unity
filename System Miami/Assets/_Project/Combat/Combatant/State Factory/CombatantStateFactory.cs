@@ -48,6 +48,11 @@ namespace SystemMiami.CombatRefactor
         {
             return new MovementExecution(combatant, path);
         }
+
+        public CombatantState ForcedMovementExecution(MovementPath path)
+        {
+            return new ForcedMovementExecution(combatant, path);
+        }
         public CombatantState ActionSelection()
         {
             return isPlayer ?

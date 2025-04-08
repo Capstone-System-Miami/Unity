@@ -7,7 +7,7 @@ using SystemMiami.CombatRefactor;
 using SystemMiami.Management;
 using SystemMiami.Utilities;
 using UnityEngine;
-
+using SystemMiami.ui;
 namespace SystemMiami
 {
     /// <summary>
@@ -36,13 +36,15 @@ namespace SystemMiami
         // List of all Combatants
         public List<Combatant> combatants = new List<Combatant>();
 
+        [Header("Testing")]
         public GameObject enemyPrefab;
         public GameObject bossPrefab; // TODO: Assign boss prefab
         public List<GameObject> enemyPrefabs = new();
-        public int enemiesRemaining;
         public int numberOfEnemies = 3;
-        
-        public event Action DungeonCleared; 
+
+        [SerializeField] private GoToNeighborhood goToNeighborhood;
+
+        [SerializeField, ReadOnly] private int enemiesRemaining;
 
         public bool IsPlayerTurn
         {
@@ -53,8 +55,6 @@ namespace SystemMiami
                 return CurrentTurnOwner is PlayerCombatant;
             }
         }
-
-        public Action<Phase> NewTurnPhase;
 
         public Combatant CurrentTurnOwner { get; private set; }
 
@@ -69,7 +69,8 @@ namespace SystemMiami
             }
         }
 
-       
+        private Dictionary<object, Action> dungeonClearedActions = new();
+        public Action<Phase> NewTurnPhase;
 
         #region Unity Methods
         //===============================
@@ -79,11 +80,10 @@ namespace SystemMiami
         }
         private void Start()
         {
-           
             if (playerCharacter != null)
             {
                 Vector3Int charTilePos = Coordinates.ScreenToIso(playerCharacter.transform.position, 0);
-                
+
                 if (!MapManager.MGR.map.TryGetValue((Vector2Int)charTilePos, out OverlayTile charTile))
                 {
                     if (!MapManager.MGR.map.TryGetValue((Vector2Int.zero), out charTile))
@@ -106,6 +106,7 @@ namespace SystemMiami
                 playerCharacter.InitAll();
             }
 
+            combatants.Add(playerCharacter);
             if (GAME.MGR.TryGetEnemies(out enemyPrefabs))
             {
                 SpawnEnemies(enemyPrefabs);
@@ -115,25 +116,23 @@ namespace SystemMiami
                 SpawnEnemies();
             }
 
-            combatants.Add(playerCharacter);
             combatants.AddRange(enemyCharacters);
 
             StartCoroutine(TurnSequence());
         }
 
-
         private void Update()
         {
             if (CurrentTurnOwner == null)
-                { return; }
+            { return; }
 
-           
+
             //Debug.Log($"Current Turn Owner: {CurrentTurnOwner.name}");
         }
 
-        private void OnDisable()    
+        private void OnDisable()
         {
-           GAME.MGR.CombatantDeath -= OnCombatantDeath;
+            GAME.MGR.CombatantDeath -= OnCombatantDeath;
         }
         //===============================
         #endregion // ^Unity Methods^
@@ -147,9 +146,8 @@ namespace SystemMiami
         /// </summary>
         private IEnumerator TurnSequence()
         {
-            
             bool combatantsReady = true;
-           
+
             do
             {
                 combatantsReady = true;
@@ -235,15 +233,14 @@ namespace SystemMiami
             // Instantiate enemy
             GameObject enemyGO = Instantiate(prefab);
             Combatant enemyCombatant = enemyGO.GetComponent<Combatant>();
-            
-            
+
+
             if (enemyCombatant == null)
             {
                 enemyCombatant = enemyGO.AddComponent<Combatant>();
             }
-            
-            
-            
+
+
             // Set enemy ID
             enemyCombatant.ID = id;
 
@@ -271,12 +268,49 @@ namespace SystemMiami
         public void OnCombatantDeath(Combatant combatant)
         {
             Debug.Log("Combatant Death called" + combatant.name + " has died");
-            if (--enemiesRemaining == 0)
+
+            if (combatant is EnemyCombatant && --enemiesRemaining == 0)
             {
-                DungeonCleared?.Invoke();
+                OnDungeonCleared();
             }
-            
-            
+            else if (combatant is PlayerCombatant)
+            {
+                GAME.MGR.GoToCharacterSelect();
+            }
+        }
+
+        public void AddDungeonClearedAction(object client, Action action)
+        {
+            dungeonClearedActions[client] = action;
+        }
+
+        protected void OnDungeonCleared()
+        {
+            List<object> nulls = new();
+
+            foreach (object client in dungeonClearedActions.Keys)
+            {
+                if (client == null
+                    || (client is GameObject go && !go.activeSelf)
+                    || (client is MonoBehaviour mono && !mono.enabled))
+                {
+                    Debug.LogError($"{name} adding a null to null list");
+                    continue;
+                }
+
+            }
+            foreach (object client in nulls)
+            {
+                Debug.LogError($"{name} removing a null from dict");
+                dungeonClearedActions.Remove(client);
+            }
+
+            foreach (object client in dungeonClearedActions.Keys)
+            {
+                dungeonClearedActions[client].Invoke();
+            }
+
+            goToNeighborhood.Go(false);
         }
         //===============================
         #endregion // ^Spawning^

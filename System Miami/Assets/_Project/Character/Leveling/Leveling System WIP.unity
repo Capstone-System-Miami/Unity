@@ -348,6 +348,9 @@ MonoBehaviour:
   additionalXPPerLevel: 50
   level: 0
   currentXP: 0
+  debugMode: 0
+  debug_GainExpKey: 0
+  debug_amountToGain: 50
 --- !u!114 &884027558 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4350139501520326043, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
@@ -400,6 +403,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _difficulty: 0
+  enemyLevel: 0
+  levelRange: 0
   str: 1
   con: 1
   dex: 1
@@ -523,10 +528,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _preserveBetweenScenes: 0
+  inputPromptsOn: 1
   inputPromptPanel: {fileID: 0}
   physicalAbilitiesBar: {fileID: 0}
   magicalAbilitiesBar: {fileID: 0}
   consumablesBar: {fileID: 0}
+  <CurrentClient>k__BackingField: {fileID: 0}
 --- !u!4 &1891744489
 Transform:
   m_ObjectHideFlags: 0

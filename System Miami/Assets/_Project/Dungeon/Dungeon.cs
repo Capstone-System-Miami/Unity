@@ -1,6 +1,7 @@
 /// Layla
 using UnityEngine;
 using SystemMiami.Utilities;
+using UnityEngine.Tilemaps;
 
 namespace SystemMiami.Dungeons
 {
@@ -30,9 +31,21 @@ namespace SystemMiami.Dungeons
 
         [SerializeField] private GameObject _obstacles;
 
-        [SerializeField] private GameObject _overlayTileContainer;
+        [SerializeField] private Tilemap staticUndamageable;
+        [SerializeField] private Tilemap staticDamageable;
+        [SerializeField] private Tilemap dynamicUndamageable;
+        [SerializeField] private Tilemap dynamicDamageable;
+
+        private GameObject overlayTileContainer;
 
         [SerializeField,ReadOnly] public DifficultyLevel DifficultyLevel;
+
+        private void Awake()
+        {
+            overlayTileContainer = Instantiate(new GameObject(), transform);
+            overlayTileContainer.name = "Overlay Tile Container";
+            
+        }
 
         /// <summary>
         /// The general style / vibe of the Dungeon.
@@ -49,8 +62,11 @@ namespace SystemMiami.Dungeons
 
         public GameObject GameBoard { get { return _gameBoard; } }
 
-        public GameObject Obstacles { get { return _obstacles; } }
+        public Tilemap StaticUndamageable { get { return staticUndamageable; } }
+        public Tilemap StaticDamageable { get { return staticDamageable; } }
+        public Tilemap DynamicUndamageable { get { return dynamicUndamageable; } }
+        public Tilemap DynamicDamageable { get { return dynamicDamageable; } }
 
-        public GameObject OverlayTileContainer { get { return _overlayTileContainer; } }
+        public GameObject OverlayTileContainer { get { return overlayTileContainer; } }
     }
 }
