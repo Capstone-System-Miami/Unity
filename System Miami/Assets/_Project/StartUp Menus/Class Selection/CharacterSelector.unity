@@ -295,7 +295,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   classType: 0
   player: {fileID: 778544193}
-  playerInventory: {fileID: 0}
 --- !u!1001 &155624316
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -308,6 +307,14 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2619156366695561887, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
+      propertyPath: mageAnimSet
+      value: 
+      objectReference: {fileID: 11400000, guid: d279112d26394af4d968acb5f3810844, type: 2}
+    - target: {fileID: 2619156366695561887, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
+      propertyPath: rogueAnimSet
+      value: 
+      objectReference: {fileID: 11400000, guid: 20cb6b84e4b70b44c8c8346d0c5b4192, type: 2}
     - target: {fileID: 4306299752331093467, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1388,7 +1395,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   classType: 3
   player: {fileID: 778544193}
-  playerInventory: {fileID: 0}
 --- !u!1 &672656521
 GameObject:
   m_ObjectHideFlags: 0
@@ -1562,7 +1568,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   classType: 1
   player: {fileID: 778544193}
-  playerInventory: {fileID: 0}
 --- !u!1 &729140063
 GameObject:
   m_ObjectHideFlags: 0
@@ -1875,7 +1880,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   classType: 2
   player: {fileID: 778544193}
-  playerInventory: {fileID: 0}
 --- !u!1 &937398326
 GameObject:
   m_ObjectHideFlags: 0
@@ -3981,7 +3985,10 @@ MonoBehaviour:
   _preserveBetweenScenes: 0
   _dungeonSceneName: Dungeon
   _neighborhoodSceneName: Neighborhood
+  characterSelectSceneName: 
   _regenerateDungeonDataOnInteract: 0
+  <IgnoreObstacles>k__BackingField: 0
+  <NoNpcs>k__BackingField: 0
 --- !u!4 &1306517318
 Transform:
   m_ObjectHideFlags: 0

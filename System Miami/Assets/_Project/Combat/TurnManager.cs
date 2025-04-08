@@ -8,7 +8,6 @@ using SystemMiami.Management;
 using SystemMiami.Utilities;
 using UnityEngine;
 using SystemMiami.ui;
-using UnityEditor.Build.Content;
 namespace SystemMiami
 {
     /// <summary>
@@ -293,14 +292,14 @@ namespace SystemMiami
             {
                 if (client == null
                     || (client is GameObject go && !go.activeSelf)
-                    || (client is MonoBehaviour mono && !mono.enabled) )
+                    || (client is MonoBehaviour mono && !mono.enabled))
                 {
                     Debug.LogError($"{name} adding a null to null list");
                     continue;
                 }
 
             }
-            foreach(object client in nulls)
+            foreach (object client in nulls)
             {
                 Debug.LogError($"{name} removing a null from dict");
                 dungeonClearedActions.Remove(client);
