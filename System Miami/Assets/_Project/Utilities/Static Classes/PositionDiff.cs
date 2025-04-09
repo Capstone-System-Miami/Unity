@@ -4,8 +4,12 @@ namespace SystemMiami.Utilities
 {
     public readonly struct PositionDiff
     {
+        public readonly int rawX;
+        public readonly int rawY;
+
         public readonly int x;
         public readonly int y;
+
         public readonly int m;
 
         public PositionDiff(GameObject from, GameObject to)
@@ -21,14 +25,21 @@ namespace SystemMiami.Utilities
         { }
 
         public PositionDiff(Vector2 from, Vector2 to)
-            : this( (Vector2Int)from, (Vector2Int)to )
+            : this(
+                    new Vector2Int((int)from.x, (int)from.y),
+                    new Vector2Int((int)to.x, (int)to.y)
+            )
         { }
 
         public PositionDiff(Vector2Int from, Vector2Int to)
         {
-            x = to.x - from.x;
-            y = to.y - from.y;
-            m = x + y;
+            rawX = to.x - from.x;
+            rawY = to.y - from.y;
+
+            x = Mathf.Abs(rawX);
+            y = Mathf.Abs(rawY);
+
+            m = Mathf.Abs(x + y);
         }
     }
 }
