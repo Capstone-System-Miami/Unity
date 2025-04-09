@@ -860,19 +860,21 @@ public class IntersectionManager : Singleton<IntersectionManager>
         List<StreetData> datas = streetGrid.Cast<StreetData>()
             .Where(data => data.streetInstance != null).ToList();
 
-        void printInstanceInfo(StreetData data, string add)
-        {
-            string longMsgDamn =
-                $"<color=red>{add}  |</color><color=yellow>|  {data.streetInstance}  |</color>" +
-                $"<color=cyan>|  Go pos position {data.streetInstance.transform.position} " +
-                $"| {data.distFromPlayerAtSpawnTime.rawX}, {data.distFromPlayerAtSpawnTime.rawY} " +
-                $"| {data.distFromPlayerAtSpawnTime.x}, {data.distFromPlayerAtSpawnTime.y} " +
-                $"| {data.distFromPlayerAtSpawnTime.m}";
-            Debug.Log(longMsgDamn);
-        }
+        // // local function for printing a shit ton of info about
+        // // intersections at every stage of them being checked.
+        // void printInstanceInfo(StreetData data, string add)
+        // {
+        //     string longMsgDamn =
+        //         $"<color=red>{add}  |</color><color=yellow>|  {data.streetInstance}  |</color>" +
+        //         $"<color=cyan>|  Go pos position {data.streetInstance.transform.position} " +
+        //         $"| {data.distFromPlayerAtSpawnTime.rawX}, {data.distFromPlayerAtSpawnTime.rawY} " +
+        //         $"| {data.distFromPlayerAtSpawnTime.x}, {data.distFromPlayerAtSpawnTime.y} " +
+        //         $"| {data.distFromPlayerAtSpawnTime.m}";
+        //     Debug.Log(longMsgDamn);
+        // }
 
         string plkey = usePlayerSpawnPos ? "PLAYER" : "ZERO";
-        datas.ForEach(data => printInstanceInfo(data, $"Begin {plkey}"));
+        // datas.ForEach(data => printInstanceInfo(data, $"Begin {plkey}"));
 
         // Strategy for finding the target PositionDiff to check
         Func<StreetData, PositionDiff> targetMember = usePlayerSpawnPos
@@ -898,13 +900,13 @@ public class IntersectionManager : Singleton<IntersectionManager>
             // then remove datas whose y is less than
             // the reference point (i.e. player or (0,0))
             List<StreetData> tempDatas = datas.Where(data => targetMember(data).rawY > 0).ToList();
-            tempDatas.ForEach(data => printInstanceInfo(data, "mbu after remove"));
+            // tempDatas.ForEach(data => printInstanceInfo(data, "mbu after remove"));
             datas = tempDatas.Count > 0 ? tempDatas : datas;
         }
 
         // Order by the strategies defined above.
         datas = datas.OrderBy(data => targetValue(data)).Reverse().ToList();
-        datas.ForEach(data => printInstanceInfo(data, "final reversed ordered"));
+        // datas.ForEach(data => printInstanceInfo(data, "final reversed ordered"));
 
         Assert.IsNotNull(datas[0]);
         Assert.IsNotNull(datas[0].streetInstance, $"{datas[0].gridIndex} really had a null instance...");
