@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e15ceed8cb262b4f93d5a16ddc74b1f, type: 3}
+  m_Name: Stamina Pill
+  m_EditorClassIdentifier: 
+  Icon: {fileID: 21300000, guid: 0274e292b08f7734f8aa19c5b21a6e11, type: 3}
+  Actions:
+  - {fileID: 11400000, guid: b564e63d40fa368498b4b8cf818bc9f9, type: 2}
+  - {fileID: 11400000, guid: 3f050e0fc73a09b4bad2c2c5a89322ce, type: 2}
+  OverrideController: {fileID: 0}
+  MageOverrideController: {fileID: 22100000, guid: e31d81d351c932544a9d436867598fbb, type: 2}
+  FighterOverrideController: {fileID: 22100000, guid: 98f413964bd22ca4d8543c4662936c31, type: 2}
+  TankOverrideController: {fileID: 22100000, guid: fadfb8c50a1c9854a91e263b95863a2a, type: 2}
+  RogueOverrideController: {fileID: 22100000, guid: 1e692281f2f785745a6e781225189e6d, type: 2}
+  Uses: 1
+  itemData:
+    ID: 3014
+    Icon: {fileID: 21300000, guid: 0274e292b08f7734f8aa19c5b21a6e11, type: 3}
+    Name: Stamina Pill
+    Description: Restore 5 Stamina and increase speed for 2 turns
+    itemType: 3
+    Price: 13
+    MinLevel: 0
+    MaxLevel: 30
+    rarity: 0
