@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5489742552735049700}
   - component: {fileID: 4714751047930878660}
   - component: {fileID: 2239614275830857744}
+  - component: {fileID: 6630522767856917590}
   m_Layer: 0
   m_Name: Building 5
   m_TagString: Untagged
@@ -30,7 +31,9 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 5367629125517093759}
+  - {fileID: 6174737609813146484}
   m_Father: {fileID: 6232260512733131743}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1839735485 &4714751047930878660
@@ -996,6 +999,25 @@ TilemapRenderer:
   m_Mode: 1
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
+--- !u!114 &6630522767856917590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 83759201392102926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf824d918f252834ea9b3dea34a48d8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allTilemaps:
+  - {fileID: 4714751047930878660}
+  allLights:
+  - {fileID: 1993185511513192176}
+  - {fileID: 6751132737461849991}
+  TRIGGER_transparent: 0
+  TRIGGER_opaque: 0
 --- !u!1 &729746109990473112
 GameObject:
   m_ObjectHideFlags: 0
@@ -1262,6 +1284,7 @@ GameObject:
   - component: {fileID: 8169103585616589318}
   - component: {fileID: 4523636534261351487}
   - component: {fileID: 8007172479941440725}
+  - component: {fileID: 7354525017608189400}
   m_Layer: 0
   m_Name: Building 4
   m_TagString: Untagged
@@ -2377,6 +2400,27 @@ TilemapRenderer:
   m_Mode: 1
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
+--- !u!114 &7354525017608189400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 926343403773646874}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf824d918f252834ea9b3dea34a48d8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allTilemaps:
+  - {fileID: 4523636534261351487}
+  - {fileID: 7228682164996635006}
+  allLights:
+  - {fileID: 8869896036557929066}
+  - {fileID: 2054770807821268760}
+  - {fileID: 4422943135961852183}
+  TRIGGER_transparent: 0
+  TRIGGER_opaque: 0
 --- !u!1 &1020980886718537922
 GameObject:
   m_ObjectHideFlags: 0
@@ -2500,8 +2544,6 @@ Transform:
   - {fileID: 4632466930082685991}
   - {fileID: 8485474497109835534}
   - {fileID: 5373961792645510987}
-  - {fileID: 5367629125517093759}
-  - {fileID: 6174737609813146484}
   m_Father: {fileID: 6232260512733131743}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1803715422667165146
@@ -2599,6 +2641,7 @@ GameObject:
   - component: {fileID: 8394319746847104511}
   - component: {fileID: 1300699719004391763}
   - component: {fileID: 5053514756717231227}
+  - component: {fileID: 7671931613994232707}
   m_Layer: 0
   m_Name: Building 2
   m_TagString: Untagged
@@ -3582,6 +3625,25 @@ TilemapRenderer:
   m_Mode: 1
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
+--- !u!114 &7671931613994232707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1817018814740546662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf824d918f252834ea9b3dea34a48d8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allTilemaps:
+  - {fileID: 1300699719004391763}
+  allLights:
+  - {fileID: 4858947166790054302}
+  - {fileID: 6300477895687791900}
+  TRIGGER_transparent: 0
+  TRIGGER_opaque: 0
 --- !u!1 &1913962095095428845
 GameObject:
   m_ObjectHideFlags: 0
@@ -3946,7 +4008,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7115123456824698585}
+  m_Father: {fileID: 5489742552735049700}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -180}
 --- !u!114 &6751132737461849991
 MonoBehaviour:
@@ -27282,7 +27344,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7115123456824698585}
+  m_Father: {fileID: 5489742552735049700}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -180}
 --- !u!114 &1993185511513192176
 MonoBehaviour:
@@ -28569,6 +28631,7 @@ GameObject:
   - component: {fileID: 6715747073918909559}
   - component: {fileID: 5954796186301669527}
   - component: {fileID: 2785657331560647091}
+  - component: {fileID: 110413429159389578}
   m_Layer: 0
   m_Name: Park
   m_TagString: Untagged
@@ -31150,6 +31213,23 @@ TilemapRenderer:
   m_Mode: 1
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
+--- !u!114 &110413429159389578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6731527166403261069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf824d918f252834ea9b3dea34a48d8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allTilemaps:
+  - {fileID: 5954796186301669527}
+  allLights: []
+  TRIGGER_transparent: 0
+  TRIGGER_opaque: 0
 --- !u!1 &7032301800240520980
 GameObject:
   m_ObjectHideFlags: 0
@@ -31161,6 +31241,7 @@ GameObject:
   - component: {fileID: 7231855349287635590}
   - component: {fileID: 1589168707231560942}
   - component: {fileID: 8888286974770345086}
+  - component: {fileID: 3292903895509814014}
   m_Layer: 0
   m_Name: Buidling 1
   m_TagString: Untagged
@@ -33687,6 +33768,26 @@ TilemapRenderer:
   m_Mode: 1
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
+--- !u!114 &3292903895509814014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7032301800240520980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf824d918f252834ea9b3dea34a48d8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allTilemaps:
+  - {fileID: 1589168707231560942}
+  allLights:
+  - {fileID: 2495971271571765107}
+  - {fileID: 614597770038993083}
+  - {fileID: 4318706121025452297}
+  TRIGGER_transparent: 0
+  TRIGGER_opaque: 0
 --- !u!1 &7263506380150917516
 GameObject:
   m_ObjectHideFlags: 0
@@ -36885,6 +36986,7 @@ GameObject:
   - component: {fileID: 8563814929536390299}
   - component: {fileID: 3618260700971041559}
   - component: {fileID: 6523671478571236259}
+  - component: {fileID: 4662114827176269932}
   m_Layer: 0
   m_Name: Building 3
   m_TagString: Untagged
@@ -37794,6 +37896,25 @@ TilemapRenderer:
   m_Mode: 1
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
+--- !u!114 &4662114827176269932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7844840070256686419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf824d918f252834ea9b3dea34a48d8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allTilemaps:
+  - {fileID: 3618260700971041559}
+  allLights:
+  - {fileID: 897662980413679396}
+  - {fileID: 6552461948199854178}
+  TRIGGER_transparent: 0
+  TRIGGER_opaque: 0
 --- !u!1 &8056082360794084600
 GameObject:
   m_ObjectHideFlags: 0
