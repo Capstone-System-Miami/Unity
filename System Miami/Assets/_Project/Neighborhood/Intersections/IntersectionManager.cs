@@ -36,6 +36,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
     // These will be passed to DungeonEntrances, which will
     // construct themselves based on the information in the presets.
     [SerializeField] private List<DungeonPreset> dungeonEntrancePresets = new();
+    [SerializeField] private List<DungeonPreset> bosses = new();
 
     [Header("Player Settings")]
     // The player prefab to instantiate in the scene.
@@ -491,7 +492,6 @@ public class IntersectionManager : Singleton<IntersectionManager>
     {
         GameObject instance = streetData.streetInstance;
         DungeonEntrance[] dungeonEntrances = instance.GetComponentsInChildren<DungeonEntrance>();
-       
         allEntrances.AddRange(dungeonEntrances);
 
         if (dungeonEntrances.Length != streetData.dungeonEntranceDifficulties.Count)
@@ -528,9 +528,24 @@ public class IntersectionManager : Singleton<IntersectionManager>
 
             int totalDungeons = dungeonEntrances.Length;
 
-           
             dungeonEntrance.ApplyNewPreset(preset);
         }
+    }
+    
+    private DungeonEntrance[] GetDungeonEntrances(GameObject intersection)
+    {
+        return intersection.GetComponentsInChildren<DungeonEntrance>();
+    }
+
+    private void ReplaceRandomWithBoss(GameObject intersection)
+    {
+        DungeonEntrance[] entrances = GetDungeonEntrances(intersection);
+        int randEntrance = Random.Range(0, entrances.Length);
+        int randBoss = Random.Range(0, bosses.Count);
+
+        DungeonPreset bossPreset = bosses[randBoss];
+        entrances[randEntrance].ApplyNewPreset(bossPreset);
+        bosses.Remove(bossPreset);
     }
 
     private void InitializeNPCSpawners(StreetData streetData)
@@ -819,18 +834,13 @@ public class IntersectionManager : Singleton<IntersectionManager>
 
         int bank = xpRequired;
 
-      
         List<int> expReward = new List<int>();
-       
-         for (int i = 0; i < entrances.Count; i++)
-         {
-             int exp = bank/entrances.Count;
-             expReward.Add(exp);
-
-         }
-      
+        for (int i = 0; i < entrances.Count; i++)
+        {
+            int exp = bank / entrances.Count;
+            expReward.Add(exp);
+        }
         return expReward;
-
     }
     
     private void OnGenerationComplete()
@@ -846,6 +856,10 @@ public class IntersectionManager : Singleton<IntersectionManager>
         FarthestIntersectionFromPlayer = GetFarthestIntersection(true, MeasurementType, MustBeUp);
         FarthestIntersectionFromZero = GetFarthestIntersection(false, MeasurementType, MustBeUp);
         FarthestIntersection = FarthestIntersectionFromPlayer;
+        if (bosses.Count > 0)
+        {
+            ReplaceRandomWithBoss(FarthestIntersection);
+        }
 
         easyDungeonReward = SetEXPReward(easyDungeons);
         mediumDungeonReward = SetEXPReward(mediumDungeons);
@@ -862,6 +876,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
 
         // // local function for printing a shit ton of info about
         // // intersections at every stage of them being checked.
+        // string plkey = usePlayerSpawnPos ? "PLAYER" : "ZERO";
         // void printInstanceInfo(StreetData data, string add)
         // {
         //     string longMsgDamn =
@@ -873,7 +888,6 @@ public class IntersectionManager : Singleton<IntersectionManager>
         //     Debug.Log(longMsgDamn);
         // }
 
-        string plkey = usePlayerSpawnPos ? "PLAYER" : "ZERO";
         // datas.ForEach(data => printInstanceInfo(data, $"Begin {plkey}"));
 
         // Strategy for finding the target PositionDiff to check
@@ -890,10 +904,13 @@ public class IntersectionManager : Singleton<IntersectionManager>
             _                           => (streetData) => targetMember(streetData).m,
         };
 
-        datas = datas.Where(data => targetValue(data) != 0).ToList();
+        datas = datas.Where(data =>
+            targetValue(data) != 0
+            && GetDungeonEntrances(data.streetInstance).Length > 0)
+            .ToList();
 
         Assert.IsTrue(datas.Count > 0, $"FindFarthestIntersection was passed a list " +
-            $"containing only the intersection under the player.");
+            $"containing only the intersection under the player, or without any DungeonEntrances.");
         
         if (mustBeUp)
         {
