@@ -15,7 +15,12 @@ namespace SystemMiami.Management
     {
         public Action<Combatant> CombatantDeath;
 
-        // public event Action<Combatant> damageTaken; Undo this once i'm home
+        public event Action<Combatant> damageTaken;
+
+        public void NotifyDamageTaken(Combatant combatant)
+        {
+            damageTaken?.Invoke(combatant);
+        }
 
         [SerializeField] string _dungeonSceneName;
         [SerializeField] string _neighborhoodSceneName;

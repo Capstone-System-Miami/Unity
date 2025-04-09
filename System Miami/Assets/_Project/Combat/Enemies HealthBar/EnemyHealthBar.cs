@@ -1,28 +1,54 @@
+/*
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using SystemMiami.AbilitySystem;
+using SystemMiami.CombatRefactor;
+using SystemMiami.InventorySystem;
+using SystemMiami.Management;
+using SystemMiami.Utilities;
 using UnityEngine;
+using UnityEngine.UI;
+using SystemMiami.CombatSystem;
+
 
 namespace SystemMiami
 {
     public class EnemyHealthBar : MonoBehaviour
     {
+        public Slider slider;
+        public Gradient gradient;
+        public Image fill;
 
-       /* void OnEnable
+        public void SetMaxHealth(int maxHealth)
         {
-            GAME.MGR.damageTaken +=
+            slider.maxValue = maxHealth;
+            slider.value = maxHealth;
 
-        }
-        */
-        // Start is called before the first frame update
-        void Start()
-         {
-        
+            fill.color = gradient.Evaluate(1f);
         }
 
-        // Update is called once per frame
-        void Update()
+        public void SetHealth(int currentHealth)
         {
-        
+            slider.value = currentHealth;
+            fill.color = gradient.Evaluate(slider.normalizedValue);
         }
+
+        void OnEnable()
+        {
+            GAME.MGR.damageTaken += OnDamageTaken;
+        }
+
+        void OnDisable()
+        {
+            GAME.MGR.damageTaken -= OnDamageTaken;
+        }
+
+        void OnDamageTaken(Combatant combatant)
+        {
+            SetHealth(combatant.GetCurrentHealth());
+        }
+ 
     }
 }
+*/

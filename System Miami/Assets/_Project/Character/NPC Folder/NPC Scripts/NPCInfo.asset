@@ -17,6 +17,29 @@ MonoBehaviour:
   - Ally
   - Keisha
   - Star
+  - Emma
+  - Noa
+  - Noah
+  - Joe
+  - Ava
+  - Sandra
+  - Bianca
+  - Oskar
+  - Esteban
+  - Elizabeth
+  - Maurice
+  - Layla
+  - Lee
+  - Antony
+  - Alek
+  - Alec
+  - Johnny
+  - Andrew
+  - Ricardo
+  - Gustavo
+  - Edy
+  - Balthazar
+  - Marbelis
   possibleSprites:
   - {fileID: -674849464, guid: 028b96a92e5556e4299f00ebe1a4885c, type: 3}
   - {fileID: -1206112302, guid: 028b96a92e5556e4299f00ebe1a4885c, type: 3}
@@ -36,23 +59,77 @@ MonoBehaviour:
   - {fileID: -1320841029, guid: 028b96a92e5556e4299f00ebe1a4885c, type: 3}
   possibleQuests:
   - questName: Goblin Menace
-    questDescriptionLine: Kill 5 Goblins
+    questDescriptionLine: Kill Goblins
     targetEnemyLayer:
       serializedVersion: 2
       m_Bits: 128
     enemiesToGoal: 0
-    objectiveGoal: 8
+    objectiveGoal: 5
     rewardEXP: 112
     rewardCurrency: 72
     questDialogue:
     - Those goblins are becoming a menace
     - Kill some for me, would you?
     questCompleted: 0
+  - questName: Spider Scaries
+    questDescriptionLine: Kill Spiders
+    targetEnemyLayer:
+      serializedVersion: 2
+      m_Bits: 256
+    enemiesToGoal: 0
+    objectiveGoal: 5
+    rewardEXP: 112
+    rewardCurrency: 72
+    questDialogue:
+    - Spiders are creepy
+    - I'll make it worth your while if you get rid of some
+    questCompleted: 0
+  - questName: Slime Potion
+    questDescriptionLine: Kill Slimes
+    targetEnemyLayer:
+      serializedVersion: 2
+      m_Bits: 768
+    enemiesToGoal: 0
+    objectiveGoal: 5
+    rewardEXP: 112
+    rewardCurrency: 72
+    questDialogue:
+    - I need some slime parts to make potions
+    - Kill some and ill bring someone to pick them up
+    questCompleted: 0
+  - questName: Changelings
+    questDescriptionLine: Kill Changelings
+    targetEnemyLayer:
+      serializedVersion: 2
+      m_Bits: 1024
+    enemiesToGoal: 0
+    objectiveGoal: 5
+    rewardEXP: 112
+    rewardCurrency: 72
+    questDialogue:
+    - Changelings are an abomination
+    - Make the world a better place and get rid of some
+    questCompleted: 0
   possibleShops:
   - shopType: 3
     shopDialogue:
     - Hey
     - I got what you looking for
+  - shopType: 3
+    shopDialogue:
+    - Waddya Want?
+    - Hurry up, I have places to be
+  - shopType: 3
+    shopDialogue:
+    - Hey good looking
+    - What can i get you
+  - shopType: 3
+    shopDialogue:
+    - You touch it you buy it
+  - shopType: 3
+    shopDialogue:
+    - 'You look like you have money '
+    - Take a look
   availableQuests:
   - questName: Goblin Menace
     questDescriptionLine: Kill 5 Goblins

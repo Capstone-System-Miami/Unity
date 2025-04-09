@@ -153,12 +153,18 @@ namespace SystemMiami.Dungeons
                     break;
                 }
             }
-
+            List<int> rewardItemIDs = rewards.Select(r => r.ID).ToList();
             for (int i = 0; i < rewards.Count; i++)
             {
                 List<int> playerItemIDs = PlayerManager.MGR.inventory.AllValidInventoryItems;
                 
-                return rewards.Where(reward => !playerItemIDs.Contains(reward.ID)).ToList();
+                rewards = rewards.Where(reward => !playerItemIDs.Contains(reward.ID)).ToList();
+                rewardItemIDs = rewardItemIDs.Distinct().ToList();
+            }
+            rewards.Clear();
+            foreach (int ID in rewardItemIDs)
+            {
+                rewards.Add(Database.MGR.GetDataWithJustID(ID));
             }
             return rewards;
         }

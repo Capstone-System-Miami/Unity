@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58d728392c04c9a48a8a419a8ac94f33, type: 3}
+  m_Name: Fire bolt
+  m_EditorClassIdentifier: 
+  Icon: {fileID: 21300000, guid: b543ee3b5a29ea847aa722ed503771b0, type: 3}
+  Actions:
+  - {fileID: 11400000, guid: c010e5aee1e8a5a468721cba8cb8975c, type: 2}
+  OverrideController: {fileID: 22100000, guid: 983c4ac37ede5db49952b8430abec95a, type: 2}
+  MageOverrideController: {fileID: 22100000, guid: e31d81d351c932544a9d436867598fbb, type: 2}
+  FighterOverrideController: {fileID: 22100000, guid: 8c8268c6f03699e43a6eea974d6b1d81, type: 2}
+  TankOverrideController: {fileID: 22100000, guid: 7e426f1b80271f845a336a2f3e4a32ff, type: 2}
+  RogueOverrideController: {fileID: 22100000, guid: 1e692281f2f785745a6e781225189e6d, type: 2}
+  AbilityType: 1
+  ResourceCost: 8
+  CooldownTurns: 1
+  itemData:
+    ID: 1046
+    Icon: {fileID: 21300000, guid: b543ee3b5a29ea847aa722ed503771b0, type: 3}
+    Name: Fire bolt
+    Description: Launch a firebolt that deals damage to targets
+    itemType: 2
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 5
+    rarity: 0
+  classType: 1
+  isEnemyAbility: 0
+  isGeneralAbility: 0
