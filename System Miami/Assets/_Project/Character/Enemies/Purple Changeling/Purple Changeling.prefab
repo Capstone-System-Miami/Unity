@@ -19,8 +19,8 @@ GameObject:
   - component: {fileID: 4434390765391053569}
   - component: {fileID: 6083187466875687617}
   - component: {fileID: -4444478195236609224}
-  m_Layer: 7
-  m_Name: Purple Goblin
+  m_Layer: 10
+  m_Name: Purple Changeling
   m_TagString: Purple Goblin
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -226,12 +226,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7981544af7126244a88c7413ccc581c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  detailedFocusHighlight: 0
   _colorTag: {r: 1, g: 0.28759372, b: 0.25943398, a: 1}
   _printUItoConsole: 1
   _movementSpeed: 3
   idleController: {fileID: 22100000, guid: a6d3a932dec6afc4687e43a71b39551c, type: 2}
   walkingController: {fileID: 22100000, guid: 4830c6627c303eb42bc46b1162ea514f, type: 2}
+  hasResourceEffect: 0
+  _endOfTurnDamage: 0
+  _endOfTurnHeal: 0
+  _endOfTurnStamina: 0
+  _endOfTurnMana: 0
   _inventory: {fileID: 6083187466875687617}
+  currentStateType: 
+  TEST_origin: {x: 0, y: 0}
+  TEST_distance: 0
+  TEST_moveType: 0
+  TRIGGER_ForceMovePreviewTest: 0
+  TRIGGER_ForceMoveExecuteTest: 0
+  TEST_currentTile: {fileID: 0}
   detectionRadius: 5
   PlayerInRange: 0
   physicalSOs:
@@ -257,6 +270,7 @@ MonoBehaviour:
   quickslotPhysicalAbilityIDs: 8a130000
   quickslotMagicalAbilityIDs: 
   quickslotConsumableIDs: 
+  equippedEquipmentModIDs: 
   credits: 0
 --- !u!114 &-4444478195236609224
 MonoBehaviour:
