@@ -149,18 +149,26 @@ namespace SystemMiami.InventorySystem
             magicalAbilityIDs.Clear();
             physicalAbilityIDs.Clear();
             consumableIDs.Clear();
-            equipmentModIDs.Clear();
+            //equipmentModIDs.Clear();
             quickslotMagicalAbilityIDs.Clear();
             quickslotPhysicalAbilityIDs.Clear();
             quickslotConsumableIDs.Clear();
             int startingAbilityID = characterClass switch
             {
-                CharacterClassType.MAGE => 2000,
+                CharacterClassType.MAGE => 1046,
                 CharacterClassType.TANK => 1015,
-                CharacterClassType.ROGUE => 1019,
-                CharacterClassType.FIGHTER => 1012,
+                CharacterClassType.ROGUE => 1032,
+                CharacterClassType.FIGHTER => 1000,
             };
-
+            int startingResourcePotionID = characterClass switch
+            {
+                CharacterClassType.MAGE => 3009,
+               _=> 3006
+            };
+            int startingGeneralHealID = 2013;
+            int startingGeneralShieldID = 1045;
+            
+            int startingHealPotionID = 3000;
             Debug.Log(
                 $"Init starting ability called on {gameObject} with args {characterClass}." +
                 $"<color = green>Adding starting Ability " +
@@ -171,6 +179,11 @@ namespace SystemMiami.InventorySystem
                 $"Data Corrupted. Database returned a starting ItemData with a 'true' failbit.");
 
             AddToInventory(startingAbilityID);
+            AddToInventory(startingGeneralHealID);
+            AddToInventory(startingGeneralShieldID);
+            AddToInventory(startingHealPotionID);
+            AddToInventory(startingResourcePotionID);
+            
         }
 
         // Gain Credits from quests and other sources
