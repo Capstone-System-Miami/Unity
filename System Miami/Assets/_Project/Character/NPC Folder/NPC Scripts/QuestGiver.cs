@@ -67,7 +67,7 @@ public class QuestGiver : MonoBehaviour
 
     public void OpenQuestWindow()
     {
-        questPanel.SetActive(true);
+        //questPanel.SetActive(true);
         // Start the quest and reset progress
         //isQuestAccepted = true;
         //isQuestCompleted = false;
