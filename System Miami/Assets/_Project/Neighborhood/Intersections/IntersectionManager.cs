@@ -539,7 +539,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
         return intersection.GetComponentsInChildren<DungeonEntrance>();
     }
 
-    private void ReplaceRandomWithBoss(GameObject intersection, DungeonPreset replacementPreset)
+    private void ReplaceRandomEntranceWithPreset(GameObject intersection, DungeonPreset replacementPreset)
     {
         DungeonEntrance[] entrances = GetDungeonEntrances(intersection);
         Assert.IsTrue(entrances.Length > 0,
@@ -861,15 +861,15 @@ public class IntersectionManager : Singleton<IntersectionManager>
 
         if (TEST_replace)
         {
-            ReplaceRandomWithBoss(FarthestIntersection, TEST_replacementPreset);
+            ReplaceRandomEntranceWithPreset(FarthestIntersection, TEST_replacementPreset);
             Debug.Log(
                 $"{FarthestIntersection.name} had a dungeon entrance " +
-                $"with {TEST_replacementPreset.name}",
+                $"replaced by {TEST_replacementPreset.name}",
                 FarthestIntersection);
         }
         // if (bosses.Count > 0)
         // {
-        //     ReplaceRandomWithBoss(FarthestIntersection);
+        //     ReplaceRandomEntranceWithPreset(FarthestIntersection);
         // }
 
         easyDungeonReward = SetEXPReward(easyDungeons);

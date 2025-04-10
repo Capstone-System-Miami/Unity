@@ -13,10 +13,6 @@ namespace SystemMiami
 
     public class DungeonRewardsPanel : Singleton<DungeonRewardsPanel>
     {
-      
-       
-
-       
         [SerializeField] private Inventory playerInventory;
         [SerializeField] private InventoryUI inventoryUI;
 

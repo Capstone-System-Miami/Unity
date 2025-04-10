@@ -67,13 +67,13 @@ namespace SystemMiami.Dungeons
 
         public void Initialize()
         {
+            _abilityItemDatas.Clear();
+            _consumableItemDatas.Clear();
+            _equipmentItemDatas.Clear();
+            rewards = new List<ItemData>();
+
             if (pullFromDatabase)
             {
-                _abilityItemDatas.Clear();
-                _consumableItemDatas.Clear();
-                _equipmentItemDatas.Clear();
-                rewards = new List<ItemData>();
-
                 _abilityItemDatas = Database.MGR.GetAllItemsOfPlayerClass(ItemType.MagicalAbility);
                 _abilityItemDatas.AddRange(Database.MGR.GetAllItemsOfPlayerClass(ItemType.PhysicalAbility));
                 _consumableItemDatas = Database.MGR.GetAllItemsOfPlayerClass(ItemType.Consumable);
@@ -302,8 +302,6 @@ namespace SystemMiami.Dungeons
             return Database.MGR.FilterByLevel(filtered);
         }
 
-        
-
         /// <summary>
         /// Collects whichever ID lists are enabled (Abilities, Consumables, EquipmentMods).
         /// </summary>
@@ -327,8 +325,5 @@ namespace SystemMiami.Dungeons
                 (list[i], list[rand]) = (list[rand], list[i]);
             }
         }
-
-        
-        
     }
 }

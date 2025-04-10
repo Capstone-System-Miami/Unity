@@ -25,7 +25,7 @@ namespace SystemMiami
         // ======================================
 
         private DungeonPreset _currentPreset;
-        [SerializeField] private DungeonData _dungeonData;
+        [SerializeField, ReadOnly] private DungeonData _dungeonData;
         private Material _material;
        
 
@@ -45,6 +45,16 @@ namespace SystemMiami
         private void OnEnable()
         {
             IntersectionManager.MGR.GenerationComplete += HandleGenerationComplete;
+
+
+            // This subscription feels weird an out of place but should work for now.
+            // Maybe this script should just set all of its IInteractable Event Listeners
+            // instead of doing it manually in the inspector?
+            // Otherwise we'll have to make a change
+            // to every single DungeonEntrance in every single prefab any time
+            // a change is made to what's subscribing to OnPlayerEnter or OnInteract, etc.
+            InteractionTrigger entranceTrigger = GetComponentInChildren<InteractionTrigger>();
+            entranceTrigger.OnInteract.AddListener(onInteract);
         }
 
         private void OnDisable()
@@ -70,15 +80,18 @@ namespace SystemMiami
                     $"and it will not call ApplyPreset().");
                 return;
             }
-
-            // This subscription feels weird an out of place but should work for now.
-            // Maybe this script should just set all of its IInteractable Event Listeners
-            // instead of doing it manually in the inspector?
-            // Otherwise we'll have to make a change
-            // to every single DungeonEntrance in every single prefab any time
-            // a change is made to what's subscribing to OnPlayerEnter or OnInteract, etc.
-            InteractionTrigger entranceTrigger = GetComponentInChildren<InteractionTrigger>();
-            entranceTrigger.OnInteract.AddListener(onInteract);
+            else if (_currentPreset == null)
+            {
+                log.warn($"<color=yellow>{name} is being assigned a preset for " +
+                    $"the first time.</color>",
+                    this);
+            }
+            else
+            {
+                log.warn($"<color=red>{name} is being assigned a preset for " +
+                    $"AT LEAST THE SECOND TIME.</color>",
+                    this);
+            }
 
             _currentPreset = preset;
 

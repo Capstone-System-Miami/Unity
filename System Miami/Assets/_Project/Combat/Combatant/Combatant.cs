@@ -290,7 +290,7 @@ namespace SystemMiami.CombatSystem
 
         private void HandleLoadoutCreated(Loadout loadout, Combatant combatant)
         {
-            if(combatant != this) {   Assert.IsNotNull(Loadout, $"{combatant.name}'s Loadout was null Handle Loudout");return; }
+            Assert.IsNotNull(loadout, $"Incoming loadout was null HandleLoadoutCreated");
 
             Loadout = loadout;
         }
