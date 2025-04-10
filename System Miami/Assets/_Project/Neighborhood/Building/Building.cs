@@ -27,6 +27,8 @@ namespace SystemMiami
 
         private void Awake()
         {
+            // TODO Using these TilemapCollider2Ds is game-breakingly slow.
+            return;
             foreach (Tilemap map in allTilemaps)
             {
                 TilemapCollider2D mapCollider = map.gameObject.AddComponent<TilemapCollider2D>();
