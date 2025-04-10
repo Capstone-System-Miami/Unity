@@ -175,7 +175,7 @@ namespace SystemMiami.InventorySystem
             }
             int startingAbilityID = characterClass switch
             {
-                CharacterClassType.MAGE => 1046,
+                CharacterClassType.MAGE => 2014,
                 CharacterClassType.TANK => 1015,
                 CharacterClassType.ROGUE => 1032,
                 CharacterClassType.FIGHTER => 1000,

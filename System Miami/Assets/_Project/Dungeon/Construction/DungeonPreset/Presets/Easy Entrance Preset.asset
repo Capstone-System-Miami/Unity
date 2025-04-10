@@ -42,6 +42,9 @@ MonoBehaviour:
     - _isDefault: 0
       _elementPrefab: {fileID: 5985083666047915755, guid: c228b952585c5bd4ebd232d67bd19af3, type: 3}
       _maxCount: 1
+    - _isDefault: 0
+      _elementPrefab: {fileID: 5985083666047915755, guid: f52d635873e4e2d4f90a468e161a7d34, type: 3}
+      _maxCount: 1
   _rewards:
     _overrideByDifficulty: 1
     _defaultDistributionMethod: 1
@@ -56,7 +59,7 @@ MonoBehaviour:
     _hardMaxLevelOffset: 2
     _includeAbilities: 1
     _includeConsumables: 1
-    _includeEquipmentMods: 1
+    _includeEquipmentMods: 0
     _abilityItemDatas:
     - ID: 2013
       Icon: {fileID: 21300000, guid: 42beaf279585ee34994d0196076d101b, type: 3}
@@ -77,7 +80,7 @@ MonoBehaviour:
       MaxLevel: 3
       rarity: 0
     - ID: 2009
-      Icon: {fileID: 0}
+      Icon: {fileID: 21300000, guid: 0aa6c2536a63df546818de27573ba3cf, type: 3}
       Name: Astral Explosion
       Description: 'Deal very high AOE damage. Consume all remaining Mana. '
       itemType: 2
@@ -103,7 +106,7 @@ MonoBehaviour:
       MinLevel: 0
       MaxLevel: 3
       rarity: 0
-    - ID: 1046
+    - ID: 2014
       Icon: {fileID: 21300000, guid: b543ee3b5a29ea847aa722ed503771b0, type: 3}
       Name: Fire bolt
       Description: Launch a firebolt that deals damage to targets
@@ -186,15 +189,6 @@ MonoBehaviour:
       Price: 0
       MinLevel: 0
       MaxLevel: 3
-      rarity: 0
-    - ID: 2012
-      Icon: {fileID: 0}
-      Name: 'Void Step '
-      Description: Teleport to target location and gain Magical Power for 1 turn.
-      itemType: 1
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 0
       rarity: 0
     - ID: 1002
       Icon: {fileID: 21300000, guid: 13243c2e89bbd3049b129ff4334efcb2, type: 3}
@@ -416,15 +410,6 @@ MonoBehaviour:
       MinLevel: 0
       MaxLevel: 3
       rarity: 0
-    - ID: 1034
-      Icon: {fileID: 21300000, guid: b36e120b6ecdefc4ead8830aa9f3dddf, type: 3}
-      Name: Shadow Step
-      Description: Teleport to a tile behind target and gain speed for 1 turns
-      itemType: 1
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 3
-      rarity: 0
     - ID: 1020
       Icon: {fileID: 21300000, guid: 6f246c4d5dcc00243bcf82730e2c9a08, type: 3}
       Name: Vampiric Dagger
@@ -568,8 +553,8 @@ MonoBehaviour:
       Name: Fire Bomb
       Description: Launch a bomb that explodes and harms all enemies in its radius
       itemType: 3
-      Price: 0
-      MinLevel: 10
+      Price: 10
+      MinLevel: 0
       MaxLevel: 0
       rarity: 0
     - ID: 3004
@@ -613,12 +598,12 @@ MonoBehaviour:
       Name: Minor Healing Potion
       Description: Heals player for 5 health
       itemType: 2
-      Price: 0
+      Price: 5
       MinLevel: 0
       MaxLevel: 10
       rarity: 0
     - ID: 3009
-      Icon: {fileID: 1425436850, guid: bf348cbba4063294c8498102360c892d, type: 3}
+      Icon: {fileID: 21300000, guid: a65e28a9f2f5f174293b6542720a7ceb, type: 3}
       Name: Minor Mana Potion
       Description: Restores 5 Mana
       itemType: 3
@@ -636,7 +621,7 @@ MonoBehaviour:
       MaxLevel: 30
       rarity: 0
     - ID: 3006
-      Icon: {fileID: 1425436850, guid: bf348cbba4063294c8498102360c892d, type: 3}
+      Icon: {fileID: 21300000, guid: d27646189d03ff34e85dc1f07315a1f8, type: 3}
       Name: Minor Stamina Potion
       Description: Restores 5 Stamina
       itemType: 3

@@ -53,6 +53,7 @@ namespace SystemMiami.Shop
         {
        
             UI.MGR.StartDialogue(this,true,true,false,myName,shop.shopDialogue);
+            UI.MGR.DialogueFinished -= HandleDialogueFinished;
             UI.MGR.DialogueFinished += HandleDialogueFinished;
 
         }

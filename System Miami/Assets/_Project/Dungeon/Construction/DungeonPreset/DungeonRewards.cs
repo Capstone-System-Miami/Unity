@@ -129,7 +129,7 @@ namespace SystemMiami.Dungeons
                     // Collect which lists are enabled
                     
                     List<List<ItemData>> candidateLists = CollectEnabledIDLists();
-                   Debug.Log($"Candidate Count {candidateLists.Count} {candidateLists[0].Count} {candidateLists[1].Count} {candidateLists[2].Count}");
+                 //  Debug.Log($"Candidate Count {candidateLists.Count} {candidateLists[0].Count} {candidateLists[1].Count} {candidateLists[2].Count}");
                     if (candidateLists.Count > 0)
                     {
                         // Pick 1 random category from the enabled ones
