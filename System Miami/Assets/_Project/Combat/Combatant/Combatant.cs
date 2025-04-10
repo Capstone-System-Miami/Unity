@@ -268,6 +268,11 @@ namespace SystemMiami.CombatSystem
 
             _animator = GetComponent<Animator>();
         }
+        public float GetCurrentHealth()
+{
+    return Health.Get();
+}
+
 
         private void InitResources()
         {
@@ -856,4 +861,7 @@ namespace SystemMiami.CombatSystem
         }
     }
     #endregion Event Args
+
+
+
 }
