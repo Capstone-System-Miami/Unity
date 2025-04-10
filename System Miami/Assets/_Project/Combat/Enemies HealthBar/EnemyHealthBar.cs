@@ -1,4 +1,4 @@
-
+// Johnny Sosa
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -25,7 +25,7 @@ namespace SystemMiami
             slider.maxValue = maxHealth;
             slider.value = maxHealth;
 
-            fill.color = gradient.Evaluate(1f);
+            fill.color = gradient.Evaluate(1f); // In theory should change color depending on the % of the slider
         }
 
         public void SetHealth(float currentHealth)
@@ -36,12 +36,12 @@ namespace SystemMiami
 
         void OnEnable()
         {
-            GAME.MGR.damageTaken += OnDamageTaken;
+            GAME.MGR.damageTaken += OnDamageTaken; // DAMGAE
         }
 
         void OnDisable()
         {
-            GAME.MGR.damageTaken -= OnDamageTaken;
+            GAME.MGR.damageTaken -= OnDamageTaken; // UPDATES HEALTH BAR
         }
 
         void OnDamageTaken(Combatant combatant)

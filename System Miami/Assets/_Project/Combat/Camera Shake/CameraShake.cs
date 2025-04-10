@@ -1,3 +1,4 @@
+// Johnny Sosa
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,7 +15,7 @@ namespace SystemMiami
 
         void Awake()
         {
-            originalPos = transform.localPosition;  // Fixed typo here
+            originalPos = transform.localPosition;  
         }
 
         public void Shake()
@@ -24,7 +25,7 @@ namespace SystemMiami
 
         IEnumerator ShakeRoutine()
         {
-            Vector3 originalPos = transform.localPosition;  // Fixed typo here
+            Vector3 originalPos = transform.localPosition;  
             float elapsed = 0.0f;
 
             while (elapsed < shakeDuration)
