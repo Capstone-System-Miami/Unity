@@ -537,7 +537,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
     {
         int maxNpcs = Mathf.Min(maxNpcsTotal, allNPCs.Count);
 
-        int npcsToSpawn = Random.Range(0, maxNpcs);
+        int npcsToSpawn = Random.Range(10, maxNpcs);
         
         for (int i = 0; i < npcsToSpawn; i++)
         {

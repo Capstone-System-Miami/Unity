@@ -16,6 +16,10 @@ namespace SystemMiami
 
         public void Initialize()  
         {
+            foreach (Quest quest in possibleQuests)
+            {
+                quest.Reset();
+            }
             availableQuests = new(possibleQuests);
         }
         
