@@ -57,6 +57,32 @@ MonoBehaviour:
   - {fileID: -528762922, guid: 028b96a92e5556e4299f00ebe1a4885c, type: 3}
   - {fileID: 1605350771, guid: 028b96a92e5556e4299f00ebe1a4885c, type: 3}
   - {fileID: -1320841029, guid: 028b96a92e5556e4299f00ebe1a4885c, type: 3}
+  - {fileID: -1228280658, guid: 8cba83b6db2f7b34ca2e9c4ddc6ad7d0, type: 3}
+  - {fileID: 1671289381, guid: 8cba83b6db2f7b34ca2e9c4ddc6ad7d0, type: 3}
+  - {fileID: 1681309829, guid: 8cba83b6db2f7b34ca2e9c4ddc6ad7d0, type: 3}
+  - {fileID: -483998727, guid: 8cba83b6db2f7b34ca2e9c4ddc6ad7d0, type: 3}
+  - {fileID: -744222674, guid: 8cba83b6db2f7b34ca2e9c4ddc6ad7d0, type: 3}
+  - {fileID: 1698676553, guid: 8cba83b6db2f7b34ca2e9c4ddc6ad7d0, type: 3}
+  - {fileID: -2086169643, guid: 8cba83b6db2f7b34ca2e9c4ddc6ad7d0, type: 3}
+  - {fileID: 1028207247, guid: 8cba83b6db2f7b34ca2e9c4ddc6ad7d0, type: 3}
+  - {fileID: 2039415368, guid: 8cba83b6db2f7b34ca2e9c4ddc6ad7d0, type: 3}
+  - {fileID: 1652667687, guid: 8cba83b6db2f7b34ca2e9c4ddc6ad7d0, type: 3}
+  - {fileID: -1258929195, guid: d7987fb14f7afa14885776b57de47e15, type: 3}
+  - {fileID: 65012270, guid: d7987fb14f7afa14885776b57de47e15, type: 3}
+  - {fileID: -985138655, guid: d7987fb14f7afa14885776b57de47e15, type: 3}
+  - {fileID: 153539538, guid: d7987fb14f7afa14885776b57de47e15, type: 3}
+  - {fileID: -1508687159, guid: d7987fb14f7afa14885776b57de47e15, type: 3}
+  - {fileID: -1536110828, guid: d7987fb14f7afa14885776b57de47e15, type: 3}
+  - {fileID: -1521760097, guid: d7987fb14f7afa14885776b57de47e15, type: 3}
+  - {fileID: -637235453, guid: d7987fb14f7afa14885776b57de47e15, type: 3}
+  - {fileID: 192531823, guid: d7987fb14f7afa14885776b57de47e15, type: 3}
+  - {fileID: -236959202, guid: d7987fb14f7afa14885776b57de47e15, type: 3}
+  - {fileID: -1342583311, guid: d7987fb14f7afa14885776b57de47e15, type: 3}
+  - {fileID: 827311488, guid: d7987fb14f7afa14885776b57de47e15, type: 3}
+  - {fileID: -894114725, guid: d7987fb14f7afa14885776b57de47e15, type: 3}
+  - {fileID: -645746065, guid: d7987fb14f7afa14885776b57de47e15, type: 3}
+  - {fileID: -2067689884, guid: d7987fb14f7afa14885776b57de47e15, type: 3}
+  - {fileID: -857933339, guid: d7987fb14f7afa14885776b57de47e15, type: 3}
   possibleQuests:
   - questName: Goblin Menace
     questDescriptionLine: Kill Goblins
@@ -64,9 +90,9 @@ MonoBehaviour:
       serializedVersion: 2
       m_Bits: 128
     enemiesToGoal: 0
-    objectiveGoal: 5
-    rewardEXP: 112
-    rewardCurrency: 72
+    objectiveGoal: 3
+    rewardEXP: 18
+    rewardCurrency: 45
     questDialogue:
     - Those goblins are becoming a menace
     - Kill some for me, would you?
@@ -77,9 +103,9 @@ MonoBehaviour:
       serializedVersion: 2
       m_Bits: 256
     enemiesToGoal: 0
-    objectiveGoal: 5
-    rewardEXP: 112
-    rewardCurrency: 72
+    objectiveGoal: 10
+    rewardEXP: 60
+    rewardCurrency: 120
     questDialogue:
     - Spiders are creepy
     - I'll make it worth your while if you get rid of some
@@ -88,11 +114,11 @@ MonoBehaviour:
     questDescriptionLine: Kill Slimes
     targetEnemyLayer:
       serializedVersion: 2
-      m_Bits: 768
+      m_Bits: 512
     enemiesToGoal: 0
-    objectiveGoal: 5
-    rewardEXP: 112
-    rewardCurrency: 72
+    objectiveGoal: 6
+    rewardEXP: 72
+    rewardCurrency: 78
     questDialogue:
     - I need some slime parts to make potions
     - Kill some and ill bring someone to pick them up
@@ -103,9 +129,9 @@ MonoBehaviour:
       serializedVersion: 2
       m_Bits: 1024
     enemiesToGoal: 0
-    objectiveGoal: 5
-    rewardEXP: 112
-    rewardCurrency: 72
+    objectiveGoal: 7
+    rewardEXP: 98
+    rewardCurrency: 91
     questDialogue:
     - Changelings are an abomination
     - Make the world a better place and get rid of some
@@ -132,15 +158,41 @@ MonoBehaviour:
     - Take a look
   availableQuests:
   - questName: Goblin Menace
-    questDescriptionLine: Kill 5 Goblins
+    questDescriptionLine: Kill Goblins
     targetEnemyLayer:
       serializedVersion: 2
       m_Bits: 128
     enemiesToGoal: 0
-    objectiveGoal: 8
-    rewardEXP: 112
-    rewardCurrency: 72
+    objectiveGoal: 3
+    rewardEXP: 18
+    rewardCurrency: 45
     questDialogue:
     - Those goblins are becoming a menace
     - Kill some for me, would you?
+    questCompleted: 0
+  - questName: Slime Potion
+    questDescriptionLine: Kill Slimes
+    targetEnemyLayer:
+      serializedVersion: 2
+      m_Bits: 512
+    enemiesToGoal: 0
+    objectiveGoal: 6
+    rewardEXP: 72
+    rewardCurrency: 78
+    questDialogue:
+    - I need some slime parts to make potions
+    - Kill some and ill bring someone to pick them up
+    questCompleted: 0
+  - questName: Changelings
+    questDescriptionLine: Kill Changelings
+    targetEnemyLayer:
+      serializedVersion: 2
+      m_Bits: 1024
+    enemiesToGoal: 0
+    objectiveGoal: 7
+    rewardEXP: 98
+    rewardCurrency: 91
+    questDialogue:
+    - Changelings are an abomination
+    - Make the world a better place and get rid of some
     questCompleted: 0

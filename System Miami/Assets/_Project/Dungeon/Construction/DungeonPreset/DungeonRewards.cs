@@ -144,33 +144,33 @@ namespace SystemMiami.Dungeons
                     break;
 
                 case RewardDistributionMethod.OneOfOneType:
-                    {
-                        // Collect which lists are enabled
+                {
+                    // Collect which lists are enabled
 
-                        List<List<ItemData>> candidateLists = CollectEnabledIDLists();
-                        // Debug.Log($"Candidate Count {candidateLists.Count} {candidateLists[0].Count} {candidateLists[1].Count} {candidateLists[2].Count}");
-                        if (candidateLists.Count > 0)
-                        {
-                            // Pick 1 random category from the enabled ones
-                            int randomTypeIndex = Random.Range(0, candidateLists.Count);
-                            TryAddRandomItem(candidateLists[randomTypeIndex], playerLevel, dungeonDifficulty);
-                        }
-                        break;
+                    List<List<ItemData>> candidateLists = CollectEnabledIDLists();
+                    // Debug.Log($"Candidate Count {candidateLists.Count} {candidateLists[0].Count} {candidateLists[1].Count} {candidateLists[2].Count}");
+                    if (candidateLists.Count > 0)
+                    {
+                        // Pick 1 random category from the enabled ones
+                        int randomTypeIndex = Random.Range(0, candidateLists.Count);
+                        TryAddRandomItem(candidateLists[randomTypeIndex], playerLevel, dungeonDifficulty);
                     }
+                    break;
+                }
                 case RewardDistributionMethod.TwoTypes:
-                    {
-                        List<List<ItemData>> candidateLists = CollectEnabledIDLists();
+                {
+                    List<List<ItemData>> candidateLists = CollectEnabledIDLists();
 
-                        if (candidateLists.Count > 1)
-                        {
-                            // Shuffle to pick 2 random distinct types
-                            Shuffle(candidateLists);
-                            // TryAddRandomItem from the first 2
-                            TryAddRandomItem(candidateLists[0], playerLevel, dungeonDifficulty);
-                            TryAddRandomItem(candidateLists[1], playerLevel, dungeonDifficulty);
-                        }
-                        break;
+                    if (candidateLists.Count > 1)
+                    {
+                        // Shuffle to pick 2 random distinct types
+                        Shuffle(candidateLists);
+                        // TryAddRandomItem from the first 2
+                        TryAddRandomItem(candidateLists[0], playerLevel, dungeonDifficulty);
+                        TryAddRandomItem(candidateLists[1], playerLevel, dungeonDifficulty);
                     }
+                    break;
+                }
             }
             List<int> rewardItemIDs = rewards.Select(r => r.ID).ToList();
             for (int i = 0; i < rewards.Count; i++)
