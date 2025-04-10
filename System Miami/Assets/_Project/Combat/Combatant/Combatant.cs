@@ -141,7 +141,7 @@ namespace SystemMiami.CombatSystem
         {
             get { return positionTile; }
             set {
-                Assert.IsNotNull(value, $"{name}'s PosTile is being set to NULL");
+               
                 positionTile = value;
             }
         }
@@ -185,7 +185,7 @@ namespace SystemMiami.CombatSystem
         }
 
         // Loadout
-        public Loadout Loadout { get; protected set; }
+        public Loadout Loadout { get;  protected set; }
         public CombatAction SelectedAbility { get; set; }
 
         #endregion Properties
@@ -290,13 +290,17 @@ namespace SystemMiami.CombatSystem
 
         private void HandleLoadoutCreated(Loadout loadout, Combatant combatant)
         {
-            if(combatant != this) { return; }
+            if(combatant != this) {   Assert.IsNotNull(Loadout, $"{combatant.name}'s Loadout was null Handle Loudout");return; }
 
             Loadout = loadout;
         }
 
         private void InitDirection()
         {
+            if (MapManager.MGR.map == null)
+            {
+                Debug.LogError($"{name}: Mapmanager is null in InitDirection. Ensure it is set before calling InitDirection.");
+            }
             Vector2Int currentPos
                 = (Vector2Int)PositionTile.GridLocation;
 

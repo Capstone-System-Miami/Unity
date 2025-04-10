@@ -32,6 +32,7 @@ namespace SystemMiami.Management
 
         public void CreatePlayerLoadout(Combatant combatant)
         {
+            Assert.IsNotNull(combatant, $"{combatant.name}'s was null");
             OnCreatePlayerLoadout(combatant);
         }
 
@@ -100,8 +101,9 @@ namespace SystemMiami.Management
             Loadout combatantLoadout = new(
                 combatant._inventory,
                 combatant);
-
-            Assert.IsNotNull(combatantLoadout);
+            Assert.IsNotNull(combatant._inventory, $"{combatant.name}'s Inventory was null");
+            Assert.IsNotNull(combatant, $"{combatant.name} was null");
+            Assert.IsNotNull(combatantLoadout, $"{combatant.name}'s Loadout was null");
 
             if (combatant is PlayerCombatant)
             {

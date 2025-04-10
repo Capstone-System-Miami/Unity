@@ -50,7 +50,8 @@ namespace SystemMiami.CombatRefactor
 
         public void ResetTurn()
         {
-            Assert.IsNotNull(combatant.Loadout, $"{combatant.name}'s Loadout was null");
+            Debug.Log($"{combatant.name}: ResetTurn called.");
+           // Assert.IsNotNull(combatant.Loadout, $"{combatant.name}'s Loadout was null");
             combatant.Loadout.ReduceCooldowns();
             GainResource();
             combatant.Stats.DecrementStatusEffectDurations();
