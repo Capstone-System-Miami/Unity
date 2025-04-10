@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
 using SystemMiami.CombatSystem;
@@ -31,6 +32,7 @@ namespace SystemMiami.InventorySystem
         public List<int> QuickslotConsumableIDs { get => quickslotConsumableIDs; private set => quickslotConsumableIDs = value; }
         public List<int> EquippedEquipmentModIDs { get => equippedEquipmentModIDs; private set => equippedEquipmentModIDs = value; }
 
+        public bool TestMode;
         public List<int> AllValidInventoryItems
         {
             get
@@ -146,6 +148,7 @@ namespace SystemMiami.InventorySystem
 
         public void InitializeStartingAbility(CharacterClassType characterClass)
         {
+            
             magicalAbilityIDs.Clear();
             physicalAbilityIDs.Clear();
             consumableIDs.Clear();
@@ -153,9 +156,26 @@ namespace SystemMiami.InventorySystem
             quickslotMagicalAbilityIDs.Clear();
             quickslotPhysicalAbilityIDs.Clear();
             quickslotConsumableIDs.Clear();
+
+            if (TestMode)
+            { 
+               List<int> tempMagIDList = Database.MGR.GetAllItemsOfPlayerClass(ItemType.MagicalAbility).Select(x => x.ID).ToList();
+               List<int> tempPhysIDList = Database.MGR.GetAllItemsOfPlayerClass(ItemType.PhysicalAbility).Select(x => x.ID).ToList();
+
+               foreach (int id in tempMagIDList)
+               {
+                   AddToInventory(id);
+               }
+               foreach (int id in tempPhysIDList)
+               {
+                   AddToInventory(id);
+               }
+
+               return;
+            }
             int startingAbilityID = characterClass switch
             {
-                CharacterClassType.MAGE => 1046,
+                CharacterClassType.MAGE => 2014,
                 CharacterClassType.TANK => 1015,
                 CharacterClassType.ROGUE => 1032,
                 CharacterClassType.FIGHTER => 1000,
@@ -169,6 +189,8 @@ namespace SystemMiami.InventorySystem
             int startingGeneralShieldID = 1045;
             
             int startingHealPotionID = 3000;
+            
+            
             Debug.Log(
                 $"Init starting ability called on {gameObject} with args {characterClass}." +
                 $"<color = green>Adding starting Ability " +

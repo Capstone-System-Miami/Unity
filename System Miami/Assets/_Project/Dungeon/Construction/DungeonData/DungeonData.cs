@@ -1,10 +1,8 @@
 /// Layla
 using System.Collections.Generic;
 using System.Linq;
-using SystemMiami.AbilitySystem;
 using UnityEngine;
-using SystemMiami.LeeInventory;
-using SystemMiami.Outdated;
+using UnityEngine.Assertions;
 
 namespace SystemMiami
 {
@@ -12,13 +10,11 @@ namespace SystemMiami
     public class DungeonData
     {
         public GameObject Prefab;
-        public List<GameObject> Enemies;
-        public List<ItemData> ItemRewards;
+        public List<GameObject> Enemies = new();
+        public List<ItemData> ItemRewards = new();
 
         public int EXPToGive;
         public int Credits;
-      //  public List<Outdated.Ability> AbilityRewards;
-       // public List<LeeInventory.OutdatedOrDuplicates.ItemData> ItemRewards;
 
         private string _prefabInfo;
         private string[] _enemyInfo;
@@ -30,10 +26,13 @@ namespace SystemMiami
         public DungeonData(
             GameObject prefab,
             List<GameObject> enemies,
-            List<ItemData> itemRewards,int expToGive,
+            List<ItemData> itemRewards,
+            int expToGive,
             int credits
         )
         {
+            Assert.IsNotNull(Enemies);
+            Assert.IsNotNull(ItemRewards);
             Prefab = prefab;
             Enemies = enemies;
             ItemRewards = itemRewards;
@@ -42,10 +41,8 @@ namespace SystemMiami
 
             _prefabInfo = $"Prefab: {Prefab}";
 
-
             string hi = $"  | Enemies:\n" +
-            string.Join("\n    |", Enemies.Select(e => e.ToString()));
-            
+            string.Join("\n    |", Enemies?.Where(e => e != null).Select(e => e.ToString()));
         }
 
         public override string ToString()
@@ -53,8 +50,8 @@ namespace SystemMiami
             string result =
                 $"{GetType().Name}\n" +
                 $"  | Prefab: {Prefab}\n" +
-                getListInfo("Enemies", Enemies.Cast<object>().ToList()) +
-                getListInfo("Item Rewards", ItemRewards.Cast<object>().ToList());
+                getListInfo("Enemies", Enemies?.Cast<object>().ToList()) +
+                getListInfo("Item Rewards", ItemRewards?.Cast<object>().ToList());
 
             return result;
         }

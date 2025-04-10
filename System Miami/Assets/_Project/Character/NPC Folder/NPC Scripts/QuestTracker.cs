@@ -14,6 +14,7 @@ namespace SystemMiami
         [SerializeField] private PlayerLevel playerLevel;
         [SerializeField] private Inventory playerInventory;
         [SerializeField] private QuestPanel questPanel;
+        
         public void AcceptQuest(Quest quest)
         {
             if (activeQuest != null)
@@ -22,6 +23,7 @@ namespace SystemMiami
             }
             activeQuest = quest;
             questPanel.Initialize(activeQuest);
+            GAME.MGR.CombatantDeath -= HandleCombatantDeath;
             GAME.MGR.CombatantDeath += HandleCombatantDeath;
         }
 
@@ -64,6 +66,7 @@ namespace SystemMiami
         {
             playerLevel.GainXP(activeQuest.rewardEXP);
             playerInventory.AddCredits(activeQuest.rewardCurrency);
+            activeQuest = new Quest(true);
         }
 
         // Helper method to update all UI elements at once

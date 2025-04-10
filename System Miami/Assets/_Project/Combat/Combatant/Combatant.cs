@@ -8,6 +8,7 @@ using SystemMiami.InventorySystem;
 using SystemMiami.Management;
 using SystemMiami.Utilities;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace SystemMiami.CombatSystem
 {
@@ -139,7 +140,10 @@ namespace SystemMiami.CombatSystem
         public OverlayTile PositionTile
         {
             get { return positionTile; }
-            set { positionTile = value; }
+            set {
+               
+                positionTile = value;
+            }
         }
 
         public OverlayTile FocusTile
@@ -181,7 +185,7 @@ namespace SystemMiami.CombatSystem
         }
 
         // Loadout
-        public Loadout Loadout { get; protected set; }
+        public Loadout Loadout { get;  protected set; }
         public CombatAction SelectedAbility { get; set; }
 
         #endregion Properties
@@ -286,13 +290,17 @@ namespace SystemMiami.CombatSystem
 
         private void HandleLoadoutCreated(Loadout loadout, Combatant combatant)
         {
-            if(combatant != this) { return; }
+            Assert.IsNotNull(loadout, $"Incoming loadout was null HandleLoadoutCreated");
 
             Loadout = loadout;
         }
 
         private void InitDirection()
         {
+            if (MapManager.MGR.map == null)
+            {
+                Debug.LogError($"{name}: Mapmanager is null in InitDirection. Ensure it is set before calling InitDirection.");
+            }
             Vector2Int currentPos
                 = (Vector2Int)PositionTile.GridLocation;
 

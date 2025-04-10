@@ -70,6 +70,7 @@ namespace SystemMiami.Management
         public void GoToCharacterSelect()
         {
             Debug.Log($"Going to {characterSelectSceneName}");
+            Destroy(PlayerManager.MGR.gameObject);
             SceneManager.LoadScene(characterSelectSceneName);
         }
 
@@ -117,7 +118,6 @@ namespace SystemMiami.Management
                 rewards = new();
                 return false;
             }
-            
 
             rewards = _dungeonData.ItemRewards;
             return true;

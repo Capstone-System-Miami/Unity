@@ -45,6 +45,7 @@ namespace SystemMiami
                     levelRange = Random.Range(0, 2);
                     enemyLevel = playerCurrentLevel - levelRange; // if player levels is 10 then enemies level should be (8 to 10) like in doc
                     break;
+                default:
                 case DifficultyLevel.HARD:
                     levelRange = Random.Range(0, 3);
                     enemyLevel = playerCurrentLevel + levelRange; // if player levels is 10 then enemies level should be (10 to 13) like in doc
