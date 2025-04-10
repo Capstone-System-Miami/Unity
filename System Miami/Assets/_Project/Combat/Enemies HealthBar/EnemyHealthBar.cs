@@ -1,4 +1,4 @@
-/*
+// Johnny Sosa
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -20,15 +20,15 @@ namespace SystemMiami
         public Gradient gradient;
         public Image fill;
 
-        public void SetMaxHealth(int maxHealth)
+        public void SetMaxHealth(float maxHealth)
         {
             slider.maxValue = maxHealth;
             slider.value = maxHealth;
 
-            fill.color = gradient.Evaluate(1f);
+            fill.color = gradient.Evaluate(1f); // In theory should change color depending on the % of the slider
         }
 
-        public void SetHealth(int currentHealth)
+        public void SetHealth(float currentHealth)
         {
             slider.value = currentHealth;
             fill.color = gradient.Evaluate(slider.normalizedValue);
@@ -36,19 +36,21 @@ namespace SystemMiami
 
         void OnEnable()
         {
-            GAME.MGR.damageTaken += OnDamageTaken;
+            GAME.MGR.damageTaken += OnDamageTaken; // DAMGAE
         }
 
         void OnDisable()
         {
-            GAME.MGR.damageTaken -= OnDamageTaken;
+            GAME.MGR.damageTaken -= OnDamageTaken; // UPDATES HEALTH BAR
         }
 
         void OnDamageTaken(Combatant combatant)
         {
             SetHealth(combatant.GetCurrentHealth());
+
+            Camera.main.GetComponent<CameraShake>()?.Shake(); // Added this to allow camera shake
         }
  
     }
 }
-*/
+
