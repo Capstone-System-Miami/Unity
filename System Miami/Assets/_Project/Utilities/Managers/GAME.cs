@@ -117,7 +117,6 @@ namespace SystemMiami.Management
                 rewards = new();
                 return false;
             }
-            
 
             rewards = _dungeonData.ItemRewards;
             return true;

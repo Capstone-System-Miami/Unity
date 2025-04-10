@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using SystemMiami.CombatSystem;
 using SystemMiami.Utilities;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace SystemMiami.CombatRefactor
 {
@@ -49,6 +50,7 @@ namespace SystemMiami.CombatRefactor
 
         public void ResetTurn()
         {
+            Assert.IsNotNull(combatant.Loadout, $"{combatant.name}'s Loadout was null");
             combatant.Loadout.ReduceCooldowns();
             GainResource();
             combatant.Stats.DecrementStatusEffectDurations();

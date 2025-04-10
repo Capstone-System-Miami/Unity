@@ -100,11 +100,11 @@ namespace SystemMiami.Dungeons
 
             if (!pullFromDatabase)
             {
-                if (_includeAbilities)
+                if (_includeAbilities && _abilityItemDatas != null)
                     result.AddRange(_abilityItemDatas);
-                if (_includeConsumables)
+                if (_includeConsumables && _consumableItemDatas != null)
                     result.AddRange(_consumableItemDatas);
-                if (_includeEquipmentMods)
+                if (_includeEquipmentMods && _equipmentItemDatas != null)
                     result.AddRange(_equipmentItemDatas);
                 return result;
             }
@@ -127,6 +127,8 @@ namespace SystemMiami.Dungeons
                     case DifficultyLevel.HARD:
                         finalMethod = _hardMethod;
                         break;
+                    default:
+                        break;
                 }
             }
 
@@ -146,7 +148,7 @@ namespace SystemMiami.Dungeons
                         // Collect which lists are enabled
 
                         List<List<ItemData>> candidateLists = CollectEnabledIDLists();
-                        Debug.Log($"Candidate Count {candidateLists.Count} {candidateLists[0].Count} {candidateLists[1].Count} {candidateLists[2].Count}");
+                        // Debug.Log($"Candidate Count {candidateLists.Count} {candidateLists[0].Count} {candidateLists[1].Count} {candidateLists[2].Count}");
                         if (candidateLists.Count > 0)
                         {
                             // Pick 1 random category from the enabled ones
@@ -271,6 +273,7 @@ namespace SystemMiami.Dungeons
                     minOffset = _mediumMinLevelOffset;
                     maxOffset = _mediumMaxLevelOffset;
                     break;
+                default:
                 case DifficultyLevel.HARD:
                     minOffset = _hardMinLevelOffset;
                     maxOffset = _hardMaxLevelOffset;

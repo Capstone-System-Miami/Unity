@@ -8,6 +8,7 @@ using SystemMiami.InventorySystem;
 using SystemMiami.Management;
 using SystemMiami.Utilities;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace SystemMiami.CombatSystem
 {
@@ -139,7 +140,10 @@ namespace SystemMiami.CombatSystem
         public OverlayTile PositionTile
         {
             get { return positionTile; }
-            set { positionTile = value; }
+            set {
+                Assert.IsNotNull(value, $"{name}'s PosTile is being set to NULL");
+                positionTile = value;
+            }
         }
 
         public OverlayTile FocusTile

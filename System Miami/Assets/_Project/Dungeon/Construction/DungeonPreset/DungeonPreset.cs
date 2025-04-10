@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace SystemMiami.Dungeons
 {
-    public enum DifficultyLevel { EASY, MEDIUM, HARD }
+    public enum DifficultyLevel { EASY, MEDIUM, HARD, BOSS }
 
     [CreateAssetMenu(fileName = "New Dungeon Preset", menuName = "Eviron/Dungeon Preset")]
     public class DungeonPreset : ScriptableObject
@@ -35,7 +35,7 @@ namespace SystemMiami.Dungeons
         [Space(5), SerializeField] private Pool<GameObject> _enemyPool;
 
         [Header("Rewards")]
-        [SerializeField] private DungeonRewards _rewards;           
+        [SerializeField] private DungeonRewards _rewards;
 
         public DungeonData GetData(List<Style> excludedStyles)
         {
@@ -52,9 +52,6 @@ namespace SystemMiami.Dungeons
             int creditsToGive = _rewards.GenerateCreditReward(_difficulty);
             
             DungeonData data = new DungeonData(prefab, enemies, itemRewards, EXPToGive, creditsToGive);
-
-            Debug.Log($"<color=green>{itemRewards[0].Name}</color>\n<color=red>{data}</color>");
-            Debug.Break();
 
             return data;
         }
@@ -144,11 +141,6 @@ namespace SystemMiami.Dungeons
             }
             dungeon.DifficultyLevel = _difficulty;
             return golist[0];
-        }
-        
-        public void AdjustEXPRewards(int requiredLevel, int totalDungeons)
-        {
-           
         }
     }
 }

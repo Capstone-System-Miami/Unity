@@ -57,7 +57,17 @@ MonoBehaviour:
     _includeAbilities: 1
     _includeConsumables: 1
     _includeEquipmentMods: 1
+    pullFromDatabase: 1
     _abilityItemDatas:
+    - ID: 2013
+      Icon: {fileID: 21300000, guid: 42beaf279585ee34994d0196076d101b, type: 3}
+      Name: General Heal
+      Description: Heal 5 health
+      itemType: 2
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 0
+      rarity: 0
     - ID: 2005
       Icon: {fileID: 21300000, guid: b36e120b6ecdefc4ead8830aa9f3dddf, type: 3}
       Name: Arcane Echo
@@ -93,6 +103,15 @@ MonoBehaviour:
       Price: 0
       MinLevel: 0
       MaxLevel: 3
+      rarity: 0
+    - ID: 1046
+      Icon: {fileID: 21300000, guid: b543ee3b5a29ea847aa722ed503771b0, type: 3}
+      Name: Fire bolt
+      Description: Launch a firebolt that deals damage to targets
+      itemType: 2
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 5
       rarity: 0
     - ID: 2000
       Icon: {fileID: 21300000, guid: 64628b0f68f6dae48ae440ad22b34f27, type: 3}
@@ -296,6 +315,15 @@ MonoBehaviour:
       MinLevel: 2
       MaxLevel: 4
       rarity: 0
+    - ID: 1045
+      Icon: {fileID: 21300000, guid: 2f1bc77efc97d6b48abf1fe558eaa230, type: 3}
+      Name: General Shield
+      Description: Increase Damage Reduction by 8 for 2 turns
+      itemType: 1
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 0
+      rarity: 0
     - ID: 1026
       Icon: {fileID: 21300000, guid: 36127f150f70db44abe87a729423061a, type: 3}
       Name: 'Adrenaline Surge '
@@ -419,8 +447,7 @@ MonoBehaviour:
     - ID: 1015
       Icon: {fileID: 21300000, guid: 1a417538a6a19c2409c9e7044b4b5e6e, type: 3}
       Name: Axe Throw
-      Description: Throws the shield at medium range towards the enemy and chains
-        attacks r
+      Description: 'Throws the shield at medium range towards the enemy '
       itemType: 1
       Price: 0
       MinLevel: 0
@@ -546,6 +573,42 @@ MonoBehaviour:
       MinLevel: 10
       MaxLevel: 0
       rarity: 0
+    - ID: 3004
+      Icon: {fileID: 1425436850, guid: bf348cbba4063294c8498102360c892d, type: 3}
+      Name: Major Healing Potion
+      Description: Heals player for 20 health
+      itemType: 3
+      Price: 20
+      MinLevel: 0
+      MaxLevel: 30
+      rarity: 0
+    - ID: 3010
+      Icon: {fileID: 1425436850, guid: bf348cbba4063294c8498102360c892d, type: 3}
+      Name: Major Mana Potion
+      Description: Restores 20 Mana
+      itemType: 3
+      Price: 20
+      MinLevel: 0
+      MaxLevel: 30
+      rarity: 0
+    - ID: 3013
+      Icon: {fileID: 1425436850, guid: bf348cbba4063294c8498102360c892d, type: 3}
+      Name: Major Regrowth Tonic
+      Description: Heal 20 health over time for 3 turns
+      itemType: 3
+      Price: 28
+      MinLevel: 0
+      MaxLevel: 30
+      rarity: 0
+    - ID: 3005
+      Icon: {fileID: 1425436850, guid: bf348cbba4063294c8498102360c892d, type: 3}
+      Name: Major Stamina Potion
+      Description: Restores 20 Stamina
+      itemType: 3
+      Price: 20
+      MinLevel: 0
+      MaxLevel: 30
+      rarity: 0
     - ID: 3000
       Icon: {fileID: 840374211, guid: bf348cbba4063294c8498102360c892d, type: 3}
       Name: Minor Healing Potion
@@ -554,6 +617,78 @@ MonoBehaviour:
       Price: 0
       MinLevel: 0
       MaxLevel: 10
+      rarity: 0
+    - ID: 3009
+      Icon: {fileID: 1425436850, guid: bf348cbba4063294c8498102360c892d, type: 3}
+      Name: Minor Mana Potion
+      Description: Restores 5 Mana
+      itemType: 3
+      Price: 5
+      MinLevel: 0
+      MaxLevel: 10
+      rarity: 0
+    - ID: 3011
+      Icon: {fileID: 1425436850, guid: bf348cbba4063294c8498102360c892d, type: 3}
+      Name: Minor Regrowth Tonic
+      Description: Heal 5 health over time for 3 turns
+      itemType: 3
+      Price: 10
+      MinLevel: 0
+      MaxLevel: 30
+      rarity: 0
+    - ID: 3006
+      Icon: {fileID: 1425436850, guid: bf348cbba4063294c8498102360c892d, type: 3}
+      Name: Minor Stamina Potion
+      Description: Restores 5 Stamina
+      itemType: 3
+      Price: 5
+      MinLevel: 0
+      MaxLevel: 10
+      rarity: 0
+    - ID: 3003
+      Icon: {fileID: 1477902531, guid: bf348cbba4063294c8498102360c892d, type: 3}
+      Name: Moderate Healing Potion
+      Description: Heals player for 10 health
+      itemType: 3
+      Price: 8
+      MinLevel: 1
+      MaxLevel: 20
+      rarity: 0
+    - ID: 3008
+      Icon: {fileID: 1425436850, guid: bf348cbba4063294c8498102360c892d, type: 3}
+      Name: Moderate Mana Potion
+      Description: Restores 10 Mana
+      itemType: 3
+      Price: 8
+      MinLevel: 0
+      MaxLevel: 0
+      rarity: 0
+    - ID: 3012
+      Icon: {fileID: 1425436850, guid: bf348cbba4063294c8498102360c892d, type: 3}
+      Name: Moderate Regrowth Tonic
+      Description: Heal 10 health over time for 3 turns
+      itemType: 3
+      Price: 18
+      MinLevel: 0
+      MaxLevel: 30
+      rarity: 0
+    - ID: 3007
+      Icon: {fileID: 1425436850, guid: bf348cbba4063294c8498102360c892d, type: 3}
+      Name: Moderate Stamina Potion
+      Description: Restores 10 Stamina
+      itemType: 3
+      Price: 8
+      MinLevel: 0
+      MaxLevel: 0
+      rarity: 0
+    - ID: 3014
+      Icon: {fileID: 21300000, guid: 0274e292b08f7734f8aa19c5b21a6e11, type: 3}
+      Name: Stamina Pill
+      Description: Restore 5 Stamina and increase speed for 2 turns
+      itemType: 3
+      Price: 13
+      MinLevel: 0
+      MaxLevel: 30
       rarity: 0
     _equipmentItemDatas:
     - ID: 1002
@@ -673,6 +808,15 @@ MonoBehaviour:
       Price: 0
       MinLevel: 2
       MaxLevel: 4
+      rarity: 0
+    - ID: 1045
+      Icon: {fileID: 21300000, guid: 2f1bc77efc97d6b48abf1fe558eaa230, type: 3}
+      Name: General Shield
+      Description: Increase Damage Reduction by 8 for 2 turns
+      itemType: 1
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 0
       rarity: 0
     - ID: 1026
       Icon: {fileID: 21300000, guid: 36127f150f70db44abe87a729423061a, type: 3}
@@ -797,8 +941,7 @@ MonoBehaviour:
     - ID: 1015
       Icon: {fileID: 21300000, guid: 1a417538a6a19c2409c9e7044b4b5e6e, type: 3}
       Name: Axe Throw
-      Description: Throws the shield at medium range towards the enemy and chains
-        attacks r
+      Description: 'Throws the shield at medium range towards the enemy '
       itemType: 1
       Price: 0
       MinLevel: 0

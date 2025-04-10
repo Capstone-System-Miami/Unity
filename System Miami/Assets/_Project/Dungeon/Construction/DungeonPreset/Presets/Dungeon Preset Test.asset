@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 643aa8bf25dd0b54c938053031f2cb06, type: 3}
   m_Name: Dungeon Preset Test
   m_EditorClassIdentifier: 
-  _difficulty: 0
+  _difficulty: 3
   _material: {fileID: 2100000, guid: b673bd577411dc242a027f4797dcd53c, type: 2}
   _doorOffColor: {r: 1, g: 0, b: 0.58740854, a: 1}
   _doorOnColor: {r: 1, g: 0.23032942, b: 0, a: 1}
@@ -21,10 +21,10 @@ MonoBehaviour:
     _maxCount: 1
     _elements:
     - _isDefault: 1
-      _elementPrefab: {fileID: 5478403791188214871, guid: 5bdcfd84e2f45c8469428cab1badf96e, type: 3}
+      _elementPrefab: {fileID: 5478403791188214871, guid: 2276dd2fcded45b41835fe0cde3f3ba7, type: 3}
       _maxCount: 1
   _enemyPool:
-    _minCount: 4
+    _minCount: 5
     _maxCount: 8
     _elements:
     - _isDefault: 0
@@ -48,8 +48,8 @@ MonoBehaviour:
     _mediumMaxLevelOffset: 0
     _hardMinLevelOffset: 1
     _hardMaxLevelOffset: 2
-    _includeAbilities: 0
-    _includeConsumables: 0
+    _includeAbilities: 1
+    _includeConsumables: 1
     _includeEquipmentMods: 1
     pullFromDatabase: 0
     _abilityItemDatas: []
