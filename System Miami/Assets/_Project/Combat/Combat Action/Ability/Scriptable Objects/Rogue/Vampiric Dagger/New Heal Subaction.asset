@@ -9,9 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea3a38993c18ff04f9257dc06b235b29, type: 3}
-  m_Name: Disorienting Strike damage pattern
+  m_Script: {fileID: 11500000, guid: 8b1adb4e6b4373b42ab0085e4d7fc6a0, type: 3}
+  m_Name: New Heal Subaction
   m_EditorClassIdentifier: 
-  _patternOrigin: 0
-  TargetedTileColor: {r: 1, g: 0, b: 0, a: 1}
-  TargetedCombatantColor: {r: 1, g: 0, b: 0, a: 1}
+  _targetingPattern: {fileID: 11400000, guid: 8793af2698ceb974fbdfeecca6fda7a4, type: 2}
+  isPreExecution: 0
+  resourceType: 0
+  amount: 5
+  perTurn: 0
+  durationTurns: 0

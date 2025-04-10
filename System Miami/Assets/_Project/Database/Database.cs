@@ -121,7 +121,9 @@ namespace SystemMiami
                 case ItemType.Consumable:
                     result = consumableEntries.Select(so => so.itemData).ToList();
                     break;
-               
+               case ItemType.EquipmentMod:
+                    result = equipmentModEntries.Select(so => so.itemData).ToList();
+                    break;
             }
            return result;
        }

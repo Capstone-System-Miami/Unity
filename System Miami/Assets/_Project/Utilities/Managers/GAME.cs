@@ -70,6 +70,7 @@ namespace SystemMiami.Management
         public void GoToCharacterSelect()
         {
             Debug.Log($"Going to {characterSelectSceneName}");
+            Destroy(PlayerManager.MGR.gameObject);
             SceneManager.LoadScene(characterSelectSceneName);
         }
 
