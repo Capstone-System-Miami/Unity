@@ -51,7 +51,10 @@ namespace SystemMiami.Dungeons
             int EXPToGive = _rewards.GenerateExpReward(_difficulty);
             int creditsToGive = _rewards.GenerateCreditReward(_difficulty);
             
-            DungeonData data = new DungeonData(prefab, enemies, itemRewards,EXPToGive,creditsToGive);
+            DungeonData data = new DungeonData(prefab, enemies, itemRewards, EXPToGive, creditsToGive);
+
+            Debug.Log($"<color=green>{itemRewards[0].Name}</color>\n<color=red>{data}</color>");
+            Debug.Break();
 
             return data;
         }

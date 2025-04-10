@@ -132,7 +132,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 18740023143509276, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
       propertyPath: consumableIDs.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 18740023143509276, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
       propertyPath: consumableIDs.Array.data[0]
@@ -141,6 +141,14 @@ PrefabInstance:
     - target: {fileID: 18740023143509276, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
       propertyPath: consumableIDs.Array.data[1]
       value: 3001
+      objectReference: {fileID: 0}
+    - target: {fileID: 18740023143509276, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
+      propertyPath: physicalAbilityIDs.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 18740023143509276, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
+      propertyPath: physicalAbilityIDs.Array.data[3]
+      value: 1005
       objectReference: {fileID: 0}
     - target: {fileID: 18740023143509276, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
       propertyPath: quickslotMagicalAbilityIDs.Array.size
@@ -13127,22 +13135,29 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b62ecf78532493d40aaa289fa59c2577, type: 2}
   - {fileID: 11400000, guid: 3ac68e114586ecf429cfaf34d8ff63f7, type: 2}
   - {fileID: 11400000, guid: ad458d592988c3749b0b654a882b084d, type: 2}
+  bosses: []
+  TEST_replace: 1
+  TEST_replacementPreset: {fileID: 11400000, guid: 5dd2b275e08f816468a3742e02f45052, type: 2}
   playerPrefab: {fileID: 6453553769002132252, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
   <NeighborhoodLevelRequirement>k__BackingField: 5
   allEntrances: []
   easyDungeonReward: 
   mediumDungeonReward: 
   hardDungeonReward: 
-  <allNPCs>k__BackingField: []
   npcPrefab: {fileID: 8476462788968368805, guid: 3988a39c08151eb4ca6432a338ae8c26, type: 3}
   maxNpcsTotal: 50
   maxNpcsShops: 30
   maxNpcsQuests: 20
+  <allNPCs>k__BackingField: []
   dialogueChance: 0
   questChance: 0
   shopChance: 1
   npcInfo: {fileID: 11400000, guid: 40557af94cd9589468c04b0bc14ee1fb, type: 2}
-  <FarthestIntersetion>k__BackingField: {fileID: 0}
+  <MeasurementType>k__BackingField: 2
+  <MustBeUp>k__BackingField: 1
+  <FarthestIntersectionFromPlayer>k__BackingField: {fileID: 0}
+  <FarthestIntersectionFromZero>k__BackingField: {fileID: 0}
+  <FarthestIntersection>k__BackingField: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

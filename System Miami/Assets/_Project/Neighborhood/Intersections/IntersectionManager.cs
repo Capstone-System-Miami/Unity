@@ -37,6 +37,8 @@ public class IntersectionManager : Singleton<IntersectionManager>
     // construct themselves based on the information in the presets.
     [SerializeField] private List<DungeonPreset> dungeonEntrancePresets = new();
     [SerializeField] private List<DungeonPreset> bosses = new();
+    [SerializeField] private bool TEST_replace;
+    [SerializeField] private DungeonPreset TEST_replacementPreset;
 
     [Header("Player Settings")]
     // The player prefab to instantiate in the scene.
@@ -537,15 +539,15 @@ public class IntersectionManager : Singleton<IntersectionManager>
         return intersection.GetComponentsInChildren<DungeonEntrance>();
     }
 
-    private void ReplaceRandomWithBoss(GameObject intersection)
+    private void ReplaceRandomWithBoss(GameObject intersection, DungeonPreset replacementPreset)
     {
         DungeonEntrance[] entrances = GetDungeonEntrances(intersection);
+        Assert.IsTrue(entrances.Length > 0,
+            $"GetDungeonEntrances() should have returned a " +
+            $"non-zero len array for {intersection.name}...");
         int randEntrance = Random.Range(0, entrances.Length);
-        int randBoss = Random.Range(0, bosses.Count);
 
-        DungeonPreset bossPreset = bosses[randBoss];
-        entrances[randEntrance].ApplyNewPreset(bossPreset);
-        bosses.Remove(bossPreset);
+        entrances[randEntrance].ApplyNewPreset(replacementPreset);
     }
 
     private void InitializeNPCSpawners(StreetData streetData)
@@ -856,10 +858,19 @@ public class IntersectionManager : Singleton<IntersectionManager>
         FarthestIntersectionFromPlayer = GetFarthestIntersection(true, MeasurementType, MustBeUp);
         FarthestIntersectionFromZero = GetFarthestIntersection(false, MeasurementType, MustBeUp);
         FarthestIntersection = FarthestIntersectionFromPlayer;
-        if (bosses.Count > 0)
+
+        if (TEST_replace)
         {
-            ReplaceRandomWithBoss(FarthestIntersection);
+            ReplaceRandomWithBoss(FarthestIntersection, TEST_replacementPreset);
+            Debug.Log(
+                $"{FarthestIntersection.name} had a dungeon entrance " +
+                $"with {TEST_replacementPreset.name}",
+                FarthestIntersection);
         }
+        // if (bosses.Count > 0)
+        // {
+        //     ReplaceRandomWithBoss(FarthestIntersection);
+        // }
 
         easyDungeonReward = SetEXPReward(easyDungeons);
         mediumDungeonReward = SetEXPReward(mediumDungeons);
