@@ -6,9 +6,6 @@ namespace SystemMiami
 {
     public enum SoundType
     {
-        Overworld,
-        Title,
-        Battle,
         Sword,
         Magic,
         Hurt,
