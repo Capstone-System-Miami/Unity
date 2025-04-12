@@ -5,8 +5,11 @@ using UnityEngine;
 
 namespace SystemMiami
 {
-    public class DontDestroy : Singleton<DontDestroy>
+    public class DontDestroy : MonoBehaviour
     {
-        
+        public void Awake()
+        {
+            DontDestroyOnLoad(gameObject);
+        }
     }
 }

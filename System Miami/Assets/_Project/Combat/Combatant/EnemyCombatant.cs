@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.Design;
 using SystemMiami.Animation;
 using SystemMiami.CombatRefactor;
 using SystemMiami.Dungeons;
@@ -14,12 +13,6 @@ namespace SystemMiami.CombatSystem
 
         [HideInInspector] public bool PlayerInRange;
 
-        [Header("CombatAction Presets")]
-        [SerializeField] private List<NewAbilitySO> physicalSOs;
-        [SerializeField] private List<NewAbilitySO> magicalSOs;
-        [SerializeField] private List<ConsumableSO> consumableSOs;
-
-
         protected override void Start()
         {
             base.Start();
@@ -27,6 +20,7 @@ namespace SystemMiami.CombatSystem
             DifficultyLevel difficultyLevel = MapManager.MGR.Dungeon.DifficultyLevel;
             GetComponent<EnemiesLevel>().Initialize(difficultyLevel, playerLevel);
         }
+
         public override OverlayTile GetNewFocus()
         {
             Combatant targetPlayer = TurnManager.MGR.playerCharacter;
