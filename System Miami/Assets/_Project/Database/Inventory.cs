@@ -1,10 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Serialization;
-using SystemMiami.CombatSystem;
-using SystemMiami.Outdated;
 using UnityEngine.Assertions;
 
 namespace SystemMiami.InventorySystem
@@ -175,22 +171,21 @@ namespace SystemMiami.InventorySystem
             }
             int startingAbilityID = characterClass switch
             {
-                CharacterClassType.MAGE => 2014,
-                CharacterClassType.TANK => 1015,
-                CharacterClassType.ROGUE => 1032,
-                CharacterClassType.FIGHTER => 1000,
+                CharacterClassType.MAGE     => 2014,
+                CharacterClassType.TANK     => 1015,
+                CharacterClassType.ROGUE    => 1032,
+                CharacterClassType.FIGHTER  => 1000,
+                _                           => 1000,
             };
             int startingResourcePotionID = characterClass switch
             {
                 CharacterClassType.MAGE => 3009,
-               _=> 3006
+                _                       => 3006
             };
             int startingGeneralHealID = 2013;
             int startingGeneralShieldID = 1045;
-            
             int startingHealPotionID = 3000;
-            
-            
+
             Debug.Log(
                 $"Init starting ability called on {gameObject} with args {characterClass}." +
                 $"<color = green>Adding starting Ability " +
@@ -205,7 +200,6 @@ namespace SystemMiami.InventorySystem
             AddToInventory(startingGeneralShieldID);
             AddToInventory(startingHealPotionID);
             AddToInventory(startingResourcePotionID);
-            
         }
 
         // Gain Credits from quests and other sources

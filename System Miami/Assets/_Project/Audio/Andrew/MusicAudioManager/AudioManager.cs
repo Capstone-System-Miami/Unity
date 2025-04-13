@@ -1,28 +1,17 @@
 using UnityEngine.Audio;
 using UnityEngine;
 using System;
+using SystemMiami.Management;
 
 namespace SystemMiami
 {
-    public class AudioManager : MonoBehaviour
+    public class AudioManager : Singleton<AudioManager>
     {
         public Sound[] sounds;
 
-        public static AudioManager instance;
-
-        void Awake()
+        protected override void Awake()
         {
-            if (instance == null)
-            {
-                instance = this;
-            }
-            else
-            {
-                Destroy(instance);
-                return;
-            }
-
-            DontDestroyOnLoad(gameObject);
+            base.Awake();
 
             foreach (Sound s in sounds)
             {
@@ -35,10 +24,12 @@ namespace SystemMiami
                 s.source.loop = s.loop;
             }
         }
+
         void Start()
         {
             //Play("OverWorld");
         }
+
         public void Play(string name)
         {
             Sound s = Array.Find(sounds, sound => sound.name == name);

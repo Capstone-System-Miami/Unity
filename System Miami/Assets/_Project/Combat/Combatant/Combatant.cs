@@ -23,6 +23,7 @@ namespace SystemMiami.CombatSystem
         #region Serialized Vars
         //============================================================
         [Header("Debug")]
+        [SerializeField] private dbug log;
         [SerializeField] private bool detailedFocusHighlight;
         private AdjacentTileSet focusAdjacent;
 
@@ -57,8 +58,8 @@ namespace SystemMiami.CombatSystem
         private Stats _stats;
         private bool isDamageable = true;
         private bool isHealable = true;
-        private bool isMovable = true;
-        private bool isStunned = false;
+        // private bool isMovable = true;
+        // private bool isStunned = false;
         private bool isInvisible = false;
         public bool hasResourceEffect = false;
         public Dictionary<ResourceType, int> restoreResourceEffects = new();
@@ -77,7 +78,10 @@ namespace SystemMiami.CombatSystem
         private OverlayTile previousFocus;
         private DirectionContext directionContext;
 
-        public event Action<Combatant> DamageTaken;
+        // NOTE:
+        // Commenting this out to get rid of annoying Console warnings.
+        // Uncomment if needed.
+        // public event Action<Combatant> DamageTaken;
 
         private object eventLock = new object();
         #endregion Private Vars
@@ -106,7 +110,7 @@ namespace SystemMiami.CombatSystem
             {
                 if (value.combatant != this)
                 {
-                    Debug.LogError(
+                    log.error(
                         $"{name} is trying to transition" +
                         $"to a state belonging to" +
                         $"{value.combatant.name}"
@@ -299,7 +303,7 @@ namespace SystemMiami.CombatSystem
         {
             if (MapManager.MGR.map == null)
             {
-                Debug.LogError($"{name}: Mapmanager is null in InitDirection. Ensure it is set before calling InitDirection.");
+                log.error($"{name}: Mapmanager is null in InitDirection. Ensure it is set before calling InitDirection.");
             }
             Vector2Int currentPos
                 = (Vector2Int)PositionTile.GridLocation;
@@ -316,7 +320,7 @@ namespace SystemMiami.CombatSystem
             stateFactory = new(this);
             currentState = stateFactory.Idle();
             currentState.OnEnter();
-            Debug.LogWarning($"{name} is initializing state machine");
+            log.warn($"{name} is initializing state machine");
         }
         #endregion Construction
 
@@ -384,10 +388,9 @@ namespace SystemMiami.CombatSystem
 
             if (!MapManager.MGR.map.TryGetValue(MapManager.MGR.CenterPos, out result))
             {
-                Debug.LogError(
+                log.error(
                     $"FATAL | {name}'s {this}" +
-                    $"FOUND NO TILE TO FOCUS ON."
-                    );
+                    $"FOUND NO TILE TO FOCUS ON.");
             }
 
             return result;
@@ -397,7 +400,7 @@ namespace SystemMiami.CombatSystem
         {
             if (PositionTile == null)
             {
-                Debug.LogError(
+                log.error(
                     $"{gameObject}'s {this} tried to " +
                     $"snap to its posiiton tile, but " +
                     $"its PositionTile was null.");
@@ -415,7 +418,7 @@ namespace SystemMiami.CombatSystem
             Stamina = new Resource(_stats.GetStat(StatType.STAMINA), Stamina.Get());
             Mana = new Resource(_stats.GetStat(StatType.MANA), Mana.Get());
             Speed = new Resource(_stats.GetStat(StatType.SPEED), Speed.Get());
-            Debug.Log($"{gameObject.name} has {Health.Get()} health.");
+            log.print($"{gameObject.name} has {Health.Get()} health.");
         }
         #endregion Resource Management
 
@@ -427,8 +430,7 @@ namespace SystemMiami.CombatSystem
             if (FocusTile == null) { return; }
             Animator.SetInteger(
                 dirParam,
-                (int)CurrentDirectionContext.ScreenDirection
-                );
+                (int)CurrentDirectionContext.ScreenDirection);
         }
         #endregion Animation
 
@@ -437,30 +439,30 @@ namespace SystemMiami.CombatSystem
         //============================================================
         public void Highlight()
         {
-            //Debug.Log($"Highlight (no args overload) called on {name}.\n" +
-            //    $"This should be called from OverlayTile when the player\n" +
-            //    $"mouses over a tile containing a combatant.\n" +
-            //    $"The function should enable / instantiate a\n" +
-            //    $"worldspace UI canvas with combatant info.");
+            // log.print($"Highlight (no args overload) called on {name}.\n" +
+            //     $"This should be called from OverlayTile when the player\n" +
+            //     $"mouses over a tile containing a combatant.\n" +
+            //     $"The function should enable / instantiate a\n" +
+            //     $"worldspace UI canvas with combatant info.");
         }
 
         public void Highlight(Color color)
         {
             if (!isInvisible)
             {
-                //print($"{name} is being highlighted");
+                // log.print($"{name} is being highlighted");
                 _renderer.color = color;
             }
             else
             {
-                //print($"{name} is not being highlighted, because it's invisible");
+                // log.print($"{name} is not being highlighted, because it's invisible");
             }
         }
 
         public void UnHighlight()
         {
             if(_renderer == null) return;
-            //print($"{name} is no longer highlighted");
+            // log.print($"{name} is no longer highlighted");
             _renderer.color = _defaultColor;
         }
 
@@ -481,7 +483,7 @@ namespace SystemMiami.CombatSystem
         public void PreviewDamage(float amount, bool perTurn, int durationTurns)
         {
             float currentHealth = Health.Get();
-            Debug.Log(
+            log.print(
                 $"{gameObject.name} will take {amount} damage,\n" +
                 $"taking its health from {currentHealth} to " +
                 $"{currentHealth - amount}");
@@ -489,8 +491,7 @@ namespace SystemMiami.CombatSystem
 
         public void ReceiveDamage(float amount, bool perTurn, int durationTurns)
         {
-
-            if(perTurn)
+            if (perTurn)
             {
                 hasResourceEffect = true;
                 _endOfTurnDamage -= amount;
@@ -499,13 +500,12 @@ namespace SystemMiami.CombatSystem
             else
             {
                 Health.Lose(amount);
-                Debug.Log(
+                log.print(
                     $"{gameObject.name} took {amount} damage,\n" +
                     $"its Health is now {Health.Get()}");
             }
 
-            GAME.MGR.NotifyDamageTaken(this);  
-
+            GAME.MGR.NotifyDamageTaken(this);
         }
         #endregion IDamageReciever
 
@@ -524,12 +524,11 @@ namespace SystemMiami.CombatSystem
 
         public void ReceiveResource(float amount, ResourceType type, bool perTurn, int durationTurns)
         {
-
             if (perTurn)
             {
                 hasResourceEffect = true;
-                restoreResourceEffects.Add(type,durationTurns);
-                if(type == ResourceType.Health)
+                restoreResourceEffects.Add(type, durationTurns);
+                if (type == ResourceType.Health)
                 {
                     _endOfTurnHeal += amount;
                 }
@@ -544,15 +543,16 @@ namespace SystemMiami.CombatSystem
             }
             else
             {
-               GainResource(type, amount);
+                GainResource(type, amount);
             }
-
         }
 
         public void GainResource(ResourceType type, float amount)
         {
             switch (type)
             {
+                // TODO:
+                // but why
                 case ResourceType.Health:
                     if (amount > 0)
                     {
@@ -593,11 +593,11 @@ namespace SystemMiami.CombatSystem
         }
         void IForceMoveReceiver.PreviewForceMove(OverlayTile destinationTile)
         {
-            //Debug.LogError(
-            //    $"{name} is trying to priview movement to " +
-            //    $"{destinationTile.name}, but its RecieveForceMove() method " +
-            //    $"has not been implemented.",
-            //    destinationTile);
+            // log.error(
+            //     $"{name} is trying to priview movement to " +
+            //     $"{destinationTile.name}, but its RecieveForceMove() method " +
+            //     $"has not been implemented.",
+            //     destinationTile);
             MovementPath pathToTile = new(PositionTile, destinationTile, true);
             StartCoroutine(TEST_ShowMovementPath(pathToTile));
         }
@@ -607,11 +607,10 @@ namespace SystemMiami.CombatSystem
             MovementPath pathToTile = new(PositionTile, destinationTile, true);
             CurrentState.SwitchState(Factory.ForcedMovementExecution(pathToTile));
 
-            
-            //Debug.LogError(
-            //    $"{name} is trying to move to {destinationTile.name}, but " +
-            //    $"its RecieveForceMove() method has not been implemented.",
-            //    destinationTile);
+            // log.error(
+            //     $"{name} is trying to move to {destinationTile.name}, but " +
+            //     $"its RecieveForceMove() method has not been implemented.",
+            //     destinationTile);
         }
 
         private IEnumerator TEST_ShowMovementPath(MovementPath path)
@@ -646,7 +645,7 @@ namespace SystemMiami.CombatSystem
             float healPerTurn,
             int durationTurns)
         {
-            Debug.Log(
+            log.print(
                 $"{gameObject.name} will have {statMod} applied,\n" +
                 $"will begin taking {damagePerTurn} per turn,\n" +
                 $"and healing {healPerTurn} per turn.\n" +
@@ -660,11 +659,6 @@ namespace SystemMiami.CombatSystem
             int durationTurns)
         {
             _stats.AddStatusEffect(statMod, durationTurns);
-
-            /// TODO:   (from layla)
-            /// These are not implemented and I can't think
-            /// too deeply about them right now, I'm sorry lol
-            
         }
         #endregion // IStatusEffectReveiver
 
@@ -677,7 +671,7 @@ namespace SystemMiami.CombatSystem
         void ITargetable.SubscribeTo(
             ref EventHandler<TargetingEventArgs> combatActionEvent)
         {
-            Debug.LogWarning($"inside {gameObject}'s Subscribe to action fn");
+            log.warn($"inside {gameObject}'s Subscribe to action fn");
 
             combatActionEvent += HandleTargetingEvent;
         }
@@ -690,15 +684,12 @@ namespace SystemMiami.CombatSystem
 
         public void HandleTargetingEvent(object sender, TargetingEventArgs args)
         {
-           // Debug.Log($"Trying to process a TargetingEvent of type {args.EventType}", gameObject);
-           if (this is not ITargetable me) { return; }
-            
-          
-            if(sender == null) return;
-            
+            // log.print($"Trying to process a TargetingEvent of type {args.EventType}", gameObject);
+            if (this is not ITargetable me) { return; }
+            if (sender == null) { return; }
+
             switch (args.EventType)
             {
-                
                 case TargetingEventType.CANCELLED:
                     UnHighlight();
                     me.PreviewOff();
@@ -722,7 +713,7 @@ namespace SystemMiami.CombatSystem
                     break;
 
                 case TargetingEventType.REPORTBACK:
-                    Debug.Log("Im subbed.", this);
+                    log.print("Im subbed.", this);
                     break;
 
                 default:
@@ -735,15 +726,15 @@ namespace SystemMiami.CombatSystem
             if (this is not ITargetable me) { return; }
 
             me.TargetedBy.ForEach(subaction => subaction.Preview());
-            //Debug.Log(
-            //    $"{gameObject.name} wants to START" +
-            //    $"displaying a preivew.");
+            // log.print(
+            //     $"{gameObject.name} wants to START" +
+            //     $"displaying a preivew.");
         }
 
         public void PreviewOff()
         {
             if (this == null) return;
-            Debug.Log(
+            log.print(
                 $"{gameObject.name} wants to STOP" +
                 $"displaying a preivew.");
         }

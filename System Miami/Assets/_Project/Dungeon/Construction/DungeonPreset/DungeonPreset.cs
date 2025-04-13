@@ -1,5 +1,6 @@
 /// Layla
 using System.Collections.Generic;
+using SystemMiami.Utilities;
 using UnityEngine;
 
 namespace SystemMiami.Dungeons
@@ -9,8 +10,12 @@ namespace SystemMiami.Dungeons
     [CreateAssetMenu(fileName = "New Dungeon Preset", menuName = "Eviron/Dungeon Preset")]
     public class DungeonPreset : ScriptableObject
     {
+        [Header("Debug")]
+        [SerializeField] private dbug log;
+        [Space(10)]
+
         [SerializeField] private DifficultyLevel _difficulty;
-        
+
         [Header("Color Settings")]
         [SerializeField] private Material _material;
 
@@ -30,7 +35,7 @@ namespace SystemMiami.Dungeons
 
         [Header("Environment Prefabs")]
         [SerializeField] private Pool<GameObject> _prefabPool;
-        
+
         [Header("Settings")]
         [Space(5), SerializeField] private Pool<GameObject> _enemyPool;
 
@@ -42,15 +47,15 @@ namespace SystemMiami.Dungeons
             GameObject prefab = getPrefab(excludedStyles);
 
             List<GameObject> enemies = _enemyPool.GetNewList();
-            
+
             _rewards.Initialize();
-            
+
             List<ItemData> itemRewards = _rewards.GenerateItemRewards(_difficulty);
-            Debug.LogWarning($"Dungeon Preset {name} generated rewards: {itemRewards.Count}");
-            
+            log.warn($"Dungeon Preset [\"{name}\"] generated rewards: {itemRewards.Count}");
+
             int EXPToGive = _rewards.GenerateExpReward(_difficulty);
             int creditsToGive = _rewards.GenerateCreditReward(_difficulty);
-            
+
             DungeonData data = new DungeonData(prefab, enemies, itemRewards, EXPToGive, creditsToGive);
 
             return data;
@@ -71,7 +76,7 @@ namespace SystemMiami.Dungeons
 
                 if (golist == null)
                 {
-                    Debug.LogError(
+                    log.error(
                         $"{this} {name} {_prefabPool} " +
                         $"returned null instead of a list",
                         this);
@@ -80,7 +85,7 @@ namespace SystemMiami.Dungeons
 
                 if (golist.Count == 0)
                 {
-                    Debug.LogError(
+                    log.error(
                         $"{this} {name} {_prefabPool} " +
                         $"returned an empty list.",
                         this);
@@ -89,7 +94,7 @@ namespace SystemMiami.Dungeons
 
                 if (golist[0] == null)
                 {
-                    Debug.LogError(
+                    log.error(
                         $"{this} {name} {_prefabPool} " +
                         $"returned a list with a null " +
                         $"GameObject at [0].",
@@ -99,7 +104,7 @@ namespace SystemMiami.Dungeons
 
                 if (!golist[0].TryGetComponent(out dungeon))
                 {
-                    Debug.LogError(
+                    log.error(
                         $"{this} {name} {_prefabPool} " +
                         $"returned {golist[0]}, " +
                         $"which is missing a Dungeon script.",
@@ -136,7 +141,7 @@ namespace SystemMiami.Dungeons
                     warning += "is being returned.";
                 }
 
-                Debug.LogWarning( warning );
+                log.warn( warning );
                 return _prefabPool.DefaultPrefab;
             }
             dungeon.DifficultyLevel = _difficulty;

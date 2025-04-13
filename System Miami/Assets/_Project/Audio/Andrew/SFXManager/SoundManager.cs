@@ -1,30 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System;
+using SystemMiami.Management;
+
 namespace SystemMiami
 {
     public enum SoundType
     {
-        Overworld,
-        Title,
-        Battle,
         Sword,
         Magic,
         Hurt,
         Foorstep
     }
+
     [RequireComponent(typeof(AudioSource)), ExecuteInEditMode]
-    public class SoundManager : MonoBehaviour
+    public class SoundManager : Singleton<SoundManager>
     {
         [SerializeField] private SoundList[] soundList;
-        public static SoundManager instance;
         private AudioSource audioSource;
-
-        private void Awake()
-        {
-            instance = this;
-        }
 
         // Start is called before the first frame update
         void Start()
@@ -32,14 +24,17 @@ namespace SystemMiami
             audioSource = GetComponent<AudioSource>();
         }
 
-        public static void PlaySound(SoundType sound, float volume = 1)
+        public void PlaySound(SoundType sound, float volume = 1)
         {
-            AudioClip[] clips = instance.soundList[(int)sound].Sounds;
+            AudioClip[] clips = soundList[(int)sound].Sounds;
             AudioClip randaomClip = clips[UnityEngine.Random.Range(0, clips.Length)];
-            //instance.audioSource.pitch = UnityEngine.Random.Range(0, 3);
-            instance.audioSource.PlayOneShot(randaomClip, volume);
-            
+            //audioSource.pitch = UnityEngine.Random.Range(0, 3);
+            audioSource.PlayOneShot(randaomClip, volume);
         }
+
+// TODO:
+// Why is this inside a preprocessor directive?
+// This means we don't want this to happen in actual builds.
 #if UNITY_EDITOR
         private void OnEnable()
         {
@@ -52,6 +47,7 @@ namespace SystemMiami
         }
 #endif
     }
+
     [Serializable]
     public struct SoundList
     {
