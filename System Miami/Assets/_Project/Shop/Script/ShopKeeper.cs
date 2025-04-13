@@ -33,6 +33,7 @@ namespace SystemMiami.Shop
             shop = npcInfo.GetShop();
             this.myName = myName;
             this.shopPanel = Instantiate(shopPanel);
+            this.shopPanel.transform.SetParent(transform);
             this.shopPanel.SetActive(false);
             slots.AddRange(this.shopPanel.GetComponentsInChildren<ShopItemSlot>());
             shopImage = shopPanel.GetComponent<ShopImage>();

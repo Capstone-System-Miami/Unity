@@ -75,13 +75,7 @@ namespace SystemMiami
            questPanel.UpdateQuest();
         }
 
-        // Helper method to update progress UI
-        private void UpdateProgressUI()
-        {
-            //change actual quest prgress text
-            // if (progressText != null)
-            //     progressText.text = $"Defeat {objectiveCount}/{selectedQuest.objectiveGoal} {selectedQuest.targetEnemyTag}s";
-        }
+        
 
     }
 }

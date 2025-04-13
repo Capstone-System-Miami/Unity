@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using SystemMiami.Management;
 using TMPro;
 using UnityEngine;
 
 namespace SystemMiami
 {
-    public class QuestPanel : MonoBehaviour
+    public class QuestPanel : Singleton<QuestPanel>
     {
         public Quest quest;
         public TMP_Text questNameText;
