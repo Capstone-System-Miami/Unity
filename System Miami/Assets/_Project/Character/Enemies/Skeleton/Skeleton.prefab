@@ -226,12 +226,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7981544af7126244a88c7413ccc581c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  log:
+    showMessages: 1
   detailedFocusHighlight: 0
   _colorTag: {r: 1, g: 0.28759372, b: 0.25943398, a: 1}
   _printUItoConsole: 1
   _movementSpeed: 2
-  idleController: {fileID: 22100000, guid: 8e8ba0c274bd30f4facac2f86605ed58, type: 2}
-  walkingController: {fileID: 22100000, guid: fa24adfcdaffda34895ba80730830d50, type: 2}
+  idleController: {fileID: 22100000, guid: 73434dc7316143944a1f4f68676ea979, type: 2}
+  walkingController: {fileID: 22100000, guid: 219ee26f456d6e04191282aa7810675a, type: 2}
   hasResourceEffect: 0
   _endOfTurnDamage: 0
   _endOfTurnHeal: 0
@@ -247,10 +249,6 @@ MonoBehaviour:
   TEST_currentTile: {fileID: 0}
   detectionRadius: 3
   PlayerInRange: 0
-  physicalSOs:
-  - {fileID: 11400000, guid: c665fe02e1ebd4a4090e8510287e199b, type: 2}
-  magicalSOs: []
-  consumableSOs: []
 --- !u!114 &-7163708798834749806
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -272,6 +270,7 @@ MonoBehaviour:
   quickslotConsumableIDs: 
   equippedEquipmentModIDs: 
   credits: 0
+  TestMode: 0
 --- !u!114 &-4757405529046438839
 MonoBehaviour:
   m_ObjectHideFlags: 0
