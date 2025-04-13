@@ -66,13 +66,14 @@ namespace SystemMiami.Dungeons
 
         public void Initialize()
         {
-            _abilityItemDatas.Clear();
-            _consumableItemDatas.Clear();
-            _equipmentItemDatas.Clear();
             rewards = new List<ItemData>();
 
             if (pullFromDatabase)
             {
+                _abilityItemDatas.Clear();
+                _consumableItemDatas.Clear();
+                _equipmentItemDatas.Clear();
+
                 _abilityItemDatas = Database.MGR.GetAllItemsOfPlayerClass(ItemType.MagicalAbility);
                 _abilityItemDatas.AddRange(Database.MGR.GetAllItemsOfPlayerClass(ItemType.PhysicalAbility));
                 _consumableItemDatas = Database.MGR.GetAllItemsOfPlayerClass(ItemType.Consumable);
