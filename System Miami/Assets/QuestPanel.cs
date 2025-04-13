@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using SystemMiami.Management;
 using TMPro;
 using UnityEngine;
-
 namespace SystemMiami
 {
     public class QuestPanel : Singleton<QuestPanel>
@@ -14,11 +11,7 @@ namespace SystemMiami
         public TMP_Text progressText;
         public TMP_Text xpRewardText;
         public TMP_Text creditRewardText;
-
-        public void GiveQuestToPlayer()
-        {
-            Debug.Log("Quest given to player");
-        }
+        
 
         public void Initialize(Quest questArg)
         {

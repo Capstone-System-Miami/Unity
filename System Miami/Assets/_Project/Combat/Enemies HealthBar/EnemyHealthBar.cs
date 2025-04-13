@@ -19,12 +19,13 @@ namespace SystemMiami
         public Slider slider;
         public Gradient gradient;
         public Image fill;
+        private Combatant _combatant;
 
         public void SetMaxHealth(float maxHealth)
         {
             slider.maxValue = maxHealth;
             slider.value = maxHealth;
-
+       
             fill.color = gradient.Evaluate(1f); // In theory should change color depending on the % of the slider
         }
 
@@ -34,9 +35,19 @@ namespace SystemMiami
             fill.color = gradient.Evaluate(slider.normalizedValue);
         }
 
+        private void Start()
+        {
+            _combatant = GetComponent<Combatant>();
+            if (_combatant != null)
+            {
+                SetMaxHealth(_combatant.GetCurrentHealth());
+            }
+        }
+
         void OnEnable()
         {
             GAME.MGR.damageTaken += OnDamageTaken; // DAMGAE
+           
         }
 
         void OnDisable()
@@ -46,8 +57,10 @@ namespace SystemMiami
 
         void OnDamageTaken(Combatant combatant)
         {
-            SetHealth(combatant.GetCurrentHealth());
-
+            if (combatant == _combatant)
+            {
+                SetHealth(combatant.GetCurrentHealth());
+            }
             Camera.main.GetComponent<CameraShake>()?.Shake(); // Added this to allow camera shake
         }
  

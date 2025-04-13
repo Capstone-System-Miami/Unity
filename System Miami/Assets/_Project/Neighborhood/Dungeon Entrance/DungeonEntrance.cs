@@ -16,6 +16,7 @@ namespace SystemMiami
         // ======================================
         [SerializeField] private dbug log;
         [SerializeField] public List<Dungeons.Style> _excludedStyles = new();
+        [SerializeField] public bool dungeonCompleted;
         #endregion // SERIALIZED
 
 
@@ -189,7 +190,7 @@ namespace SystemMiami
             {
                 DungeonRewardsPanel.MGR.ShowPanel(_dungeonData);
             }
-           // GAME.MGR.GoToDungeon(_dungeonData);
+            //GAME.MGR.GoToDungeon(_dungeonData);
         }
         #endregion // PRIVATE METHODS
     }
