@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace SystemMiami
@@ -11,13 +9,7 @@ namespace SystemMiami
         // Start is called before the first frame update
         void Start()
         {
-            SoundManager.PlaySound(sound, value);
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-        
+            SoundManager.MGR.PlaySound(sound, value);
         }
     }
 }
