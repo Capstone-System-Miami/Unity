@@ -1,20 +1,14 @@
 using System;
 using SystemMiami;
 using SystemMiami.Management;
-using SystemMiami.ui;
 using UnityEngine;
-using TMPro;
-using UnityEngine.Serialization;
-
-
 
 public class QuestGiver : MonoBehaviour
 {
     public Quest assignedQuest; // Array of possible quests
     public Quest selectedQuest; // The current quest assigned to the player
     public string questNPCname;
-    
-   
+
     public GameObject questPanel;
 
     private int objectiveCount = 0; // How many enemies have been defeated
@@ -46,17 +40,15 @@ public class QuestGiver : MonoBehaviour
         QuestPanel questPanelComponent = panelPrefab.GetComponent<QuestPanel>();
         questPanelComponent.Initialize(assignedQuest);
         questPanel.SetActive(false);
-        Debug.Log($"{npcName} assigned quest: {assignedQuest.questName}");
-   
+        // Debug.Log($"{npcName} assigned quest: {assignedQuest.questName}");
     }
-    
+
     // Call this method when the player interacts with the quest giver
     public void TalkToQuestGiver()
     {
-       
+
         UI.MGR.StartDialogue(this,true,true,false,questNPCname,assignedQuest.questDialogue);
         UI.MGR.DialogueFinished += HandleDialogueFinished;
-
     }
 
     private void HandleDialogueFinished(object sender, EventArgs args)
@@ -67,17 +59,14 @@ public class QuestGiver : MonoBehaviour
 
     public void OpenQuestWindow()
     {
-        //questPanel.SetActive(true);
+        // questPanel.SetActive(true);
         // Start the quest and reset progress
-        //isQuestAccepted = true;
-        //isQuestCompleted = false;
-       // objectiveCount = 0;
-       // UpdateUI();
-       QuestTracker.MGR.AcceptQuest(assignedQuest);
+        // isQuestAccepted = true;
+        // isQuestCompleted = false;
+        // objectiveCount = 0;
+        // UpdateUI();
+        // QuestTracker.MGR.AcceptQuest(assignedQuest);
     }
-    
-    
-
     /*public void EnemyDefeated(GameObject enemy)
     {
         if (!isQuestAccepted || isQuestCompleted)
@@ -97,10 +86,4 @@ public class QuestGiver : MonoBehaviour
             }
         }
     }*/
-
-    
-
-    
-
-    
 }

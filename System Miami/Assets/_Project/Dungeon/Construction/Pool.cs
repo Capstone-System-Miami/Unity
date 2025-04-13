@@ -31,7 +31,7 @@ namespace SystemMiami
             {
                 Debug.LogWarning($"No Default Element Fount in pool ( {this} )");
             }
-            
+
             int count = Random.Range(_minCount, _maxCount + 1);
 
             return getListOfSize(count);
@@ -135,10 +135,10 @@ namespace SystemMiami
                     result.Add(_defaultPrefab);
 
                     Debug.Log(
-                        $"{this} Added a default prefab ({_defaultPrefab.name})\n" +
-                        getLoopInfo(validElementsMinIndex, validElementsMaxIndex, randomIndex, i) +
-                        $"Updated Elements:\n" +
-                        string.Join( "\n", validElements.Select( e => DebugHelpers.GetInfo(e, BindingFlags.NonPublic | BindingFlags.Instance) ) )
+                        $"A Pool<{_defaultPrefab.GetType()}> Added a default prefab ({_defaultPrefab.name})\n"
+                        // + getLoopInfo(validElementsMinIndex, validElementsMaxIndex, randomIndex, i) +
+                        // $"Updated Elements:\n" +
+                        // string.Join("\n", validElements.Select(e => DebugHelpers.GetInfo(e, BindingFlags.NonPublic | BindingFlags.Instance)))
                         );
 
                     continue;
@@ -156,8 +156,7 @@ namespace SystemMiami
 
             //Debug.Log(
             //    $"End of {this}'s getListOfSize() func\n" +
-            //    getPoolInfo(validElements)
-            //    );
+            //    getPoolInfo(validElements));
 
             return result;
         }

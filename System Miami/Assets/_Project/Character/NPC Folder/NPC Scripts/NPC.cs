@@ -6,12 +6,18 @@ using Random = UnityEngine.Random;
 
 namespace SystemMiami
 {
+    public enum NPCType
+    {
+        QuestGiver,
+        ShopKeeper,
+        Dialogue
+    };
+
     public class NPC : MonoBehaviour
     {
-        
         public string npcName;
         public SpriteRenderer sprite;
-        
+
         public NPCInfoSO npcInfoSo;
 
         public bool assigned;
@@ -19,17 +25,11 @@ namespace SystemMiami
         public GameObject questPanel;
         public GameObject shopPanel;
         public string[] DialogueStrings;
-       
+
         public NPCType myType;
-       
+
         QuestGiver questGiver;
         ShopKeeper shopKeeper;
-
-        private void Start()
-        {
-            
-            
-        }
 
         public void Initialize(NPCType npcType)
         {
@@ -64,7 +64,7 @@ namespace SystemMiami
                 questGiver.TalkToQuestGiver();
             }
             else if (myType == NPCType.ShopKeeper)
-            {                
+            {
                 shopKeeper.TalkToShopKeeper();
             }
             else
@@ -79,11 +79,4 @@ namespace SystemMiami
             }
         }
     }
-}
-
-public enum NPCType
-{
-    QuestGiver,
-    ShopKeeper,
-    Dialogue
 }

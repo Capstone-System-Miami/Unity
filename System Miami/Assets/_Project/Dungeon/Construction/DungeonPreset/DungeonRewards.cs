@@ -54,7 +54,6 @@ namespace SystemMiami.Dungeons
         private int hardMinCredit = 14;
         private int hardMaxCredit = 20;
 
-        
         [Header("Available IDs")]
         [SerializeField] private bool pullFromDatabase = true;
         [SerializeField] public List<ItemData> _abilityItemDatas = new();         // e.g. Physical or Magical
@@ -109,7 +108,7 @@ namespace SystemMiami.Dungeons
                 return result;
             }
 
-            Debug.Log("Generate Rewards");
+            // Debug.Log("Generate Rewards");
             int playerLevel = PlayerManager.MGR.CurrentLevel;
 
             //  Determine the final distribution method
@@ -187,8 +186,6 @@ namespace SystemMiami.Dungeons
             return rewards;
         }
 
-
-       
         public int GenerateExpReward(DifficultyLevel dungeonDifficulty)
         {
             int expReward = 0;
@@ -295,9 +292,9 @@ namespace SystemMiami.Dungeons
                 // Ensure we don’t clamp below 1 or do something unintended
                 if (adjustedMin < 0) adjustedMin = 0;
                 
-               log.warn($"Before {filtered.Count} {data.ID}");
+               // log.warn($"Before {filtered.Count} {data.ID}");
                filtered.Add(data);
-               log.warn($"After {filtered.Count} {data.ID}");
+               // log.warn($"After {filtered.Count} {data.ID}");
             }
             return Database.MGR.FilterByLevel(filtered);
         }

@@ -1,8 +1,6 @@
-using SystemMiami.AbilitySystem;
 using SystemMiami.CombatSystem;
 using System.Collections;
 using UnityEngine;
-using System;
 
 namespace SystemMiami.CombatRefactor
 {
@@ -140,71 +138,5 @@ namespace SystemMiami.CombatRefactor
 
             return newFocus != currentFocus;
         }
-
-        // VVVVV KEEP FOR REFERENCE PLEASE  VVVVV
-
-        //private string getMovementPrompt()
-        //{
-        //    string result = "";
-
-        //    if (turnOwner.StateMachine.CanMove)
-        //    {
-        //        result += $"Click a tile to move,\n\n";
-        //    }
-        //    else if (turnOwner.Speed.Get() > 0)
-        //    {
-        //        result += $"Moving To Tile.\n\n";
-        //    }
-        //    else
-        //    {
-        //        result += $"Speed Depleted\n\n";
-        //    }
-
-        //    result += $"Press E to end Movement Phase\n\n" +
-        //                $"Or Press Q to end Turn.";
-
-        //    return result;
-        //}
-
-        //private string getActionPrompt()
-        //{
-        //    string result = "";
-
-        //    if (turnOwner.StateMachine.CanAct)
-        //    {
-        //        result += $"Click an Ability to Equip it,\n\n" +
-        //            $"Or ";
-        //    }
-
-        //    result += $"Press Q to End Turn.";
-
-        //    return result;
-        //}
-
-
-        //#region Ability Responses
-        //private void onEquipAbility(Ability ability)
-        //{
-        //    _overrideActionPrompt = true;
-        //    _actionText = $"Left Click a Tile to Lock Targets";
-        //}
-
-        //private void onUnequipAbility()
-        //{
-        //    _overrideActionPrompt = false;
-        //}
-
-        //private void onLockedTargets(Ability ability)
-        //{
-        //    _overrideActionPrompt = true;
-        //    _actionText = $"Press Enter to Use {ability.name}";
-        //}
-
-        //private void onUseAbility(Ability ability)
-        //{
-        //    _overrideActionPrompt = true;
-        //    _actionText = $"Using {ability.name}";
-        //}
-        //#endregion
     }
 }

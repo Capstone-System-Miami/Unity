@@ -4,10 +4,9 @@ using SystemMiami.AbilitySystem;
 using SystemMiami.CombatRefactor;
 using SystemMiami.CombatSystem;
 using SystemMiami.Management;
+using SystemMiami.Utilities;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.Assertions;
-
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -18,6 +17,9 @@ namespace SystemMiami
 
     public class Database : Singleton<Database>
     {
+        [Header("Debug Loggers")]
+        [SerializeField] private dbug log;
+
         [SerializeField] private List<ItemData> PhysicalAbilityItemDatas = new List<ItemData>();
         [SerializeField] private List<ItemData> MagicalAbilityItemDatas = new List<ItemData>();
         [SerializeField] private List<ItemData> ConsumableItemDatas = new List<ItemData>();
@@ -33,28 +35,27 @@ namespace SystemMiami
         [SerializeField] private List<NewAbilitySO> enemyPhysicalAbilityEntries = new();
         [SerializeField] private List<NewAbilitySO> enemyMagicalAbilityEntries = new();
         [SerializeField] private List<EquipmentModSO> equipmentModEntries = new();
-       
 
-       private Dictionary<int, NewAbilitySO> physicalAbilityDatabase;
-       private Dictionary<int, NewAbilitySO> magicalAbilityDatabase;
-       private Dictionary<int, ConsumableSO> consumableDatabase;
-       private Dictionary<int, NewAbilitySO> enemyPhysicalAbilityDatabase;
-       private Dictionary<int, NewAbilitySO> enemyMagicalAbilityDatabase;
-       private Dictionary<int, EquipmentModSO> equipmentModDatabase;
+        private Dictionary<int, NewAbilitySO> physicalAbilityDatabase;
+        private Dictionary<int, NewAbilitySO> magicalAbilityDatabase;
+        private Dictionary<int, ConsumableSO> consumableDatabase;
+        private Dictionary<int, NewAbilitySO> enemyPhysicalAbilityDatabase;
+        private Dictionary<int, NewAbilitySO> enemyMagicalAbilityDatabase;
+        private Dictionary<int, EquipmentModSO> equipmentModDatabase;
 
-       [SerializeField] private bool characterSelection;
+        [SerializeField] private bool characterSelection;
 
-       private void OnEnable()
-       {
-           Initialize();
-       }
+        private void OnEnable()
+        {
+            Initialize();
+        }
 
-       public void Initialize()
-       {
+        public void Initialize()
+        {
             // Filter database to only include abilities matching the player's class type.
             Attributes playerAttributes = FindObjectOfType<PlayerManager>().GetComponent<Attributes>();
             CharacterClassType playerClassType = playerAttributes._characterClass;
-            
+
             // Filter physical abilities if not in character selection screen
             //if (!characterSelection)
             //{
@@ -76,9 +77,7 @@ namespace SystemMiami
             enemyPhysicalAbilityDatabase = enemyPhysicalAbilityEntries.ToDictionary(entry => entry.itemData.ID);
             enemyMagicalAbilityDatabase = enemyMagicalAbilityEntries.ToDictionary(entry => entry.itemData.ID);
             equipmentModDatabase = equipmentModEntries.ToDictionary(entry => entry.itemData.ID);
-       }
-
-       
+        }
 
         private void Update()
         {
@@ -99,14 +98,13 @@ namespace SystemMiami
         }
 
 
-        public List <ItemData> GetAllItemsOfPlayerClass(ItemType type)
-       {
-           List<ItemData> result = new();
-           
+        public List<ItemData> GetAllItemsOfPlayerClass(ItemType type)
+        {
+            List<ItemData> result = new();
             switch (type)
             {
                 default:
-                 case ItemType.PhysicalAbility:
+                case ItemType.PhysicalAbility:
                     Assert.IsNotNull(physicalAbilityEntries);
                     Assert.IsTrue(physicalAbilityEntries.Count > 0);
                     result = physicalAbilityEntries.Select(so => so.itemData).ToList();
@@ -121,17 +119,15 @@ namespace SystemMiami
                 case ItemType.Consumable:
                     result = consumableEntries.Select(so => so.itemData).ToList();
                     break;
-               case ItemType.EquipmentMod:
+                case ItemType.EquipmentMod:
                     result = equipmentModEntries.Select(so => so.itemData).ToList();
                     break;
             }
-           return result;
-       }
+            return result;
+        }
 
-       
-       
-       public ItemData GetRandomDataOfType(ItemType type)
-       {
+        public ItemData GetRandomDataOfType(ItemType type)
+        {
             List<int> entryIndices = new();
             int randomIndex = 0;
 
@@ -157,10 +153,10 @@ namespace SystemMiami
                     return GetDataWithJustID(entryIndices[randomIndex]);
 
                 case ItemType.Consumable:
-                   foreach (int id in consumableDatabase.Keys)
-                   {
-                       entryIndices.Add(id);
-                   }
+                    foreach (int id in consumableDatabase.Keys)
+                    {
+                        entryIndices.Add(id);
+                    }
 
                     randomIndex = Random.Range(0, entryIndices.Count);
                     return GetDataWithJustID(entryIndices[randomIndex]);
@@ -172,23 +168,23 @@ namespace SystemMiami
 
                     randomIndex = Random.Range(0, entryIndices.Count);
                     return GetDataWithJustID(entryIndices[randomIndex]);
-           }
+            }
 
 
-           // Lee old code
-           //return type switch
-           //{
-           //    ItemType.PhysicalAbility => physicalAbilityDatabase.ContainsKey(id) ? physicalAbilityDatabase[id].itemData : default,
-           //    ItemType.MagicalAbility => magicalAbilityDatabase.ContainsKey(id) ? magicalAbilityDatabase[id].itemData : default,
-           //    ItemType.Consumable => consumableDatabase.ContainsKey(id) ? consumableDatabase[id].itemData : default,
-           //    _ => default
-           //};
-       }
-       
-       public ItemData GetDataWithJustID(int id)
-       {
-           int IDType = id / 1000;
-            Debug.Log("Something is trying to get an ID SLOT");
+            // Lee old code
+            //return type switch
+            //{
+            //    ItemType.PhysicalAbility => physicalAbilityDatabase.ContainsKey(id) ? physicalAbilityDatabase[id].itemData : default,
+            //    ItemType.MagicalAbility => magicalAbilityDatabase.ContainsKey(id) ? magicalAbilityDatabase[id].itemData : default,
+            //    ItemType.Consumable => consumableDatabase.ContainsKey(id) ? consumableDatabase[id].itemData : default,
+            //    _ => default
+            //};
+        }
+
+        public ItemData GetDataWithJustID(int id)
+        {
+            int IDType = id / 1000;
+            log.print("Something is trying to get an ID SLOT");
             return IDType switch
             {
                 1 => physicalAbilityDatabase.ContainsKey(id) ? physicalAbilityDatabase[id].itemData : default,
@@ -197,112 +193,109 @@ namespace SystemMiami
                 4 => equipmentModDatabase.ContainsKey(id) ? equipmentModDatabase[id].itemData : default,
                 _ => default
             };
+        }
 
-            
-       }
+        // Factory 
+        /// <summary>
+        /// Create an instance of a CombatAction (AbilityPhysical, AbilityMagical, or Consumable)
+        /// based on the given ID. 
+        /// </summary>
 
-       // Factory 
-       /// <summary>
-       /// Create an instance of a CombatAction (AbilityPhysical, AbilityMagical, or Consumable)
-       /// based on the given ID. 
-       /// </summary>
-       
-       public CombatAction CreateInstance(int id, Combatant user)
-       {
-           // Check if it's an ability
-           if (physicalAbilityDatabase.TryGetValue(id, out NewAbilitySO abilityEntry))
-           {
+        public CombatAction CreateInstance(int id, Combatant user)
+        {
+            // Check if it's an ability
+            if (physicalAbilityDatabase.TryGetValue(id, out NewAbilitySO abilityEntry))
+            {
                 return new AbilityPhysical(abilityEntry, user);
-           }
-           if (magicalAbilityDatabase.TryGetValue(id, out abilityEntry))
-           {
+            }
+            if (magicalAbilityDatabase.TryGetValue(id, out abilityEntry))
+            {
                 return new AbilityMagical(abilityEntry, user);
-           }
-           // Check if it's a consumable
-           if (consumableDatabase.TryGetValue(id, out ConsumableSO consumableEntry))
-           {
+            }
+            // Check if it's a consumable
+            if (consumableDatabase.TryGetValue(id, out ConsumableSO consumableEntry))
+            {
                 return new Consumable(consumableEntry, user);
-           }
-           if (enemyPhysicalAbilityDatabase.TryGetValue(id, out  abilityEntry))
-           {
+            }
+            if (enemyPhysicalAbilityDatabase.TryGetValue(id, out abilityEntry))
+            {
                 return new AbilityPhysical(abilityEntry, user);
-           }
-           if (enemyMagicalAbilityDatabase.TryGetValue(id, out abilityEntry))
-           {
+            }
+            if (enemyMagicalAbilityDatabase.TryGetValue(id, out abilityEntry))
+            {
                 return new AbilityMagical(abilityEntry, user);
-           }
-           else
-           {
-               Debug.LogWarning($"No matching CombatAction found for ID {id} in GameDatabase!");
-           }
+            }
+            else
+            {
+                log.warn($"No matching CombatAction found for ID {id} in GameDatabase!");
+            }
 
-           return null;
-       }
-       
-       /// <summary>
-       /// Retrieves an EquipmentModSO from the dictionary by ID.
-       /// Returns null if not found. 
-       /// </summary>
-       public EquipmentModSO GetEquipmentMod(int modID)
-       {
-           //don't love the way I did this but it works for now
-           equipmentModDatabase.TryGetValue(modID, out var modSo);
-           return modSo;
-       }
-       
-       /// <summary>
-       /// Gets the itemData type of that ID(for sorting purposes)
-       /// </summary>
-       public ItemType GetDataType(int id)
-       {
-           if (physicalAbilityDatabase.ContainsKey(id)) return ItemType.PhysicalAbility;
-           if (magicalAbilityDatabase.ContainsKey(id)) return ItemType.MagicalAbility;
-           if (consumableDatabase.ContainsKey(id)) return ItemType.Consumable;
-           if (equipmentModDatabase.ContainsKey(id)) return ItemType.EquipmentMod;
-           return ItemType.Consumable; //fallback
-       }
-       
-       /// <summary>
-       /// Retrieve all item IDs from the list that match (minLvl <= playerLvl <= maxLvl).
-       /// </summary>
-       public List<ItemData> FilterByLevel(List<int> itemIDs)
-       {
-           int playerLevel = FindObjectOfType<PlayerLevel>().CurrentLevel;
-           List<ItemData> filtered = new List<ItemData>();
-           foreach (int id in itemIDs)
-           {
-               ItemData data = GetDataWithJustID(id);
-              //data.ID == 0 if not found
-               if (data.ID != 0 &&
-                   data.MinLevel <= playerLevel &&
-                   data.MaxLevel >= playerLevel)
-               {
-                   filtered.Add(data);
-               }
-           }
-           return filtered;
-       }
-       
-       public List<ItemData> FilterByLevel(List<ItemData> itemData)
-       {
-           int playerLevel = FindObjectOfType<PlayerLevel>().CurrentLevel;
-           List<ItemData> filtered = new List<ItemData>();
-           foreach (ItemData data in itemData)
-           {
-              
-               //data.ID == 0 if not found
-               if (data.ID != 0 &&
-                   data.MinLevel <= playerLevel &&
-                   data.MaxLevel >= playerLevel)
-               {
-                  // Debug.Log($"Before {filtered.Count} {data.ID}");
-                   filtered.Add(data);
-                  // Debug.Log($"After {filtered.Count} {data.ID}");
-               }
-           }
-         
-         return filtered;
-       }
+            return null;
+        }
+
+        /// <summary>
+        /// Retrieves an EquipmentModSO from the dictionary by ID.
+        /// Returns null if not found. 
+        /// </summary>
+        public EquipmentModSO GetEquipmentMod(int modID)
+        {
+            //don't love the way I did this but it works for now
+            equipmentModDatabase.TryGetValue(modID, out var modSo);
+            return modSo;
+        }
+
+        /// <summary>
+        /// Gets the itemData type of that ID(for sorting purposes)
+        /// </summary>
+        public ItemType GetDataType(int id)
+        {
+            if (physicalAbilityDatabase.ContainsKey(id)) return ItemType.PhysicalAbility;
+            if (magicalAbilityDatabase.ContainsKey(id)) return ItemType.MagicalAbility;
+            if (consumableDatabase.ContainsKey(id)) return ItemType.Consumable;
+            if (equipmentModDatabase.ContainsKey(id)) return ItemType.EquipmentMod;
+            return ItemType.Consumable; //fallback
+        }
+
+        /// <summary>
+        /// Retrieve all item IDs from the list that match (minLvl <= playerLvl <= maxLvl).
+        /// </summary>
+        public List<ItemData> FilterByLevel(List<int> itemIDs)
+        {
+            int playerLevel = FindObjectOfType<PlayerLevel>().CurrentLevel;
+            List<ItemData> filtered = new List<ItemData>();
+            foreach (int id in itemIDs)
+            {
+                ItemData data = GetDataWithJustID(id);
+                //data.ID == 0 if not found
+                if (data.ID != 0 &&
+                    data.MinLevel <= playerLevel &&
+                    data.MaxLevel >= playerLevel)
+                {
+                    filtered.Add(data);
+                }
+            }
+            return filtered;
+        }
+
+        public List<ItemData> FilterByLevel(List<ItemData> itemData)
+        {
+            int playerLevel = FindObjectOfType<PlayerLevel>().CurrentLevel;
+            List<ItemData> filtered = new List<ItemData>();
+            foreach (ItemData data in itemData)
+            {
+                //data.ID == 0 if not found
+                if (data.ID != 0 &&
+                    data.MinLevel <= playerLevel &&
+                    data.MaxLevel >= playerLevel)
+                {
+                    // log.print($"Before {filtered.Count} {data.ID}");
+                    filtered.Add(data);
+                    // log.print($"After {filtered.Count} {data.ID}");
+                }
+            }
+
+            return filtered;
+        }
 
  #if UNITY_EDITOR
         [ContextMenu("Load All Abilities & Consumables")]
@@ -319,8 +312,6 @@ namespace SystemMiami
                 if (ability != null)
                 {
                     allAbilities.Add(ability);
-                    
-
                 }
             }
             physicalAbilityEntries.Clear();
@@ -343,6 +334,7 @@ namespace SystemMiami
             {
                 switch (ability.AbilityType)
                 {
+                    default:
                     case AbilityType.PHYSICAL:
                         if (ability.isEnemyAbility)
                         {
@@ -355,7 +347,6 @@ namespace SystemMiami
                             PhysicalAbilityItemDatas.Add(ability.itemData);
 
                         }
-                       
                         break;
 
                     case AbilityType.MAGICAL:
@@ -398,7 +389,6 @@ namespace SystemMiami
                 if (modSo != null) 
                 {
                     results.Add(modSo); 
-                    
                 }
             }
             equipmentModEntries = results;

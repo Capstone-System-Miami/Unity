@@ -10,12 +10,15 @@ using UnityEngine.Assertions;
 using UnityEngine.Tilemaps;
 using SystemMiami.Utilities;
 
-//Made By Antony (Layla edited)
+//Made By Antony (Layla & Lee edited)
 
 // The main class responsible for generating and managing streets in the game.
 public class IntersectionManager : Singleton<IntersectionManager>
 {
-    [SerializeField] private dbug log = new();
+    [Header("Debug Loggers")]
+    [SerializeField] private dbug generationLog = new();
+    [SerializeField] private dbug npcLog = new();
+    [SerializeField] private dbug swapLog = new();
 
     // Serialized fields allow these private variables to be set in the Unity Editor.
     [Header("Street Generation Settings")] [SerializeField]
@@ -88,8 +91,11 @@ public class IntersectionManager : Singleton<IntersectionManager>
     private int currentShopCount = 0;
     private int currentQuestCount = 0;
 
-    [Range(0,1)]
-    [SerializeField] private float dialogueChance = 0.5f;
+    // NOTE:
+    // Commenting out to get rid of warning in inspector.
+    // Feel free to uncomment if we need to use it.
+    // [Range(0,1)]
+    // [SerializeField] private float dialogueChance = 0.5f;
     [Range(0,1)]
     [SerializeField] private float questChance = 0.3f;
     [Range(0,1)]
@@ -114,7 +120,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
         { new Vector2Int(-1, 0), ExitDirection.West } // Left corresponds to West exit.
     };
 
-    // Mapping from moveDirection vectors to the opposite ExitDirection enums.
+    // Mapping from Direction vectors to the opposite ExitDirection enums.
     private Dictionary<Vector2Int, ExitDirection> dirToOppositeExit = new Dictionary<Vector2Int, ExitDirection>
     {
         { new Vector2Int(0, 1), ExitDirection.South }, // Up's opposite is South.
@@ -156,7 +162,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
     {
         if (GAME.MGR.NoNpcs)
         {
-            Debug.LogWarning($"Game Manager setting for NoNpcs was true. " +
+            npcLog.warn($"Game Manager setting for NoNpcs was true. " +
                 $"Setting all NPC max values to zero.");
             maxNpcsTotal = 0;
             maxNpcsShops = 0;
@@ -191,12 +197,11 @@ public class IntersectionManager : Singleton<IntersectionManager>
         {
             generationComplete = true;
             OnGenerationComplete();
-           
         }
 
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            Debug.LogWarning(getGridReport());
+            generationLog.warn(getGridReport());
         }
     }
 
@@ -214,7 +219,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
             else
             {
                 // Log a warning if a duplicate IntersectionType is detected.
-                Debug.LogWarning("Duplicate IntersectionType detected in StreetPools");
+                generationLog.warn("Duplicate IntersectionType detected in StreetPools");
             }
         }
     }
@@ -370,7 +375,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
         if (!streetPoolDictionary.TryGetValue(streetType, out IntersectionPool pool))
         {
             // Log a warning if no IntersectionPool is found for the new IntersectionType.
-            Debug.LogWarning(
+            generationLog.warn(
                 $"No IntersectionPool found for IntersectionType: {streetType}.\n" +
                 $"An object will not be instantiated at {currentStreet.gridIndex}.");
             return;
@@ -384,7 +389,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
     {
         if (streetData.streetInstance == null)
         {
-            Debug.LogWarning(
+            generationLog.warn(
                 $"The cell at {streetData.gridIndex} is trying to replace itself," +
                 $"but no instance was found to replace.\n" +
                 $"Returning without instantiating.");
@@ -413,7 +418,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
 
         if (NpcSpawners.Length > 0)
         {
-            Debug.Log("Found NpcSpawners");
+            npcLog.print("Found NpcSpawners");
 
             NPCSpawner firstNPC = NpcSpawners[0];
             int firstNPCIndex = allNPCs.IndexOf(firstNPC);
@@ -427,7 +432,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
         if (!streetPoolDictionary.TryGetValue(streetType, out IntersectionPool pool))
         {
             // Log a warning if no IntersectionPool is found for the new IntersectionType.
-            Debug.LogWarning(
+            generationLog.warn(
                 $"No IntersectionPool found for IntersectionType: {streetType}.\n" +
                 $"The object at {streetData.gridIndex} has been destroyed" +
                 $"and will not be reinstantiated.");
@@ -449,7 +454,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
         }
         else
         {
-            log.warn(
+            generationLog.warn(
                 $"{rawPrefab.name} is using an outdated format. It will work, " +
                 $"but consider using the new format (with the Grid-containing " +
                 $"object as the root) instead.");
@@ -498,7 +503,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
 
         if (dungeonEntrances.Length != streetData.dungeonEntranceDifficulties.Count)
         {
-            Debug.LogWarning($"{instance.name}'s number of DungeonEntrances has changed");
+            generationLog.warn($"{instance.name}'s number of DungeonEntrances has changed");
         }
 
         for (int i = 0; i < dungeonEntrances.Length; i++)
@@ -507,7 +512,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
 
             if (dungeonEntrance == null)
             {
-                Debug.LogError(
+                generationLog.error(
                     $"A DungeonEntrance component was removed while" +
                     $"iterating through the entrances in {instance.name}.\n" +
                     $"Error occured at iteration {i}.");
@@ -562,7 +567,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
         int maxNpcs = Mathf.Min(maxNpcsTotal, allNPCs.Count);
 
         int npcsToSpawn = Random.Range(10, maxNpcs);
-        
+
         for (int i = 0; i < npcsToSpawn; i++)
         {
             Assert.IsTrue(i < maxNpcsTotal);
@@ -570,33 +575,34 @@ public class IntersectionManager : Singleton<IntersectionManager>
             GameObject npcInstance = allNPCs[i].SpawnNPC(npcPrefab);
             AssignRole(npcInstance);
         }
-        
-        Debug.Log("Spawned NPCs");
+        npcLog.print("Spawned NPCs");
     }
 
     private void AssignRole(GameObject spawnerNpcPrefab)
     {
         NPC npc = spawnerNpcPrefab.GetComponent<NPC>();
-     
-       float roll = Random.value;
 
-       if (roll < shopChance
-            && currentShopCount < maxNpcsShops)
-       {
+        float roll = Random.value;
+
+        if (roll < shopChance
+             && currentShopCount < maxNpcsShops)
+        {
+            currentNpcCount++;
             currentShopCount++;
             npc.Initialize(NPCType.ShopKeeper);
-       }
-       else if (roll < shopChance + questChance
-            && currentQuestCount < maxNpcsQuests)
+        }
+        else if (roll < shopChance + questChance
+             && currentQuestCount < maxNpcsQuests)
         {
+            currentNpcCount++;
             currentQuestCount++;
             npc.Initialize(NPCType.QuestGiver);
-       }
+        }
         else
         {
+            currentNpcCount++;
             npc.Initialize(NPCType.Dialogue);
         }
-       
     }
 
     private DungeonPreset GetRandomPreset()
@@ -744,15 +750,15 @@ public class IntersectionManager : Singleton<IntersectionManager>
     // Output statistics about the street generation process to the console.
     private void LogGenerationResults()
     {
-        Debug.Log($"Generation Complete, {streetCount} streets generated");
+        generationLog.print($"Generation Complete, {streetCount} streets generated");
         if (firstStreetGenerated != null)
         {
-            Debug.Log($"First Street Generated: Index {firstStreetGenerated.gridIndex}");
+            generationLog.print($"First Street Generated: Index {firstStreetGenerated.gridIndex}");
         }
 
         if (lastStreetGenerated != null)
         {
-            Debug.Log($"Last Street Generated: Index {lastStreetGenerated.gridIndex}");
+            generationLog.print($"Last Street Generated: Index {lastStreetGenerated.gridIndex}");
         }
     }
 
@@ -760,7 +766,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
     {
         if (prefabRoot.childCount == 0)
         {
-            log.error(
+            generationLog.error(
                 $"{prefabRoot.name} didn't have any children, " +
                 $"and had to return the original prefab... " +
                 $"Ensure that {prefabRoot.name} is formatted correctly");
@@ -769,7 +775,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
         }
         else if (!prefabRoot.GetChild(0).TryGetComponent(out Tilemap map))
         {
-            log.error(
+            generationLog.error(
                 $"{prefabRoot.GetChild(0).name} didn't have a tilemap, " +
                 $"and had to return the original prefab..." +
                 $"Ensure that {prefabRoot.name} is formatted correctly");
@@ -862,7 +868,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
         if (TEST_replace)
         {
             ReplaceRandomEntranceWithPreset(FarthestIntersection, TEST_replacementPreset);
-            Debug.Log(
+            swapLog.print(
                 $"{FarthestIntersection.name} had a dungeon entrance " +
                 $"replaced by {TEST_replacementPreset.name}",
                 FarthestIntersection);
@@ -896,7 +902,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
         //         $"| {data.distFromPlayerAtSpawnTime.rawX}, {data.distFromPlayerAtSpawnTime.rawY} " +
         //         $"| {data.distFromPlayerAtSpawnTime.x}, {data.distFromPlayerAtSpawnTime.y} " +
         //         $"| {data.distFromPlayerAtSpawnTime.m}";
-        //     Debug.Log(longMsgDamn);
+        //     swapLog.print(longMsgDamn);
         // }
 
         // datas.ForEach(data => printInstanceInfo(data, $"Begin {plkey}"));
