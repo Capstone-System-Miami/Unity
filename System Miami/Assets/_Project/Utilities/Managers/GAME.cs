@@ -1,6 +1,7 @@
 /// Layla
 using System;
 using SystemMiami.CombatSystem;
+using SystemMiami.Dungeons;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
@@ -13,15 +14,6 @@ namespace SystemMiami.Management
 {
     public class GAME : Singleton<GAME>
     {
-        public Action<Combatant> CombatantDeath;
-
-        public event Action<Combatant> damageTaken;
-
-        public void NotifyDamageTaken(Combatant combatant)
-        {
-            damageTaken?.Invoke(combatant);
-        }
-
         [SerializeField] string _dungeonSceneName;
         [SerializeField] string _neighborhoodSceneName;
         [SerializeField] string characterSelectSceneName;
@@ -37,9 +29,15 @@ namespace SystemMiami.Management
 
         public bool RegenerateDungeonDataOnInteract { get { return _regenerateDungeonDataOnInteract; } }
 
+        [field: SerializeField] public List<int> LevelThresholds { get; private set; }
+        [field: SerializeField] public List<DungeonPreset> Bosses { get; private set; }
+
         [field: SerializeField] public bool IgnoreObstacles { get; private set; }
 
         [field: SerializeField] public bool NoNpcs { get; private set; }
+
+        public Action<Combatant> CombatantDeath;
+        public event Action<Combatant> damageTaken;
 
         protected override void Awake()
         {
@@ -147,9 +145,30 @@ namespace SystemMiami.Management
             return true;
         }
 
+        public void NotifyCombatantDeath(Combatant combatant)
+        {
+            CombatantDeath.Invoke(combatant);
+        }
+
+        public void NotifyDamageTaken(Combatant combatant)
+        {
+            damageTaken?.Invoke(combatant);
+        }
+
         public void GoToNeighborhood(bool regenerate)
         {
             _dungeonData = null;
+
+            // local fn for responding to scene load in
+            void onSceneLoaded(Scene scene, LoadSceneMode mode)
+            {
+                if (regenerate)
+                {
+                    IntersectionManager.MGR.RegenerateStreets();
+                }
+
+                SceneManager.sceneLoaded -= onSceneLoaded;
+            }
 
             // If we're exiting combat and entering into a Neighborhood,
             // it will need to be the one we were in when we entered combat,
@@ -167,6 +186,9 @@ namespace SystemMiami.Management
             }
 
             Debug.Log($"Going to {_neighborhoodSceneName}");
+
+            SceneManager.sceneLoaded += onSceneLoaded;
+
             SceneManager.LoadScene(_neighborhoodSceneName);
         }
 

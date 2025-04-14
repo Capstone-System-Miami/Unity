@@ -426,6 +426,12 @@ MonoBehaviour:
   _neighborhoodSceneName: NEIGHBORHOOD
   characterSelectSceneName: CharacterSelector
   _regenerateDungeonDataOnInteract: 0
+  <LevelThresholds>k__BackingField: 050000000a0000000f00000014000000
+  <Bosses>k__BackingField:
+  - {fileID: 11400000, guid: b4ee8b6520ae7a747acbd090a0850748, type: 2}
+  - {fileID: 11400000, guid: 500b23b9507db49479fefd591206b7e4, type: 2}
+  - {fileID: 11400000, guid: c95579a033064234d9f06fa784e8b218, type: 2}
+  - {fileID: 11400000, guid: 6f5a4eac2b2f4084196115a4a129ccd0, type: 2}
   <IgnoreObstacles>k__BackingField: 1
   <NoNpcs>k__BackingField: 0
 --- !u!4 &765166754
@@ -773,7 +779,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1514576595445630240, guid: 4af93532f95a3394e83e4426c5011245, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 960.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1598333241861905046, guid: 4af93532f95a3394e83e4426c5011245, type: 3}
       propertyPath: m_AnchorMax.y
@@ -13939,7 +13945,7 @@ MonoBehaviour:
   npcLog:
     showMessages: 0
   swapLog:
-    showMessages: 0
+    showMessages: 1
   streetPools:
   - {fileID: 11400000, guid: 1bb8ccc0cf177824787e246cb55ddde4, type: 2}
   - {fileID: 11400000, guid: 0c49fb2684c944044b6da7d8c1bf3190, type: 2}
@@ -13968,12 +13974,20 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b62ecf78532493d40aaa289fa59c2577, type: 2}
   - {fileID: 11400000, guid: 3ac68e114586ecf429cfaf34d8ff63f7, type: 2}
   - {fileID: 11400000, guid: ad458d592988c3749b0b654a882b084d, type: 2}
-  bosses: []
+  bosses:
+  - {fileID: 11400000, guid: b4ee8b6520ae7a747acbd090a0850748, type: 2}
+  - {fileID: 11400000, guid: 500b23b9507db49479fefd591206b7e4, type: 2}
+  - {fileID: 11400000, guid: c95579a033064234d9f06fa784e8b218, type: 2}
+  - {fileID: 11400000, guid: 6f5a4eac2b2f4084196115a4a129ccd0, type: 2}
   TEST_replace: 1
-  TEST_replacementPreset: {fileID: 11400000, guid: 5dd2b275e08f816468a3742e02f45052, type: 2}
+  TEST_replacementPreset: {fileID: 11400000, guid: b4ee8b6520ae7a747acbd090a0850748, type: 2}
   playerPrefab: {fileID: 6453553769002132252, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
   <NeighborhoodLevelRequirement>k__BackingField: 5
-  allEntrances: []
+  <MeasurementType>k__BackingField: 2
+  <MustBeUp>k__BackingField: 1
+  <FarthestIntersectionFromPlayer>k__BackingField: {fileID: 0}
+  <FarthestIntersectionFromZero>k__BackingField: {fileID: 0}
+  <FarthestIntersection>k__BackingField: {fileID: 0}
   easyDungeonReward: 
   mediumDungeonReward: 
   hardDungeonReward: 
@@ -13985,11 +13999,6 @@ MonoBehaviour:
   questChance: 0.559
   shopChance: 0.462
   npcInfo: {fileID: 11400000, guid: 40557af94cd9589468c04b0bc14ee1fb, type: 2}
-  <MeasurementType>k__BackingField: 2
-  <MustBeUp>k__BackingField: 1
-  <FarthestIntersectionFromPlayer>k__BackingField: {fileID: 0}
-  <FarthestIntersectionFromZero>k__BackingField: {fileID: 0}
-  <FarthestIntersection>k__BackingField: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

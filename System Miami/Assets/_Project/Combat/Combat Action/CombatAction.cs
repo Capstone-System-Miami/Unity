@@ -156,7 +156,7 @@ namespace SystemMiami.CombatRefactor
 
         public void SubscribeToDirectionUpdates(Combatant user)
         {
-            Debug.LogWarning($"{this} trying to register for tile updates");
+            // Debug.LogWarning($"{this} trying to register for tile updates");
 
             if (registered) { return; }
 
@@ -164,7 +164,7 @@ namespace SystemMiami.CombatRefactor
             user.DirectionChanged += HandleDirectionChanged;
 
             registered = true;
-            Debug.LogWarning($"{this} registered for tile updates");
+            // Debug.LogWarning($"{this} registered for tile updates");
         }
 
         public void UnsubscribeToDirectionUpdates(Combatant user)
@@ -247,10 +247,8 @@ namespace SystemMiami.CombatRefactor
 
         protected IEnumerator Execute()
         {
-            
             ExecutionStarted = true;
-            
-            
+
             PreExecution();
             yield return null;
 
@@ -261,7 +259,6 @@ namespace SystemMiami.CombatRefactor
             AnimatorClipInfo clipInfo = User.Animator.GetCurrentAnimatorClipInfo(0)[0];
             ForceReenterState();
             yield return null;
-           
 
             Debug.Log("Current Clip time: " + clipInfo.clip.length.ToString());
             Debug.Log("Current Clip Info: " + clipInfo.clip.name);
@@ -270,14 +267,12 @@ namespace SystemMiami.CombatRefactor
             timer.Start();
 
             yield return new WaitUntil(() => timer.IsStarted);
-            
+
             string timeMsg =
                 $"Time is {Time.time}\n";
-            do
-            {
-                
-                yield return null;
-            } while (!timer.IsFinished);
+
+            yield return new WaitUntil( () => timer.IsFinished );
+
             timeMsg += $"Time is {Time.time}";
 
             Debug.LogWarning(timeMsg);
@@ -340,22 +335,23 @@ namespace SystemMiami.CombatRefactor
 
         protected virtual void OnTargetingEvent(TargetingEventType eventType)
         {
-            string eventMessage =
-                $"{this} trying to raise an event\n" +
-                $"Event is: ";
-
-            if (TargetingEvent == null)
-            {
-                eventMessage += $"null.";
-            }
-            else
-            {
-                eventMessage +=
-                    $"not null, and its subscriber count is:" +
-                    $"{TargetingEvent.GetInvocationList().Length}";
-            }
-            Debug.LogWarning(eventMessage);
-
+            // NOTE: Keep this. useful debug for any & all combat.
+            //
+            // string eventMessage =
+            //     $"{this} trying to raise an event\n" +
+            //     $"Event is: ";
+            //
+            // if (TargetingEvent == null)
+            // {
+            //     eventMessage += $"null.";
+            // }
+            // else
+            // {
+            //     eventMessage +=
+            //         $"not null, and its subscriber count is:" +
+            //         $"{TargetingEvent.GetInvocationList().Length}";
+            // }
+            // Debug.LogWarning(eventMessage);
 
             TargetingEventArgs args = new(
                 User,
@@ -367,23 +363,22 @@ namespace SystemMiami.CombatRefactor
 
         private void Target(TargetSet targets)
         {
-            Debug.LogWarning("Starting subscription process...");
+            // Debug.LogWarning("Starting subscription process...");
             targets?.all?.ForEach(target =>
             {
-                Debug.LogWarning($"Subscribing {target} to TargetingEvent...");
-                
+                // Debug.LogWarning($"Subscribing {target} to TargetingEvent...");
                 target.SubscribeTo(ref TargetingEvent);
 
-                Debug.LogWarning(
-                    $"Subscription complete for {target}." +
-                    $"TargetingEvent is null: {TargetingEvent == null}");
+                // Debug.LogWarning(
+                //     $"Subscription complete for {target}." +
+                //     $"TargetingEvent is null: {TargetingEvent == null}");
 
                 AssignCommands(target);
             });
 
-            Debug.LogWarning("All subscriptions complete. Raising event...");
+            // Debug.LogWarning("All subscriptions complete. Raising event...");
 
-            OnTargetingEvent(TargetingEventType.STARTED);            
+            OnTargetingEvent(TargetingEventType.STARTED);
         }
 
         private void UnTarget(TargetSet targets)
@@ -396,13 +391,10 @@ namespace SystemMiami.CombatRefactor
 
                 ClearCommands(target);
             });
-
         }
 
         private void AssignCommands(ITargetable target)
         {
-           
-            
             Subactions.ForEach(subaction =>
                 target.TargetedBy.Add(subaction.GenerateCommand(target, this)));
         }

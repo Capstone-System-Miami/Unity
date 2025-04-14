@@ -19,7 +19,10 @@ public class IntersectionManager : Singleton<IntersectionManager>
     [SerializeField] private dbug generationLog = new();
     [SerializeField] private dbug npcLog = new();
     [SerializeField] private dbug swapLog = new();
+    [Space (10)]
 
+
+    [Space (10)]
     // Serialized fields allow these private variables to be set in the Unity Editor.
     [Header("Street Generation Settings")] [SerializeField]
     private IntersectionPool[] streetPools; // Array of StreetPools, which contain prefabs for different street types.
@@ -35,6 +38,8 @@ public class IntersectionManager : Singleton<IntersectionManager>
     [SerializeField]
     private int maxStreetsToConnect = 4; // Maximum number of streets that can be connected from one street.
 
+    [Space (10)]
+    [Header("Dungeon Preset Settings")]
     // List to pull from when assigning difficulty to entrances.
     // These will be passed to DungeonEntrances, which will
     // construct themselves based on the information in the presets.
@@ -42,44 +47,34 @@ public class IntersectionManager : Singleton<IntersectionManager>
     [SerializeField] private List<DungeonPreset> bosses = new();
     [SerializeField] private bool TEST_replace;
     [SerializeField] private DungeonPreset TEST_replacementPreset;
+    [Space (10)]
 
+
+    [Space (10)]
     [Header("Player Settings")]
     // The player prefab to instantiate in the scene.
     [SerializeField] private GameObject playerPrefab;
-
     [field: SerializeField] public int NeighborhoodLevelRequirement { get; private set; }
 
-    // List to keep track of instantiated street GameObjects.
-    private List<GameObject> streetObjects = new List<GameObject>();
-
-    // Queue used for breadth-first street generation.
-    private Queue<Vector2Int> streetQueue = new Queue<Vector2Int>();
-
-    // Dictionary mapping StreetTypes to their corresponding StreetPools.
-    private Dictionary<IntersectionType, IntersectionPool> streetPoolDictionary;
-
-    // 2D array representing the grid of streets.
-    private StreetData[,] streetGrid;
-
-    // Counter for the number of streets generated.
-    private int streetCount;
-
-    // Flag to indicate if the street generation is complete.
-    private bool generationComplete = false;
-    
-    
+    [Space (10)]
     [Header("Dungeon Entrances")]
-    [SerializeField, ReadOnly] private List<DungeonEntrance> allEntrances = new();
+    [SerializeField, ReadOnly] private HashSet<DungeonEntrance> allEntrances = new();
+    [field: SerializeField] public MeasurementType MeasurementType { get; private set; } = MeasurementType.MANHATTAN;
+    [field: SerializeField] public bool MustBeUp { get; private set; } = true;
+    [field: SerializeField, ReadOnly] public GameObject FarthestIntersectionFromPlayer { get; private set; }
+    [field: SerializeField, ReadOnly] public GameObject FarthestIntersectionFromZero { get; private set; }
+    [field: SerializeField, ReadOnly] public GameObject FarthestIntersection { get; private set; }
+
     private List<DungeonEntrance> easyDungeons = new List<DungeonEntrance>();
     private List<DungeonEntrance> mediumDungeons = new List<DungeonEntrance>();
     private List<DungeonEntrance> hardDungeons = new List<DungeonEntrance>();
-    
+
     public List<int> easyDungeonReward = new List<int>();
     public List<int> mediumDungeonReward = new List<int>();
     public List<int> hardDungeonReward = new List<int>();
+    [Space (10)]
 
- 
-    
+    [Space (10)]
     [Header("NPC Settings")]
     [SerializeField] private GameObject npcPrefab;
     [SerializeField] private int maxNpcsTotal;
@@ -102,6 +97,26 @@ public class IntersectionManager : Singleton<IntersectionManager>
     [SerializeField] private float shopChance = 0.2f;
     public NPCInfoSO npcInfo;
 
+
+    #region Private Vars
+    // ========================================================================
+    // List to keep track of instantiated street GameObjects.
+    private List<GameObject> streetObjects = new List<GameObject>();
+
+    // Queue used for breadth-first street generation.
+    private Queue<Vector2Int> streetQueue = new Queue<Vector2Int>();
+
+    // Dictionary mapping StreetTypes to their corresponding StreetPools.
+    private Dictionary<IntersectionType, IntersectionPool> streetPoolDictionary;
+
+    // 2D array representing the grid of streets.
+    private StreetData[,] streetGrid;
+
+    // Counter for the number of streets generated.
+    private int streetCount;
+
+    // Flag to indicate if the street generation is complete.
+    private bool generationComplete = false;
     // Possible directions to check for neighboring streets (up, down, right, left).
     private Vector2Int[] directions =
     {
@@ -146,17 +161,14 @@ public class IntersectionManager : Singleton<IntersectionManager>
 
     // Reference to the last StreetData object generated.
     private StreetData lastStreetGenerated;
-
-    [field: SerializeField] public MeasurementType MeasurementType { get; private set; } = MeasurementType.MANHATTAN;
-    [field: SerializeField] public bool MustBeUp { get; private set; } = true;
-    [field: SerializeField, ReadOnly] public GameObject FarthestIntersectionFromPlayer { get; private set; }
-    [field: SerializeField, ReadOnly] public GameObject FarthestIntersectionFromZero { get; private set; }
-    [field: SerializeField, ReadOnly] public GameObject FarthestIntersection { get; private set; }
+    #endregion // Private Vars ================================================
 
 
     public event Action GenerationComplete;
 
 
+    #region Unity Constr.
+    // ========================================================================
     // Unity's Start method is called before the first frame update.
     void Start()
     {
@@ -182,7 +194,6 @@ public class IntersectionManager : Singleton<IntersectionManager>
         // If there are streets in the queue and generation is not complete, continue generating streets.
         if (streetQueue.Count > 0 && !generationComplete)
         {
-           
             // Dequeue a street index from the queue and attempt to generate a street there.
             TryGenerateStreet(streetQueue.Dequeue());
         }
@@ -204,7 +215,37 @@ public class IntersectionManager : Singleton<IntersectionManager>
             generationLog.warn(getGridReport());
         }
     }
+    #endregion // Unity Contstr. ==============================================
 
+
+    #region Public
+    // ========================================================================
+    // Destroy all generated streets and reset the grid to attempt generation again.
+    public void RegenerateStreets()
+    {
+        // Destroy all instantiated street GameObjects.
+        foreach (GameObject obj in streetObjects)
+        {
+            Destroy(obj);
+        }
+
+        streetObjects.Clear(); // Clear the list of street objects.
+
+        streetQueue.Clear(); // Clear the street generation queue.
+        streetCount = 0; // Set the street count.
+        generationComplete = false; // Set generation as not complete.
+
+        // Reset grid
+        InitializeStreetGrid();
+
+        // Restart street generation from the center of the grid.
+        StartStreetGenerationFromStreet(new Vector2Int(gridSizeX / 2, gridSizeY / 2));
+    }
+    #endregion // Public ======================================================
+
+
+    #region Private
+    // ========================================================================
     // Initialize the dictionary that maps StreetTypes to their corresponding StreetPools.
     private void InitializeStreetPoolDictionary()
     {
@@ -403,16 +444,10 @@ public class IntersectionManager : Singleton<IntersectionManager>
         if (streetObjects.Contains(streetData.streetInstance))
         {
             streetObjects.Remove(streetData.streetInstance);
-           
         }
+
         DungeonEntrance[] dataEntrances = streetData.streetInstance.GetComponentsInChildren<DungeonEntrance>();
-        
-        if (dataEntrances.Length > 0) 
-        {
-            DungeonEntrance firstEntrance = dataEntrances[0];
-            int firstEntranceIndex = allEntrances.IndexOf(firstEntrance);
-            allEntrances.RemoveRange(firstEntranceIndex, dataEntrances.Length - 1);
-        }
+        allEntrances.ExceptWith(dataEntrances);
 
         NPCSpawner[] NpcSpawners = streetData.streetInstance.GetComponentsInChildren<NPCSpawner>();
 
@@ -498,8 +533,16 @@ public class IntersectionManager : Singleton<IntersectionManager>
     private void InitializeDungeonPresets(StreetData streetData)
     {
         GameObject instance = streetData.streetInstance;
-        DungeonEntrance[] dungeonEntrances = instance.GetComponentsInChildren<DungeonEntrance>();
-        allEntrances.AddRange(dungeonEntrances);
+        DungeonEntranceAssigner entranceAssigner;
+
+        if (!TryGetComponent(out entranceAssigner))
+        {
+            entranceAssigner = instance.AddComponent<DungeonEntranceAssigner>();
+        }
+
+        entranceAssigner.log = new(true);
+        DungeonEntrance[] dungeonEntrances = entranceAssigner.GetEntrances().ToArray();
+        allEntrances.UnionWith(entranceAssigner.GetEntrances());
 
         if (dungeonEntrances.Length != streetData.dungeonEntranceDifficulties.Count)
         {
@@ -535,10 +578,10 @@ public class IntersectionManager : Singleton<IntersectionManager>
 
             int totalDungeons = dungeonEntrances.Length;
 
-            dungeonEntrance.ApplyNewPreset(preset);
+            dungeonEntrance.StoreNewPreset(preset);
         }
     }
-    
+
     private DungeonEntrance[] GetDungeonEntrances(GameObject intersection)
     {
         return intersection.GetComponentsInChildren<DungeonEntrance>();
@@ -552,7 +595,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
             $"non-zero len array for {intersection.name}...");
         int randEntrance = Random.Range(0, entrances.Length);
 
-        entrances[randEntrance].ApplyNewPreset(replacementPreset);
+        entrances[randEntrance].StoreNewPreset(replacementPreset);
     }
 
     private void InitializeNPCSpawners(StreetData streetData)
@@ -638,7 +681,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
             int x = streetData.gridIndex.x;
             int y = streetData.gridIndex.y;
 
-            // Check each exit moveDirection to see if it connects to a valid street.
+            // Check each exit direction to see if it connects to a valid street.
             foreach (ExitDirection exit in streetData.exits)
             {
                 Vector2Int dir = exitToDir[exit];
@@ -659,30 +702,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
             streetData.exits = validExits;
 
             ReplaceStreet(streetData); // Update the street prefab to reflect valid exits
-
         }
-    }
-
-    // Destroy all generated streets and reset the grid to attempt generation again.
-    private void RegenerateStreets()
-    {
-        // Destroy all instantiated street GameObjects.
-        foreach (GameObject obj in streetObjects)
-        {
-            Destroy(obj);
-        }
-
-        streetObjects.Clear(); // Clear the list of street objects.
-
-        streetQueue.Clear(); // Clear the street generation queue.
-        streetCount = 0; // Set the street count.
-        generationComplete = false; // Set generation as not complete.
-
-        // Reset grid
-        InitializeStreetGrid();
-
-        // Restart street generation from the center of the grid.
-        StartStreetGenerationFromStreet(new Vector2Int(gridSizeX / 2, gridSizeY / 2));
     }
 
     // Convert a grid index to an isometric world position.
@@ -825,7 +845,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
 
         public List<DifficultyLevel>
             dungeonEntranceDifficulties = new List<DifficultyLevel>(); // List of difficulties for DungeonEntrances.
-        
+
         public List<NPCSpawner> npcSpawnerList = new List<NPCSpawner>();
 
         public PositionDiff distFromZeroAtSpawnTime;
@@ -856,6 +876,11 @@ public class IntersectionManager : Singleton<IntersectionManager>
         CleanupExits(); // Adjust exits to ensure consistency between connected streets.
         SetEntranceLists();
 
+        easyDungeonReward = SetEXPReward(easyDungeons);
+        mediumDungeonReward = SetEXPReward(mediumDungeons);
+        hardDungeonReward = SetEXPReward(hardDungeons);
+        SpawnNPCs();
+
         // Leaving the zero option here if we want it, but the
         // positioning of the intersections is pretty fucked.
         // Hard coding this in so it doesn't accidentally get
@@ -865,47 +890,31 @@ public class IntersectionManager : Singleton<IntersectionManager>
         FarthestIntersectionFromZero = GetFarthestIntersection(false, MeasurementType, MustBeUp);
         FarthestIntersection = FarthestIntersectionFromPlayer;
 
-        if (TEST_replace)
+        DungeonEntranceAssigner farthestEntranceAssigner;
+        if (!FarthestIntersection.TryGetComponent(out farthestEntranceAssigner))
         {
-            ReplaceRandomEntranceWithPreset(FarthestIntersection, TEST_replacementPreset);
-            swapLog.print(
-                $"{FarthestIntersection.name} had a dungeon entrance " +
-                $"replaced by {TEST_replacementPreset.name}",
-                FarthestIntersection);
+            swapLog.error(
+                    $"{name} couldn't find a DungeonEntranceAssigner on " +
+                    $"{FarthestIntersection.name}");
         }
-        // if (bosses.Count > 0)
-        // {
-        //     ReplaceRandomEntranceWithPreset(FarthestIntersection);
-        // }
 
-        easyDungeonReward = SetEXPReward(easyDungeons);
-        mediumDungeonReward = SetEXPReward(mediumDungeons);
-        hardDungeonReward = SetEXPReward(hardDungeons);
-        SpawnNPCs();
+        DungeonPreset replacement = TEST_replace ? TEST_replacementPreset : null;
+        DungeonPreset replacee = farthestEntranceAssigner.ReplaceRandomEntranceWithPreset(replacement);
+        swapLog.print(
+            $"{FarthestIntersection.name} had a dungeon entrance " +
+            $"replaced by {TEST_replacementPreset.name}",
+            FarthestIntersection);
+
         LogGenerationResults(); // Output generation statistics to the console.
         GenerationComplete?.Invoke();
     }
 
-    public GameObject GetFarthestIntersection(bool usePlayerSpawnPos, MeasurementType type, bool mustBeUp)
+    private GameObject GetFarthestIntersection(bool usePlayerSpawnPos, MeasurementType type, bool mustBeUp)
     {
         List<StreetData> datas = streetGrid.Cast<StreetData>()
-            .Where(data => data.streetInstance != null).ToList();
+            .Where(data => data.streetInstance != null && data.streetInstance.GetComponent<DungeonEntranceAssigner>() != null).ToList();
 
-        // // local function for printing a shit ton of info about
-        // // intersections at every stage of them being checked.
-        // string plkey = usePlayerSpawnPos ? "PLAYER" : "ZERO";
-        // void printInstanceInfo(StreetData data, string add)
-        // {
-        //     string longMsgDamn =
-        //         $"<color=red>{add}  |</color><color=yellow>|  {data.streetInstance}  |</color>" +
-        //         $"<color=cyan>|  Go pos position {data.streetInstance.transform.position} " +
-        //         $"| {data.distFromPlayerAtSpawnTime.rawX}, {data.distFromPlayerAtSpawnTime.rawY} " +
-        //         $"| {data.distFromPlayerAtSpawnTime.x}, {data.distFromPlayerAtSpawnTime.y} " +
-        //         $"| {data.distFromPlayerAtSpawnTime.m}";
-        //     swapLog.print(longMsgDamn);
-        // }
-
-        // datas.ForEach(data => printInstanceInfo(data, $"Begin {plkey}"));
+        Assert.IsTrue(datas.Count > 0);
 
         // Strategy for finding the target PositionDiff to check
         Func<StreetData, PositionDiff> targetMember = usePlayerSpawnPos
@@ -948,7 +957,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
         return datas[0].streetInstance;
     }
 
-    public void SetEntranceLists()
+    private void SetEntranceLists()
     {
         easyDungeons = allEntrances.Where(entrance => entrance.CurrentPreset.Difficulty == DifficultyLevel.EASY)
             .ToList();
@@ -957,4 +966,5 @@ public class IntersectionManager : Singleton<IntersectionManager>
         hardDungeons = allEntrances.Where(entrance => entrance.CurrentPreset.Difficulty == DifficultyLevel.HARD)
             .ToList();
     }
+    #endregion // Private =====================================================
 }

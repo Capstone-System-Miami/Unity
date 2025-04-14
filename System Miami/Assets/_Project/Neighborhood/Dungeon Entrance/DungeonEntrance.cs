@@ -1,6 +1,4 @@
 /// Layla, Antony
-
-using System;
 using System.Collections.Generic;
 using SystemMiami.Dungeons;
 using SystemMiami.Management;
@@ -60,7 +58,7 @@ namespace SystemMiami
 
         #region PUBLIC METHODS
         // ======================================
-        public void ApplyNewPreset(DungeonPreset preset)
+        public void StoreNewPreset(DungeonPreset preset)
         {
             if (preset == null)
             {
@@ -190,7 +188,6 @@ namespace SystemMiami
             {
                 DungeonRewardsPanel.MGR.ShowPanel(_dungeonData);
             }
-            //GAME.MGR.GoToDungeon(_dungeonData);
         }
         #endregion // PRIVATE METHODS
     }
