@@ -69,6 +69,7 @@ namespace SystemMiami.Management
         {
             Debug.Log($"Going to {characterSelectSceneName}");
             Destroy(PlayerManager.MGR.gameObject);
+            Destroy(IntersectionManager.MGR.gameObject);
             SceneManager.LoadScene(characterSelectSceneName);
         }
 

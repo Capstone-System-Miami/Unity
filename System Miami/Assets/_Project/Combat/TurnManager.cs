@@ -80,6 +80,7 @@ namespace SystemMiami
         {
             GAME.MGR.CombatantDeath += OnCombatantDeath;
         }
+
         private void Start()
         {
             if (playerCharacter != null)
@@ -128,7 +129,6 @@ namespace SystemMiami
             if (CurrentTurnOwner == null)
             { return; }
 
-
             //Debug.Log($"Current Turn Owner: {CurrentTurnOwner.name}");
         }
 
@@ -161,11 +161,11 @@ namespace SystemMiami
                         break;
                     }
                 }
-                Debug.Log("IN");
+                Debug.Log("Combatants Preparing...");
                 yield return null;
             } while (!combatantsReady);
 
-            Debug.Log("OUT");
+            Debug.Log("Combatants Ready. Begin Combat");
             enemiesRemaining = enemyCharacters.Count;
             while (!IsGameOver)
             {
@@ -299,7 +299,6 @@ namespace SystemMiami
                     Debug.LogError($"{name} adding a null to null list");
                     continue;
                 }
-
             }
             foreach (object client in nulls)
             {
