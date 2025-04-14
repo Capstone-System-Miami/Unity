@@ -8341,6 +8341,8 @@ MonoBehaviour:
   _neighborhoodSceneName: NEIGHBORHOOD
   characterSelectSceneName: CharacterSelector
   _regenerateDungeonDataOnInteract: 0
+  <LevelThresholds>k__BackingField: 
+  <Bosses>k__BackingField: []
   <IgnoreObstacles>k__BackingField: 1
   <NoNpcs>k__BackingField: 0
 --- !u!224 &1523799289 stripped
@@ -9989,13 +9991,11 @@ MonoBehaviour:
   enemyCharacters: []
   combatants: []
   enemyPrefab: {fileID: 5679960105606152641, guid: ea6a1a0b9017fda40b8e6da4c145a98e, type: 3}
-  bossPrefab: {fileID: 5985083666047915755, guid: 0992dae8a10eab24da3ffdab83f92baf, type: 3}
   enemyPrefabs:
   - {fileID: 5985083666047915755, guid: eae0eae8fe396f84493cde92e333db05, type: 3}
   - {fileID: 5679960105606152641, guid: ea6a1a0b9017fda40b8e6da4c145a98e, type: 3}
   - {fileID: 5985083666047915755, guid: eae0eae8fe396f84493cde92e333db05, type: 3}
-  numberOfEnemies: 1
-  goToNeighborhood: {fileID: 1910545388}
+  numberOfEnemies: 5
   enemiesRemaining: 0
 --- !u!114 &1910545388
 MonoBehaviour:
@@ -10024,6 +10024,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1937259266}
   - component: {fileID: 1937259265}
+  - component: {fileID: 1937259267}
   m_Layer: 0
   m_Name: UIManager
   m_TagString: Untagged
@@ -10049,6 +10050,9 @@ MonoBehaviour:
   physicalAbilitiesBar: {fileID: 981103834327479979}
   magicalAbilitiesBar: {fileID: 3484177042865103407}
   consumablesBar: {fileID: 8804400399479512730}
+  lossPanelPrefab: {fileID: 4783360393765713647, guid: 6af531a8b599b02468634cdb57c86976, type: 3}
+  winPanelPrefab: {fileID: 4783360393765713647, guid: 5082a91670d74b443b4559e7c0b643d8, type: 3}
+  TEMP_goToNeighborhood: {fileID: 1937259267}
   <CurrentClient>k__BackingField: {fileID: 0}
 --- !u!4 &1937259266
 Transform:
@@ -10065,6 +10069,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1937259267
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1937259264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c50cd799e0e54ab429a3ccc7874ea72d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1940009733
 GameObject:
   m_ObjectHideFlags: 0

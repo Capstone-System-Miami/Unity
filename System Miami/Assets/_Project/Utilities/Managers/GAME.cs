@@ -1,5 +1,6 @@
 /// Layla
 using System;
+using System.Linq;
 using SystemMiami.CombatSystem;
 using SystemMiami.Dungeons;
 using UnityEngine;
@@ -68,8 +69,11 @@ namespace SystemMiami.Management
         public void GoToCharacterSelect()
         {
             Debug.Log($"Going to {characterSelectSceneName}");
-            Destroy(PlayerManager.MGR.gameObject);
-            Destroy(IntersectionManager.MGR.gameObject);
+
+            Singleton<MonoBehaviour>[] managers = FindObjectsOfType<Singleton<MonoBehaviour>>();
+            managers.Where(m => m != null).ToList().ForEach(m => Destroy(m.gameObject));
+            // Destroy(PlayerManager.MGR?.gameObject);
+            // Destroy(IntersectionManager.MGR?.gameObject);
             SceneManager.LoadScene(characterSelectSceneName);
         }
 
@@ -195,14 +199,14 @@ namespace SystemMiami.Management
 
         public void Quit()
         {
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
             if (EditorApplication.isPlaying)
             {
                 EditorApplication.isPlaying = false;
             }
-            #else
+#else
             Application.Quit();
-            #endif
+#endif
         }
 
         public int ImmediateBreakpointSpace()

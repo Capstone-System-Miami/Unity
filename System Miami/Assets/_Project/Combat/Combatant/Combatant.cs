@@ -30,8 +30,6 @@ namespace SystemMiami.CombatSystem
         [Header("General Info")]
         [SerializeField] private Color _colorTag = Color.white;
 
-        
-        
         [Header("Settings"), Space(10)]
         [SerializeField] private bool _printUItoConsole;
         [SerializeField] private float _movementSpeed;
@@ -39,7 +37,6 @@ namespace SystemMiami.CombatSystem
         [Header("Animation")]
         [SerializeField] protected AnimatorOverrideController idleController;
         [SerializeField] protected AnimatorOverrideController walkingController;
-        
         #endregion Serialized Vars
 
 
@@ -49,7 +46,7 @@ namespace SystemMiami.CombatSystem
         // State Machine
         private CombatantStateFactory stateFactory;
         private CombatantState currentState;
-        
+
         // Rendering
         private SpriteRenderer _renderer;
         private Color _defaultColor;
@@ -144,10 +141,7 @@ namespace SystemMiami.CombatSystem
         public OverlayTile PositionTile
         {
             get { return positionTile; }
-            set {
-               
-                positionTile = value;
-            }
+            set { positionTile = value; }
         }
 
         public OverlayTile FocusTile
@@ -214,12 +208,23 @@ namespace SystemMiami.CombatSystem
         private void OnEnable()
         {
             UI.MGR.CombatantLoadoutCreated += HandleLoadoutCreated;
+
+            if (TurnManager.MGR != null)
+            {
+                TurnManager.MGR.DungeonCleared += HandleDungeonCleared;
+                TurnManager.MGR.DungeonFailed += HandleDungeonFailed;
+            }
         }
 
 
         private void OnDisable()
         {
             UI.MGR.CombatantLoadoutCreated -= HandleLoadoutCreated;
+            if (TurnManager.MGR != null)
+            {
+                TurnManager.MGR.DungeonCleared += HandleDungeonCleared;
+                TurnManager.MGR.DungeonFailed += HandleDungeonFailed;
+            }
             currentState = null;
         }
 
@@ -354,7 +359,7 @@ namespace SystemMiami.CombatSystem
         #region Tile Management
         //============================================================
         public void UpdateFocus()
-        {            
+        {
             FocusTile = GetNewFocus() ?? GetDefaultFocus();
         }
 
@@ -825,6 +830,17 @@ namespace SystemMiami.CombatSystem
             );
         }
         #endregion Tile Event Raisers
+
+
+        protected virtual void HandleDungeonCleared()
+        {
+            currentState.SwitchState(Factory.Idle());
+        }
+
+        protected virtual void HandleDungeonFailed()
+        {
+            currentState.SwitchState(Factory.Idle());
+        }
     }
 
 

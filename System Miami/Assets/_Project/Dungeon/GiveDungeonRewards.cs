@@ -16,9 +16,14 @@ namespace SystemMiami
 
         private void OnEnable()
         {
-            TurnManager.MGR.AddDungeonClearedAction(this, GiveReward);
+            TurnManager.MGR.DungeonCleared += GiveReward;
             playerInventory = PlayerManager.MGR.GetComponent<Inventory>();
             playerLevel = PlayerManager.MGR.GetComponent<PlayerLevel>();
+        }
+
+        private void OnDisable()
+        {
+            TurnManager.MGR.DungeonCleared -= GiveReward;
         }
 
         public void GiveReward()

@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using SystemMiami.CombatRefactor;
 using SystemMiami.CombatSystem;
-using System.Collections.Generic;
+using System.Collections;
 using SystemMiami.ui;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -22,6 +22,13 @@ namespace SystemMiami.Management
         [SerializeField] private CombatActionBar magicalAbilitiesBar;
         [SerializeField] private CombatActionBar consumablesBar;
 
+        [Header("Game Over")]
+        [SerializeField] private GameObject lossPanelPrefab;
+        [SerializeField] private GameObject winPanelPrefab;
+        // This should eventually get removed when we have a substantial win panel.
+        [SerializeField] private GoToNeighborhood TEMP_goToNeighborhood;
+        private bool bossDefeated;
+
         public Action<ActionQuickslot> SlotClicked;
         public Action<Loadout, Combatant> CombatantLoadoutCreated;
 
@@ -29,6 +36,30 @@ namespace SystemMiami.Management
         public event EventHandler DialogueFinished;
 
         [field: SerializeField, ReadOnly] public GameObject CurrentClient { get; private set; }
+
+        private void OnEnable()
+        {
+            GAME.MGR.CombatantDeath += HandleCombatantDeath;
+
+            IEnumerator fucku()
+            {
+                yield return new WaitUntil( () => TurnManager.MGR != null );
+                TurnManager.MGR.DungeonCleared += HandleDungeonCleared;
+                TurnManager.MGR.DungeonFailed += HandleDungeonFailed;
+            }
+
+            StartCoroutine(fucku());
+        }
+
+
+        private void OnDisable()
+        {
+            GAME.MGR.CombatantDeath -= HandleCombatantDeath;
+
+            TurnManager.MGR.DungeonCleared -= HandleDungeonCleared;
+            TurnManager.MGR.DungeonFailed -= HandleDungeonFailed;
+        }
+
 
         public void CreatePlayerLoadout(Combatant combatant)
         {
@@ -135,6 +166,35 @@ namespace SystemMiami.Management
             physicalAbilitiesBar.FillWith(loadout.PhysicalAbilities.Cast<CombatAction>().ToList());
             magicalAbilitiesBar.FillWith(loadout.MagicalAbilities.Cast<CombatAction>().ToList());
             consumablesBar.FillWith(loadout.Consumables.Cast<CombatAction>().ToList());
+        }
+
+        private void HandleCombatantDeath(Combatant combatant)
+        {
+            if (combatant is EnemyCombatant e && e.IsBoss)
+            {
+                bossDefeated = true;
+            }
+        }
+
+        private void HandleDungeonCleared()
+        {
+            Debug.Log($"{name} handling dun clr");
+            TEMP_goToNeighborhood.Go(bossDefeated);
+
+            // TODO:
+            // Comment the above line and uncomment this when the
+            // panel is functional/ ready to be used.
+            //
+            // Instantiate(winPanelPrefab);
+
+            // just in case the singleton sticks around.
+            bossDefeated = false;
+        }
+
+        private void HandleDungeonFailed()
+        {
+            Debug.Log($"{name} handling dun fail");
+            Instantiate(lossPanelPrefab);
         }
     }
 }

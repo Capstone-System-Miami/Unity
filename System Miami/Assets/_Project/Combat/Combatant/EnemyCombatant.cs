@@ -41,7 +41,7 @@ namespace SystemMiami.CombatSystem
         {
             MovementPath pathToPlayerData = new(
                 PositionTile,
-                target.PositionTile,
+                target?.PositionTile,
                 false
             );
 

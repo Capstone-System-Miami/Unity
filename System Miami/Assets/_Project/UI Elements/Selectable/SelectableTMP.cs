@@ -9,16 +9,8 @@ namespace SystemMiami.ui
 
         protected override void Update()
         {
-            _currentText = getCurrentText();
+            _currentText = useTextFromComponent ? getStringFromComponent() : getCurrentText();
             _currentColor = getCurrentColor();
-
-            if (useTextFromComponent)
-            {
-                if (_tmp.text != _currentText)
-                {
-                    _tmp.text = _currentText;
-                }
-            }
 
             if (_tmp.color != _currentColor)
             {

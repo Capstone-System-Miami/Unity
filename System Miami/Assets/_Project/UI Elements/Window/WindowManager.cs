@@ -32,25 +32,26 @@ namespace SystemMiami.ui
             Canvas = GetComponent<Canvas>();
         }
 
-        public void RequestOpenWindow(IWindowable windowableObject)
+        public bool RequestOpenWindow(IWindowable windowableObject, out Window newWindow)
         {
-            Window newWindow = Instantiate(prefab, transform);
+            newWindow = Instantiate(prefab, transform);
 
             Assert.IsNotNull(newWindow);
 
-            if (windowableObject.GetType() != newWindow.GenericType)
+            if (windowableObject.GetType() != prefab.GenericType)
             {
                 log.error(
                     $"Type mismatch in {name}. Requested to open a window " +
                     $"of {windowableObject.GetType()}," +
-                    $"but {newWindow.GetType()} only accepts " +
-                    $"{newWindow.GenericType} objects",
+                    $"but {name} only accepts " +
+                    $"{prefab.GenericType} objects",
                     this);
-                return;
+                return false;
             }
 
             newWindow.Initialize(windowableObject);
             OnWindowOpened(newWindow);
+            return true;
         }
 
         public void RequestCloseWindow(Window toClose)

@@ -70,7 +70,7 @@ namespace SystemMiami
 
         private void updatePhasePanel()
         {
-            Phase currentPhase = turnOwner.CurrentPhase;
+            Phase currentPhase = turnOwner == null ? Phase.None : turnOwner.CurrentPhase;
 
             Color phaseColor = currentPhase switch
             {

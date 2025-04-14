@@ -1,23 +1,14 @@
+using SystemMiami.Management;
 using UnityEngine;
 
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
-
+// Layla
 namespace SystemMiami.ui
 {
     public class QuitGame : MonoBehaviour
     {
         public void Go()
         {
-#if UNITY_EDITOR
-            if (EditorApplication.isPlaying)
-            {
-                EditorApplication.isPlaying = false;
-            }
-#else
-            Application.Quit();
-#endif
+            GAME.MGR.Quit();
         }
     }
 }

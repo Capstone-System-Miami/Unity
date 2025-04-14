@@ -30,8 +30,7 @@ namespace SystemMiami.CombatRefactor
 
         protected CombatantState(
             Combatant combatant,
-            Phase phase
-            )
+            Phase phase)
         {
             this.combatant = combatant;
             this.factory = combatant.Factory;

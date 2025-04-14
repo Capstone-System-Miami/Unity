@@ -50,7 +50,7 @@ namespace SystemMiami
 
         public void Clear()
         {
-            Debug.LogWarning($"Clear called on targs");
+            // Debug.LogWarning($"Clear called on targs");
             all.Clear();
             tiles.Clear();
             occupants.Clear();

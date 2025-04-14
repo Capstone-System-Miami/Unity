@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using SystemMiami.CombatSystem;
 using SystemMiami.CombatRefactor;
 using SystemMiami.Management;
@@ -40,11 +41,8 @@ namespace SystemMiami
 
         [Header("Testing")]
         public GameObject enemyPrefab;
-        public GameObject bossPrefab; // TODO: Assign boss prefab
         public List<GameObject> enemyPrefabs = new();
         public int numberOfEnemies = 3;
-
-        [SerializeField] private GoToNeighborhood goToNeighborhood;
 
         [SerializeField, ReadOnly] private int enemiesRemaining;
 
@@ -71,7 +69,8 @@ namespace SystemMiami
             }
         }
 
-        private Dictionary<object, Action> dungeonClearedActions = new();
+        public event Action DungeonCleared;
+        public event Action DungeonFailed;
         public Action<Phase> NewTurnPhase;
 
         #region Unity Methods
@@ -79,6 +78,11 @@ namespace SystemMiami
         private void OnEnable()
         {
             GAME.MGR.CombatantDeath += OnCombatantDeath;
+        }
+
+        private void OnDisable()
+        {
+            GAME.MGR.CombatantDeath -= OnCombatantDeath;
         }
 
         private void Start()
@@ -132,10 +136,6 @@ namespace SystemMiami
             //Debug.Log($"Current Turn Owner: {CurrentTurnOwner.name}");
         }
 
-        private void OnDisable()
-        {
-            GAME.MGR.CombatantDeath -= OnCombatantDeath;
-        }
         //===============================
         #endregion // ^Unity Methods^
 
@@ -275,43 +275,22 @@ namespace SystemMiami
             {
                 OnDungeonCleared();
             }
-            else if (combatant is PlayerCombatant)
+            else if (combatant is PlayerCombatant p)
             {
-                GAME.MGR.GoToCharacterSelect();
+                OnDungeonFailed();
             }
-        }
-
-        public void AddDungeonClearedAction(object client, Action action)
-        {
-            dungeonClearedActions[client] = action;
         }
 
         protected void OnDungeonCleared()
         {
-            List<object> nulls = new();
+            combatants.Where(c => c != null).ToList().ForEach(c => c.gameObject.SetActive(false));
+            DungeonCleared?.Invoke();
+        }
 
-            foreach (object client in dungeonClearedActions.Keys)
-            {
-                if (client == null
-                    || (client is GameObject go && !go.activeSelf)
-                    || (client is MonoBehaviour mono && !mono.enabled))
-                {
-                    Debug.LogError($"{name} adding a null to null list");
-                    continue;
-                }
-            }
-            foreach (object client in nulls)
-            {
-                Debug.LogError($"{name} removing a null from dict");
-                dungeonClearedActions.Remove(client);
-            }
-
-            foreach (object client in dungeonClearedActions.Keys)
-            {
-                dungeonClearedActions[client].Invoke();
-            }
-
-            goToNeighborhood.Go(false);
+        protected void OnDungeonFailed()
+        {
+            combatants.Where(c => c != null).ToList().ForEach(c => c.gameObject.SetActive(false));
+            DungeonFailed.Invoke();
         }
         //===============================
         #endregion // ^Spawning^
