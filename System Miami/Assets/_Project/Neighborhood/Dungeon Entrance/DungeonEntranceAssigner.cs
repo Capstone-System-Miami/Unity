@@ -1,11 +1,16 @@
 using System.Collections.Generic;
 using SystemMiami.Dungeons;
+using SystemMiami.Utilities;
 using UnityEngine;
 
 namespace SystemMiami
 {
     public class DungeonEntranceAssigner : MonoBehaviour
     {
+        // If attaching with AddComponent, we can set this
+        // to a new dbug and pass in whether we want to show msgs
+        public dbug log = new(false);
+
         private DungeonEntrance[] entrances;
         private int currentIndex = 0;
         public bool canAssign => entrances != null && entrances.Length < currentIndex;
@@ -33,7 +38,7 @@ namespace SystemMiami
 
         public DungeonPreset ReplaceRandomEntranceWithPreset(DungeonPreset replacement)
         {
-            Debug.Log($"REPLACING ENTRANCE", this);
+            log.print($"REPLACING ENTRANCE", this);
             int randEntrance = Random.Range(0, entrances.Length);
             DungeonPreset replacee = entrances[randEntrance].CurrentPreset;
 

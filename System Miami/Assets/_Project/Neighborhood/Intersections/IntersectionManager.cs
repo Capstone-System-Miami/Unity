@@ -540,7 +540,8 @@ public class IntersectionManager : Singleton<IntersectionManager>
             entranceAssigner = instance.AddComponent<DungeonEntranceAssigner>();
         }
 
-        DungeonEntrance[] dungeonEntrances = instance.GetComponentsInChildren<DungeonEntrance>();
+        entranceAssigner.log = new(true);
+        DungeonEntrance[] dungeonEntrances = entranceAssigner.GetEntrances().ToArray();
         allEntrances.UnionWith(entranceAssigner.GetEntrances());
 
         if (dungeonEntrances.Length != streetData.dungeonEntranceDifficulties.Count)

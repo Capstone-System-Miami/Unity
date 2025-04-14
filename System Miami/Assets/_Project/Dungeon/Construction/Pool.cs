@@ -25,16 +25,27 @@ namespace SystemMiami
         /// </summary>
         public List<T> GetNewList()
         {
+            List<T> result = new();
+
             resetElementCounts();
 
             if (!tryGetDefault(out _defaultPrefab))
             {
-                Debug.LogWarning($"No Default Element Fount in pool ( {this} )");
+                Debug.LogWarning($"No Default Element Found in pool ( {this} )");
             }
 
-            int count = Random.Range(_minCount, _maxCount + 1);
+            result = getRequired();
 
-            return getListOfSize(count);
+            int countRemaining = _maxCount - result.Count;
+            if (countRemaining < 0 || countRemaining > _maxCount)
+            {
+                return result;
+            }
+
+            int randomCountRemaining = Random.Range(_minCount, countRemaining + 1);
+
+            result.AddRange(getListOfSize(randomCountRemaining));
+            return result;
         }
 
         private void resetElementCounts()
@@ -44,6 +55,27 @@ namespace SystemMiami
             {
                 _elements[i] = new PoolElement<T>(_elements[i]);
             }
+        }
+
+        /// <summary>
+        /// Gets, concats, & returns the required number of elements
+        /// from each <see cref="PoolElement{T}">.
+        /// </summary>
+        private List<T> getRequired()
+        {
+            List<T> result = new();
+
+            for (int i = 0; i < _elements.Count; i++)
+            {
+                if (!_elements[i].TryGetRequired(out T[] req))
+                {
+                    continue;
+                }
+
+                result.AddRange(req);
+            }
+
+            return result;
         }
 
         /// <summary>

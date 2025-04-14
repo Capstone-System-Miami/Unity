@@ -503,9 +503,8 @@ namespace SystemMiami.CombatSystem
                 log.print(
                     $"{gameObject.name} took {amount} damage,\n" +
                     $"its Health is now {Health.Get()}");
+                GAME.MGR.NotifyDamageTaken(this);
             }
-
-            GAME.MGR.NotifyDamageTaken(this);
         }
         #endregion IDamageReciever
 

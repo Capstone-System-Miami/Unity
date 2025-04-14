@@ -16,14 +16,15 @@ MonoBehaviour:
     showMessages: 1
   _difficulty: 3
   _material: {fileID: 2100000, guid: b673bd577411dc242a027f4797dcd53c, type: 2}
-  _doorOffColor: {r: 4.237095, g: 4.2370944, b: 4.2370944, a: 1}
-  _doorOnColor: {r: 5.992157, g: 0, b: 3.5198445, a: 1}
+  _doorOffColor: {r: 2.1185474, g: 2.1185472, b: 2.1185472, a: 1}
+  _doorOnColor: {r: 3.562958, g: 0, b: 2.0929122, a: 1}
   _prefabPool:
     _minCount: 1
     _maxCount: 1
     _elements:
     - _isDefault: 1
       _elementPrefab: {fileID: 5478403791188214871, guid: 2276dd2fcded45b41835fe0cde3f3ba7, type: 3}
+      _minCount: 0
       _maxCount: 1
   _enemyPool:
     _minCount: 5
@@ -31,21 +32,27 @@ MonoBehaviour:
     _elements:
     - _isDefault: 0
       _elementPrefab: {fileID: 5679960105606152641, guid: 76b61994fd6fd104ea3feb66e67171a6, type: 3}
+      _minCount: 1
       _maxCount: 1
     - _isDefault: 1
       _elementPrefab: {fileID: 5985083666047915755, guid: c228b952585c5bd4ebd232d67bd19af3, type: 3}
+      _minCount: 3
       _maxCount: 10
     - _isDefault: 0
       _elementPrefab: {fileID: 5985083666047915755, guid: f52d635873e4e2d4f90a468e161a7d34, type: 3}
+      _minCount: 0
       _maxCount: 1
     - _isDefault: 0
       _elementPrefab: {fileID: 5679960105606152641, guid: ea6a1a0b9017fda40b8e6da4c145a98e, type: 3}
+      _minCount: 0
       _maxCount: 1
     - _isDefault: 0
       _elementPrefab: {fileID: 5985083666047915755, guid: 5b39672ccdd947646a06d564cf3cc222, type: 3}
+      _minCount: 0
       _maxCount: 1
     - _isDefault: 0
       _elementPrefab: {fileID: 5985083666047915755, guid: 36669b685c52cef4ea0721e004888ce8, type: 3}
+      _minCount: 0
       _maxCount: 1
   _rewards:
     _overrideByDifficulty: 1

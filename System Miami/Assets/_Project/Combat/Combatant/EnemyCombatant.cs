@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using SystemMiami.Animation;
-using SystemMiami.CombatRefactor;
-using SystemMiami.Dungeons;
+﻿using SystemMiami.Dungeons;
 using UnityEngine;
 
 // Authors: Layla Hoey, Lee St Louis
@@ -9,6 +6,7 @@ namespace SystemMiami.CombatSystem
 {
     public class EnemyCombatant : Combatant
     {
+        [field: SerializeField] public bool IsBoss { get; private set; } = false;
         [SerializeField] private int detectionRadius = 3;
 
         [HideInInspector] public bool PlayerInRange;

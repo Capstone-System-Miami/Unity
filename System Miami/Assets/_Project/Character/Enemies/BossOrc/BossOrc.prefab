@@ -226,6 +226,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7981544af7126244a88c7413ccc581c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  log:
+    showMessages: 0
   detailedFocusHighlight: 0
   _colorTag: {r: 1, g: 0.28759372, b: 0.25943398, a: 1}
   _printUItoConsole: 1
@@ -245,12 +247,9 @@ MonoBehaviour:
   TRIGGER_ForceMovePreviewTest: 0
   TRIGGER_ForceMoveExecuteTest: 0
   TEST_currentTile: {fileID: 0}
-  detectionRadius: 3
+  <IsBoss>k__BackingField: 1
+  detectionRadius: 4
   PlayerInRange: 0
-  physicalSOs:
-  - {fileID: 11400000, guid: c665fe02e1ebd4a4090e8510287e199b, type: 2}
-  magicalSOs: []
-  consumableSOs: []
 --- !u!114 &-7163708798834749806
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -272,6 +271,7 @@ MonoBehaviour:
   quickslotConsumableIDs: 
   equippedEquipmentModIDs: 
   credits: 0
+  TestMode: 0
 --- !u!114 &-4757405529046438839
 MonoBehaviour:
   m_ObjectHideFlags: 0
