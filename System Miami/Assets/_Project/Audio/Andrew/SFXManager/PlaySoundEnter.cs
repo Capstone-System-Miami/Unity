@@ -9,7 +9,7 @@ namespace SystemMiami
 
         public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            SoundManager.MGR.PlaySound(sound, volume);
+            SoundFxManager.MGR.PlaySound(sound, volume);
         }
     }
 }

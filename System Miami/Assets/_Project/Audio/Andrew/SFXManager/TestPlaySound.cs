@@ -9,7 +9,7 @@ namespace SystemMiami
         // Start is called before the first frame update
         void Start()
         {
-            SoundManager.MGR.PlaySound(sound, value);
+            SoundFxManager.MGR.PlaySound(sound, value);
         }
     }
 }
