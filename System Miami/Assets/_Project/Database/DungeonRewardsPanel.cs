@@ -34,7 +34,7 @@ namespace SystemMiami
 
         [SerializeField] private dbug log;
 
-        
+        private DungeonEntrance entranceClient;
         private DungeonData currentDungeonData;
 
         public DungeonData CurrentDungeonData
@@ -44,19 +44,15 @@ namespace SystemMiami
 
         private void Start()
         {
-            
             if (panel != null)
                 panel.SetActive(false);
-            
         }
 
         private void OnEnable()
         {
-            
             if (playerInventory != null)
             {
                 playerInventory.OnInventoryChanged += RefreshPanel;
-                
             }
             SubscribeToGrid(inventoryUI.Tabs.TabConsumable.ItemGrid);
             SubscribeToGrid(inventoryUI.Tabs.TabPhysical.ItemGrid);
@@ -65,13 +61,10 @@ namespace SystemMiami
             SubscribeToGrid(loadoutGridPhysical);
             SubscribeToGrid(loadoutGridMagical);
             SubscribeToGrid(loadoutGridConsumable);
-            
-            
         }
 
         private void OnDisable()
         {
-            
             if (playerInventory != null)
             {
                 playerInventory.OnInventoryChanged -= RefreshPanel;
@@ -83,27 +76,22 @@ namespace SystemMiami
             UnsubscribeToGrid(loadoutGridPhysical);
             UnsubscribeToGrid(loadoutGridMagical);
             UnsubscribeToGrid(loadoutGridConsumable);
-           
         }
 
-       
-        public void ShowPanel(DungeonData dungeonData)
+        public void ShowPanel(DungeonEntrance entranceClient, DungeonData dungeonData)
         {
-            currentDungeonData = dungeonData;
-            continueButton.onClick.AddListener ( () => HandleContinueButtonClickedClicked());
-           
+            this.entranceClient = entranceClient;
+            this.currentDungeonData = dungeonData;
+            continueButton.onClick.AddListener ( () => HandleContinueButtonClickedClicked() );
+
             FillDungeonRewardsUI(dungeonData);
 
-            
-            //FillInventoryUI();
             FillloadoutUI();
 
-           
             if (panel != null)
                 panel.SetActive(true);
         }
 
-       
         public void HidePanel()
         {
             if (panel != null)
@@ -111,7 +99,6 @@ namespace SystemMiami
             continueButton.onClick.RemoveAllListeners();
         }
 
-        
         public void RefreshPanel()
         {
             //FillInventoryUI();
@@ -120,34 +107,10 @@ namespace SystemMiami
             FillDungeonRewardsUI(currentDungeonData);
         }
 
-       
-        /*private void FillInventoryUI()
-        {
-            if (playerInventory == null)
-            {
-                log?.error("No player inventory assigned. Cannot fill inventory UI.");
-                return;
-            }
-
-           
-            // inventoryGridPhysical?.ClearSlots();
-            // inventoryGridMagical?.ClearSlots();
-            // inventoryGridConsumable?.ClearSlots();
-            //
-            //
-            // inventoryGridPhysical?.FillSlots(playerInventory.PhysicalAbilityIDs);
-            // inventoryGridMagical?.FillSlots(playerInventory.MagicalAbilityIDs);
-            // inventoryGridConsumable?.FillSlots(playerInventory.ConsumableIDs);
-
-            
-        }*/
-
         public void CheckGrid(ItemGrid grid, bool InventoryGrid)
         {
-           
             foreach (InventoryItemSlot slot in grid.Slots )
             {
-               
               ItemData dataToMove = slot.ClearSlot();
               if (InventoryGrid)
               {
@@ -158,12 +121,10 @@ namespace SystemMiami
                   MoveItemToInventory(dataToMove.ID);
               }
             }
-            
         }
 
         public void HandleSlotDoubleClick(InventoryItemSlot slot)
         {
-            
             ItemData dataToMove = slot.ClearSlot();
             if (playerInventory.AllValidInventoryItems.Contains(dataToMove.ID))
             {
@@ -179,21 +140,17 @@ namespace SystemMiami
         {
             foreach (InventoryItemSlot slot in grid.Slots)
             {
-               
                 slot.slotDoubleClicked += HandleSlotDoubleClick;
             }
-        } 
-        
-        
+        }
+
         public void UnsubscribeToGrid(ItemGrid grid)
         {
             foreach (InventoryItemSlot slot in grid.Slots)
             {
-               
                 slot.slotDoubleClicked -= HandleSlotDoubleClick;
             }
-        } 
-        
+        }
 
         public void MoveItemToloadout(int itemID)
         {
@@ -203,7 +160,6 @@ namespace SystemMiami
             RefreshPanel();
         }
 
-       
         public void MoveItemToInventory(int itemID)
         {
             if (playerInventory == null) return;
@@ -224,7 +180,6 @@ namespace SystemMiami
                 log.error("No player inventory assigned. Cannot fill loadout UI.");
             }
 
-
             loadoutGridPhysical?.ClearSlots();
             loadoutGridMagical?.ClearSlots();
             loadoutGridConsumable?.ClearSlots();
@@ -234,7 +189,6 @@ namespace SystemMiami
             loadoutGridMagical?.FillSlots(playerInventory.QuickslotMagicalAbilityIDs);
             loadoutGridConsumable?.FillSlots(playerInventory.QuickslotConsumableIDs);
         }
-
 
         private void FillDungeonRewardsUI(DungeonData data)
         {
@@ -284,6 +238,7 @@ namespace SystemMiami
             }
 
             HidePanel();
+            entranceClient.DisableInteraction();
             GAME.MGR.GoToDungeon(CurrentDungeonData);
         }
     }

@@ -5,6 +5,7 @@ using SystemMiami.Management;
 using SystemMiami.Utilities;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.Events;
 
 namespace SystemMiami
 {
@@ -23,6 +24,9 @@ namespace SystemMiami
         private DungeonPreset _currentPreset;
         [SerializeField, ReadOnly] private DungeonData _dungeonData;
         private Material _material;
+
+        private InteractionTrigger entranceTrigger;
+        private UnityAction interactDelegate;
         #endregion // PRIVATE VARS
 
 
@@ -42,8 +46,9 @@ namespace SystemMiami
             // Otherwise we'll have to make a change
             // to every single DungeonEntrance in every single prefab any time
             // a change is made to what's subscribing to OnPlayerEnter or OnInteract, etc.
-            InteractionTrigger entranceTrigger = GetComponentInChildren<InteractionTrigger>();
-            entranceTrigger.OnInteract.AddListener(OnInteract);
+            entranceTrigger = GetComponentInChildren<InteractionTrigger>();
+            interactDelegate = () => OnInteract();
+            entranceTrigger.OnInteract.AddListener(interactDelegate);
         }
 
         private void OnDisable()
@@ -93,13 +98,24 @@ namespace SystemMiami
             // ApplyStoredPreset();
         }
 
+        /// <summary>
+        /// Gets called from
+        /// <see cref="DungeonRewardsPanel.HandleContinueButtonClickedClicked">
+        /// </summary>
+        public void DisableInteraction()
+        {
+            DisableDungeonColor();
+            entranceTrigger.IsInteractionEnabled = false;
+            entranceTrigger.OnInteract.RemoveListener(interactDelegate);
+        }
+
         public void TurnOffDungeonColor()
         {
             if (_material == null) { return; }
             if (CurrentPreset == null) { return; }
+            if (!entranceTrigger.IsInteractionEnabled) { return; }
 
             _material.SetColor("_Color", CurrentPreset.DoorOffColor);
-
             // log.print($"Turned off dungeon color for {gameObject.name}.");
         }
 
@@ -107,10 +123,15 @@ namespace SystemMiami
         {
             if (_material == null) { return; }
             if (CurrentPreset == null) { return; }
+            if (!entranceTrigger.IsInteractionEnabled) { return; }
 
             _material.SetColor("_Color", CurrentPreset.DoorOnColor);
-
             // log.print($"Turned on dungeon color for {gameObject.name}.");
+        }
+
+        public void DisableDungeonColor()
+        {
+            _material.SetColor("_Color", Color.black);
         }
         #endregion // PUBLIC METHODS
 
@@ -186,7 +207,7 @@ namespace SystemMiami
             }
             if (DungeonRewardsPanel.MGR != null)
             {
-                DungeonRewardsPanel.MGR.ShowPanel(_dungeonData);
+                DungeonRewardsPanel.MGR.ShowPanel(this, _dungeonData);
             }
         }
         #endregion // PRIVATE METHODS

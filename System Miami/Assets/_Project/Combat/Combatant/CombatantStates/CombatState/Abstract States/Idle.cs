@@ -21,7 +21,7 @@ namespace SystemMiami.CombatRefactor
         public override void MakeDecision()
         {
             base.MakeDecision();
-            
+
             if (DyingRequested())
             {
                 SwitchState(factory.Dying());

@@ -15,11 +15,6 @@ namespace SystemMiami
 
         private IInteractable _storedInteraction;
 
-        private void Start()
-        {
-            
-        }
-
         private void Update()
         {
             if (_storedInteraction == null)
@@ -36,32 +31,32 @@ namespace SystemMiami
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            
-                 log.print("enter called"); 
+            log.print("enter called");
 
             // InParent will search for it in the collision first,
             // then loop up through parents until it finds one
             IInteractable collidedInteraction = collision.GetComponentInParent<IInteractable>();
-            
+
             if (collidedInteraction == null)
             {
-                
-                    log.print($"Entering { collision.name }, but it is not an interactable object"); 
-
+                log.print($"Entering {collision.name}, but it is not an interactable object");
                 return;
             }
 
             // If there is already a stored interaction, boot/override it.
             _storedInteraction?.PlayerExit();
             _storedInteraction = collidedInteraction;
-            _storedInteraction.PlayerEnter();
-            
-            _promptBox.ShowPrompt(_storedInteraction, _interactKey);
+
+            if (collidedInteraction.IsInteractionEnabled)
+            {
+                _storedInteraction.PlayerEnter();
+                _promptBox.ShowPrompt(_storedInteraction, _interactKey);
+            }
         }
 
         private void OnTriggerExit2D(Collider2D collision)
         {
-            log.print("exit called"); 
+            log.print("exit called");
 
             // InParent will search for it in the collision first,
             // then loop up through parents until it finds one
@@ -69,17 +64,16 @@ namespace SystemMiami
 
             if (collidedInteraction == null)
             {
-               
-                    log.print($"leaving { collision.name }, but it is not an interactable object");
-
+                log.print($"leaving {collision.name}, but it is not an interactable object");
                 return;
             }
-            
+
+
             // Let the stored interaction know we're leaving
             _storedInteraction?.PlayerExit();
 
             // Stop storing it
             _storedInteraction = null;
-        }       
+        }
     }
 }
