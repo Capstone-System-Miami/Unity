@@ -93,6 +93,16 @@ namespace SystemMiami.Utilities
             Debug.LogError(msg, context);
         }
 
+        public void stop()
+        {
+            Debug.Break();
+        }
+
+        public static void Stop()
+        {
+            Debug.Break();
+        }
+
         public static string format<T>(IList<T> collection)
         {
             string result = "";

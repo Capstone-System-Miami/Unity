@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Linq;
 using SystemMiami.Management;
+using SystemMiami.Utilities;
 using UnityEngine.SceneManagement;
 using UnityEngine.Assertions;
 
@@ -18,16 +19,20 @@ namespace SystemMiami
 
     public class AudioManager : Singleton<AudioManager>
     {
+        [Header("Debug")]
+        public dbug log;
+
         [Header("Sound FX")]
         public Sound[] sounds;
 
         [Header("Music")]
-        public AudioSource musicSource;
         public Music mainMenu;
+        public Music settings;
         public Music characterSelect;
         public Music neighborhood;
         public Music dungeonLow;
         public Music dungeonHigh;
+        [field: SerializeField, ReadOnly] public AudioSource musicSource { get; private set; }
 
         [Space(10)]
         public bool overrideBuildIndex;
@@ -44,21 +49,20 @@ namespace SystemMiami
             // just make sure you do it after the call to the base
             // version of awake above.
 
-            musicSource = CreateNewMusicSource();
-        }
-
-        private void OnEnable()
-        {
             // NOTE:
             // This array must be created before HandleSceneLoaded is called.
             allMusic = new Music[] {
                 mainMenu,
+                settings,
                 characterSelect,
                 neighborhood,
                 dungeonLow,
                 dungeonHigh
             };
+        }
 
+        private void OnEnable()
+        {
             SceneManager.sceneLoaded += HandleSceneLoaded;
         }
         private void OnDisable()
@@ -91,17 +95,7 @@ namespace SystemMiami
             // If not null, we can use it as is,
             // so now we can be sure that our sound is usable.
 
-            // New UNINSTANTIATED GameObject with an added AudioSource.
-            // This is kind of like creating a prefab at runtime.
-            // We can set the AudioSource's settings it before
-            // we instantiate the object.
-            GameObject sourceObj = new(sound.name);
-            AudioSource source = sourceObj.AddComponent<AudioSource>();
-
-            source.clip = sound.clip;
-            source.volume = sound.volume;
-            source.pitch = sound.pitch;
-            source.loop = sound.loop;
+            AudioSource source = CreateNewSource(sound);
 
             source.Play();
 
@@ -109,7 +103,7 @@ namespace SystemMiami
             Action onClipFinished = () => {
                 // Anything we want to have happen when the 
                 // AudioSource is not playing anything anymore:
-                Debug.Log($"{sound.name}'s source is no longer playing anything.");
+                log?.print($"{sound.name}'s source is no longer playing anything.");
                 Destroy(source.gameObject);
             };
 
@@ -120,48 +114,48 @@ namespace SystemMiami
 
         public void PlaySound(string soundName)
         {
-            Sound s = Array.Find(sounds, sound => sound.name == name);
+            Sound s = Array.Find(sounds, sound => sound.name == soundName);
             if (s == null)
             {
-                Debug.LogWarning("Sound: " + name + " Not FOUND");
+                log.warn("Sound: " + name + " Not FOUND");
                 return;
             }
 
             PlaySound(s);
         }
 
-        public void PlayMusic(Sound music)
+        public void PlayMusic(Music music)
         {
-            if (musicSource.isPlaying)
+            if (musicSource != null && musicSource.clip == music.clip)
             {
+                log.print("Source clip was same. Returning.");
+                return;
+            }
+            else if (musicSource != null)
+            {
+                log.print($"Source clip was not same. Destroying {musicSource.gameObject.name}");
+
+                musicSource.Stop();
                 Destroy(musicSource.gameObject);
-                musicSource = CreateNewMusicSource();
             }
 
-            musicSource.clip = music.clip;
-            musicSource.volume = music.volume;
-            musicSource.pitch = music.pitch;
-            musicSource.loop = music.loop;
+            log.print($"Creating new musicSource.");
 
+            musicSource = CreateNewSource(music);
             musicSource.Play();
         }
 
         protected virtual void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            sceneMusic = allMusic.Where(music => music.BuildIndex == scene.buildIndex).ToArray();
-
             if (overrideBuildIndex) { return; }
 
+            sceneMusic = allMusic.Where(music => music.BuildIndex == scene.buildIndex).ToArray();
+
+            log.print("Scene Music Arr", sceneMusic.Select(music => ( $"{music.name} (clip: '{music.clip}')" )).ToArray());
             Assert.IsNotNull(sceneMusic, $"{name}'s sceneMusic was null. Check HandleSceneLoaded()");
             Assert.IsTrue(sceneMusic.Length > 0, $"{name}'s sceneMusic had nothing in it. Check HandleSceneLoaded()");
 
-            if (musicSource != null && musicSource.isPlaying)
-            {
-                if (musicSource.clip != sceneMusic[0].clip)
-                {
-                    PlayMusic(sceneMusic[0]);
-                }
-            }
+            PlayMusic(sceneMusic[0]);
         }
 
         private IEnumerator DoWhenOver(AudioSource sourceToCheck, Action onClipOver)
@@ -170,10 +164,24 @@ namespace SystemMiami
             onClipOver.Invoke();
         }
 
-        private AudioSource CreateNewMusicSource()
+        /// <summary>
+        /// Create a new INSTANTIATED GameObject with an added <see cref="AudioSource"/>.
+        /// Sets the new AudioSource's settings to those of incomming param <see cref="Sound"/>.
+        /// Sets the new AudioSource's <c>GameObject</c> as a child of this manager.
+        /// NOTE: This does not call <c>Play()</c> on the new AudioSource.
+        ///
+        /// </summary>
+        private AudioSource CreateNewSource(Sound sound)
         {
-            GameObject sourceObj = new("Music");
-            return sourceObj.AddComponent<AudioSource>();
+            GameObject sourceObj = new(sound.name);
+            AudioSource newSource = sourceObj.AddComponent<AudioSource>();
+            newSource.transform.SetParent(transform);
+
+            newSource.clip = sound.clip;
+            newSource.volume = sound.volume;
+            newSource.pitch = sound.pitch;
+            newSource.loop = sound.loop;
+            return newSource;
         }
     }
 }

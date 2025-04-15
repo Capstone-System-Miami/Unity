@@ -44,7 +44,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d315b1147188e594182c141c2c2e02d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _preserveBetweenScenes: 0
+  _preserveBetweenScenes: 1
+  log:
+    showMessages: 1
   sounds:
   - name: OverWorld
     clip: {fileID: 8300000, guid: 9c00c36f9d87a36418c8119263d909a2, type: 3}
@@ -387,23 +389,31 @@ MonoBehaviour:
     name: MainMenu
     clip: {fileID: 8300000, guid: 0d1d1e0032d4d3d40bfcf54d72832f67, type: 3}
     type: 0
-    volume: 1
+    volume: 0.6
     pitch: 1
     loop: 1
     <BuildIndex>k__BackingField: 0
+  settings:
+    name: Settings
+    clip: {fileID: 8300000, guid: 0d1d1e0032d4d3d40bfcf54d72832f67, type: 3}
+    type: 0
+    volume: 0.6
+    pitch: 1
+    loop: 1
+    <BuildIndex>k__BackingField: 2
   characterSelect:
     name: CharacterSelect
     clip: {fileID: 8300000, guid: 0d1d1e0032d4d3d40bfcf54d72832f67, type: 3}
     type: 0
-    volume: 1
+    volume: 0.6
     pitch: 1
     loop: 1
     <BuildIndex>k__BackingField: 3
   neighborhood:
     name: OverWorld
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: 9c00c36f9d87a36418c8119263d909a2, type: 3}
     type: 0
-    volume: 1
+    volume: 0.6
     pitch: 1
     loop: 1
     <BuildIndex>k__BackingField: 4
@@ -411,7 +421,7 @@ MonoBehaviour:
     name: Dungeon Low
     clip: {fileID: 8300000, guid: f2efd0de7f71f1e409ceb6044a2a5377, type: 3}
     type: 0
-    volume: 1
+    volume: 0.6
     pitch: 1
     loop: 1
     <BuildIndex>k__BackingField: 1
@@ -419,16 +429,16 @@ MonoBehaviour:
     name: Dungeon High
     clip: {fileID: 8300000, guid: ebb7eba99ab409e40bfdebc03232b948, type: 3}
     type: 0
-    volume: 1
+    volume: 0.6
     pitch: 1
     loop: 1
     <BuildIndex>k__BackingField: 1
-  overrideBuildIndex: 1
+  overrideBuildIndex: 0
   overrideWith:
     name: OverWorld
     clip: {fileID: 8300000, guid: 23c7e4b0a55c6cf4a9fcf9be3407d3dc, type: 3}
     type: 0
-    volume: 1
+    volume: 0.6
     pitch: 1
     loop: 1
     <BuildIndex>k__BackingField: 0
