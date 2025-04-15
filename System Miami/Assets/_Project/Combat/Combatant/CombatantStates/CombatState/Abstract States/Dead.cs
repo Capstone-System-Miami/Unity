@@ -1,5 +1,4 @@
 using SystemMiami.CombatSystem;
-using SystemMiami.Management;
 using UnityEngine;
 
 namespace SystemMiami.CombatRefactor
@@ -12,7 +11,6 @@ namespace SystemMiami.CombatRefactor
         public override void OnEnter()
         {
             base.OnEnter();
-            GAME.MGR.NotifyCombatantDeath(combatant);
 
             // Player died
             Debug.Log($"{combatant.name} has died.");

@@ -77,12 +77,12 @@ namespace SystemMiami
         //===============================
         private void OnEnable()
         {
-            GAME.MGR.CombatantDeath += OnCombatantDeath;
+            GAME.MGR.CombatantDying += OnCombatantDying;
         }
 
         private void OnDisable()
         {
-            GAME.MGR.CombatantDeath -= OnCombatantDeath;
+            GAME.MGR.CombatantDying -= OnCombatantDying;
         }
 
         private void Start()
@@ -267,9 +267,9 @@ namespace SystemMiami
             Debug.Log($"Spawning {enemyCombatant}");
         }
 
-        public void OnCombatantDeath(Combatant combatant)
+        public void OnCombatantDying(Combatant combatant)
         {
-            Debug.Log("Combatant Death called" + combatant.name + " has died");
+            Debug.Log($"{name} responding to CombatantDying({combatant.name}).");
 
             if (combatant is EnemyCombatant && --enemiesRemaining == 0)
             {
@@ -289,8 +289,7 @@ namespace SystemMiami
 
         protected void OnDungeonFailed()
         {
-            combatants.Where(c => c != null).ToList().ForEach(c => c.gameObject.SetActive(false));
-            DungeonFailed.Invoke();
+            DungeonFailed?.Invoke();
         }
         //===============================
         #endregion // ^Spawning^

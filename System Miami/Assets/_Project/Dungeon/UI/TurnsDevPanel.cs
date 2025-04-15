@@ -20,21 +20,27 @@ namespace SystemMiami
 
         #region Private
         private string _promptToDisplay;
+        private bool _promptsEnabled;
+        private bool _overrideActionPrompt;
         #endregion
 
         #region Properties
-        private Combatant turnOwner
-        {
-            get
-            {
-                return TurnManager.MGR.CurrentTurnOwner;
-            }
-        }
-        #endregion
+        private Combatant turnOwner => TurnManager.MGR?.CurrentTurnOwner;
 
-        #region Bools
-        private bool _promptsEnabled;
-        private bool _overrideActionPrompt;
+        private string turnOwnerName => turnOwner?.name ?? "None";
+
+        private Color turnOwnerColor => turnOwner?.ColorTag ?? Color.black;
+
+        private Phase currentPhase => turnOwner?.CurrentPhase ?? Phase.None;
+
+        private Color phaseColor => currentPhase switch
+        {
+            Phase.Movement  => _movementColor,
+            Phase.Action    => _actionColor,
+            Phase.None      => Color.black,
+            _               => Color.black
+        };
+
         #endregion
 
         public void SetMovementPrompt(string prompt)
@@ -46,7 +52,7 @@ namespace SystemMiami
         #region Unity
         private void Start() 
         {
-            _panelLabel.SetForeground("Turn Indicator Dev Panel");
+            _panelLabel.SetForeground("Turn Indicator");
             _combatantField.Label.SetForeground("Combatant:");
             _phaseField.Label.SetForeground("Phase:");
         }
@@ -64,23 +70,13 @@ namespace SystemMiami
         #region Panel Updates
         private void updateCombatantPanel()
         {
-            _combatantField.Value.SetForeground($"{turnOwner.name}");
-            _combatantField.Value.SetForeground(turnOwner.ColorTag);
+            _combatantField.Value.SetForeground($"{turnOwnerName}");
+            _combatantField.Value.SetForeground(turnOwnerColor);
         }
 
         private void updatePhasePanel()
         {
-            Phase currentPhase = turnOwner == null ? Phase.None : turnOwner.CurrentPhase;
-
-            Color phaseColor = currentPhase switch
-            {
-                Phase.Movement => _movementColor,
-                Phase.Action => _actionColor,
-                Phase.None => Color.black,
-                _ => Color.black
-            };
-
-            _phaseField.Value.SetForeground($"{turnOwner.CurrentPhase}");
+            _phaseField.Value.SetForeground($"{currentPhase}");
             _phaseField.Value.SetForeground(phaseColor);
         }
         #endregion

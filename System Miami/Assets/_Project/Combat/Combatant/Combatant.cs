@@ -122,7 +122,7 @@ namespace SystemMiami.CombatSystem
 
         public bool IsMyTurn { get; set; }
         public bool ReadyToStart { get { return currentState is Idle; } }
-        public Phase CurrentPhase { get { return currentState.phase; } }
+        public Phase CurrentPhase { get { return currentState?.phase ?? Phase.None; } }
 
         // Stats, Status, Resources
         public Stats Stats { get { return _stats; } }
@@ -222,8 +222,8 @@ namespace SystemMiami.CombatSystem
             UI.MGR.CombatantLoadoutCreated -= HandleLoadoutCreated;
             if (TurnManager.MGR != null)
             {
-                TurnManager.MGR.DungeonCleared += HandleDungeonCleared;
-                TurnManager.MGR.DungeonFailed += HandleDungeonFailed;
+                TurnManager.MGR.DungeonCleared -= HandleDungeonCleared;
+                TurnManager.MGR.DungeonFailed -= HandleDungeonFailed;
             }
             currentState = null;
         }
@@ -839,7 +839,10 @@ namespace SystemMiami.CombatSystem
 
         protected virtual void HandleDungeonFailed()
         {
-            currentState.SwitchState(Factory.Idle());
+            if (currentState is not Dying && currentState is not Dead)
+            {
+                currentState.SwitchState(Factory.Idle());
+            }
         }
     }
 

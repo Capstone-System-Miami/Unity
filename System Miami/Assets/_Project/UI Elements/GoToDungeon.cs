@@ -6,7 +6,7 @@ namespace SystemMiami.ui
 {
     public class GoToDungeon : MonoBehaviour
     {
-        DungeonData storedData;
+        private DungeonData storedData;
 
         public void Go(bool useStoredData)
         {

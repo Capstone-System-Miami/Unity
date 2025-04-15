@@ -23,11 +23,11 @@ namespace SystemMiami
             }
             activeQuest = quest;
             questPanel.Initialize(activeQuest);
-            GAME.MGR.CombatantDeath -= HandleCombatantDeath;
-            GAME.MGR.CombatantDeath += HandleCombatantDeath;
+            GAME.MGR.CombatantDying -= HandleCombatantDying;
+            GAME.MGR.CombatantDying += HandleCombatantDying;
         }
 
-        private void HandleCombatantDeath(Combatant obj)
+        private void HandleCombatantDying(Combatant obj)
         {
             Debug.Log($"Combatant died. Object layer: {obj.gameObject.layer}");
             Debug.Log($"Target enemy layer: {activeQuest.targetEnemyLayer.value}");
@@ -59,7 +59,7 @@ namespace SystemMiami
             activeQuest.Reset();
             GiveQuestRewards();
             Debug.Log($"Congratulations! You completed {activeQuest.questName}. Reward: {activeQuest.rewardEXP} EXP, {activeQuest.rewardCurrency} Currency.");
-            GAME.MGR.CombatantDeath -= HandleCombatantDeath;
+            GAME.MGR.CombatantDying -= HandleCombatantDying;
         }
 
         public void GiveQuestRewards()

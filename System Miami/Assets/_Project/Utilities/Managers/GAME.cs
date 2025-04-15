@@ -37,7 +37,7 @@ namespace SystemMiami.Management
 
         [field: SerializeField] public bool NoNpcs { get; private set; }
 
-        public Action<Combatant> CombatantDeath;
+        public Action<Combatant> CombatantDying;
         public event Action<Combatant> damageTaken;
 
         protected override void Awake()
@@ -150,9 +150,9 @@ namespace SystemMiami.Management
             return true;
         }
 
-        public void NotifyCombatantDeath(Combatant combatant)
+        public void NotifyCombatantDying(Combatant combatant)
         {
-            CombatantDeath.Invoke(combatant);
+            CombatantDying.Invoke(combatant);
         }
 
         public void NotifyDamageTaken(Combatant combatant)

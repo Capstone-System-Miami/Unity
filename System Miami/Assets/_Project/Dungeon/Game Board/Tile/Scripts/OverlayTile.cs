@@ -126,12 +126,12 @@ namespace SystemMiami
         
         private void OnEnable()
         {
-            GAME.MGR.CombatantDeath += HandleCombatantDeath;
+            GAME.MGR.CombatantDying += HandleCombatantDying;
         }
 
         private void OnDisable()
         {
-            GAME.MGR.CombatantDeath -= HandleCombatantDeath;
+            GAME.MGR.CombatantDying -= HandleCombatantDying;
         }
 
         private void Start()
@@ -250,7 +250,7 @@ namespace SystemMiami
             occupant = null;
         }
         
-        private void HandleCombatantDeath(Combatant deadCombatant)
+        private void HandleCombatantDying(Combatant deadCombatant)
         {
             if (deadCombatant == occupant as Combatant)
             {

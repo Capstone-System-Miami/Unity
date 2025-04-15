@@ -1,4 +1,5 @@
 using SystemMiami.CombatSystem;
+using SystemMiami.Management;
 using SystemMiami.Utilities;
 using UnityEngine;
 
@@ -16,6 +17,7 @@ namespace SystemMiami.CombatRefactor
         public override void OnEnter()
         {
             base.OnEnter();
+            GAME.MGR.NotifyCombatantDying(combatant);
 
             deathTimer = new(combatant, 0.1f);
             readyToDie.Add( () => deathTimer.IsStarted );

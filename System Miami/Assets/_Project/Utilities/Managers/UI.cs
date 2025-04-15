@@ -39,25 +39,22 @@ namespace SystemMiami.Management
 
         private void OnEnable()
         {
-            GAME.MGR.CombatantDeath += HandleCombatantDeath;
+            GAME.MGR.CombatantDying += HandleCombatantDying;
 
-            IEnumerator fucku()
+            IEnumerator WaitForTurnManager()
             {
                 yield return new WaitUntil( () => TurnManager.MGR != null );
                 TurnManager.MGR.DungeonCleared += HandleDungeonCleared;
                 TurnManager.MGR.DungeonFailed += HandleDungeonFailed;
             }
 
-            StartCoroutine(fucku());
+            StartCoroutine(WaitForTurnManager());
         }
 
 
         private void OnDisable()
         {
-            GAME.MGR.CombatantDeath -= HandleCombatantDeath;
-
-            TurnManager.MGR.DungeonCleared -= HandleDungeonCleared;
-            TurnManager.MGR.DungeonFailed -= HandleDungeonFailed;
+            GAME.MGR.CombatantDying -= HandleCombatantDying;
         }
 
 
@@ -168,7 +165,7 @@ namespace SystemMiami.Management
             consumablesBar.FillWith(loadout.Consumables.Cast<CombatAction>().ToList());
         }
 
-        private void HandleCombatantDeath(Combatant combatant)
+        private void HandleCombatantDying(Combatant combatant)
         {
             if (combatant is EnemyCombatant e && e.IsBoss)
             {
@@ -189,6 +186,9 @@ namespace SystemMiami.Management
 
             // just in case the singleton sticks around.
             bossDefeated = false;
+
+            TurnManager.MGR.DungeonCleared -= HandleDungeonCleared;
+            TurnManager.MGR.DungeonFailed -= HandleDungeonFailed;
         }
 
         private void HandleDungeonFailed()
