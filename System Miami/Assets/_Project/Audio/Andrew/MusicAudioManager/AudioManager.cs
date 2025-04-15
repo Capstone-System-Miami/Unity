@@ -3,6 +3,8 @@ using System;
 using System.Collections;
 using System.Linq;
 using SystemMiami.Management;
+using UnityEngine.SceneManagement;
+using UnityEngine.Assertions;
 
 namespace SystemMiami
 {
@@ -11,19 +13,64 @@ namespace SystemMiami
         Sword,
         Magic,
         Hurt,
-        Foorstep
+        Footstep
     }
 
     public class AudioManager : Singleton<AudioManager>
     {
+        [Header("Sound FX")]
         public Sound[] sounds;
+
+        [Header("Music")]
+        public AudioSource musicSource;
+        public Music mainMenu;
+        public Music characterSelect;
+        public Music neighborhood;
+        public Music dungeonLow;
+        public Music dungeonHigh;
+
+        [Space(10)]
+        public bool overrideBuildIndex;
+        public Music overrideWith;
+
+        private Music[] allMusic;
+        private Music[] sceneMusic;
 
         protected override void Awake()
         {
             base.Awake();
 
-            foreach (Sound sound in sounds)
+            // If you need anything to happen in here,
+            // just make sure you do it after the call to the base
+            // version of awake above.
+
+            musicSource = CreateNewMusicSource();
+        }
+
+        private void OnEnable()
+        {
+            // NOTE:
+            // This array must be created before HandleSceneLoaded is called.
+            allMusic = new Music[] {
+                mainMenu,
+                characterSelect,
+                neighborhood,
+                dungeonLow,
+                dungeonHigh
+            };
+
+            SceneManager.sceneLoaded += HandleSceneLoaded;
+        }
+        private void OnDisable()
+        {
+            SceneManager.sceneLoaded -= HandleSceneLoaded;
+        }
+
+        private void Start()
+        {
+            if (overrideBuildIndex)
             {
+                PlayMusic(overrideWith);
             }
         }
 
@@ -56,20 +103,22 @@ namespace SystemMiami
             source.pitch = sound.pitch;
             source.loop = sound.loop;
 
-            Instantiate(sourceObj);
             source.Play();
 
             // Define an action to perform in the future.
-            // In this case, the action will be to destroy the object
-            // we just created.
-            Action onClipFinished = () => Destroy(source.gameObject);
+            Action onClipFinished = () => {
+                // Anything we want to have happen when the 
+                // AudioSource is not playing anything anymore:
+                Debug.Log($"{sound.name}'s source is no longer playing anything.");
+                Destroy(source.gameObject);
+            };
 
             // We'll wait until the clip is finished, and then execute the
             // action we just defined.
-            StartCoroutine(DoWhenOver(source, onClipFinished));
+            StartCoroutine( DoWhenOver(source, onClipFinished) );
         }
 
-        public void PlaySound(string name)
+        public void PlaySound(string soundName)
         {
             Sound s = Array.Find(sounds, sound => sound.name == name);
             if (s == null)
@@ -77,12 +126,54 @@ namespace SystemMiami
                 Debug.LogWarning("Sound: " + name + " Not FOUND");
                 return;
             }
+
+            PlaySound(s);
+        }
+
+        public void PlayMusic(Sound music)
+        {
+            if (musicSource.isPlaying)
+            {
+                Destroy(musicSource.gameObject);
+                musicSource = CreateNewMusicSource();
+            }
+
+            musicSource.clip = music.clip;
+            musicSource.volume = music.volume;
+            musicSource.pitch = music.pitch;
+            musicSource.loop = music.loop;
+
+            musicSource.Play();
+        }
+
+        protected virtual void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            sceneMusic = allMusic.Where(music => music.BuildIndex == scene.buildIndex).ToArray();
+
+            if (overrideBuildIndex) { return; }
+
+            Assert.IsNotNull(sceneMusic, $"{name}'s sceneMusic was null. Check HandleSceneLoaded()");
+            Assert.IsTrue(sceneMusic.Length > 0, $"{name}'s sceneMusic had nothing in it. Check HandleSceneLoaded()");
+
+            if (musicSource != null && musicSource.isPlaying)
+            {
+                if (musicSource.clip != sceneMusic[0].clip)
+                {
+                    PlayMusic(sceneMusic[0]);
+                }
+            }
         }
 
         private IEnumerator DoWhenOver(AudioSource sourceToCheck, Action onClipOver)
         {
             yield return new WaitUntil( () => !sourceToCheck.isPlaying );
             onClipOver.Invoke();
+        }
+
+        private AudioSource CreateNewMusicSource()
+        {
+            GameObject sourceObj = new("Music");
+            return sourceObj.AddComponent<AudioSource>();
         }
     }
 }

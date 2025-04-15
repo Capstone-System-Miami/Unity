@@ -43,15 +43,15 @@ namespace SystemMiami
 // Why is this inside a preprocessor directive?
 // This means we don't want this to happen in actual builds.
 #if UNITY_EDITOR
-        private void OnEnable()
-        {
-            string[] names = Enum.GetNames(typeof(SoundType));
-            Array.Resize(ref soundList, names.Length);
-            for (int i = 0; i < soundList.Length; i++)
-            {
-                soundList[i].name = names[i];
-            }
-        }
+        // private void OnEnable()
+        // {
+        //     string[] names = Enum.GetNames(typeof(SoundType));
+        //     Array.Resize(ref soundList, names.Length);
+        //     for (int i = 0; i < soundList.Length; i++)
+        //     {
+        //         soundList[i].name = names[i];
+        //     }
+        // }
 #endif
     }
 
