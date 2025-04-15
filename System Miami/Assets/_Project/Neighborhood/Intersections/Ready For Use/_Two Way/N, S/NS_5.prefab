@@ -3257,6 +3257,7 @@ GameObject:
   - component: {fileID: 2673432827625067552}
   - component: {fileID: 2111833620992454797}
   - component: {fileID: 2958836421608137689}
+  - component: {fileID: 406971374688595156}
   m_Layer: 0
   m_Name: Building 2
   m_TagString: Untagged
@@ -4820,6 +4821,31 @@ TilemapRenderer:
   m_Mode: 1
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
+--- !u!114 &406971374688595156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3185877518980793724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf824d918f252834ea9b3dea34a48d8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allTilemaps:
+  - {fileID: 2111833620992454797}
+  - {fileID: 6376183897187014705}
+  - {fileID: 3606272800715939651}
+  - {fileID: 6139835451306713631}
+  allLights:
+  - {fileID: 6928165817832117861}
+  - {fileID: 6632455118728255817}
+  - {fileID: 22106759995666414}
+  - {fileID: 4900674335448517588}
+  - {fileID: 8544475681984688047}
+  TRIGGER_transparent: 0
+  TRIGGER_opaque: 0
 --- !u!1 &3504178874267081772
 GameObject:
   m_ObjectHideFlags: 0
@@ -10299,6 +10325,7 @@ GameObject:
   - component: {fileID: 7948538028004875198}
   - component: {fileID: 4732741986971278591}
   - component: {fileID: 838145277539675537}
+  - component: {fileID: 7047992495278086728}
   m_Layer: 0
   m_Name: Building 1
   m_TagString: Untagged
@@ -20645,6 +20672,28 @@ TilemapRenderer:
   m_Mode: 1
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
+--- !u!114 &7047992495278086728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3907913375608780124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf824d918f252834ea9b3dea34a48d8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allTilemaps:
+  - {fileID: 4732741986971278591}
+  - {fileID: 5229395475552731448}
+  allLights:
+  - {fileID: 136895266251199256}
+  - {fileID: 1137202227957575636}
+  - {fileID: 6908551364367334735}
+  - {fileID: 1885445860288668855}
+  TRIGGER_transparent: 0
+  TRIGGER_opaque: 0
 --- !u!1 &4335003873567016755
 GameObject:
   m_ObjectHideFlags: 0
@@ -42348,6 +42397,7 @@ GameObject:
   - component: {fileID: 4280373118209241833}
   - component: {fileID: 5095190143909746303}
   - component: {fileID: 3612083277584185165}
+  - component: {fileID: 8943686476657646386}
   m_Layer: 0
   m_Name: WALL
   m_TagString: Untagged
@@ -44582,6 +44632,24 @@ TilemapRenderer:
   m_Mode: 1
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
+--- !u!114 &8943686476657646386
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8012802928712918229}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf824d918f252834ea9b3dea34a48d8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allTilemaps:
+  - {fileID: 5095190143909746303}
+  - {fileID: 7028988754182266573}
+  allLights: []
+  TRIGGER_transparent: 0
+  TRIGGER_opaque: 0
 --- !u!1 &8429729054277030256
 GameObject:
   m_ObjectHideFlags: 0
