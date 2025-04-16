@@ -25,7 +25,6 @@ namespace SystemMiami
         [SerializeField] private ItemGrid loadoutGridMagical;
         [SerializeField] private ItemGrid loadoutGridConsumable;
 
-        
         [SerializeField] private ItemGrid dungeonRewardsGrid;
 
         [SerializeField] private TextMeshProUGUI textExpReward;
@@ -126,7 +125,7 @@ namespace SystemMiami
         public void HandleSlotDoubleClick(InventoryItemSlot slot)
         {
             ItemData dataToMove = slot.ClearSlot();
-            if (playerInventory.AllValidInventoryItems.Contains(dataToMove.ID))
+            if (playerInventory.AllInventoryItems.Contains(dataToMove.ID))
             {
                 MoveItemToloadout(dataToMove.ID);
             }
