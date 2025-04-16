@@ -55,6 +55,7 @@ namespace SystemMiami.CombatSystem
             this.target = target;
             this.amount = amount;
             this.perTurn = perTurn;
+            this.durationTurns = durationTurns;
         }
 
         public void Preview()

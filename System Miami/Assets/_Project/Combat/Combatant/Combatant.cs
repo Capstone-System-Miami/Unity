@@ -531,7 +531,17 @@ namespace SystemMiami.CombatSystem
             if (perTurn)
             {
                 hasResourceEffect = true;
-                restoreResourceEffects.Add(type, durationTurns);
+
+                //making sure that you cant reduce duration with a shorter duration attack
+                if (restoreResourceEffects.ContainsKey(type))
+                {
+                    restoreResourceEffects[type] = Math.Max(restoreResourceEffects[type], durationTurns);
+                }
+                else
+                {
+                    restoreResourceEffects.Add(type, durationTurns);
+                }
+
                 if (type == ResourceType.Health)
                 {
                     _endOfTurnHeal += amount;
@@ -544,6 +554,8 @@ namespace SystemMiami.CombatSystem
                 {
                     _endOfTurnMana += amount;
                 }
+
+                Debug.Log($"{name}: Added {type} restore effect with duration {durationTurns}. Current value: {restoreResourceEffects[type]}");
             }
             else
             {

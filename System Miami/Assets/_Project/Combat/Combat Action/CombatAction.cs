@@ -145,7 +145,7 @@ namespace SystemMiami.CombatRefactor
                 }
             }
 
-            Debug.Log("Player found in targets FALSE", User);
+          //  Debug.Log("Player found in targets FALSE", User);
             return false;
         }
 

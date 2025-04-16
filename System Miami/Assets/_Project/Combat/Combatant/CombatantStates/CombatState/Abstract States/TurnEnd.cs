@@ -34,6 +34,7 @@ namespace SystemMiami.CombatRefactor
         public override void OnExit()
         {
             combatant.IsMyTurn = false;
+            Debug.Log($"{combatant.name} health is {combatant.GetCurrentHealth()} at the end of its turn.");
         }
 
         // Decision
