@@ -19,6 +19,16 @@ namespace SystemMiami.Management
         [SerializeField] string _neighborhoodSceneName;
         [SerializeField] string characterSelectSceneName;
 
+        [SerializeField] public string DungeonSceneName {
+            get { return _dungeonSceneName; }
+        }
+        [SerializeField] public string NeighborhoodSceneName {
+            get { return _neighborhoodSceneName; }
+        }
+        [SerializeField] public string CharacterSelectSceneName {
+            get { return characterSelectSceneName; }
+        }
+
         [Tooltip(
             "This should really only be checked on while " +
             "debugging / demoing. In game, we want each entrance " +

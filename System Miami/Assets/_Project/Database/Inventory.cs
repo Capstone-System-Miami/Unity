@@ -1,7 +1,9 @@
+using SystemMiami.Management;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.SceneManagement;
 
 namespace SystemMiami.InventorySystem
 {
@@ -18,6 +20,8 @@ namespace SystemMiami.InventorySystem
 
         [SerializeField] private int credits;
 
+        [field: SerializeField, ReadOnly] public bool subbedToDungeon { get; private set; }
+
         public List<int> PhysicalAbilityIDs { get => physicalAbilityIDs; private set => physicalAbilityIDs = value; }
         public List<int> MagicalAbilityIDs { get => magicalAbilityIDs; private set => magicalAbilityIDs = value; }
         public List<int> ConsumableIDs { get => consumableIDs; private set => consumableIDs = value; }
@@ -29,7 +33,7 @@ namespace SystemMiami.InventorySystem
         public List<int> EquippedEquipmentModIDs { get => equippedEquipmentModIDs; private set => equippedEquipmentModIDs = value; }
 
         public bool TestMode;
-        public List<int> AllValidInventoryItems
+        public List<int> AllInventoryItems
         {
             get
             {
@@ -42,16 +46,90 @@ namespace SystemMiami.InventorySystem
             }
         }
 
+        public List<int> AllQuickslotItems
+        {
+            get
+            {
+                List<int> result = new();
+                result.AddRange(quickslotPhysicalAbilityIDs);
+                result.AddRange(quickslotMagicalAbilityIDs);
+                result.AddRange(quickslotConsumableIDs);
+                result.AddRange(equippedEquipmentModIDs);
+                return result;
+            }
+        }
+
         public int Credits { get => credits; private set => credits = value; }
 
         public event System.Action OnInventoryChanged;
 
 
-        private void Update()
+        #region Unity Methods
+        // ====================================================================
+        private void OnEnable()
         {
-            if (Input.GetKeyDown(KeyCode.G)) { AddCredits(100); } //  Test adding credits
+            SceneManager.sceneLoaded += HandleSceneLoaded;
         }
 
+        private void OnDisable()
+        {
+            SceneManager.sceneLoaded += HandleSceneLoaded;
+        }
+
+        private void Update()
+        {
+            //  Test adding credits
+            if (Debug.isDebugBuild && Input.GetKeyDown(KeyCode.G))
+            {
+                AddCredits(100);
+            }
+        }
+        #endregion // Unity Methods ===========================================
+
+
+        #region Event Subscriptions
+        // ====================================================================
+        private void SetTurnManagerSubscription(bool subscribe)
+        {
+            if (subscribe)
+            {
+                subbedToDungeon = true;
+                TurnManager.MGR.DungeonFailed += HandleDungeonComplete;
+                TurnManager.MGR.DungeonFailed += HandleDungeonFailed;
+            }
+            else
+            {
+                subbedToDungeon = false;
+                TurnManager.MGR.DungeonFailed -= HandleDungeonComplete;
+                TurnManager.MGR.DungeonFailed -= HandleDungeonFailed;
+            }
+        }
+        #endregion // Event Subscriptions =====================================
+
+
+        #region Event Responses
+        // ====================================================================
+        private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            if (scene.name == GAME.MGR.DungeonSceneName && !subbedToDungeon)
+            {
+                SetTurnManagerSubscription(true);
+            }
+        }
+
+        private void HandleDungeonComplete()
+        {
+            SetTurnManagerSubscription(false);
+
+            // TODO: Convert quickslot data back to normal inventory.
+        }
+        private void HandleDungeonFailed()
+        {
+            SetTurnManagerSubscription(false);
+
+            // TODO: Convert quickslot data back to normal inventory.
+        }
+        #endregion // Event Responses ===========================================
         public void AddToInventory(int ID)
         {
             switch (Database.MGR.GetDataType(ID))

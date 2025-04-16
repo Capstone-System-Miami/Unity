@@ -175,7 +175,7 @@ namespace SystemMiami.Dungeons
             List<int> rewardItemIDs = rewards.Select(r => r.ID).ToList();
             for (int i = 0; i < rewards.Count; i++)
             {
-                List<int> playerItemIDs = PlayerManager.MGR.inventory.AllValidInventoryItems;
+                List<int> playerItemIDs = PlayerManager.MGR.inventory.AllInventoryItems;
                 rewards = rewards.Where(reward => !playerItemIDs.Contains(reward.ID)).ToList();
                 rewardItemIDs = rewardItemIDs.Distinct().ToList();
             }
