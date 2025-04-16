@@ -69,6 +69,8 @@ namespace SystemMiami
             }
         }
 
+        private bool STOP = false;
+
         public event Action DungeonCleared;
         public event Action DungeonFailed;
         public Action<Phase> NewTurnPhase;
@@ -187,7 +189,7 @@ namespace SystemMiami
 
                     CurrentTurnOwner = combatant;
                     yield return new WaitForEndOfFrame();
-                    yield return new WaitUntil(() => !combatant.IsMyTurn);
+                    yield return new WaitUntil(() => combatant == null || !combatant.IsMyTurn || STOP);
                 }
 
                 yield return null;
@@ -283,12 +285,15 @@ namespace SystemMiami
 
         protected void OnDungeonCleared()
         {
-            combatants.Where(c => c != null).ToList().ForEach(c => c.gameObject.SetActive(false));
+            STOP = true;
+            // combatants.Where(c => c != null && c is not PlayerCombatant).ToList().ForEach(c => c.gameObject.SetActive(false));
             DungeonCleared?.Invoke();
         }
 
         protected void OnDungeonFailed()
         {
+            STOP = true;
+            combatants.Where(c => c != null && c is not PlayerCombatant).ToList().ForEach(c => c.gameObject.SetActive(false));
             DungeonFailed?.Invoke();
         }
         //===============================
