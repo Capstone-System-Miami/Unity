@@ -169,6 +169,8 @@ namespace SystemMiami.ui
 
         public void OnPointerExit(PointerEventData eventData)
         {
+            PopUpHandler.MGR.ClosePopup();
+
             if (itemData.failbit) { return; }
 
             Color toSet = IsEnabled
@@ -177,8 +179,6 @@ namespace SystemMiami.ui
 
             // could set a highlight color
             spriteBox.SetBackground(toSet);
-
-            PopUpHandler.MGR.ClosePopup();
         }
 
         public void OnPointerDown(PointerEventData eventData)

@@ -75,15 +75,18 @@ namespace SystemMiami.ui
             }
         }
 
-        private void OnEnable()
-        {
-            PlayerManager.MGR.inventory.InventoryChanged += HandleInventoryChanged;
-        }
-
-        private void OnDisable()
-        {
-            PlayerManager.MGR.inventory.InventoryChanged -= HandleInventoryChanged;
-        }
+        /// NOTE: This is a subscription to <see cref="Inventory.InventoryChanged">,
+        /// which doesn't do anything right now.
+        ///
+        // private void OnEnable()
+        // {
+        //     PlayerManager.MGR.inventory.InventoryChanged += HandleInventoryChanged;
+        // }
+        //
+        // private void OnDisable()
+        // {
+        //     PlayerManager.MGR.inventory.InventoryChanged -= HandleInventoryChanged;
+        // }
 
         private void Start()
         {

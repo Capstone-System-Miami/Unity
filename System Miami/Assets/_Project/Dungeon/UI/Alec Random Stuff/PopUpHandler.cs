@@ -108,7 +108,7 @@ namespace SystemMiami.ui
 
             // Set the text in the popup
             BindText();
-        }        
+        }
 
         public void ClosePopup()
         {
