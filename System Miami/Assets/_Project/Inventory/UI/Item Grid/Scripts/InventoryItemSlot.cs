@@ -1,14 +1,13 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 using UnityEngine.EventSystems;
 using SystemMiami.Utilities;
 
 namespace SystemMiami.ui
 {
     [RequireComponent(typeof(RectTransform))]
-    public class InventoryItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
+    public class InventoryItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
     {
         [SerializeField] private dbug log;
 
@@ -18,11 +17,10 @@ namespace SystemMiami.ui
         [SerializeField] private HighlightColorSet enabledColors;
         [SerializeField] private HighlightColorSet disabledColors;
 
-        
         [Header("Internal Refs")]
         [SerializeField] private SpriteBox spriteBox;
 
-        [SerializeField]private ItemData itemData;
+        [SerializeField] private ItemData itemData;
 
         private Image fallback;
         private bool usingFallback = false;
@@ -38,11 +36,13 @@ namespace SystemMiami.ui
         private int clicks;
         public bool doubleClick;
 
+        [field: SerializeField, ReadOnly] public int ItemCount { get; private set; }
+
         public event Action<InventoryItemSlot> slotDoubleClicked;
+
         private void Awake()
         {
             RT = GetComponent<RectTransform>();
-            
             if (spriteBox == null && !TryGetComponent(out spriteBox))
             {
                 foreach (Transform child in transform)
@@ -72,20 +72,31 @@ namespace SystemMiami.ui
                         $"anywhere on {name}");
                 }
             }
-            
-            
-        }
-
-        public bool TryFill(int itemID)
-        {
-            itemData = Database.MGR.GetDataWithJustID(itemID);
-            Refresh();
-            return !itemData.failbit;
         }
 
         public bool TryFill(ItemData data)
         {
-            itemData = data;
+            return TryFill(data.ID);
+        }
+
+        public bool TryFill(int itemID)
+        {
+            if (itemData.ID == itemID)
+            {
+                // TODO: Uncomment the rest of this
+                // if we can implement UI for ItemCount.
+                //
+                // if (!itemData.IsStackable)
+                // {
+                return false;
+                // }
+                // else
+                // {
+                //     ItemCount++;
+                // }
+            }
+
+            itemData = Database.MGR.GetDataWithJustID(itemID);
             Refresh();
             return !itemData.failbit;
         }
@@ -108,11 +119,10 @@ namespace SystemMiami.ui
             currentItemStr = "None";
             return itemCleared;
         }
-        
 
         private void Refresh()
         {
-            if (itemData.failbit) { log.error("Failed to get item data");  return; }
+            if (itemData.failbit) { log.error("Failed to get item data"); return; }
 
             if (!usingFallback)
             {
@@ -181,16 +191,20 @@ namespace SystemMiami.ui
                 clicks = 0;
                 clickTime = 0;
                 slotDoubleClicked?.Invoke(this);
-                Debug.Log("Double CLick: "+this.GetComponent<RectTransform>().name);
-
+                Debug.Log("Double Click: " + this.GetComponent<RectTransform>().name);
             }
             else if (clicks > 2 || Time.time - clickTime > 1)
             {
                 clicks = 0;
-                
             }
-            
-           
+        }
+
+        public void OnPointerUp(PointerEventData eventData)
+        {
+            if (doubleClick)
+            {
+                PopUpHandler.MGR.ClosePopup();
+            }
         }
     }
 }

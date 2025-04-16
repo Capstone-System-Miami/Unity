@@ -10,7 +10,7 @@ namespace SystemMiami
     public struct ItemData
     {
         public static readonly ItemData FailedData = new(
-            0, null, "", "", 0, 0, 0, 0);
+            0, null, "", "", 0, 0, 0, 0, false);
         
         public int ID;
         public Sprite Icon;
@@ -21,6 +21,7 @@ namespace SystemMiami
         public int MinLevel;
         public int MaxLevel;
         public Rarity rarity;
+        [field: SerializeField] public bool IsStackable { get; private set; }
 
         public readonly bool failbit;
        
@@ -32,7 +33,8 @@ namespace SystemMiami
             ItemType itemType,
             Rarity rarity,
             int minLevel,
-            int maxLevel)
+            int maxLevel,
+            bool isStackable)
         {
             failbit = (id == 0);
 
@@ -41,6 +43,7 @@ namespace SystemMiami
             Name = name;
             Description = description;
             this.itemType = itemType;
+            IsStackable = isStackable;
 
             // TODO:
             // Is it intentional that none of these vvvv

@@ -1,4 +1,5 @@
 using SystemMiami.Management;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -41,8 +42,7 @@ namespace SystemMiami.InventorySystem
                 allIDs.AddRange(PhysicalAbilityIDs);
                 allIDs.AddRange(MagicalAbilityIDs);
                 allIDs.AddRange(ConsumableIDs);
-
-                return allIDs ?? new();
+                return allIDs;
             }
         }
 
@@ -50,18 +50,26 @@ namespace SystemMiami.InventorySystem
         {
             get
             {
-                List<int> result = new();
-                result.AddRange(quickslotPhysicalAbilityIDs);
-                result.AddRange(quickslotMagicalAbilityIDs);
-                result.AddRange(quickslotConsumableIDs);
-                result.AddRange(equippedEquipmentModIDs);
-                return result;
+                List<int> allQuickslotIDs = new();
+                allQuickslotIDs.AddRange(quickslotPhysicalAbilityIDs);
+                allQuickslotIDs.AddRange(quickslotMagicalAbilityIDs);
+                allQuickslotIDs.AddRange(quickslotConsumableIDs);
+                allQuickslotIDs.AddRange(equippedEquipmentModIDs);
+                return allQuickslotIDs;
             }
         }
 
         public int Credits { get => credits; private set => credits = value; }
 
         public event System.Action OnInventoryChanged;
+
+        /// <summary>
+        /// NOTE: This doesn't really mean anything right now.
+        /// If you want, feel free to check out <see cref="InventoryChangedEventArgs">
+        /// and figure out how to integrate it. There's something there, but I can't
+        /// get it rn.
+        ///
+        public event EventHandler<InventoryChangedEventArgs> InventoryChanged;
 
 
         #region Unity Methods
@@ -130,6 +138,8 @@ namespace SystemMiami.InventorySystem
             // TODO: Convert quickslot data back to normal inventory.
         }
         #endregion // Event Responses ===========================================
+
+
         public void AddToInventory(int ID)
         {
             switch (Database.MGR.GetDataType(ID))
@@ -222,7 +232,6 @@ namespace SystemMiami.InventorySystem
 
         public void InitializeStartingAbility(CharacterClassType characterClass)
         {
-            
             magicalAbilityIDs.Clear();
             physicalAbilityIDs.Clear();
             consumableIDs.Clear();
@@ -247,6 +256,7 @@ namespace SystemMiami.InventorySystem
 
                return;
             }
+
             int startingAbilityID = characterClass switch
             {
                 CharacterClassType.MAGE     => 2014,
@@ -255,11 +265,13 @@ namespace SystemMiami.InventorySystem
                 CharacterClassType.FIGHTER  => 1000,
                 _                           => 1000,
             };
+
             int startingResourcePotionID = characterClass switch
             {
                 CharacterClassType.MAGE => 3009,
                 _                       => 3006
             };
+
             int startingGeneralHealID = 2013;
             int startingGeneralShieldID = 1045;
             int startingHealPotionID = 3000;
