@@ -44,18 +44,20 @@ namespace SystemMiami.CombatSystem
         void ReceiveDamage(float amount,bool perTurn,int durationTurns);
     }
 
-    public class DamageCommand : ISubactionCommand
+    public class DamageCommand : ISubactionCommand , IPerTurn
     {
         public readonly ITargetable target;
         public readonly float amount;
         public readonly bool perTurn;
         public readonly int durationTurns;
+        public int RemainingTurns { get; private set; }
         public DamageCommand(ITargetable target, float amount, bool perTurn,int durationTurns)
         {
             this.target = target;
             this.amount = amount;
             this.perTurn = perTurn;
             this.durationTurns = durationTurns;
+            RemainingTurns = durationTurns;
         }
 
         public void Preview()
@@ -66,6 +68,7 @@ namespace SystemMiami.CombatSystem
         public void Execute()
         {
             target.GetDamageInterface()?.ReceiveDamage(amount,perTurn, durationTurns);
+            RemainingTurns--;
         }
     }
 }
