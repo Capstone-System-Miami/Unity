@@ -59,7 +59,7 @@ namespace SystemMiami.CombatSystem
         // private bool isStunned = false;
         private bool isInvisible = false;
         public bool hasResourceEffect = false;
-        public Dictionary<ResourceType, int> restoreResourceEffects = new();
+        public List<IPerTurn> resourceEffects = new();
         public float _endOfTurnDamage;
         public float _endOfTurnHeal;
         public float _endOfTurnStamina;
@@ -496,20 +496,13 @@ namespace SystemMiami.CombatSystem
 
         public void ReceiveDamage(float amount, bool perTurn, int durationTurns)
         {
-            if (perTurn)
-            {
-                hasResourceEffect = true;
-                _endOfTurnDamage -= amount;
-                restoreResourceEffects.Add(ResourceType.Health, durationTurns);
-            }
-            else
-            {
+            
                 Health.Lose(amount);
                 log.print(
                     $"{gameObject.name} took {amount} damage,\n" +
                     $"its Health is now {Health.Get()}");
                 GAME.MGR.NotifyDamageTaken(this);
-            }
+            
         }
         #endregion IDamageReciever
 
@@ -531,8 +524,7 @@ namespace SystemMiami.CombatSystem
             if (perTurn)
             {
                 hasResourceEffect = true;
-                restoreResourceEffects.Add(type, durationTurns);
-                if (type == ResourceType.Health)
+                /*if (type == ResourceType.Health)
                 {
                     _endOfTurnHeal += amount;
                 }
@@ -543,7 +535,9 @@ namespace SystemMiami.CombatSystem
                 else if (type == ResourceType.Mana)
                 {
                     _endOfTurnMana += amount;
-                }
+                }*/
+
+                Debug.Log($"{name}: Added {type} restore effect with duration {durationTurns}.");
             }
             else
             {
@@ -558,14 +552,7 @@ namespace SystemMiami.CombatSystem
                 // TODO:
                 // but why
                 case ResourceType.Health:
-                    if (amount > 0)
-                    {
-                        Health.Gain(amount);
-                    }
-                    else
-                    {
-                        Health.Lose(-amount);
-                    }
+                    Health.Gain(amount);
                     break;
                 case ResourceType.Stamina:
                     Stamina.Gain(amount);
@@ -747,7 +734,16 @@ namespace SystemMiami.CombatSystem
         {
             if (this is not ITargetable me) { return; }
 
-            me.TargetedBy.ForEach(subaction => subaction.Execute());
+            me.TargetedBy.ForEach(subaction =>
+            {
+                subaction.Execute();
+                if (subaction is IPerTurn effect)
+                {
+                    resourceEffects.Add(effect);
+                    log.print("Added a resource effect to " +
+                        $"{gameObject.name} with {subaction.GetType()}");
+                }
+            });
         }
 
         /// <inheritdoc />
@@ -882,3 +878,4 @@ namespace SystemMiami.CombatSystem
 
 
 }
+

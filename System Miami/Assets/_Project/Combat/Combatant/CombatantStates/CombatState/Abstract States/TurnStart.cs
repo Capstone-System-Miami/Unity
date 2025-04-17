@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using SystemMiami.CombatSystem;
 using SystemMiami.Utilities;
 using UnityEngine;
@@ -8,6 +9,7 @@ namespace SystemMiami.CombatRefactor
 {
     public abstract class TurnStart : CombatantState
     {
+        
         protected Conditions movementTileSelectionConditions = new();
         protected Conditions actionSelectionConditions = new();
 
@@ -19,6 +21,7 @@ namespace SystemMiami.CombatRefactor
             base.OnEnter();
             combatant.IsMyTurn = true;
             ResetTurn();
+           
         }
 
         public override void MakeDecision()
@@ -53,57 +56,24 @@ namespace SystemMiami.CombatRefactor
             Debug.Log($"{combatant.name}: ResetTurn called.");
            // Assert.IsNotNull(combatant.Loadout, $"{combatant.name}'s Loadout was null");
             combatant.Loadout.ReduceCooldowns();
-            GainResource();
             combatant.Stats.DecrementStatusEffectDurations();
-            DecrementRestoreResourceDurations();
+            ApplyResourceEffects();
             combatant.Speed = new Resource(combatant.Stats.GetStat(StatType.SPEED));
         }
-        private void GainResource()
+        
+        public void ApplyResourceEffects()
         {
-            if(combatant.hasResourceEffect)
+            if(combatant.resourceEffects == null || combatant.resourceEffects.Count == 0)
             {
-                if (combatant.restoreResourceEffects.ContainsKey(ResourceType.Health))
-                {
-                    combatant.GainResource(ResourceType.Health,combatant._endOfTurnHeal);
-                    combatant.GainResource(ResourceType.Health,combatant._endOfTurnDamage);
-                }
-                else if(combatant.restoreResourceEffects.ContainsKey(ResourceType.Mana))
-                {
-                    combatant.GainResource(ResourceType.Mana, combatant._endOfTurnMana);
-                }
-                else if (combatant.restoreResourceEffects.ContainsKey(ResourceType.Stamina))
-                {
-                    combatant.GainResource(ResourceType.Stamina, combatant._endOfTurnStamina);
-                }
-                
+                return;
             }
-        }
-        public void DecrementRestoreResourceDurations()
-        {
-            if (combatant.restoreResourceEffects.Count > 0 && combatant != null)
+            combatant.resourceEffects = combatant.resourceEffects.Where(effect => effect.RemainingTurns > 0).ToList();
+            combatant.resourceEffects.ForEach(effect =>
             {
-                List<ResourceType> keysToRemove = new List<ResourceType>();
-
-                // First pass: decide which keys need changing / removing
-                foreach (var kvp in combatant.restoreResourceEffects)
-                {
-                    if (kvp.Value > 0)
-                    {
-                        combatant.restoreResourceEffects[kvp.Key] = kvp.Value - 1;
-                    }
-                    if (kvp.Value <= 0)
-                    {
-                        keysToRemove.Add(kvp.Key);
-                    }
-                }
-
-                // Second pass: remove them outside the iteration
-                foreach (var key in keysToRemove)
-                {
-                    combatant.restoreResourceEffects.Remove(key);
-                }
-            }
-           
+               
+                effect.Execute();
+            });
         }
+
     }
 }

@@ -20,13 +20,14 @@ namespace SystemMiami.CombatSystem
         }
     }
 
-    public class RestoreResourceCommand : ISubactionCommand
+    public class RestoreResourceCommand : ISubactionCommand , IPerTurn
     {
         public readonly ITargetable reciever;
         public readonly float amount;
         public readonly ResourceType type;
         public readonly bool perTurn;
         public readonly int durationTurns;
+        public int RemainingTurns { get; private set; }
 
         public RestoreResourceCommand(ITargetable healReciever,ResourceType type, float amount, bool perTurn,int durationTurns)
         {
@@ -35,6 +36,7 @@ namespace SystemMiami.CombatSystem
             this.type = type;
             this.perTurn = perTurn;
             this.durationTurns = durationTurns;
+            RemainingTurns = durationTurns;
         }
 
         public void Preview()
@@ -45,7 +47,10 @@ namespace SystemMiami.CombatSystem
         public void Execute()
         {
             reciever.GetHealInterface()?.ReceiveResource(amount,type,perTurn, durationTurns);
+            RemainingTurns--;
         }
+
+       
     }
 
     /// <summary>
