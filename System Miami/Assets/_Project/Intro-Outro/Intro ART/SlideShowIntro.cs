@@ -10,7 +10,10 @@ namespace SystemMiami
 
         public Sprite[] slides;
         public Image slideshowImages;
+        public CanvasGroup canvasGroup;
         public float slideDuration = 3f;
+        public float fadeDuration = 1f;
+
 
         private int currentSlide = 0;
 
@@ -29,14 +32,35 @@ namespace SystemMiami
             while (currentSlide < slides.Length)
             {
                 slideshowImages.sprite = slides[currentSlide];
-                currentSlide++;
+
+                yield return StartCoroutine(Fade(0f, 1f)); // Start Fade
+
                 yield return new WaitForSeconds(slideDuration);
+
+                yield return StartCoroutine(Fade(1f, 0f)); // End fade
+
+                currentSlide++;
+
             }
 
 
             Debug.Log("SlideShow Finished");
         }
 
+        IEnumerator Fade(float from, float to)
+        {
+            float timer = 0f;
+            while (timer < fadeDuration)
+            {
+                timer += Time.deltaTime;
+                float alpha = Mathf.Lerp(from, to, timer / fadeDuration);
+                canvasGroup.alpha = alpha;
+                yield return null;
+
+            }
+            canvasGroup.alpha = to;
+
+        }
 
     }
 }
