@@ -58,18 +58,7 @@ namespace SystemMiami
 
         public Combatant CurrentTurnOwner { get; private set; }
 
-        public bool IsGameOver
-        {
-            get
-            {
-                if (playerCharacter == null) { return true; }
-                if (enemyCharacters.Count == 0) { return true; }
-
-                return false;
-            }
-        }
-
-        private bool STOP = false;
+        public bool IsGameOver { get; private set; }
 
         public event Action DungeonCleared;
         public event Action DungeonFailed;
@@ -129,15 +118,6 @@ namespace SystemMiami
 
             StartCoroutine(TurnSequence());
         }
-
-        private void Update()
-        {
-            if (CurrentTurnOwner == null)
-            { return; }
-
-            //Debug.Log($"Current Turn Owner: {CurrentTurnOwner.name}");
-        }
-
         //===============================
         #endregion // ^Unity Methods^
 
@@ -176,10 +156,9 @@ namespace SystemMiami
                 // combatants die.
                 combatants.RemoveAll(combatant => combatant == null);
 
+                // vv During player turn vv
                 foreach (Combatant combatant in combatants)
                 {
-                    if (combatant == null) { continue; }
-
                     // TODO this is a werid way of
                     // 'forcing' a state switch, as
                     // states should control their own
@@ -188,11 +167,17 @@ namespace SystemMiami
                     combatant.CurrentState.SwitchState(combatant.Factory.TurnStart());
 
                     CurrentTurnOwner = combatant;
-                    yield return new WaitForEndOfFrame();
-                    yield return new WaitUntil(() => combatant == null || !combatant.IsMyTurn || STOP);
-                }
 
-                yield return null;
+                    do
+                    {
+                        if (IsGameOver) { yield break; }
+                        if (combatant == null) { break; }
+
+                        yield return null;
+                    } while (combatant.IsMyTurn);
+
+                    yield return null;
+                }
             }
         }
 
@@ -281,18 +266,19 @@ namespace SystemMiami
             {
                 OnDungeonFailed();
             }
+
         }
 
         protected void OnDungeonCleared()
         {
-            STOP = true;
+            IsGameOver = true;
             // combatants.Where(c => c != null && c is not PlayerCombatant).ToList().ForEach(c => c.gameObject.SetActive(false));
             DungeonCleared?.Invoke();
         }
 
         protected void OnDungeonFailed()
         {
-            STOP = true;
+            IsGameOver = true;
             combatants.Where(c => c != null && c is not PlayerCombatant).ToList().ForEach(c => c.gameObject.SetActive(false));
             DungeonFailed?.Invoke();
         }

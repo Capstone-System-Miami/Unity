@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using SystemMiami.CombatSystem;
 using SystemMiami.Dungeons;
+using SystemMiami.Utilities;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
@@ -15,6 +16,9 @@ namespace SystemMiami.Management
 {
     public class GAME : Singleton<GAME>
     {
+        [Header("Debug")]
+        public dbug log;
+
         [SerializeField] string _dungeonSceneName;
         [SerializeField] string _neighborhoodSceneName;
         [SerializeField] string characterSelectSceneName;
@@ -36,7 +40,7 @@ namespace SystemMiami.Management
             "in case we want to preview rewards, enemies, etc."
             )]
         [SerializeField] private bool _regenerateDungeonDataOnInteract;
-        private DungeonData _dungeonData;
+        public DungeonData CurrentDungeonData { get; private set; }
 
         /// <summary>
         /// WARN: If this is on, DungeonEntrances will no longer disable after the player leaves them.
@@ -45,11 +49,16 @@ namespace SystemMiami.Management
         public bool RegenerateDungeonDataOnInteract { get { return _regenerateDungeonDataOnInteract; } }
 
         [field: SerializeField] public List<int> LevelThresholds { get; private set; }
-        [field: SerializeField] public List<DungeonPreset> Bosses { get; private set; }
+
+        [Header("Bosses")]
+        [SerializeField] private DungeonPreset[] bosses;
+        [field: SerializeField] public bool BossRecentlyDefeated { get; private set; }
 
         [field: SerializeField] public bool IgnoreObstacles { get; private set; }
 
         [field: SerializeField] public bool NoNpcs { get; private set; }
+
+        private Queue<DungeonPreset> bossDungeonQueue = new();
 
         public Action<Combatant> CombatantDying;
         public event Action<Combatant> damageTaken;
@@ -57,6 +66,66 @@ namespace SystemMiami.Management
         protected override void Awake()
         {
             base.Awake();
+
+            for (int i = 0; i < bosses?.Length; i++)
+            {
+                bossDungeonQueue.Enqueue(bosses[i]);
+            }
+        }
+
+        private void OnEnable()
+        {
+            SceneManager.sceneLoaded += HandleSceneLoaded;
+        }
+
+        private void OnDisable()
+        {
+            SceneManager.sceneLoaded -= HandleSceneLoaded;
+        }
+
+        public void NotifyBossSpawned()
+        {
+            BossRecentlyDefeated = false;
+        }
+
+        public void NotifyBossDefeated()
+        {
+            BossRecentlyDefeated = true;
+        }
+
+        public void NotifyCombatantDying(Combatant combatant)
+        {
+            CombatantDying.Invoke(combatant);
+        }
+
+        public void NotifyDamageTaken(Combatant combatant)
+        {
+            damageTaken?.Invoke(combatant);
+        }
+
+        public void GoToCharacterSelect()
+        {
+            log.on();
+            log.print($"Going to {characterSelectSceneName}");
+
+            Singleton<MonoBehaviour>[] managers = FindObjectsOfType<Singleton<MonoBehaviour>>();
+            log.print("Managers Before Pruning", managers);
+            Singleton<MonoBehaviour>[] managersAfterPruning =
+                managers.Where(m => m != null)
+                .ToArray();
+            log.print("Managers After Pruning", managersAfterPruning);
+            log.stop();
+            // Destroy(PlayerManager.MGR?.gameObject);
+            // Destroy(IntersectionManager.MGR?.gameObject);
+            SceneManager.LoadScene(characterSelectSceneName);
+            log.off();
+        }
+
+        public void GoToDungeon(DungeonData data)
+        {
+            CurrentDungeonData = data;
+
+            GoToDungeon();
         }
 
         /// <summary>
@@ -80,114 +149,13 @@ namespace SystemMiami.Management
             SceneManager.LoadScene(_dungeonSceneName);
         }
 
-        public void GoToCharacterSelect()
-        {
-            Debug.Log($"Going to {characterSelectSceneName}");
-
-            Singleton<MonoBehaviour>[] managers = FindObjectsOfType<Singleton<MonoBehaviour>>();
-            managers.Where(m => m != null).ToList().ForEach(m => Destroy(m.gameObject));
-            // Destroy(PlayerManager.MGR?.gameObject);
-            // Destroy(IntersectionManager.MGR?.gameObject);
-            SceneManager.LoadScene(characterSelectSceneName);
-        }
-
-        public void GoToDungeon(DungeonData data)
-        {
-            _dungeonData = data;
-
-            GoToDungeon();
-        }
-
-        public bool TryGetEnemies(out List<GameObject> enemies)
-        {
-            if (_dungeonData == null)
-            {
-                enemies = new();
-                return false;
-            }
-
-            enemies = _dungeonData.Enemies;
-            return true;
-        }
-
-        public bool TryGetDungeonPrefab(out GameObject prefab)
-        {
-            if (_dungeonData == null)
-            {
-                prefab = null;
-                return false;
-            }
-
-            if (_dungeonData.Prefab == null)
-            {
-                prefab = null;
-                return false;
-            }
-
-            prefab = _dungeonData.Prefab;
-            return true;
-        }
-
-        public bool TryGetRewards(out List<ItemData> rewards)
-        {
-            if (_dungeonData == null)
-            {
-                rewards = new();
-                return false;
-            }
-
-            rewards = _dungeonData.ItemRewards;
-            return true;
-        }
-
-        public bool TryGetEXP(out int exp)
-        {
-            if (_dungeonData == null)
-            {
-                exp = 0;
-                return false;
-            }
-
-            exp = _dungeonData.EXPToGive;
-            return true;
-        }
-
-        public bool TryGetCredit(out int credit)
-        {
-            if (_dungeonData == null)
-            {
-                credit = 0;
-                return false;
-            }
-
-            credit = _dungeonData.Credits;
-            return true;
-        }
-
-        public void NotifyCombatantDying(Combatant combatant)
-        {
-            CombatantDying.Invoke(combatant);
-        }
-
-        public void NotifyDamageTaken(Combatant combatant)
-        {
-            damageTaken?.Invoke(combatant);
-        }
-
         public void GoToNeighborhood(bool regenerate)
         {
-            _dungeonData = null;
+            string debugGotoNeighborhood =
+                    $"Going to {NeighborhoodSceneName}.\n" +
+                    $"Regenerating?  {regenerate}";
 
-            // local fn for responding to scene load in
-            void onSceneLoaded(Scene scene, LoadSceneMode mode)
-            {
-                if (regenerate)
-                {
-                    IntersectionManager.MGR.RegenerateStreets();
-                }
-
-                SceneManager.sceneLoaded -= onSceneLoaded;
-            }
+            CurrentDungeonData = null;
 
             // If we're exiting combat and entering into a Neighborhood,
             // it will need to be the one we were in when we entered combat,
@@ -195,19 +163,26 @@ namespace SystemMiami.Management
             // before we load the scene. This ensures that the IntersectionManager
             // present in the scene to-be-loaded will destroy itself after it detects
             // the pre-existing IntersectionManager we're carrying with us between scenes.
-            if (IntersectionManager.MGR != null && regenerate)
+
+            if (IntersectionManager.MGR != null)
             {
-                Destroy(IntersectionManager.MGR);
+                if (regenerate)
+                {
+                    debugGotoNeighborhood += $"Intersection MGR was {((IntersectionManager.MGR == null) ? "NULL" : "here")}\n";
+                    Destroy(IntersectionManager.MGR);
+                }
+                else // !regen
+                {
+                    debugGotoNeighborhood += $"Setting active.\n";
+                    IntersectionManager.MGR.gameObject.SetActive(true);
+                }
             }
-            else if (IntersectionManager.MGR != null && !regenerate)
+            else
             {
-                IntersectionManager.MGR.gameObject.SetActive(true);
+                debugGotoNeighborhood += $"Was already null\n";
             }
 
-            Debug.Log($"Going to {_neighborhoodSceneName}");
-
-            SceneManager.sceneLoaded += onSceneLoaded;
-
+            debugGotoNeighborhood += $"Going to scene...\n";
             SceneManager.LoadScene(_neighborhoodSceneName);
         }
 
@@ -223,9 +198,102 @@ namespace SystemMiami.Management
 #endif
         }
 
+        public bool TryGetNextBoss(out DungeonPreset preset)
+        {
+            return bossDungeonQueue.TryDequeue(out preset);
+        }
+
+        public bool TryGetEnemies(out List<GameObject> enemies)
+        {
+            if (CurrentDungeonData == null)
+            {
+                enemies = new();
+                return false;
+            }
+
+            enemies = CurrentDungeonData.Enemies;
+            return true;
+        }
+
+        public bool TryGetDungeonPrefab(out GameObject prefab)
+        {
+            if (CurrentDungeonData == null)
+            {
+                prefab = null;
+                return false;
+            }
+
+            if (CurrentDungeonData.Prefab == null)
+            {
+                prefab = null;
+                return false;
+            }
+
+            prefab = CurrentDungeonData.Prefab;
+            return true;
+        }
+
+        public bool TryGetRewards(out List<ItemData> rewards)
+        {
+            if (CurrentDungeonData == null)
+            {
+                rewards = new();
+                return false;
+            }
+
+            rewards = CurrentDungeonData.ItemRewards;
+            return true;
+        }
+
+        public bool TryGetEXP(out int exp)
+        {
+            if (CurrentDungeonData == null)
+            {
+                exp = 0;
+                return false;
+            }
+
+            exp = CurrentDungeonData.EXPToGive;
+            return true;
+        }
+
+        public bool TryGetCredit(out int credit)
+        {
+            if (CurrentDungeonData == null)
+            {
+                credit = 0;
+                return false;
+            }
+
+            credit = CurrentDungeonData.Credits;
+            return true;
+        }
+
         public int ImmediateBreakpointSpace()
         {
             return 0;
+        }
+
+        private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            if (TurnManager.MGR != null)
+            {
+                TurnManager.MGR.DungeonFailed += HandleDungeonFailed;
+                TurnManager.MGR.DungeonCleared += HandleDungeonCleared;
+            }
+        }
+
+        private void HandleDungeonFailed()
+        {
+            TurnManager.MGR.DungeonFailed -= HandleDungeonFailed;
+            TurnManager.MGR.DungeonCleared -= HandleDungeonCleared;
+        }
+
+        private void HandleDungeonCleared()
+        {
+            TurnManager.MGR.DungeonFailed -= HandleDungeonFailed;
+            TurnManager.MGR.DungeonCleared -= HandleDungeonCleared;
+            GoToNeighborhood(CurrentDungeonData.difficulty == DifficultyLevel.BOSS);
         }
     }
 }
