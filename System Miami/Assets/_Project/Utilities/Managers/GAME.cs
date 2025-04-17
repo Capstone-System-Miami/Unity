@@ -83,6 +83,17 @@ namespace SystemMiami.Management
             SceneManager.sceneLoaded -= HandleSceneLoaded;
         }
 
+        private void Update()
+        {
+            if (Debug.isDebugBuild
+                && Input.GetKeyDown(KeyCode.KeypadMinus)
+                && Input.GetKeyDown(KeyCode.KeypadMultiply))
+            {
+                IntersectionManager.MGR.gameObject.SetActive(false);
+                GoToCharacterSelect();
+            }
+        }
+
         public void NotifyBossSpawned()
         {
             BossRecentlyDefeated = false;
@@ -108,15 +119,19 @@ namespace SystemMiami.Management
             log.on();
             log.print($"Going to {characterSelectSceneName}");
 
-            Singleton<MonoBehaviour>[] managers = FindObjectsOfType<Singleton<MonoBehaviour>>();
+            Singleton[] managers = FindObjectsOfType<Singleton>(true);
             log.print("Managers Before Pruning", managers);
-            Singleton<MonoBehaviour>[] managersAfterPruning =
-                managers.Where(m => m != null)
-                .ToArray();
-            log.print("Managers After Pruning", managersAfterPruning);
+
+            for (int i = 0; i < managers.Length; i++)
+            {
+                if (managers[i] == this) { log.print("me"); continue; }
+
+                Destroy(managers[i].GetMe());
+            }
+            managers = FindObjectsOfType<Singleton>(true);
+
+            log.print("Managers After Pruning", managers.Select(o => o.name).ToArray());
             log.stop();
-            // Destroy(PlayerManager.MGR?.gameObject);
-            // Destroy(IntersectionManager.MGR?.gameObject);
             SceneManager.LoadScene(characterSelectSceneName);
             log.off();
         }
