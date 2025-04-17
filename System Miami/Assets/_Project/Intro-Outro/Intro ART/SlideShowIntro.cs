@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+using UnityEngine.SceneManagement;
 
 namespace SystemMiami
 {
@@ -9,8 +11,10 @@ namespace SystemMiami
     {
 
         public Sprite[] slides;
+        public string[] slideTexts;
         public Image slideshowImages;
         public CanvasGroup canvasGroup;
+        public TextMeshProUGUI slideText;
         public float slideDuration = 3f;
         public float fadeDuration = 1f;
 
@@ -31,7 +35,8 @@ namespace SystemMiami
         {
             while (currentSlide < slides.Length)
             {
-                slideshowImages.sprite = slides[currentSlide];
+                slideshowImages.sprite = slides[currentSlide]; // Chnages pictures
+                slideText.text = slideTexts[currentSlide]; // Changes the text
 
                 yield return StartCoroutine(Fade(0f, 1f)); // Start Fade
 
@@ -43,7 +48,7 @@ namespace SystemMiami
 
             }
 
-
+            SceneManager.LoadScene("Main Menu");
             Debug.Log("SlideShow Finished");
         }
 
