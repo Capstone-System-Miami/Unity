@@ -193,18 +193,17 @@ namespace SystemMiami.Dungeons
             switch (dungeonDifficulty)
             {
                 case DifficultyLevel.EASY:
-                    expReward = IntersectionManager.MGR.easyDungeonReward[Random.Range(0, IntersectionManager.MGR.easyDungeonReward.Count -1)];
+                    expReward = IntersectionManager.MGR.easyDungeonReward[Random.Range(0, IntersectionManager.MGR.easyDungeonReward.Count)];
                     break;
                 case DifficultyLevel.MEDIUM:
-                    expReward = IntersectionManager.MGR.mediumDungeonReward[Random.Range(0, IntersectionManager.MGR.mediumDungeonReward.Count -1)];
+                    expReward = IntersectionManager.MGR.mediumDungeonReward[Random.Range(0, IntersectionManager.MGR.mediumDungeonReward.Count)];
                     break;
                 case DifficultyLevel.HARD:
-                    expReward = IntersectionManager.MGR.hardDungeonReward[Random.Range(0, IntersectionManager.MGR.hardDungeonReward.Count -1)];
+                    expReward = IntersectionManager.MGR.hardDungeonReward[Random.Range(0, IntersectionManager.MGR.hardDungeonReward.Count)];
                     break;
                 default:
                     break;
             }
-            
             return expReward;
         }
 

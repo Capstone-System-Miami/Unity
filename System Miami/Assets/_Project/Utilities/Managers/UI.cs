@@ -6,6 +6,7 @@ using SystemMiami.CombatSystem;
 using System.Collections;
 using SystemMiami.ui;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Assertions;
 
 namespace SystemMiami.Management
@@ -15,7 +16,6 @@ namespace SystemMiami.Management
         [Header("Messages")]
         [SerializeField] private bool inputPromptsOn = true;
         [SerializeField] private TextBox inputPromptPanel;
-
 
         [Header("Loadout UI")]
         [SerializeField] private CombatActionBar physicalAbilitiesBar;
@@ -27,7 +27,6 @@ namespace SystemMiami.Management
         [SerializeField] private GameObject winPanelPrefab;
         // This should eventually get removed when we have a substantial win panel.
         [SerializeField] private GoToNeighborhood TEMP_goToNeighborhood;
-        private bool bossDefeated;
 
         public Action<ActionQuickslot> SlotClicked;
         public Action<Loadout, Combatant> CombatantLoadoutCreated;
@@ -39,24 +38,13 @@ namespace SystemMiami.Management
 
         private void OnEnable()
         {
-            GAME.MGR.CombatantDying += HandleCombatantDying;
-
-            IEnumerator WaitForTurnManager()
-            {
-                yield return new WaitUntil( () => TurnManager.MGR != null );
-                TurnManager.MGR.DungeonCleared += HandleDungeonCleared;
-                TurnManager.MGR.DungeonFailed += HandleDungeonFailed;
-            }
-
-            StartCoroutine(WaitForTurnManager());
+            SceneManager.sceneLoaded += HandleSceneLoaded;
         }
-
 
         private void OnDisable()
         {
-            GAME.MGR.CombatantDying -= HandleCombatantDying;
+            SceneManager.sceneLoaded -= HandleSceneLoaded;
         }
-
 
         public void CreatePlayerLoadout(Combatant combatant)
         {
@@ -165,18 +153,20 @@ namespace SystemMiami.Management
             consumablesBar.FillWith(loadout.Consumables.Cast<CombatAction>().ToList());
         }
 
-        private void HandleCombatantDying(Combatant combatant)
+
+        private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            if (combatant is EnemyCombatant e && e.IsBoss)
+            if (TurnManager.MGR != null)
             {
-                bossDefeated = true;
+                TurnManager.MGR.DungeonFailed += HandleDungeonFailed;
+                TurnManager.MGR.DungeonCleared += HandleDungeonCleared;
             }
         }
 
         private void HandleDungeonCleared()
         {
             Debug.Log($"{name} handling dun clr");
-            TEMP_goToNeighborhood.Go(bossDefeated);
+            TEMP_goToNeighborhood.Go(GAME.MGR.CurrentDungeonData.difficulty == Dungeons.DifficultyLevel.BOSS);
 
             // TODO:
             // Comment the above line and uncomment this when the
@@ -184,17 +174,18 @@ namespace SystemMiami.Management
             //
             // Instantiate(winPanelPrefab);
 
-            // just in case the singleton sticks around.
-            bossDefeated = false;
+            TurnManager.MGR.DungeonFailed += HandleDungeonFailed;
+            TurnManager.MGR.DungeonCleared += HandleDungeonCleared;
 
-            TurnManager.MGR.DungeonCleared -= HandleDungeonCleared;
-            TurnManager.MGR.DungeonFailed -= HandleDungeonFailed;
         }
 
         private void HandleDungeonFailed()
         {
             Debug.Log($"{name} handling dun fail");
             Instantiate(lossPanelPrefab);
+
+            TurnManager.MGR.DungeonFailed += HandleDungeonFailed;
+            TurnManager.MGR.DungeonCleared += HandleDungeonCleared;
         }
     }
 }

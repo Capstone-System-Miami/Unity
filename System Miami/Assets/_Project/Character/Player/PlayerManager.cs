@@ -82,6 +82,8 @@ namespace SystemMiami
 
         protected override void Awake()
         {
+            // WARN: Not sure what this is, but I'm too scared to change it now
+            // Just want to flag this as a potential source of bugs
             if (MGR != null && TurnManager.MGR != null)
             {
                 MGR.transform.position = transform.position;
@@ -127,6 +129,10 @@ namespace SystemMiami
             {
                 DisableComponents(neighborhoodComponents);
                 DisableComponents(dungeonComponents);
+
+                // NOTE: 04.16 added this
+                //
+                EnableComponents(sharedComponents);
             }
         }
 

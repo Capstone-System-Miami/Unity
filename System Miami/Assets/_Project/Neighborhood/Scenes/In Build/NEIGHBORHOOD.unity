@@ -360,7 +360,7 @@ MonoBehaviour:
   physicalAbilitiesBar: {fileID: 0}
   magicalAbilitiesBar: {fileID: 0}
   consumablesBar: {fileID: 0}
-  lossPanelPrefab: {fileID: 0}
+  lossPanelPrefab: {fileID: 1569061008}
   winPanelPrefab: {fileID: 0}
   TEMP_goToNeighborhood: {fileID: 0}
   <CurrentClient>k__BackingField: {fileID: 0}
@@ -447,11 +447,12 @@ MonoBehaviour:
   characterSelectSceneName: CharacterSelector
   _regenerateDungeonDataOnInteract: 0
   <LevelThresholds>k__BackingField: 050000000a0000000f00000014000000
-  <Bosses>k__BackingField:
+  bosses:
   - {fileID: 11400000, guid: b4ee8b6520ae7a747acbd090a0850748, type: 2}
   - {fileID: 11400000, guid: 500b23b9507db49479fefd591206b7e4, type: 2}
   - {fileID: 11400000, guid: c95579a033064234d9f06fa784e8b218, type: 2}
   - {fileID: 11400000, guid: 6f5a4eac2b2f4084196115a4a129ccd0, type: 2}
+  <BossRecentlyDefeated>k__BackingField: 0
   <IgnoreObstacles>k__BackingField: 1
   <NoNpcs>k__BackingField: 0
 --- !u!4 &765166754
@@ -2980,7 +2981,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7888797626266517924, guid: 986468fcb482211448948832df514333, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -13534,6 +13535,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1569061008 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4783360393765713647, guid: 6af531a8b599b02468634cdb57c86976, type: 3}
+  m_PrefabInstance: {fileID: 2721766280165638650}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1858657214
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13954,7 +13960,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1653312403757453481, guid: e27864cd9e05dd34bab4fee3e81e1500, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5668472032526767104, guid: e27864cd9e05dd34bab4fee3e81e1500, type: 3}
       propertyPath: m_Pivot.x
@@ -16461,19 +16467,14 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b62ecf78532493d40aaa289fa59c2577, type: 2}
   - {fileID: 11400000, guid: 3ac68e114586ecf429cfaf34d8ff63f7, type: 2}
   - {fileID: 11400000, guid: ad458d592988c3749b0b654a882b084d, type: 2}
-  bosses:
-  - {fileID: 11400000, guid: b4ee8b6520ae7a747acbd090a0850748, type: 2}
-  - {fileID: 11400000, guid: 500b23b9507db49479fefd591206b7e4, type: 2}
-  - {fileID: 11400000, guid: c95579a033064234d9f06fa784e8b218, type: 2}
-  - {fileID: 11400000, guid: 6f5a4eac2b2f4084196115a4a129ccd0, type: 2}
   TEST_replace: 1
   TEST_replacementPreset: {fileID: 11400000, guid: b4ee8b6520ae7a747acbd090a0850748, type: 2}
+  NeighborhoodBossPreset: {fileID: 0}
   playerPrefab: {fileID: 6453553769002132252, guid: 41e098d003201e24cb34e50520a2ee3e, type: 3}
   <NeighborhoodLevelRequirement>k__BackingField: 5
   <MeasurementType>k__BackingField: 2
   <MustBeUp>k__BackingField: 1
   <FarthestIntersectionFromPlayer>k__BackingField: {fileID: 0}
-  <FarthestIntersectionFromZero>k__BackingField: {fileID: 0}
   <FarthestIntersection>k__BackingField: {fileID: 0}
   easyDungeonReward: 
   mediumDungeonReward: 

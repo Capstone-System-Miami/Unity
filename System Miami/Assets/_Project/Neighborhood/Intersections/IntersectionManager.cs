@@ -44,9 +44,9 @@ public class IntersectionManager : Singleton<IntersectionManager>
     // These will be passed to DungeonEntrances, which will
     // construct themselves based on the information in the presets.
     [SerializeField] private List<DungeonPreset> dungeonEntrancePresets = new();
-    [SerializeField] private List<DungeonPreset> bosses = new();
     [SerializeField] private bool TEST_replace;
     [SerializeField] private DungeonPreset TEST_replacementPreset;
+    [SerializeField, ReadOnly] public DungeonPreset NeighborhoodBossPreset;
     [Space (10)]
 
 
@@ -62,7 +62,6 @@ public class IntersectionManager : Singleton<IntersectionManager>
     [field: SerializeField] public MeasurementType MeasurementType { get; private set; } = MeasurementType.MANHATTAN;
     [field: SerializeField] public bool MustBeUp { get; private set; } = true;
     [field: SerializeField, ReadOnly] public GameObject FarthestIntersectionFromPlayer { get; private set; }
-    [field: SerializeField, ReadOnly] public GameObject FarthestIntersectionFromZero { get; private set; }
     [field: SerializeField, ReadOnly] public GameObject FarthestIntersection { get; private set; }
 
     private List<DungeonEntrance> easyDungeons = new List<DungeonEntrance>();
@@ -117,6 +116,8 @@ public class IntersectionManager : Singleton<IntersectionManager>
 
     // Flag to indicate if the street generation is complete.
     private bool generationComplete = false;
+
+
     // Possible directions to check for neighboring streets (up, down, right, left).
     private Vector2Int[] directions =
     {
@@ -181,6 +182,13 @@ public class IntersectionManager : Singleton<IntersectionManager>
             maxNpcsQuests = 0;
         }
         playerPrefab = GameObject.Find("Player");
+
+        if (!TryFindReplacement(out NeighborhoodBossPreset))
+        {
+            // win game
+            return;
+        }
+
         InitializeStreetPoolDictionary(); // Prepare the dictionary mapping StreetTypes to StreetPools.
         InitializeStreetGrid(); // SetAll up the grid itemData structure for street generation.
         StartStreetGenerationFromStreet(new Vector2Int(gridSizeX / 2,
@@ -824,7 +832,6 @@ public class IntersectionManager : Singleton<IntersectionManager>
             {
                 report += $"{street.streetInstance.name}";
             }
-
             report += "\n";
         }
 
@@ -870,7 +877,18 @@ public class IntersectionManager : Singleton<IntersectionManager>
         }
         return expReward;
     }
-    
+
+    private bool TryFindReplacement(out DungeonPreset replacement)
+    {
+        if (TEST_replace)
+        {
+            replacement = TEST_replacementPreset;
+            return true;
+        }
+
+        return GAME.MGR.TryGetNextBoss(out replacement);
+    }
+
     private void OnGenerationComplete()
     {
         CleanupExits(); // Adjust exits to ensure consistency between connected streets.
@@ -881,13 +899,8 @@ public class IntersectionManager : Singleton<IntersectionManager>
         hardDungeonReward = SetEXPReward(hardDungeons);
         SpawnNPCs();
 
-        // Leaving the zero option here if we want it, but the
-        // positioning of the intersections is pretty fucked.
-        // Hard coding this in so it doesn't accidentally get
-        // set in the inspector and fuck things up.
-        // You can still see farthest from zero in the inspector.
+
         FarthestIntersectionFromPlayer = GetFarthestIntersection(true, MeasurementType, MustBeUp);
-        FarthestIntersectionFromZero = GetFarthestIntersection(false, MeasurementType, MustBeUp);
         FarthestIntersection = FarthestIntersectionFromPlayer;
 
         DungeonEntranceAssigner farthestEntranceAssigner;
@@ -897,13 +910,15 @@ public class IntersectionManager : Singleton<IntersectionManager>
                     $"{name} couldn't find a DungeonEntranceAssigner on " +
                     $"{FarthestIntersection.name}");
         }
+        else
+        {
+            DungeonPreset replacee = farthestEntranceAssigner.ReplaceRandomEntranceWithPreset(NeighborhoodBossPreset);
 
-        DungeonPreset replacement = TEST_replace ? TEST_replacementPreset : null;
-        DungeonPreset replacee = farthestEntranceAssigner.ReplaceRandomEntranceWithPreset(replacement);
-        swapLog.print(
-            $"{FarthestIntersection.name} had a dungeon entrance " +
-            $"replaced by {TEST_replacementPreset.name}",
-            FarthestIntersection);
+            swapLog.print(
+                $"{FarthestIntersection.name} had a dungeon entrance " +
+                $"replaced by {TEST_replacementPreset.name}",
+                FarthestIntersection);
+        }
 
         LogGenerationResults(); // Output generation statistics to the console.
         GenerationComplete?.Invoke();

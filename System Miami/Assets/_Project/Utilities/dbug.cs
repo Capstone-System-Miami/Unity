@@ -114,7 +114,7 @@ namespace SystemMiami.Utilities
                 result += "\n";
             }
 
-            return result;
+            return result == "" ? "(empty)" : result;
         }
 
         public void on()
