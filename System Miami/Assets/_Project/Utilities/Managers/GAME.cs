@@ -38,6 +38,10 @@ namespace SystemMiami.Management
         [SerializeField] private bool _regenerateDungeonDataOnInteract;
         private DungeonData _dungeonData;
 
+        /// <summary>
+        /// WARN: If this is on, DungeonEntrances will no longer disable after the player leaves them.
+        ///
+        /// </summary>
         public bool RegenerateDungeonDataOnInteract { get { return _regenerateDungeonDataOnInteract; } }
 
         [field: SerializeField] public List<int> LevelThresholds { get; private set; }

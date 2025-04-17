@@ -237,7 +237,11 @@ namespace SystemMiami
             }
 
             HidePanel();
-            entranceClient.DisableInteraction();
+
+            if (!GAME.MGR.RegenerateDungeonDataOnInteract)
+            {
+                entranceClient.DisableInteraction();
+            }
             GAME.MGR.GoToDungeon(CurrentDungeonData);
         }
     }
