@@ -22,6 +22,8 @@ namespace SystemMiami.Management
         [SerializeField] string _dungeonSceneName;
         [SerializeField] string _neighborhoodSceneName;
         [SerializeField] string characterSelectSceneName;
+        [SerializeField] string _creditsSceneName;
+
 
         [SerializeField] public string DungeonSceneName {
             get { return _dungeonSceneName; }
@@ -31,6 +33,11 @@ namespace SystemMiami.Management
         }
         [SerializeField] public string CharacterSelectSceneName {
             get { return characterSelectSceneName; }
+        }
+        [SerializeField]
+        public string CreditsSceneName
+        {
+            get { return _creditsSceneName; }
         }
 
         [Tooltip(
