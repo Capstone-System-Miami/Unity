@@ -45,9 +45,6 @@ namespace SystemMiami
             {
                 playerInventory.AddCredits(credit);
             }
-            
-           
         }
     }
-    
 }

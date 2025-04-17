@@ -12,6 +12,10 @@ namespace SystemMiami.ui
             _currentText = useTextFromComponent ? getStringFromComponent() : getCurrentText();
             _currentColor = getCurrentColor();
 
+            if (_tmp.text != _currentText)
+            {
+                _tmp.text = _currentText;
+            }
             if (_tmp.color != _currentColor)
             {
                 _tmp.color = _currentColor;

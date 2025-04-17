@@ -308,7 +308,7 @@ namespace SystemMiami.Management
         {
             TurnManager.MGR.DungeonFailed -= HandleDungeonFailed;
             TurnManager.MGR.DungeonCleared -= HandleDungeonCleared;
-            GoToNeighborhood(CurrentDungeonData.difficulty == DifficultyLevel.BOSS);
+            // GoToNeighborhood(CurrentDungeonData.difficulty == DifficultyLevel.BOSS);
         }
     }
 }

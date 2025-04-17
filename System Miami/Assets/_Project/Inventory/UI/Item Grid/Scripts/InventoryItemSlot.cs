@@ -169,7 +169,7 @@ namespace SystemMiami.ui
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            PopUpHandler.MGR.ClosePopup();
+            PopUpHandler.MGR?.ClosePopup();
 
             if (itemData.failbit) { return; }
 
@@ -190,6 +190,7 @@ namespace SystemMiami.ui
             {
                 clicks = 0;
                 clickTime = 0;
+                doubleClick = true;
                 slotDoubleClicked?.Invoke(this);
                 Debug.Log("Double Click: " + this.GetComponent<RectTransform>().name);
             }
@@ -203,7 +204,7 @@ namespace SystemMiami.ui
         {
             if (doubleClick)
             {
-                PopUpHandler.MGR.ClosePopup();
+                PopUpHandler.MGR?.ClosePopup();
             }
         }
     }

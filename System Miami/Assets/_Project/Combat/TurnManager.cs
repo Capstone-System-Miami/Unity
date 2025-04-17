@@ -159,6 +159,7 @@ namespace SystemMiami
                 // vv During player turn vv
                 foreach (Combatant combatant in combatants)
                 {
+                    if (combatant == null) { continue; }
                     // TODO this is a werid way of
                     // 'forcing' a state switch, as
                     // states should control their own

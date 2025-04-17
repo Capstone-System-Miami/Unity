@@ -166,17 +166,16 @@ namespace SystemMiami.Management
         private void HandleDungeonCleared()
         {
             Debug.Log($"{name} handling dun clr");
-            TEMP_goToNeighborhood.Go(GAME.MGR.CurrentDungeonData.difficulty == Dungeons.DifficultyLevel.BOSS);
+            // TEMP_goToNeighborhood.Go(GAME.MGR.CurrentDungeonData.difficulty == Dungeons.DifficultyLevel.BOSS);
 
             // TODO:
             // Comment the above line and uncomment this when the
             // panel is functional/ ready to be used.
             //
-            // Instantiate(winPanelPrefab);
+            Instantiate(winPanelPrefab);
 
             TurnManager.MGR.DungeonFailed += HandleDungeonFailed;
             TurnManager.MGR.DungeonCleared += HandleDungeonCleared;
-
         }
 
         private void HandleDungeonFailed()

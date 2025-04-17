@@ -49,6 +49,7 @@ namespace SystemMiami.ui
                 _text.color = _currentColor;
             }
         }
+
         public void Highlight()
         {
             _isHighlighted = true;
@@ -149,6 +150,5 @@ namespace SystemMiami.ui
             _selectedMessages = new HighlightableClassSet<string>(text);
             _disabledMessages = new HighlightableClassSet<string>(text);
         }
-
     }
 }

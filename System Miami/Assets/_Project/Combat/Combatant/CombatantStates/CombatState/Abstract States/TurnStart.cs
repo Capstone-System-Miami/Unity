@@ -9,7 +9,6 @@ namespace SystemMiami.CombatRefactor
 {
     public abstract class TurnStart : CombatantState
     {
-        
         protected Conditions movementTileSelectionConditions = new();
         protected Conditions actionSelectionConditions = new();
 
@@ -21,7 +20,6 @@ namespace SystemMiami.CombatRefactor
             base.OnEnter();
             combatant.IsMyTurn = true;
             ResetTurn();
-           
         }
 
         public override void MakeDecision()
@@ -60,7 +58,7 @@ namespace SystemMiami.CombatRefactor
             ApplyResourceEffects();
             combatant.Speed = new Resource(combatant.Stats.GetStat(StatType.SPEED));
         }
-        
+
         public void ApplyResourceEffects()
         {
             if(combatant.resourceEffects == null || combatant.resourceEffects.Count == 0)
@@ -70,7 +68,6 @@ namespace SystemMiami.CombatRefactor
             combatant.resourceEffects = combatant.resourceEffects.Where(effect => effect.RemainingTurns > 0).ToList();
             combatant.resourceEffects.ForEach(effect =>
             {
-               
                 effect.Execute();
             });
         }

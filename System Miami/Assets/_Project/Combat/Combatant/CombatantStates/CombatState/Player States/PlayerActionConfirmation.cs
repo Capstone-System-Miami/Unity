@@ -19,8 +19,8 @@ namespace SystemMiami.CombatRefactor
             string actionName = Database.MGR.GetDataWithJustID(combatAction.ID).Name;
 
             InputPrompts =
-                $"(NOT IMPLEMENTED) Hover over a target to " +
-                $"preview {actionName}'s effects.\n\n" +
+                // $"(NOT IMPLEMENTED) Hover over a target to " +
+                // $"preview {actionName}'s effects.\n\n" +
                 $"Press Enter to confirm your targets\n" +
                 $"and use {actionName}\n\n" +
                 $"Or Right Click to select new targets.";
