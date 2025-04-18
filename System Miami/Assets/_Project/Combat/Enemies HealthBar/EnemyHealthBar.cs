@@ -1,4 +1,4 @@
-// Johnny Sosa
+// Author: Johnny Sosa
 using System;
 using System.Collections;
 using System.Collections.Generic;

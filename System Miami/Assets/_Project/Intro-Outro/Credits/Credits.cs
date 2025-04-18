@@ -1,13 +1,14 @@
 // Author: Johnny Sosa
 
-using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using UnityEngine.UI; 
 
 namespace SystemMiami
 {
-    public class Outro : MonoBehaviour
+    public class Credits : MonoBehaviour
     {
         // Start is called before the first frame update
         void Start()
