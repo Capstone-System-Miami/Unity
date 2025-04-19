@@ -1,3 +1,4 @@
+using System.Collections;
 using SystemMiami.ui;
 using SystemMiami.Utilities;
 using UnityEngine;
@@ -32,7 +33,7 @@ namespace SystemMiami.InventorySystem
             }
         }
 
-        private ItemGrid activeGridInternal;
+        [SerializeField, ReadOnly] private ItemGrid activeGridInternal;
 
         public InventoryTabGroup Tabs { get { return tabs; } }
 
@@ -52,7 +53,6 @@ namespace SystemMiami.InventorySystem
                     $"so {name} did not subscribe to inventory's System.Action " +
                     $"OnInventoryChanged.");
                 return;
-
             }
 
             // TODO: Should this be reversed? I was sort of assuming the
@@ -73,7 +73,15 @@ namespace SystemMiami.InventorySystem
 
         private void Update()
         {
-            // RefreshUI();
+            // FIX: I have no idea why this won't happen
+            // on enable or load or start or anywhere except
+            // when the window is already open. The statement
+            // below works completely fine once the menu is open.
+            //
+            if (Input.GetKeyDown(KeyCode.J))
+            {
+                RefreshUI();
+            }
         }
 
         public void RefreshUI()
@@ -81,12 +89,12 @@ namespace SystemMiami.InventorySystem
             Tabs.TabPhysical.ItemGrid.ClearSlots();
             Tabs.TabMagical.ItemGrid.ClearSlots();
             Tabs.TabConsumable.ItemGrid.ClearSlots();
-            Tabs.TabEquipment.ItemGrid.ClearSlots();
 
             Tabs.TabPhysical.ItemGrid.FillSlots(playerInventory.PhysicalAbilityIDs);
             Tabs.TabMagical.ItemGrid.FillSlots(playerInventory.MagicalAbilityIDs);
             Tabs.TabConsumable.ItemGrid.FillSlots(playerInventory.ConsumableIDs);
-            Tabs.TabEquipment.ItemGrid.FillSlots(playerInventory.EquipmentModIDs);
+
+            Tabs.ReSelectCurrent();
         }
 
         private void OnDisable()

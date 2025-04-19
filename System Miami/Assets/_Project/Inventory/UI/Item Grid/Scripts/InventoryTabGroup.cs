@@ -8,14 +8,12 @@ namespace SystemMiami.ui
         [SerializeField] private InventoryTab tabPhysical;
         [SerializeField] private InventoryTab tabMagical;
         [SerializeField] private InventoryTab tabConsumable;
-        [SerializeField] private InventoryTab tabEquipment;
 
         private bool tabsInitialized;
 
         public InventoryTab TabPhysical { get { return tabPhysical; } }
         public InventoryTab TabMagical { get { return tabMagical; } }
         public InventoryTab TabConsumable { get { return tabConsumable; } }
-        public InventoryTab TabEquipment { get { return tabEquipment; } }
 
         protected override List<InventoryTab> GetSelectables()
         {
@@ -29,7 +27,6 @@ namespace SystemMiami.ui
                 TabPhysical,
                 TabMagical,
                 TabConsumable,
-                TabEquipment,
             };
         }
 
@@ -38,7 +35,6 @@ namespace SystemMiami.ui
             tabPhysical.Initialize(ItemType.PhysicalAbility);
             tabMagical.Initialize(ItemType.MagicalAbility);
             tabConsumable.Initialize(ItemType.Consumable);
-            tabEquipment.Initialize(ItemType.EquipmentMod);
 
             tabsInitialized = true;
         }
