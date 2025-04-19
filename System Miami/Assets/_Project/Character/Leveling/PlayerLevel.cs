@@ -18,6 +18,8 @@ namespace SystemMiami
         [SerializeField, ReadOnly] private int level = 0;
         [SerializeField, ReadOnly] private int currentXP = 0;
 
+        [SerializeField] private GameObject levelUpText;
+        
         [Header("Debugging")]
         [SerializeField] private bool debugMode = false;
         [SerializeField] private KeyCode debug_GainExpKey;
@@ -60,11 +62,24 @@ namespace SystemMiami
             {
                 OnLevelUp();
                 GainXP(remainderXP);
+                if (!levelUpText.activeSelf)
+                {
+                    levelUpText.SetActive(true);
+                }
             }
             else if (remainderXP == 0)
             {
                 OnLevelUp();
+                if (!levelUpText.activeSelf)
+                {
+                    levelUpText.SetActive(true);
+                }
             }
+        }
+
+        public void TurnOffLevelText()
+        {
+            levelUpText.SetActive(false);
         }
 
         /// <summary>
