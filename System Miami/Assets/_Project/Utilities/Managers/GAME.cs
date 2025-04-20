@@ -284,7 +284,7 @@ namespace SystemMiami.Management
             }
 
             enemies = CurrentDungeonData.Enemies;
-            return true;
+            return enemies.Count > 0;
         }
 
         public bool TryGetDungeonPrefab(out GameObject prefab)

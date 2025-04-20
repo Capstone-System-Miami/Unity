@@ -11,7 +11,7 @@ namespace SystemMiami.CombatRefactor
         public override void OnEnter()
         {
             base.OnEnter();
-            
+
             InputPrompts = 
                 $"Turn over.\n" +
                 $"Press Enter/Return to continue.";
@@ -34,7 +34,7 @@ namespace SystemMiami.CombatRefactor
         public override void OnExit()
         {
             combatant.IsMyTurn = false;
-            Debug.Log($"{combatant.name} health is {combatant.GetCurrentHealth()} at the end of its turn.");
+            Debug.Log($"{combatant.name} health is {combatant.Health.Get()} at the end of its turn.");
         }
 
         // Decision

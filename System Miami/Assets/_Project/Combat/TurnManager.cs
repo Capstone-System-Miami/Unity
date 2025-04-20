@@ -60,6 +60,7 @@ namespace SystemMiami
 
         public bool IsGameOver { get; private set; }
 
+        public event Action CombatStarted;
         public event Action DungeonCleared;
         public event Action DungeonFailed;
         public Action<Phase> NewTurnPhase;
@@ -137,10 +138,10 @@ namespace SystemMiami
                 combatantsReady = true;
                 foreach (Combatant combatant in combatants)
                 {
-                    if (!combatant.ReadyToStart)
+                    if (!combatant.Initialized)
                     {
+                        combatant.InitAll();
                         combatantsReady = false;
-                        break;
                     }
                 }
                 Debug.Log("Combatants Preparing...");
@@ -148,7 +149,9 @@ namespace SystemMiami
             } while (!combatantsReady);
 
             Debug.Log("Combatants Ready. Begin Combat");
+            OnCombatStart();
             enemiesRemaining = enemyCharacters.Count;
+            IsGameOver = false;
             while (!IsGameOver)
             {
                 // Remove null items.
@@ -253,6 +256,12 @@ namespace SystemMiami
             enemyCharacters.Add(enemyCombatant);
 
             Debug.Log($"Spawning {enemyCombatant}");
+        }
+
+        public void OnCombatStart()
+        {
+            IsGameOver = false;
+            CombatStarted?.Invoke();
         }
 
         public void OnCombatantDying(Combatant combatant)
