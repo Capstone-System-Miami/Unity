@@ -14,7 +14,7 @@ namespace SystemMiami.Utilities
     /// the IFieldReserializerInterface.
     public class FieldReserializerTestComponent : MonoBehaviour, IFieldReserializer
     {
-        static Dictionary<string, string> oldFieldName_newFieldName = new()
+        Dictionary<string, string> oldFieldName_newFieldName = new()
         {
             {"_testRenameEditor" , "newGuy7000_hellYeah"},
             {"_testInt" , "testInt"},
@@ -28,27 +28,27 @@ namespace SystemMiami.Utilities
             return oldFieldName_newFieldName;
         }
 
-        // [Header("Test Old Vals")]
-        // [SerializeField] private int _testInt = 0;
-        // [SerializeField] private string _testString = "";
-        // [SerializeField] private Vector3 _testVec = Vector3.zero;
-        // [SerializeField] private GameObject _testPrefab = null;
-        // [SerializeField, Space(5)] private TestSerializableClass _testSerializableClass;
-        // [SerializeField] private GameObject _testRenameEditor;
-        // [Space(10)]
-        //
-        // [Header("Test New Vals")]
-        // [SerializeField] private int testInt = 0;
-        // [SerializeField] private string testString = "";
-        // [SerializeField] private Vector3 testVec = Vector3.zero;
-        // [SerializeField] private GameObject testPrefab = null;
-        // [SerializeField, Space(5)] private TestSerializableClass testSerializableClass;
-        // [SerializeField] private GameObject newGuy7000_hellYeah;
-        //
-        // ~FieldReserializerTestComponent()
-        // {
-        //     Debug.Log("FieldReserializerTestComponent destroyed");
-        // }
+        [Header("Test Old Vals")]
+        [SerializeField] private int _testInt = 0;
+        [SerializeField] private string _testString = "";
+        [SerializeField] private Vector3 _testVec = Vector3.zero;
+        [SerializeField] private GameObject _testPrefab = null;
+        [SerializeField, Space(5)] private TestSerializableClass _testSerializableClass;
+        [SerializeField] private GameObject _testRenameEditor;
+        [Space(10)]
+
+        [Header("Test New Vals")]
+        [SerializeField] private int testInt = 0;
+        [SerializeField] private string testString = "";
+        [SerializeField] private Vector3 testVec = Vector3.zero;
+        [SerializeField] private GameObject testPrefab = null;
+        [SerializeField, Space(5)] private TestSerializableClass testSerializableClass;
+        [SerializeField] private GameObject newGuy7000_hellYeah;
+
+        ~FieldReserializerTestComponent()
+        {
+            Debug.Log("FieldReserializerTestComponent destroyed");
+        }
     }
 
     [System.Serializable]

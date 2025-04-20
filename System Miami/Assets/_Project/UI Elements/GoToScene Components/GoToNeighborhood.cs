@@ -7,9 +7,12 @@ namespace SystemMiami.ui
     public class GoToNeighborhood : MonoBehaviour
     {
         public bool CurrentIsBoss {
-            get {
+            get
+            {
                 if (GAME.MGR == null) { return false; }
-                return GAME.MGR?.CurrentDungeonData.difficulty == Dungeons.DifficultyLevel.BOSS; }
+                return GAME.MGR?.CurrentDungeonData?.difficulty
+                    == Dungeons.DifficultyLevel.BOSS;
+            }
         }
 
         public void Go()

@@ -96,9 +96,9 @@ namespace SystemMiami.CustomEditor
                 GUILayout.BeginVertical("Field Find & Replace by Name", "window");
                 GUILayout.Space(10);
 
-                GameObject killYourself = new();
-                object fuckfuckfuck = killYourself.AddComponent(script.GetClass());
-                if (fuckfuckfuck is IFieldReserializer fuckyourgoddamnass)
+                GameObject tempObj = new();
+                object componentOfTypeAddedToTempObjAs_obj = tempObj.AddComponent(script.GetClass());
+                if (componentOfTypeAddedToTempObjAs_obj is IFieldReserializer obj_castToRsInterface)
                 {
                     // Header Cols
                     GUILayout.BeginHorizontal();
@@ -107,7 +107,7 @@ namespace SystemMiami.CustomEditor
                     GUILayout.EndHorizontal();
 
                     Dictionary<string, string> fieldPairs =
-                        fuckyourgoddamnass.OldFieldName_NewFieldName();
+                        obj_castToRsInterface.OldFieldName_NewFieldName();
 
                     // Field Name Pairs
                     for (int i = 0; i < fieldPairs.Count; i++)
@@ -141,12 +141,12 @@ namespace SystemMiami.CustomEditor
                 else
                 {
                     EditorGUILayout.HelpBox(
-                        $"Killf asdglfhnasdfuj THE FUCKING CLASS IS {script.GetClass()}",
+                        $"{script.GetClass()}",
                         MessageType.Error);
                     GUILayout.EndVertical();
                     return;
                 }
-                DestroyImmediate(killYourself);
+                DestroyImmediate(tempObj);
             }
             GUILayout.Space(10);
             GUILayout.EndVertical();
@@ -183,26 +183,26 @@ namespace SystemMiami.CustomEditor
 
             for (int i = 0; i < targetPrefabs.Count; i++)
             {
-                GUILayout.BeginHorizontal();               
-                targetPrefabs[i] = (GameObject)EditorGUILayout.ObjectField(
+                GUILayout.BeginHorizontal();
+                EditorGUILayout.ObjectField(
                     targetPrefabs[i],
                     script.GetClass(),
                     true);
 
                 targetComponents[i] = targetPrefabs[i].GetComponent(script.GetClass()) as MonoBehaviour;
-                targetComponents[i] = (MonoBehaviour)EditorGUILayout.ObjectField(
+                EditorGUILayout.ObjectField(
                     targetComponents[i],
                     script.GetClass(),
                     true);
 
                 GUILayout.EndHorizontal();
             }
-            
 
             if (targetPrefabs.Count == 0 || targetPrefabs.Count != targetComponents.Count)
             {
                 EditorGUILayout.HelpBox(
                     "Something doesn't look right here...", MessageType.Warning);
+                return;
             }
 
             //GUILayout.BeginHorizontal();
@@ -250,7 +250,6 @@ namespace SystemMiami.CustomEditor
             GUILayout.EndVertical();
 
             GUILayout.FlexibleSpace();
-            
 
             /// Clear Button
             /// ==========================
@@ -310,6 +309,8 @@ namespace SystemMiami.CustomEditor
                             FieldInfo newInfo = infos.Values.ElementAt(j);
                             newInfo.SetValue(targetComponents[i], oldInfo.GetValue(targetComponents[i]));
                             oldInfo.SetValue(targetComponents[i], null);
+                            EditorUtility.SetDirty(targetComponents[i]);
+                            EditorUtility.SetDirty(targetPrefabs[i]);
 
                             fieldsReplaced++;
                         }

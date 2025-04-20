@@ -317,6 +317,39 @@ MonoBehaviour:
   playerLevel: {fileID: 18220305}
   playerInventory: {fileID: 18220308}
   questPanel: {fileID: 2080435359}
+--- !u!1001 &21676811
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 97266673212223590, guid: 261af33b32e7e684d98a43ac01189c2c, type: 3}
+      propertyPath: m_Name
+      value: Game Manager
+      objectReference: {fileID: 0}
+    - target: {fileID: 2274812822827208571, guid: 261af33b32e7e684d98a43ac01189c2c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2274812822827208571, guid: 261af33b32e7e684d98a43ac01189c2c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2274812822827208571, guid: 261af33b32e7e684d98a43ac01189c2c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8536012487520916425, guid: 261af33b32e7e684d98a43ac01189c2c, type: 3}
+      propertyPath: _preserveBetweenScenes
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 261af33b32e7e684d98a43ac01189c2c, type: 3}
 --- !u!1 &307716495
 GameObject:
   m_ObjectHideFlags: 0
@@ -649,67 +682,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2714981005219291665, guid: 3bcb65aae83dbb043a7e0ae0ec07130e, type: 3}
   m_PrefabInstance: {fileID: 1330444464}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &765166752
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 765166754}
-  - component: {fileID: 765166753}
-  m_Layer: 0
-  m_Name: GameManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &765166753
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 765166752}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5ad32c278bc44c04494652f25e65ab16, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _preserveBetweenScenes: 1
-  log:
-    showMessages: 0
-  _dungeonSceneName: Dungeon
-  _neighborhoodSceneName: NEIGHBORHOOD
-  characterSelectSceneName: CharacterSelector
-  _creditsSceneName: 
-  _regenerateDungeonDataOnInteract: 0
-  <LevelThresholds>k__BackingField: 050000000a0000000f00000014000000
-  bosses:
-  - {fileID: 11400000, guid: b4ee8b6520ae7a747acbd090a0850748, type: 2}
-  - {fileID: 11400000, guid: 500b23b9507db49479fefd591206b7e4, type: 2}
-  - {fileID: 11400000, guid: c95579a033064234d9f06fa784e8b218, type: 2}
-  - {fileID: 11400000, guid: 6f5a4eac2b2f4084196115a4a129ccd0, type: 2}
-  <BossRecentlyDefeated>k__BackingField: 0
-  <IgnoreObstacles>k__BackingField: 1
-  <NoNpcs>k__BackingField: 0
---- !u!4 &765166754
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 765166752}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 30.459259, y: 187.37381, z: 3.131455}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &819385963
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10359,6 +10331,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7042945819466953197, guid: 34ba42aa4fc551f46a273b81993c85cc, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7540595280013267169, guid: 34ba42aa4fc551f46a273b81993c85cc, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -13992,7 +13968,7 @@ MonoBehaviour:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 765166754}
+  - {fileID: 21676811}
   - {fileID: 4842253111934106999}
   - {fileID: 1153027862}
   - {fileID: 1560212750}
