@@ -1,4 +1,7 @@
 /// Layla
+///
+#define SYS_PAN_DEVKEYS
+
 using System;
 using System.Linq;
 using SystemMiami.CombatSystem;
@@ -49,8 +52,8 @@ namespace SystemMiami.Management
         [SerializeField] DevKeycode debugExitToNeighborhoodImmediate;
         [SerializeField] DevKeycode debugExitToCharSelectImmediate;
         [SerializeField] DevKeycode debugLoseCombatImmediate;
-        [SerializeField, ReadOnly] string toPrint = "<color=cyan>This is cyan.</color>";
-        private Coroutine checkForDevKey;
+        [SerializeField] DevKeycode debugWinCombatImmediate;
+        [SerializeField] DevKeycode debugGoToBossIntersection;
         #endregion // Debugging
 
 
@@ -127,22 +130,9 @@ namespace SystemMiami.Management
         {
             SceneManager.sceneLoaded += HandleSceneLoaded;
 
-            debugExitToNeighborhoodImmediate
-                .HookIn(this, () => {
-                    GoToNeighborhood(false);
-                });
-            debugExitToCharSelectImmediate
-                .HookIn(this, () => {
-                    GoToCharacterSelect();
-                });
-            debugLoseCombatImmediate
-                .HookIn(this, () => {
-                    PlayerCombatant player = TurnManager.MGR?.playerCharacter as PlayerCombatant;
-                    if (player != null)
-                    {
-                        player.CurrentState.SwitchState(player.Factory.Dying());
-                    }
-                });
+#if SYS_PAN_DEVKEYS
+            HookIntoDevKeycodes();
+#endif
         }
 
         private void OnDisable()
@@ -369,6 +359,63 @@ namespace SystemMiami.Management
         {
             return 0;
         }
+
+#if SYS_PAN_DEVKEYS
+        private void HookIntoDevKeycodes()
+        {
+            debugExitToNeighborhoodImmediate
+                .HookIn(this, () => {
+                    GoToNeighborhood(false);
+                });
+            debugExitToCharSelectImmediate
+                .HookIn(this, () => {
+                    GoToCharacterSelect();
+                });
+            debugLoseCombatImmediate
+                .HookIn(this, () => {
+                    PlayerCombatant player = TurnManager.MGR?.playerCharacter as PlayerCombatant;
+                    if (player != null)
+                    {
+                        player.CurrentState.SwitchState(player.Factory.Dying());
+                    }
+                });
+            debugWinCombatImmediate
+                .HookIn(this, () => {
+                    List<Combatant> enemies = TurnManager.MGR?.enemyCharacters;
+                    if (enemies != null)
+                    {
+                        foreach (Combatant enemy in enemies)
+                        {
+                            enemy.CurrentState.SwitchState(enemy.Factory.Dying());
+                        }
+                    }
+                });
+            debugGoToBossIntersection
+                .HookIn(this, () => {
+                    Transform bossIntersectionTransform = IntersectionManager.MGR?.FarthestIntersection.transform;
+                    Transform playerTransform = PlayerManager.MGR?.transform;
+                    if (bossIntersectionTransform != null && playerTransform != null)
+                    {
+                        playerTransform.position = bossIntersectionTransform.position;
+                    }
+                });
+        }
+
+        // WARN: This is unused right now...
+        // It shouldn't cause any issues, since Game Manager persists
+        // through scenes, but it could cause some like "Serialized Reference no longer exists"
+        // errors or whatever. Haven't been able to figure out how to unhook without
+        // causeing "Routine is null" errors that make the keycodes stop functioning.
+        //
+        private void UnhookDevKeycodes()
+        {
+            debugExitToNeighborhoodImmediate.Unhook(this);
+            debugExitToCharSelectImmediate.Unhook(this);
+            debugLoseCombatImmediate.Unhook(this);
+            debugWinCombatImmediate.Unhook(this);
+            debugGoToBossIntersection.Unhook(this);
+        }
+#endif
         #endregion // Debugging
 
 

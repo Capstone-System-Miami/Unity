@@ -63,6 +63,23 @@ namespace SystemMiami.Utilities
             updateProcess = runner.StartCoroutine(UpdateProcess());
         }
 
+        public void Unhook(MonoBehaviour runner)
+        {
+            if (this.runner != runner)
+            {
+                // Wrong runner
+                return;
+            }
+
+            if (process != null)
+            {
+                runner.StopCoroutine(this.process);
+                this.process = null;
+            }
+
+            codeEntered = null;
+        }
+
         private void LocalUpdate()
         {
             if (!isHolding || pressInSequence.Count == 0) return;
@@ -107,9 +124,6 @@ namespace SystemMiami.Utilities
             }
 
             // Debug.Log("BOTTOM of check sequence");
-            runner.StopCoroutine(this.process);
-            this.process = null;
-            codeEntered = null;
         }
     }
 }
