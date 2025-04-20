@@ -46,7 +46,9 @@ namespace SystemMiami.Management
         SerializeField]
         public bool NoNpcs { get; private set; }
 
-        [SerializeField] DevKeycode debugABlueStatement;
+        [SerializeField] DevKeycode debugExitToNeighborhoodImmediate;
+        [SerializeField] DevKeycode debugExitToCharSelectImmediate;
+        [SerializeField] DevKeycode debugLoseCombatImmediate;
         [SerializeField, ReadOnly] string toPrint = "<color=cyan>This is cyan.</color>";
         private Coroutine checkForDevKey;
         #endregion // Debugging
@@ -124,6 +126,23 @@ namespace SystemMiami.Management
         private void OnEnable()
         {
             SceneManager.sceneLoaded += HandleSceneLoaded;
+
+            debugExitToNeighborhoodImmediate
+                .HookIn(this, () => {
+                    GoToNeighborhood(false);
+                });
+            debugExitToCharSelectImmediate
+                .HookIn(this, () => {
+                    GoToCharacterSelect();
+                });
+            debugLoseCombatImmediate
+                .HookIn(this, () => {
+                    PlayerCombatant player = TurnManager.MGR?.playerCharacter as PlayerCombatant;
+                    if (player != null)
+                    {
+                        player.CurrentState.SwitchState(player.Factory.Dying());
+                    }
+                });
         }
 
         private void OnDisable()
@@ -139,18 +158,6 @@ namespace SystemMiami.Management
             {
                 IntersectionManager.MGR.gameObject.SetActive(false);
                 GoToCharacterSelect();
-            }
-
-            if (Debug.isDebugBuild)
-            {
-                if (checkForDevKey == null && debugABlueStatement.isHolding)
-                {
-                    checkForDevKey = debugABlueStatement.Start(this, () => Debug.Log(toPrint));
-                }
-                else if (checkForDevKey != null)
-                {
-                    checkForDevKey = null;
-                }
             }
         }
         #endregion // Event Responses
@@ -175,7 +182,6 @@ namespace SystemMiami.Management
 
         public void GoToCharacterSelect()
         {
-            log.on();
             log.print($"Going to {CharacterSelectSceneName}");
 
             Singleton[] managers = FindObjectsOfType<Singleton>(true);
@@ -190,9 +196,7 @@ namespace SystemMiami.Management
             managers = FindObjectsOfType<Singleton>(true);
 
             log.print("Managers After Pruning", managers.Select(o => o.name).ToArray());
-            log.stop();
             SceneManager.LoadScene(CharacterSelectSceneName);
-            log.off();
         }
 
         public void GoToNeighborhood(bool regenerate)

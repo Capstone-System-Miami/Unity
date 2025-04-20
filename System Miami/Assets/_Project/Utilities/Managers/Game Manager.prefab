@@ -47,18 +47,33 @@ MonoBehaviour:
   _preserveBetweenScenes: 0
   log:
     showMessages: 0
-  dungeonSceneName: Dungeon
-  neighborhoodSceneName: NEIGHBORHOOD
-  characterSelectSceneName: CharacterSelector
-  creditsSceneName: Credits Scene
+  <RegenerateDungeonDataOnInteract>k__BackingField: 0
+  <IgnoreObstacles>k__BackingField: 1
+  <NoNpcs>k__BackingField: 0
+  debugExitToNeighborhoodImmediate:
+    holdDown: 31000000320000003300000034000000
+    pressInSequence: 6e00000062000000
+  debugExitToCharSelectImmediate:
+    holdDown: 31000000320000003300000034000000
+    pressInSequence: 6300000068000000
+  debugLoseCombatImmediate:
+    holdDown: 31000000320000003300000034000000
+    pressInSequence: 640000006900000065000000
+  toPrint: <color=cyan>This is cyan.</color>
+  mainMenuSceneName: 
   settingsSceneName: SettingsScene
-  _regenerateDungeonDataOnInteract: 0
-  <LevelThresholds>k__BackingField: 050000000a0000000f00000014000000
+  introSceneName: 
+  characterSelectSceneName: CharacterSelector
+  neighborhoodSceneName: NEIGHBORHOOD
+  dungeonSceneName: Dungeon
+  outroSceneName: 
+  creditsSceneName: Credits Scene
   bosses:
   - {fileID: 11400000, guid: b4ee8b6520ae7a747acbd090a0850748, type: 2}
   - {fileID: 11400000, guid: 500b23b9507db49479fefd591206b7e4, type: 2}
   - {fileID: 11400000, guid: c95579a033064234d9f06fa784e8b218, type: 2}
   - {fileID: 11400000, guid: 6f5a4eac2b2f4084196115a4a129ccd0, type: 2}
+  <LevelThresholds>k__BackingField: 050000000a0000000f00000014000000
+  <CurrentDungeonData>k__BackingField:
+    difficulty: 0
   <BossRecentlyDefeated>k__BackingField: 0
-  <IgnoreObstacles>k__BackingField: 1
-  <NoNpcs>k__BackingField: 0
