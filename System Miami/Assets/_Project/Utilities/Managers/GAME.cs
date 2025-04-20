@@ -45,6 +45,10 @@ namespace SystemMiami.Management
         Tooltip( "Whether or not Npcs should spawn at all in the game" ),
         SerializeField]
         public bool NoNpcs { get; private set; }
+
+        [SerializeField] DevKeycode debugABlueStatement;
+        [SerializeField, ReadOnly] string toPrint = "<color=cyan>This is cyan.</color>";
+        private Coroutine checkForDevKey;
         #endregion // Debugging
 
 
@@ -135,6 +139,18 @@ namespace SystemMiami.Management
             {
                 IntersectionManager.MGR.gameObject.SetActive(false);
                 GoToCharacterSelect();
+            }
+
+            if (Debug.isDebugBuild)
+            {
+                if (checkForDevKey == null && debugABlueStatement.isHolding)
+                {
+                    checkForDevKey = debugABlueStatement.Start(this, () => Debug.Log(toPrint));
+                }
+                else if (checkForDevKey != null)
+                {
+                    checkForDevKey = null;
+                }
             }
         }
         #endregion // Event Responses
