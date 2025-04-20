@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 137720345}
   - component: {fileID: 137720344}
   - component: {fileID: 137720343}
-  - component: {fileID: 137720342}
+  - component: {fileID: 137720347}
   - component: {fileID: 137720346}
   m_Layer: 5
   m_Name: fighterbtn
@@ -163,18 +163,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0.0000034814002, y: -89}
   m_SizeDelta: {x: 100, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &137720342
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 137720340}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f73f3257403c2f48ba083362042754b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &137720343
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -219,17 +207,17 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 137720342}
-        m_TargetAssemblyTypeName: SystemMiami.ButtonSceneLoader, Assembly-CSharp
-        m_MethodName: LoadScene
-        m_Mode: 5
+      - m_Target: {fileID: 137720347}
+        m_TargetAssemblyTypeName: SystemMiami.ui.GoToNeighborhood, Assembly-CSharp
+        m_MethodName: Go
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: Neighborhood
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
       - m_Target: {fileID: 137720346}
         m_TargetAssemblyTypeName: SystemMiami.ClassChanger, Assembly-CSharp
@@ -295,6 +283,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   classType: 0
   player: {fileID: 778544193}
+--- !u!114 &137720347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 137720340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35ee4393984a9ae41bae16ff52a6cd21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &155624316
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1254,7 +1254,7 @@ GameObject:
   - component: {fileID: 616840369}
   - component: {fileID: 616840368}
   - component: {fileID: 616840367}
-  - component: {fileID: 616840366}
+  - component: {fileID: 616840371}
   - component: {fileID: 616840370}
   m_Layer: 5
   m_Name: tankbtn
@@ -1283,18 +1283,6 @@ RectTransform:
   m_AnchoredPosition: {x: -0.0000011811, y: -89}
   m_SizeDelta: {x: 100, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &616840366
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 616840364}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f73f3257403c2f48ba083362042754b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &616840367
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1339,17 +1327,17 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 616840366}
-        m_TargetAssemblyTypeName: SystemMiami.ButtonSceneLoader, Assembly-CSharp
-        m_MethodName: LoadScene
-        m_Mode: 5
+      - m_Target: {fileID: 616840371}
+        m_TargetAssemblyTypeName: SystemMiami.ui.GoToNeighborhood, Assembly-CSharp
+        m_MethodName: Go
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: Neighborhood
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
       - m_Target: {fileID: 616840370}
         m_TargetAssemblyTypeName: SystemMiami.ClassChanger, Assembly-CSharp
@@ -1415,6 +1403,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   classType: 3
   player: {fileID: 778544193}
+--- !u!114 &616840371
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 616840364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35ee4393984a9ae41bae16ff52a6cd21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &672656521
 GameObject:
   m_ObjectHideFlags: 0
@@ -1427,7 +1427,7 @@ GameObject:
   - component: {fileID: 672656526}
   - component: {fileID: 672656525}
   - component: {fileID: 672656524}
-  - component: {fileID: 672656523}
+  - component: {fileID: 672656528}
   - component: {fileID: 672656527}
   m_Layer: 5
   m_Name: magebtn
@@ -1456,18 +1456,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0.000011057, y: -89}
   m_SizeDelta: {x: 100, y: 37.2179}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &672656523
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 672656521}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f73f3257403c2f48ba083362042754b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &672656524
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1512,17 +1500,17 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 672656523}
-        m_TargetAssemblyTypeName: SystemMiami.ButtonSceneLoader, Assembly-CSharp
-        m_MethodName: LoadScene
-        m_Mode: 5
+      - m_Target: {fileID: 672656528}
+        m_TargetAssemblyTypeName: SystemMiami.ui.GoToNeighborhood, Assembly-CSharp
+        m_MethodName: Go
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: Neighborhood
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
       - m_Target: {fileID: 672656527}
         m_TargetAssemblyTypeName: SystemMiami.ClassChanger, Assembly-CSharp
@@ -1588,6 +1576,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   classType: 1
   player: {fileID: 778544193}
+--- !u!114 &672656528
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 672656521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35ee4393984a9ae41bae16ff52a6cd21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &729140063
 GameObject:
   m_ObjectHideFlags: 0
@@ -1739,7 +1739,7 @@ GameObject:
   - component: {fileID: 921010255}
   - component: {fileID: 921010254}
   - component: {fileID: 921010253}
-  - component: {fileID: 921010252}
+  - component: {fileID: 921010257}
   - component: {fileID: 921010256}
   m_Layer: 5
   m_Name: roguebtn
@@ -1768,18 +1768,6 @@ RectTransform:
   m_AnchoredPosition: {x: -0.0000011811007, y: -89}
   m_SizeDelta: {x: 100, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &921010252
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 921010250}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f73f3257403c2f48ba083362042754b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &921010253
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1824,17 +1812,17 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 921010252}
-        m_TargetAssemblyTypeName: SystemMiami.ButtonSceneLoader, Assembly-CSharp
-        m_MethodName: LoadScene
-        m_Mode: 5
+      - m_Target: {fileID: 921010257}
+        m_TargetAssemblyTypeName: SystemMiami.ui.GoToNeighborhood, Assembly-CSharp
+        m_MethodName: Go
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: Neighborhood
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
       - m_Target: {fileID: 921010256}
         m_TargetAssemblyTypeName: SystemMiami.ClassChanger, Assembly-CSharp
@@ -1900,6 +1888,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   classType: 2
   player: {fileID: 778544193}
+--- !u!114 &921010257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 921010250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35ee4393984a9ae41bae16ff52a6cd21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &937398326
 GameObject:
   m_ObjectHideFlags: 0
@@ -4638,7 +4638,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1306517318}
-  - component: {fileID: 1306517317}
   - component: {fileID: 1306517316}
   m_Layer: 0
   m_Name: Managers
@@ -4669,30 +4668,6 @@ MonoBehaviour:
   winPanelPrefab: {fileID: 0}
   TEMP_goToNeighborhood: {fileID: 0}
   <CurrentClient>k__BackingField: {fileID: 0}
---- !u!114 &1306517317
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1306517315}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5ad32c278bc44c04494652f25e65ab16, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _preserveBetweenScenes: 0
-  log:
-    showMessages: 0
-  _dungeonSceneName: Dungeon
-  _neighborhoodSceneName: Neighborhood
-  characterSelectSceneName: 
-  _regenerateDungeonDataOnInteract: 0
-  <LevelThresholds>k__BackingField: 
-  bosses: []
-  <BossRecentlyDefeated>k__BackingField: 0
-  <IgnoreObstacles>k__BackingField: 0
-  <NoNpcs>k__BackingField: 0
 --- !u!4 &1306517318
 Transform:
   m_ObjectHideFlags: 0
@@ -4858,6 +4833,63 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1656526941}
   m_CullTransparentMesh: 1
+--- !u!1001 &1700860968
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 97266673212223590, guid: 261af33b32e7e684d98a43ac01189c2c, type: 3}
+      propertyPath: m_Name
+      value: Game Manager
+      objectReference: {fileID: 0}
+    - target: {fileID: 2274812822827208571, guid: 261af33b32e7e684d98a43ac01189c2c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 192.61879
+      objectReference: {fileID: 0}
+    - target: {fileID: 2274812822827208571, guid: 261af33b32e7e684d98a43ac01189c2c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 243.63911
+      objectReference: {fileID: 0}
+    - target: {fileID: 2274812822827208571, guid: 261af33b32e7e684d98a43ac01189c2c, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.98615336
+      objectReference: {fileID: 0}
+    - target: {fileID: 2274812822827208571, guid: 261af33b32e7e684d98a43ac01189c2c, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2274812822827208571, guid: 261af33b32e7e684d98a43ac01189c2c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2274812822827208571, guid: 261af33b32e7e684d98a43ac01189c2c, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2274812822827208571, guid: 261af33b32e7e684d98a43ac01189c2c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2274812822827208571, guid: 261af33b32e7e684d98a43ac01189c2c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2274812822827208571, guid: 261af33b32e7e684d98a43ac01189c2c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2274812822827208571, guid: 261af33b32e7e684d98a43ac01189c2c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 261af33b32e7e684d98a43ac01189c2c, type: 3}
 --- !u!1 &1776054279
 GameObject:
   m_ObjectHideFlags: 0
@@ -5281,6 +5313,7 @@ CanvasRenderer:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 1700860968}
   - {fileID: 234369732}
   - {fileID: 313761915}
   - {fileID: 277811816}
