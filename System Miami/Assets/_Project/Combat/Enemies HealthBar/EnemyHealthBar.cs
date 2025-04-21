@@ -21,11 +21,30 @@ namespace SystemMiami
         public Image fill;
         private Combatant _combatant;
 
+        private void Awake()
+        {
+            _combatant = GetComponent<Combatant>();
+        }
+
+        void OnEnable()
+        {
+            GAME.MGR.damageTaken += OnDamageTaken; // DAMGAE
+        }
+
+        void OnDisable()
+        {
+            GAME.MGR.damageTaken -= OnDamageTaken; // UPDATES HEALTH BAR
+        }
+
+        private void Start()
+        {
+            StartCoroutine(SetOnceInitialized());
+        }
+
         public void SetMaxHealth(float maxHealth)
         {
+            // NOTE: (layla) Removed the line setting the combatants current health.
             slider.maxValue = maxHealth;
-            slider.value = maxHealth;
-       
             fill.color = gradient.Evaluate(1f); // In theory should change color depending on the % of the slider
         }
 
@@ -35,31 +54,32 @@ namespace SystemMiami
             fill.color = gradient.Evaluate(slider.normalizedValue);
         }
 
-        private void Start()
+        public void Reset()
         {
-            _combatant = GetComponent<Combatant>();
-            if (_combatant != null)
-            {
-                SetMaxHealth(_combatant.GetCurrentHealth());
-            }
+            SetMaxHealth(_combatant.Health.GetMax());
+            SetHealth(_combatant.Health.GetMax());
         }
 
-        void OnEnable()
+        public void Recalc()
         {
-            GAME.MGR.damageTaken += OnDamageTaken; // DAMGAE
-           
+            SetMaxHealth(_combatant.Health.GetMax());
+            SetHealth(_combatant.Health.Get());
         }
 
-        void OnDisable()
+        private IEnumerator SetOnceInitialized()
         {
-            GAME.MGR.damageTaken -= OnDamageTaken; // UPDATES HEALTH BAR
+            yield return new WaitUntil( () => _combatant != null & _combatant.Initialized);
+            Reset();
         }
 
-        void OnDamageTaken(Combatant combatant)
+        private void OnDamageTaken(Combatant combatant)
         {
             if (combatant == _combatant)
             {
-                SetHealth(combatant.GetCurrentHealth());
+                // Status effects will change the health of the enemy,
+                // so we want to make sure their max is set frequently.
+                SetMaxHealth(combatant.Health.GetMax());
+                SetHealth(combatant.Health.Get());
             }
             Camera.main.GetComponent<CameraShake>()?.Shake(); // Added this to allow camera shake
         }

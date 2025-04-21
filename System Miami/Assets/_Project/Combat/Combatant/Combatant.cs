@@ -42,6 +42,7 @@ namespace SystemMiami.CombatSystem
 
         #region Private Vars
         //============================================================
+        private bool initialized = false;
 
         // State Machine
         private CombatantStateFactory stateFactory;
@@ -121,7 +122,22 @@ namespace SystemMiami.CombatSystem
         public bool PrintUItoConsole { get { return _printUItoConsole; } }
 
         public bool IsMyTurn { get; set; }
-        public bool ReadyToStart { get { return currentState is Idle; } }
+        public bool Initialized {
+            get
+            {
+                return _stats != null
+                    && _renderer != null
+                    && _animator != null
+                    && Health != null
+                    && Stamina != null
+                    && Mana != null
+                    && Speed != null
+                    && MapManager.MGR != null
+                    && CurrentDirectionContext != null
+                    && Factory != null
+                    && CurrentState != null;
+            }
+        }
         public Phase CurrentPhase { get { return currentState?.phase ?? Phase.None; } }
 
         // Stats, Status, Resources
@@ -235,7 +251,8 @@ namespace SystemMiami.CombatSystem
 
         private void Update()
         {
-            if(this == null) return;
+            if (this == null) return;
+            if (!Initialized) return;
             UpdateResources();
 
             CurrentState.Update();
@@ -281,11 +298,6 @@ namespace SystemMiami.CombatSystem
 
             _animator = GetComponent<Animator>();
         }
-        public float GetCurrentHealth()
-{
-    return Health.Get();
-}
-
 
         private void InitResources()
         {

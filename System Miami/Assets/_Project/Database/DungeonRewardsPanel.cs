@@ -56,7 +56,6 @@ namespace SystemMiami
             SubscribeToGrid(inventoryUI.Tabs.TabConsumable.ItemGrid);
             SubscribeToGrid(inventoryUI.Tabs.TabPhysical.ItemGrid);
             SubscribeToGrid(inventoryUI.Tabs.TabMagical.ItemGrid);
-            SubscribeToGrid(inventoryUI.Tabs.TabEquipment.ItemGrid);
             SubscribeToGrid(loadoutGridPhysical);
             SubscribeToGrid(loadoutGridMagical);
             SubscribeToGrid(loadoutGridConsumable);
@@ -71,7 +70,6 @@ namespace SystemMiami
             UnsubscribeToGrid(inventoryUI.Tabs.TabConsumable.ItemGrid);
             UnsubscribeToGrid(inventoryUI.Tabs.TabPhysical.ItemGrid);
             UnsubscribeToGrid(inventoryUI.Tabs.TabMagical.ItemGrid);
-            UnsubscribeToGrid(inventoryUI.Tabs.TabEquipment.ItemGrid);
             UnsubscribeToGrid(loadoutGridPhysical);
             UnsubscribeToGrid(loadoutGridMagical);
             UnsubscribeToGrid(loadoutGridConsumable);

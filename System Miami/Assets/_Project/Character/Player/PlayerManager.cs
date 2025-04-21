@@ -21,8 +21,7 @@ namespace SystemMiami
         #region SERIALIZED
         // ======================================
         [Header("Debug")]
-        [SerializeField] private dbug log;
-        [SerializeField] bool showDebug;
+        [SerializeField] private dbug log = new();
 
         [Header("Component Groups")]
         [Tooltip("Components active in all modes")]
@@ -184,8 +183,6 @@ namespace SystemMiami
         // ======================================
         #endregion
 
-      
-        
 
         #region PUBLIC METHODS
         // ======================================
@@ -199,7 +196,7 @@ namespace SystemMiami
             playerCamera.SetActive(true);
             interactionUI.SetActive(true);
             interactionUI.GetComponentInChildren<PromptBox>().Clear();
-            
+
             DisableComponents(dungeonComponents);
             EnableComponents(neighborhoodComponents);
 

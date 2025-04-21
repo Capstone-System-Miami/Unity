@@ -1,4 +1,4 @@
-using System;
+using System.Collections;
 using System.Collections.Generic;
 using SystemMiami.Utilities;
 using UnityEngine;
@@ -33,24 +33,40 @@ namespace SystemMiami.ui
             ElementSelector = new(selectables);
         }
 
+        // FIX: Figure out why the fuck this is the only thing that works
+        //
         private void OnEnable()
         {
-            if (CurrentElement != null)
+            IEnumerator godHelpUsAll()
             {
-                ReSelectCurrent();
+                float remaining = 1f;
+                while (remaining > 0)
+                {
+                    remaining -= Time.deltaTime;
+                    SelectElement(0, true);
+                    yield return null;
+                }
             }
+
+            StartCoroutine(godHelpUsAll());
         }
 
         private void Start()
         {
-            ButtonSelector.Reset();
-            ElementSelector.Reset();
+            SelectElement(0, true);
         }
 
         public virtual void SelectElement(int index)
         {
             ButtonSelector.Select(index);
             ElementSelector.Select(index);
+        }
+
+
+        public virtual void SelectElement(int index, bool selectIfSame)
+        {
+            ButtonSelector.Select(index, selectIfSame);
+            ElementSelector.Select(index, selectIfSame);
         }
 
         public virtual void ReSelectCurrent()
@@ -60,27 +76,5 @@ namespace SystemMiami.ui
         }
 
         protected abstract List<T> GetSelectables();
-
-        //protected abstract List<MonoBehaviour> GetRawMonos();
-
-        //private List<T> GetAsT()
-        //{
-        //    List<T> result = new();
-        //    List<MonoBehaviour> monos = GetRawMonos();
-
-        //    foreach (MonoBehaviour mono in monos)
-        //    {
-        //        if (mono is not T t)
-        //        {
-        //            log.error($"{mono.name} does NOT implement {typeof(ISingleSelectable)}");
-        //        }
-        //        else
-        //        {
-        //            result.Add(t);
-        //        }
-        //    }
-
-        //    return result;
-        //}
     }
 }

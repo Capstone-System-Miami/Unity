@@ -10,6 +10,7 @@ namespace SystemMiami.CombatRefactor
 
         public readonly Combatant combatant;
         protected readonly CombatantStateFactory factory;
+        protected bool combatStarted;
 
         private string inputPrompts = "";
         public string InputPrompts
@@ -35,6 +36,9 @@ namespace SystemMiami.CombatRefactor
             this.combatant = combatant;
             this.factory = combatant.Factory;
             this.phase = phase;
+
+            combatStarted = false;
+            TurnManager.MGR.CombatStarted += HandleCombatStarted;
         }
 
         /// <summary>
@@ -136,6 +140,13 @@ namespace SystemMiami.CombatRefactor
             newFocus = combatant.GetNewFocus() ?? combatant.GetDefaultFocus();
 
             return newFocus != currentFocus;
+        }
+
+        protected virtual void HandleCombatStarted()
+        {
+            combatStarted = true;
+
+            TurnManager.MGR.CombatStarted -= HandleCombatStarted;
         }
     }
 }

@@ -1,0 +1,84 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &97266673212223590
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2274812822827208571}
+  - component: {fileID: 8536012487520916425}
+  m_Layer: 0
+  m_Name: Game Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2274812822827208571
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 97266673212223590}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8536012487520916425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 97266673212223590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ad32c278bc44c04494652f25e65ab16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _preserveBetweenScenes: 0
+  log:
+    showMessages: 0
+  <RegenerateDungeonDataOnInteract>k__BackingField: 0
+  <IgnoreObstacles>k__BackingField: 1
+  <NoNpcs>k__BackingField: 0
+  debugExitToNeighborhoodImmediate:
+    holdDown: 31000000320000003300000034000000
+    pressInSequence: 6e00000068000000
+  debugExitToCharSelectImmediate:
+    holdDown: 31000000320000003300000034000000
+    pressInSequence: 6300000068000000
+  debugLoseCombatImmediate:
+    holdDown: 31000000320000003300000034000000
+    pressInSequence: 640000006900000065000000
+  debugWinCombatImmediate:
+    holdDown: 31000000320000003300000034000000
+    pressInSequence: 77000000690000006e000000
+  debugGoToBossIntersection:
+    holdDown: 31000000320000003300000034000000
+    pressInSequence: 620000006f0000007300000073000000
+  mainMenuSceneName: Menu Scene
+  settingsSceneName: SettingsScene
+  introSceneName: 
+  characterSelectSceneName: CharacterSelector
+  neighborhoodSceneName: NEIGHBORHOOD
+  dungeonSceneName: Dungeon
+  outroSceneName: 
+  creditsSceneName: Credits Scene
+  bosses:
+  - {fileID: 11400000, guid: b4ee8b6520ae7a747acbd090a0850748, type: 2}
+  - {fileID: 11400000, guid: 500b23b9507db49479fefd591206b7e4, type: 2}
+  - {fileID: 11400000, guid: c95579a033064234d9f06fa784e8b218, type: 2}
+  - {fileID: 11400000, guid: 6f5a4eac2b2f4084196115a4a129ccd0, type: 2}
+  <LevelThresholds>k__BackingField: 050000000a0000000f00000014000000
+  <CurrentDungeonData>k__BackingField:
+    difficulty: 0
+  <BossRecentlyDefeated>k__BackingField: 0

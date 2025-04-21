@@ -108,8 +108,9 @@ namespace SystemMiami.ui
 
             if (!usingFallback)
             {
-                spriteBox.SetBackground(null, Color.grey);
-                spriteBox.SetForeground(null, Color.white);
+                spriteBox.enabled = false;
+                spriteBox.SetBackground(null, Color.clear);
+                spriteBox.SetForeground(null, Color.clear);
             }
             else
             {
@@ -126,7 +127,8 @@ namespace SystemMiami.ui
 
             if (!usingFallback)
             {
-                spriteBox.SetForeground(itemData.Icon);
+                spriteBox.enabled = true;
+                spriteBox.SetForeground(itemData.Icon, Color.white);
             }
             else
             {

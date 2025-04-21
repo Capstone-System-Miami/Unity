@@ -35,7 +35,7 @@ namespace SystemMiami.Shop
         {
             titleTxt.text = item.Name;
             descriptionTxt.text = item.Description;
-            costTxt.text = item.Price.ToString();
+            costTxt.text = item.Price.ToString() + " Credits";
             buyButton.onClick.RemoveAllListeners();
             buyButton.onClick.AddListener(() => addItemToInventory());
         }
@@ -56,6 +56,7 @@ namespace SystemMiami.Shop
             {
                 playerInventory.AddToInventory(item.ID);
                 Debug.Log("Player has bought " + item.Name);
+                PlayerManager.MGR.inventory.LoseCredits(item.Price);
             }
         }
 
