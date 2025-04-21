@@ -25,6 +25,7 @@ namespace SystemMiami.Management
         [Header("Game Over")]
         [SerializeField] private GameObject lossPanelPrefab;
         [SerializeField] private GameObject winPanelPrefab;
+        [SerializeField] private GameObject rollCreditsPanelPrefab;
         // This should eventually get removed when we have a substantial win panel.
         [SerializeField] private GoToNeighborhood TEMP_goToNeighborhood;
 
@@ -166,16 +167,18 @@ namespace SystemMiami.Management
         private void HandleDungeonCleared()
         {
             Debug.Log($"{name} handling dun clr");
-            // TEMP_goToNeighborhood.Go(GAME.MGR.CurrentDungeonData.difficulty == Dungeons.DifficultyLevel.BOSS);
 
-            // TODO:
-            // Comment the above line and uncomment this when the
-            // panel is functional/ ready to be used.
-            //
-            Instantiate(winPanelPrefab);
+            if (GAME.MGR.AllBossesDefeated)
+            {
+                Instantiate(rollCreditsPanelPrefab);
+            }
+            else
+            {
+                Instantiate(winPanelPrefab);
+            }
 
-            TurnManager.MGR.DungeonFailed += HandleDungeonFailed;
-            TurnManager.MGR.DungeonCleared += HandleDungeonCleared;
+            TurnManager.MGR.DungeonFailed -= HandleDungeonFailed;
+            TurnManager.MGR.DungeonCleared -= HandleDungeonCleared;
         }
 
         private void HandleDungeonFailed()
@@ -183,8 +186,8 @@ namespace SystemMiami.Management
             Debug.Log($"{name} handling dun fail");
             Instantiate(lossPanelPrefab);
 
-            TurnManager.MGR.DungeonFailed += HandleDungeonFailed;
-            TurnManager.MGR.DungeonCleared += HandleDungeonCleared;
+            TurnManager.MGR.DungeonFailed -= HandleDungeonFailed;
+            TurnManager.MGR.DungeonCleared -= HandleDungeonCleared;
         }
     }
 }

@@ -108,6 +108,9 @@ namespace SystemMiami.Management
         [field: SerializeField] public bool BossRecentlyDefeated { get; private set; }
 
         private Queue<DungeonPreset> bossDungeonQueue = new();
+        public bool AllBossesDefeated {
+            get { return bossDungeonQueue.Count == 0; }
+        }
 
         // Events
         public Action<Combatant> CombatantDying;
@@ -464,7 +467,6 @@ namespace SystemMiami.Management
         {
             TurnManager.MGR.DungeonFailed -= HandleDungeonFailed;
             TurnManager.MGR.DungeonCleared -= HandleDungeonCleared;
-            // GoToNeighborhood(CurrentDungeonData.difficulty == DifficultyLevel.BOSS);
         }
         #endregion // Event Responses
     }

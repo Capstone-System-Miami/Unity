@@ -185,7 +185,9 @@ public class IntersectionManager : Singleton<IntersectionManager>
 
         if (!TryFindReplacement(out NeighborhoodBossPreset))
         {
-            // win game
+            // WARN: If we hit this codeblock, something has gone wrong.
+            // This *should* only happen if we were to return to the
+            // neighborhood after winning the game completely.
             return;
         }
 
