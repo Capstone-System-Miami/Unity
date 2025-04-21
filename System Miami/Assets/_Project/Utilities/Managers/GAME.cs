@@ -108,8 +108,13 @@ namespace SystemMiami.Management
         [field: SerializeField] public bool BossRecentlyDefeated { get; private set; }
 
         private Queue<DungeonPreset> bossDungeonQueue = new();
+        public bool AllBossesDefeated {
+            get { return bossDungeonQueue.Count == 0; }
+        }
 
         // Events
+        public event Action GamePaused;
+        public event Action GameResumed;
         public Action<Combatant> CombatantDying;
         public event Action<Combatant> damageTaken;
 
@@ -151,6 +156,22 @@ namespace SystemMiami.Management
             }
         }
         #endregion // Event Responses
+
+
+        #region Game Control
+        // =====================================================================
+        public void PauseGame()
+        {
+            Time.timeScale = 0;
+            GamePaused?.Invoke();
+        }
+
+        public void ResumeGame()
+        {
+            Time.timeScale = 1;
+            GameResumed?.Invoke();
+        }
+        #endregion // Game Control
 
 
         #region Scene Navigation
@@ -447,6 +468,7 @@ namespace SystemMiami.Management
         // =====================================================================
         private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
         {
+            Time.timeScale = 1;
             if (TurnManager.MGR != null)
             {
                 TurnManager.MGR.DungeonFailed += HandleDungeonFailed;
@@ -464,7 +486,6 @@ namespace SystemMiami.Management
         {
             TurnManager.MGR.DungeonFailed -= HandleDungeonFailed;
             TurnManager.MGR.DungeonCleared -= HandleDungeonCleared;
-            // GoToNeighborhood(CurrentDungeonData.difficulty == DifficultyLevel.BOSS);
         }
         #endregion // Event Responses
     }

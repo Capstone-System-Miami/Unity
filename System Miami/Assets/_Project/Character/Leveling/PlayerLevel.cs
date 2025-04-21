@@ -62,7 +62,7 @@ namespace SystemMiami
             {
                 OnLevelUp();
                 GainXP(remainderXP);
-                if (!levelUpText.activeSelf)
+                if (levelUpText != null && !levelUpText.activeSelf)
                 {
                     levelUpText.SetActive(true);
                 }
@@ -70,7 +70,7 @@ namespace SystemMiami
             else if (remainderXP == 0)
             {
                 OnLevelUp();
-                if (!levelUpText.activeSelf)
+                if (levelUpText != null && !levelUpText.activeSelf)
                 {
                     levelUpText.SetActive(true);
                 }
@@ -79,6 +79,8 @@ namespace SystemMiami
 
         public void TurnOffLevelText()
         {
+            if (levelUpText == null) { return; }
+
             levelUpText.SetActive(false);
         }
 
