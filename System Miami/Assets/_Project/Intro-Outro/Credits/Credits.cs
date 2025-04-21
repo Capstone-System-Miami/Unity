@@ -1,25 +1,91 @@
-// Author: Johnny Sosa
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
-using UnityEngine.UI; 
+using UnityEngine.SceneManagement;
 
 namespace SystemMiami
 {
     public class Credits : MonoBehaviour
     {
+        public string[] titles;
+        public string[] names;
+        public CanvasGroup canvasGroup;
+        public TextMeshProUGUI titleText;
+        public TextMeshProUGUI nameText;
+        public GameObject[] imageGroups;
+        public Button continueButton;
+        public float fadeDuration = 1f;
+
+        private int currentSlide = 0;
+        private bool waitingForInput = false;
+
+
+
+
         // Start is called before the first frame update
         void Start()
         {
+            continueButton.onClick.AddListener(AdvanceSlide);
+            continueButton.interactable = false;
+            StartCoroutine(PlaySlideShow());
         
         }
 
-        // Update is called once per frame
-        void Update()
+        IEnumerator PlaySlideShow()
         {
-        
+            while (currentSlide < titles.Length && currentSlide < names.Length)
+            {
+                titleText.text = titles[currentSlide];
+                nameText.text = names[currentSlide];
+                
+                imageGroups[currentSlide].SetActive(true);
+
+
+                yield return StartCoroutine(Fade(0f, 1f)); // Start Fade
+
+                waitingForInput = true;
+                continueButton.interactable = true;
+
+                while (waitingForInput)
+                {
+                    yield return null;
+                }
+
+                continueButton.interactable = false;
+                yield return StartCoroutine(Fade(1f, 0f)); // End fade
+
+                imageGroups[currentSlide].SetActive(false);
+
+                currentSlide++;
+
+            }
+            
+
+             Debug.Log("Credits Finished");
+            SceneManager.LoadScene("Menu Scene"); // Takes you back to Main
         }
+
+        public void AdvanceSlide()
+        {
+            waitingForInput = false; 
+        }
+
+        IEnumerator Fade(float from, float to)
+        {
+            float timer = 0f;
+            while (timer < fadeDuration)
+            {
+                timer += Time.deltaTime;
+                float alpha = Mathf.Lerp(from, to, timer / fadeDuration); // Fade effect is handled here
+                canvasGroup.alpha = alpha;
+                yield return null;
+
+            }
+            canvasGroup.alpha = to;
+
+        }
+
     }
 }
