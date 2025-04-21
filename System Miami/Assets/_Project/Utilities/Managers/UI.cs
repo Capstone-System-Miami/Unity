@@ -249,6 +249,10 @@ namespace SystemMiami.Management
             {
                 prefab = dungeonPauseButtonPrefab;
             }
+            else
+            {
+                return;
+            }
 
             Assert.IsNotNull(prefab, $"{name} tried to instantiate a null pause button...");
 

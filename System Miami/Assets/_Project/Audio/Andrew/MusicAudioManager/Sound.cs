@@ -10,9 +10,7 @@ namespace SystemMiami
 
         public AudioClip clip;
         public SoundType type;
-
-        [Range(0f,1f)]
-        public float volume;
+        public AudioMixerGroup group;
 
         [Range(0.1f, 3f)]
         public float pitch;
@@ -28,7 +26,6 @@ namespace SystemMiami
             name = "Default Sound Name";
             clip = null;
             type = default;
-            volume = 1f;
             pitch = 1f;
             loop = false;
         }
@@ -47,7 +44,6 @@ namespace SystemMiami
         {
             this.name = name;
             this.clip = clip;
-            this.volume = volume;
             this.pitch = pitch;
             this.loop = loop;
         }
@@ -57,7 +53,6 @@ namespace SystemMiami
             this.name = name;
             this.clip = null;
             this.type = type;
-            this.volume = volume;
             this.pitch = pitch;
             this.loop = loop;
         }

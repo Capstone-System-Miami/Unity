@@ -418,12 +418,23 @@ MonoBehaviour:
   _preserveBetweenScenes: 0
   inputPromptsOn: 1
   inputPromptPanel: {fileID: 0}
+  neighborhoodPauseButtonPrefab: {fileID: 0}
+  dungeonPauseButtonPrefab: {fileID: 0}
+  pausePanelPrefab: {fileID: 0}
+  pauseButton: {fileID: 0}
+  pausePanel: {fileID: 0}
+  characterMenuPrefab: {fileID: 0}
+  characterMenuButtonPrefab: {fileID: 0}
+  characterMenu: {fileID: 0}
+  characterMenuButton: {fileID: 0}
   physicalAbilitiesBar: {fileID: 0}
   magicalAbilitiesBar: {fileID: 0}
   consumablesBar: {fileID: 0}
   lossPanelPrefab: {fileID: 0}
   winPanelPrefab: {fileID: 0}
-  TEMP_goToNeighborhood: {fileID: 0}
+  winBossPanelPrefab: {fileID: 0}
+  rollCreditsPanelPrefab: {fileID: 0}
+  combatOverPanel: {fileID: 0}
   <CurrentClient>k__BackingField: {fileID: 0}
 --- !u!4 &166022999
 Transform:
@@ -1166,9 +1177,9 @@ MonoBehaviour:
   m_HandleRect: {fileID: 792418342}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 10
-  m_WholeNumbers: 1
-  m_Value: 0
+  m_MaxValue: 1
+  m_WholeNumbers: 0
+  m_Value: 0.6
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1693,6 +1704,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4766871419057806930, guid: 88b586bbf39b1a541a88067c4c068da9, type: 3}
+      propertyPath: <mainMixer>k__BackingField
+      value: 
+      objectReference: {fileID: 24100000, guid: f479d9c990caf4f43baeae6082d92296, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1857,9 +1872,9 @@ MonoBehaviour:
   m_HandleRect: {fileID: 954467555}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 10
-  m_WholeNumbers: 1
-  m_Value: 5
+  m_MaxValue: 1
+  m_WholeNumbers: 0
+  m_Value: 0.6
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2450,6 +2465,7 @@ GameObject:
   - component: {fileID: 1896209883}
   - component: {fileID: 1896209885}
   - component: {fileID: 1896209884}
+  - component: {fileID: 1896209886}
   m_Layer: 5
   m_Name: Main Panel
   m_TagString: Untagged
@@ -2516,6 +2532,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1896209882}
   m_CullTransparentMesh: 1
+--- !u!114 &1896209886
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1896209882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6835dfa9fe09f444918c2d76aaf2c8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  musicVolSlider: {fileID: 1162826266}
+  sfxVolSlider: {fileID: 823193725}
 --- !u!1 &1966798627
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Audio;
 using System;
 using System.Collections;
 using System.Linq;
@@ -19,13 +20,18 @@ namespace SystemMiami
 
     public class AudioManager : Singleton<AudioManager>
     {
+        const float MAX_DB_ATTENUATION = 20f;
+
         [Header("Debug")]
         public dbug log;
+
+        [field: Header("Global")]
+        [field: SerializeField] public AudioMixer mainMixer { get; private set; }
 
         [Header("Sound FX")]
         public Sound[] sounds;
 
-        [Header("Music")]
+        [field: Header("Music")]
         public Music mainMenu;
         public Music settings;
         public Music characterSelect;
@@ -145,6 +151,30 @@ namespace SystemMiami
             musicSource.Play();
         }
 
+        public void AdjustMusicVolume(float percent)
+        {
+            if (mainMixer == null) { Debug.LogError("didn't work"); return; }
+            mainMixer.SetFloat("musicVolume", Mathf.Log10(percent) * MAX_DB_ATTENUATION);
+        }
+        public void AdjustSfxVolume(float percent)
+        {
+            if (mainMixer == null) { Debug.LogError("didn't work"); return; }
+
+            mainMixer.SetFloat("musicVolume", Mathf.Log10(percent) * MAX_DB_ATTENUATION);
+        }
+
+        public float GetMusicVolumePercent()
+        {
+            mainMixer.GetFloat("musicVolume", out float currentAtten);
+            return (Mathf.Pow(10, currentAtten)) / MAX_DB_ATTENUATION;
+        }
+        public float GetSfxVolumePercent()
+        {
+            mainMixer.GetFloat("sfxVolume", out float currentAtten);
+            return (Mathf.Pow(10, currentAtten)) / MAX_DB_ATTENUATION;
+        }
+
+
         protected virtual void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             if (overrideBuildIndex) { return; }
@@ -157,6 +187,7 @@ namespace SystemMiami
 
             PlayMusic(sceneMusic[0]);
         }
+
 
         private IEnumerator DoWhenOver(AudioSource sourceToCheck, Action onClipOver)
         {
@@ -177,8 +208,9 @@ namespace SystemMiami
             AudioSource newSource = sourceObj.AddComponent<AudioSource>();
             newSource.transform.SetParent(transform);
 
+            newSource.outputAudioMixerGroup = sound.group;
             newSource.clip = sound.clip;
-            newSource.volume = sound.volume;
+            newSource.volume = 1f;
             newSource.pitch = sound.pitch;
             newSource.loop = sound.loop;
             return newSource;
