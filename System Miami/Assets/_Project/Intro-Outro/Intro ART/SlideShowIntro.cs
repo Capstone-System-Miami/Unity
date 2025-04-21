@@ -17,11 +17,12 @@ namespace SystemMiami
         public Image slideshowImages;
         public CanvasGroup canvasGroup;
         public TextMeshProUGUI slideText;
-        public float slideDuration = 3f;
+        public Button continueButton;
         public float fadeDuration = 1f;
 
 
         private int currentSlide = 0;
+        private bool waitingForInput = false;
 
 
 
@@ -29,6 +30,8 @@ namespace SystemMiami
         // Start is called before the first frame update
         void Start()
         {
+            continueButton.onClick.AddListener(AdvanceSlide);
+            continueButton.interactable = false;
             StartCoroutine(PlaySlideShow());
         
         }
@@ -42,16 +45,28 @@ namespace SystemMiami
 
                 yield return StartCoroutine(Fade(0f, 1f)); // Start Fade
 
-                yield return new WaitForSeconds(slideDuration);
+                waitingForInput = true;
+                continueButton.interactable = true;
 
+                while (waitingForInput)
+                {
+                    yield return null;
+                }
+
+                continueButton.interactable = false;
                 yield return StartCoroutine(Fade(1f, 0f)); // End fade
 
                 currentSlide++;
 
             }
 
-            SceneManager.LoadScene("Main Menu");
+            SceneManager.LoadScene("Menu Scene"); // Takes you back to Main
             Debug.Log("SlideShow Finished");
+        }
+
+        public void AdvanceSlide()
+        {
+            waitingForInput = false; 
         }
 
         IEnumerator Fade(float from, float to)
@@ -60,7 +75,7 @@ namespace SystemMiami
             while (timer < fadeDuration)
             {
                 timer += Time.deltaTime;
-                float alpha = Mathf.Lerp(from, to, timer / fadeDuration);
+                float alpha = Mathf.Lerp(from, to, timer / fadeDuration); // Fade effect is handled here
                 canvasGroup.alpha = alpha;
                 yield return null;
 
