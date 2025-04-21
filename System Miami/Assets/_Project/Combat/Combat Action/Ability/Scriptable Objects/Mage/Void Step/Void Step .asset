@@ -15,24 +15,26 @@ MonoBehaviour:
   Icon: {fileID: 0}
   Actions:
   - {fileID: 11400000, guid: d63a7f5f60c566f4396d828943dbd13a, type: 2}
-  OverrideController: {fileID: 0}
+  - {fileID: 11400000, guid: d496fde23daaf50489e82533e325535a, type: 2}
+  OverrideController: {fileID: 22100000, guid: 983c4ac37ede5db49952b8430abec95a, type: 2}
   MageOverrideController: {fileID: 0}
   FighterOverrideController: {fileID: 0}
   TankOverrideController: {fileID: 0}
   RogueOverrideController: {fileID: 0}
   AbilityType: 1
-  ResourceCost: 0
-  CooldownTurns: 0
+  ResourceCost: 22
+  CooldownTurns: 3
   itemData:
     ID: 2012
-    Icon: {fileID: 0}
+    Icon: {fileID: 21300000, guid: fa231709fdaf17b499a4663cf3918987, type: 3}
     Name: 'Void Step '
-    Description: Teleport to target location and gain Magical Power for 1 turn.
-    itemType: 1
+    Description: Gain Magical Power for 2 turns and reduce enemy speed to 0.
+    itemType: 2
     Price: 0
-    MinLevel: 0
-    MaxLevel: 0
+    MinLevel: 8
+    MaxLevel: 15
     rarity: 0
-  classType: 0
-  isEnemyAbility: 1
+    <IsStackable>k__BackingField: 0
+  classType: 1
+  isEnemyAbility: 0
   isGeneralAbility: 0

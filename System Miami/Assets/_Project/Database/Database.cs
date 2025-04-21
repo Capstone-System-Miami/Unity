@@ -5,8 +5,10 @@ using SystemMiami.CombatRefactor;
 using SystemMiami.CombatSystem;
 using SystemMiami.Management;
 using SystemMiami.Utilities;
+
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.SceneManagement;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -44,6 +46,7 @@ namespace SystemMiami
         private Dictionary<int, EquipmentModSO> equipmentModDatabase;
 
         [SerializeField] private bool characterSelection;
+        [SerializeField] Scene currentScene;
 
         private void OnEnable()
         {
@@ -55,20 +58,29 @@ namespace SystemMiami
             // Filter database to only include abilities matching the player's class type.
             Attributes playerAttributes = FindObjectOfType<PlayerManager>().GetComponent<Attributes>();
             CharacterClassType playerClassType = playerAttributes._characterClass;
+            Scene currentScene = SceneManager.GetActiveScene ();
+            string sceneName = currentScene.name;
+            if (sceneName == "CharacterSelector")
+            {
+                characterSelection = true;
+            }
+            else
+            {
+                characterSelection = false;
+            }
+             //Filter physical abilities if not in character selection screen
+            if (!characterSelection)
+            {
+                physicalAbilityEntries = physicalAbilityEntries
+                    .Where(entry => entry.classType == playerClassType || entry.isGeneralAbility).ToList();
+                PhysicalAbilityItemDatas = physicalAbilityEntries.Select(so => so.itemData).ToList();
 
-            // Filter physical abilities if not in character selection screen
-            //if (!characterSelection)
-            //{
-            //    physicalAbilityEntries = physicalAbilityEntries
-            //        .Where(entry => entry.classType == playerClassType && !entry.isGeneralAbility).ToList();
-            //    PhysicalAbilityItemDatas = physicalAbilityEntries.Select(so => so.itemData).ToList();
 
-
-            //    // Filter magical abilities
-            //    magicalAbilityEntries = magicalAbilityEntries
-            //        .Where(entry => entry.classType == playerClassType && !entry.isGeneralAbility).ToList();
-            //    PhysicalAbilityItemDatas = physicalAbilityEntries.Select(so => so.itemData).ToList();
-            //}
+                // Filter magical abilities
+                magicalAbilityEntries = magicalAbilityEntries
+                    .Where(entry => entry.classType == playerClassType || entry.isGeneralAbility).ToList();
+              MagicalAbilityItemDatas = magicalAbilityEntries.Select(so => so.itemData).ToList();
+            }
 
             // Convert lists to dictionaries 
             physicalAbilityDatabase = physicalAbilityEntries.ToDictionary(entry => entry.itemData.ID);
