@@ -60,13 +60,13 @@ namespace SystemMiami
 
             }
 
-            SceneManager.LoadScene("Menu Scene");
+            SceneManager.LoadScene("Menu Scene"); // Takes you back to Main
             Debug.Log("SlideShow Finished");
         }
 
         public void AdvanceSlide()
         {
-            waitingForInput = false;
+            waitingForInput = false; 
         }
 
         IEnumerator Fade(float from, float to)
@@ -75,7 +75,7 @@ namespace SystemMiami
             while (timer < fadeDuration)
             {
                 timer += Time.deltaTime;
-                float alpha = Mathf.Lerp(from, to, timer / fadeDuration);
+                float alpha = Mathf.Lerp(from, to, timer / fadeDuration); // Fade effect is handled here
                 canvasGroup.alpha = alpha;
                 yield return null;
 
