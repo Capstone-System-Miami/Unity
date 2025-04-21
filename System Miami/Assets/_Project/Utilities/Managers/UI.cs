@@ -17,7 +17,8 @@ namespace SystemMiami.Management
         [SerializeField] private TextBox inputPromptPanel;
 
         [Header("GameControl")]
-        [SerializeField] private GameObject pauseButtonPrefab;
+        [SerializeField] private GameObject neighborhoodPauseButtonPrefab;
+        [SerializeField] private GameObject dungeonPauseButtonPrefab;
         [SerializeField] private GameObject pausePanelPrefab;
         [SerializeField, ReadOnly] private GameObject pauseButton;
         [SerializeField, ReadOnly] private GameObject pausePanel;
@@ -96,6 +97,9 @@ namespace SystemMiami.Management
 
         public void ClickSlot(ActionQuickslot slot)
         {
+            if (TurnManager.MGR == null) { return; }
+            if (!TurnManager.MGR.IsPlayerTurn) { return; }
+            if (TurnManager.MGR.playerCharacter.CurrentPhase != Phase.Action) { return; }
             physicalAbilitiesBar.DisableAllExcept(slot);
             magicalAbilitiesBar.DisableAllExcept(slot);
             consumablesBar.DisableAllExcept(slot);
@@ -136,21 +140,53 @@ namespace SystemMiami.Management
 
         public void OpenCharacterMenu()
         {
+            // Create the character menu
+            if (characterMenu == null && characterMenuPrefab != null)
+            {
+                characterMenu = Instantiate(characterMenuPrefab);
+            }
+
+            characterMenu.transform.SetParent(transform);
+
+            // Destroy the character menu button
+            if (characterMenuButton != null)
+            {
+                Destroy(characterMenuButton);
+                characterMenuButton = null;
+            }
+
             OnCharacterMenuOpened();
         }
 
         public void CloseCharacterMenu()
         {
+            // Create the character menu button
+            if (characterMenuButton == null && characterMenuButtonPrefab != null)
+            {
+                characterMenuButton = Instantiate(characterMenuButtonPrefab);
+            }
+
+            characterMenuButton.transform.SetParent(transform);
+
+            // Destroy the character menu
+            if (characterMenu != null)
+            {
+                Destroy(characterMenu);
+                characterMenu = null;
+            }
+
             OnCharacterMenuClosed();
         }
 
         protected virtual void OnCreatePlayerLoadout(Combatant combatant)
         {
+            Assert.IsNotNull(combatant, $"{combatant.name} was null");
+            Assert.IsNotNull(combatant._inventory, $"{combatant.name}'s Inventory was null");
+
             Loadout combatantLoadout = new(
                 combatant._inventory,
                 combatant);
-            Assert.IsNotNull(combatant._inventory, $"{combatant.name}'s Inventory was null");
-            Assert.IsNotNull(combatant, $"{combatant.name} was null");
+
             Assert.IsNotNull(combatantLoadout, $"{combatant.name}'s Loadout was null");
 
             if (combatant is PlayerCombatant)
@@ -169,53 +205,23 @@ namespace SystemMiami.Management
         protected virtual void OnDialogueStarted(DialogueEventArgs args)
         {
             CurrentClient = (args.client as MonoBehaviour)?.gameObject;
-
             DialogueStarted?.Invoke(this, args);
         }
 
         protected virtual void OnDialogueFinished()
         {
+            CurrentClient = null;
             DialogueFinished?.Invoke(this, EventArgs.Empty);
         }
 
 
         protected virtual void OnCharacterMenuOpened()
         {
-            // Create the character menu
-            if (characterMenu == null && characterMenuPrefab != null)
-            {
-                characterMenu = Instantiate(characterMenuPrefab);
-            }
-
-            characterMenu.transform.SetParent(transform);
-
-            // Destroy the character menu button
-            if (characterMenuButton != null)
-            {
-                Destroy(characterMenuButton);
-                characterMenuButton = null;
-            }
-
             CharacterMenuOpened?.Invoke();
         }
 
         protected virtual void OnCharacterMenuClosed()
         {
-            // Create the character menu button
-            if (characterMenuButton == null && characterMenuButtonPrefab != null)
-            {
-                characterMenuButton = Instantiate(characterMenuButtonPrefab);
-            }
-
-            characterMenuButton.transform.SetParent(transform);
-
-            // Destroy the character menu
-            if (characterMenu != null)
-            {
-                Destroy(characterMenu);
-                characterMenu = null;
-            }
-
             CharacterMenuClosed?.Invoke();
         }
 
@@ -226,6 +232,25 @@ namespace SystemMiami.Management
             consumablesBar.FillWith(loadout.Consumables.Cast<CombatAction>().ToList());
         }
 
+        private void CreatePauseButton(string sceneName)
+        {
+
+                // Create a pause button
+                if (pauseButton == null && dungeonPauseButtonPrefab == null)
+                {
+                    // ERROR
+                }
+                else if (pauseButton == null)
+                {
+                    pauseButton = Instantiate(dungeonPauseButtonPrefab);
+                }
+                else
+                {
+                    // pre existing pause button
+                }
+
+                pauseButton.transform.SetParent(transform);
+        }
 
         private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
         {
@@ -234,27 +259,12 @@ namespace SystemMiami.Management
                 TurnManager.MGR.DungeonFailed += HandleDungeonFailed;
                 TurnManager.MGR.DungeonCleared += HandleDungeonCleared;
 
-                // Create a pause button
-                if (pauseButton == null && pauseButtonPrefab == null)
-                {
-                    // ERROR
-                }
-                else if (pauseButton == null)
-                {
-                    pauseButton = Instantiate(pauseButtonPrefab);
-                }
-                else
-                {
-                    // pre existing pause button
-                }
-
-                pauseButton.transform.SetParent(transform);
-            }
 
             if (scene.name == GAME.MGR.NeighborhoodSceneName)
             {
                 OpenCharacterMenu();
                 CloseCharacterMenu();
+            }
             }
         }
 
@@ -278,9 +288,9 @@ namespace SystemMiami.Management
         private void HandleGameResumed()
         {
             // Create pause button
-            if (pauseButton == null && pauseButtonPrefab != null)
+            if (pauseButton == null && dungeonPauseButtonPrefab != null)
             {
-                pauseButton ??= Instantiate(pauseButtonPrefab);
+                pauseButton ??= Instantiate(dungeonPauseButtonPrefab);
                 pauseButton.transform.SetParent(transform);
             }
 

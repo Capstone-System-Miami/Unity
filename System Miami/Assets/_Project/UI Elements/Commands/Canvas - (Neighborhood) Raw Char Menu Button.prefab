@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 7018992411701908040}
   - component: {fileID: 7862507069866170629}
   - component: {fileID: 7878866916077121927}
-  - component: {fileID: 5883766809677020029}
+  - component: {fileID: 5368911631482400297}
   m_Layer: 5
-  m_Name: Raw Pause Button
+  m_Name: Char Menu Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,7 +28,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3942281308836250291}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -36,11 +36,11 @@ RectTransform:
   - {fileID: 6087384758499718670}
   m_Father: {fileID: 8273514662519018039}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 32, y: -32}
-  m_SizeDelta: {x: 296, y: 72}
-  m_Pivot: {x: 0, y: 1}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -32, y: -32}
+  m_SizeDelta: {x: 376, y: 80}
+  m_Pivot: {x: 1, y: 1}
 --- !u!222 &2287509358271809978
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -62,7 +62,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.3679245, g: 0.3679245, b: 0.3679245, a: 1}
+  m_Color: {r: 0.36862746, g: 0.36862746, b: 0.36862746, a: 0.28235295}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -102,8 +102,8 @@ MonoBehaviour:
     _normal: {fileID: 0}
     _highlighted: {fileID: 0}
   _unselectedColors:
-    _normal: {r: 0.36862746, g: 0.36862746, b: 0.36862746, a: 1}
-    _highlighted: {r: 1, g: 0.72156864, b: 0.72156864, a: 1}
+    _normal: {r: 0.36862746, g: 0.36862746, b: 0.36862746, a: 0.78431374}
+    _highlighted: {r: 0.99215686, g: 0.84705883, b: 0.6313726, a: 0.9019608}
   _selectedColors:
     _normal: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
     _highlighted: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
@@ -259,8 +259,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-        - m_Target: {fileID: 5883766809677020029}
-          m_TargetAssemblyTypeName: SystemMiami.PauseGame, Assembly-CSharp
+        - m_Target: {fileID: 5368911631482400297}
+          m_TargetAssemblyTypeName: SystemMiami.OpenCharacterMenu, Assembly-CSharp
           m_MethodName: Go
           m_Mode: 1
           m_Arguments:
@@ -271,7 +271,7 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
---- !u!114 &5883766809677020029
+--- !u!114 &5368911631482400297
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -280,7 +280,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3942281308836250291}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a5e62dff342401b4ba763fbd8d0a2f54, type: 3}
+  m_Script: {fileID: 11500000, guid: fe28089249deef944bf1d632b9c4f731, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &4563658423870363596
@@ -296,7 +296,7 @@ GameObject:
   - component: {fileID: 5672735813410059317}
   - component: {fileID: 1602240368473530551}
   m_Layer: 5
-  m_Name: Pause Text
+  m_Name: Char Menu Button Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -349,7 +349,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Pause
+  m_text: '[Character Menu]'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 303fdf2f21f5eab47949f5c3806da193, type: 2}
   m_sharedMaterial: {fileID: 1836521152029091587, guid: 303fdf2f21f5eab47949f5c3806da193, type: 2}
@@ -358,8 +358,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4288322262
-  m_fontColor: {r: 0.83921576, g: 0.6039216, b: 0.6039216, a: 1}
+    rgba: 2158090493
+  m_fontColor: {r: 0.99215686, g: 0.84705883, b: 0.6313726, a: 0.5019608}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -382,7 +382,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 17
+  m_fontStyle: 16
   m_HorizontalAlignment: 32
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
@@ -432,17 +432,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _text: {fileID: 0}
   _unselectedMessages:
-    _normal: Pause
-    _highlighted: '[Pause]'
+    _normal: Character Menu
+    _highlighted: '[Character Menu]'
   _selectedMessages:
-    _normal: Pause
-    _highlighted: '[Pause]'
+    _normal: Character Menu
+    _highlighted: '[Character Menu]'
   _disabledMessages:
-    _normal: Pause
-    _highlighted: '[Pause]'
+    _normal: Character Menu
+    _highlighted: '[Character Menu]'
   _unselectedColors:
-    _normal: {r: 1, g: 0.72156864, b: 0.72156864, a: 1}
-    _highlighted: {r: 0.36862746, g: 0.36862746, b: 0.36862746, a: 1}
+    _normal: {r: 0.99215686, g: 0.84705883, b: 0.6313726, a: 0.5019608}
+    _highlighted: {r: 0.3679245, g: 0.3679245, b: 0.3679245, a: 0.9019608}
   _selectedColors:
     _normal: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     _highlighted: {r: 0.5, g: 0.5, b: 0.5, a: 1}
@@ -464,7 +464,7 @@ GameObject:
   - component: {fileID: 4432949356377161054}
   - component: {fileID: 8749830618094027496}
   m_Layer: 5
-  m_Name: Canvas - Raw Pause Button
+  m_Name: Canvas - (Neighborhood) Raw Char Menu Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -511,7 +511,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!114 &4432949356377161054
 MonoBehaviour:
