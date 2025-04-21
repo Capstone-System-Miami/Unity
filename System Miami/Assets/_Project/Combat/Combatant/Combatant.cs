@@ -33,6 +33,7 @@ namespace SystemMiami.CombatSystem
         [Header("Settings"), Space(10)]
         [SerializeField] private bool _printUItoConsole;
         [SerializeField] private float _movementSpeed;
+        [SerializeField] private KeyCode flowKey;
 
         [Header("Animation")]
         [SerializeField] protected AnimatorOverrideController idleController;
@@ -533,36 +534,13 @@ namespace SystemMiami.CombatSystem
 
         public void ReceiveResource(float amount, ResourceType type, bool perTurn, int durationTurns)
         {
-            if (perTurn)
-            {
-                hasResourceEffect = true;
-                /*if (type == ResourceType.Health)
-                {
-                    _endOfTurnHeal += amount;
-                }
-                else if (type == ResourceType.Stamina)
-                {
-                    _endOfTurnStamina += amount;
-                }
-                else if (type == ResourceType.Mana)
-                {
-                    _endOfTurnMana += amount;
-                }*/
-
-                Debug.Log($"{name}: Added {type} restore effect with duration {durationTurns}.");
-            }
-            else
-            {
-                GainResource(type, amount);
-            }
+            GainResource(type, amount);
         }
 
         public void GainResource(ResourceType type, float amount)
         {
             switch (type)
             {
-                // TODO:
-                // but why
                 case ResourceType.Health:
                     Health.Gain(amount);
                     break;
@@ -575,7 +553,6 @@ namespace SystemMiami.CombatSystem
                 default:
                     Health.Gain(amount);
                     break;
-
             }
         }
         #endregion IHealReceiver

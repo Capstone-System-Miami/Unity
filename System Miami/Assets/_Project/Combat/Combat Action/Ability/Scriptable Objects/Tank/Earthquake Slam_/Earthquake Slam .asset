@@ -16,6 +16,10 @@ MonoBehaviour:
   Actions:
   - {fileID: 11400000, guid: 7be940429e145e0418edfece52c76a9d, type: 2}
   OverrideController: {fileID: 22100000, guid: ba81ce6c28447d7489b9394b0c82d659, type: 2}
+  MageOverrideController: {fileID: 0}
+  FighterOverrideController: {fileID: 0}
+  TankOverrideController: {fileID: 0}
+  RogueOverrideController: {fileID: 0}
   AbilityType: 0
   ResourceCost: 8
   CooldownTurns: 3
@@ -23,12 +27,13 @@ MonoBehaviour:
     ID: 1037
     Icon: {fileID: 21300000, guid: 6169e8f0f91d66e4cb88e641d0575a39, type: 3}
     Name: 'Earthquake Slam '
-    Description: Deal damage to all enemies within range and push them back
+    Description: 'Deal damage to all enemies within range '
     itemType: 1
     Price: 0
     MinLevel: 2
     MaxLevel: 4
     rarity: 0
+    <IsStackable>k__BackingField: 0
   classType: 3
   isEnemyAbility: 0
   isGeneralAbility: 0

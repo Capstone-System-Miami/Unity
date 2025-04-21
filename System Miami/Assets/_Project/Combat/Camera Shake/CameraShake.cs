@@ -25,7 +25,7 @@ namespace SystemMiami
 
         IEnumerator ShakeRoutine()
         {
-            Vector3 originalPos = transform.localPosition;  
+            
             float elapsed = 0.0f;
 
             while (elapsed < shakeDuration)

@@ -13,7 +13,7 @@ namespace SystemMiami.CombatRefactor
     public abstract class CombatAction
     {
         public readonly Sprite Icon;
-        
+
         public readonly AnimatorOverrideController DefaultOverrideController;
         public readonly AnimatorOverrideController FighterOverrideController;
         public readonly AnimatorOverrideController MageOverrideController;
@@ -49,8 +49,9 @@ namespace SystemMiami.CombatRefactor
             Sprite icon,
             int ActionID,
             List<CombatSubactionSO> subactions, AnimatorOverrideController defaultOverrideController,
-            AnimatorOverrideController fighterOverrideController,AnimatorOverrideController mageOverrideController,
-            AnimatorOverrideController tankOverrideController, AnimatorOverrideController rogueOverrideController,bool isGeneralAbility,
+            AnimatorOverrideController fighterOverrideController, AnimatorOverrideController mageOverrideController,
+            AnimatorOverrideController tankOverrideController, AnimatorOverrideController rogueOverrideController,
+            bool isGeneralAbility,
             Combatant user)
         {
             ID = ActionID;
@@ -117,7 +118,7 @@ namespace SystemMiami.CombatRefactor
             Debug.Log(
                 "Cleaning up CombatAction after execution.",
                 User);
-            if (this == null) return; 
+            if (this == null) return;
             Unequip();
             ExecutionStarted = false;
             ExecutionFinished = false;
@@ -145,7 +146,7 @@ namespace SystemMiami.CombatRefactor
                 }
             }
 
-          //  Debug.Log("Player found in targets FALSE", User);
+            //  Debug.Log("Player found in targets FALSE", User);
             return false;
         }
 
@@ -158,7 +159,10 @@ namespace SystemMiami.CombatRefactor
         {
             // Debug.LogWarning($"{this} trying to register for tile updates");
 
-            if (registered) { return; }
+            if (registered)
+            {
+                return;
+            }
 
             user.FocusTileChanged += HandleFocusTileChanged;
             user.DirectionChanged += HandleDirectionChanged;
@@ -169,7 +173,10 @@ namespace SystemMiami.CombatRefactor
 
         public void UnsubscribeToDirectionUpdates(Combatant user)
         {
-            if (!registered) { return; }
+            if (!registered)
+            {
+                return;
+            }
 
             user.FocusTileChanged -= HandleFocusTileChanged;
             user.DirectionChanged -= HandleDirectionChanged;
@@ -227,6 +234,14 @@ namespace SystemMiami.CombatRefactor
 
             FocusBasedSubactions.ForEach(subaction => focusBasedTargetSet
                 += subaction.TargetingPattern.GetTargets(directionContext));
+
+            string report = "";
+            foreach (ITargetable target in focusBasedTargetSet.occupants)
+            {
+                report += $"Found target in focus set: {target}\n";
+            }
+
+            Debug.Log(report);
         }
 
         protected void RecalculateDirectionBasedTargets(DirectionContext directionContext)
@@ -235,12 +250,27 @@ namespace SystemMiami.CombatRefactor
 
             DirectionBasedSubactions.ForEach(subaction => directionBasedTargetSet
                 += subaction.TargetingPattern.GetTargets(directionContext));
+
+            string report = "";
+            foreach (ITargetable target in directionBasedTargetSet.occupants)
+            {
+                report += $"Found target in direction set: {target}\n";
+            }
+
+            Debug.Log(report);
         }
 
         protected void RecalculateCumulativeTargets()
         {
             cumulativeTargetSet?.Clear();
             cumulativeTargetSet = directionBasedTargetSet + focusBasedTargetSet;
+            string report = "";
+            foreach (ITargetable target in cumulativeTargetSet.occupants)
+            {
+                report += $"Found target in cumulative set: {target}\n";
+            }
+
+            Debug.Log(report);
         }
 
 
@@ -271,7 +301,7 @@ namespace SystemMiami.CombatRefactor
             string timeMsg =
                 $"Time is {Time.time}\n";
 
-            yield return new WaitUntil( () => timer.IsFinished );
+            yield return new WaitUntil(() => timer.IsFinished);
 
             timeMsg += $"Time is {Time.time}";
 
@@ -383,11 +413,11 @@ namespace SystemMiami.CombatRefactor
 
         private void UnTarget(TargetSet targets)
         {
-            if (targets == null ) return;
+            if (targets == null) return;
             OnTargetingEvent(TargetingEventType.CANCELLED);
             targets?.all?.ForEach(target =>
             {
-                target.UnsubscribeTo( ref TargetingEvent);
+                target.UnsubscribeTo(ref TargetingEvent);
 
                 ClearCommands(target);
             });
@@ -395,8 +425,46 @@ namespace SystemMiami.CombatRefactor
 
         private void AssignCommands(ITargetable target)
         {
-            Subactions.ForEach(subaction =>
-                target.TargetedBy.Add(subaction.GenerateCommand(target, this)));
+            foreach (CombatSubactionSO subaction in Subactions)
+            {
+                bool isValidTarget = false;
+
+                
+                List<ITargetable> targets = subaction.TargetingPattern.GetTargets(User.CurrentDirectionContext).all;
+
+                
+                if (subaction.TargetingPattern.PatternOrigin == PatternOriginType.USER)
+                {
+                    if (subaction.TargetingPattern is AreaOfEffectPattern aoePattern)
+                    {
+                        // if it shouldn't affect center and the target is the player then not valid
+                        if (!aoePattern.AffectsCenter && target == User)
+                        {
+                            isValidTarget = false;
+                        }
+                        else
+                        {
+                            isValidTarget = targets.Contains(target);
+                        }
+                    }
+                    else
+                    {
+                        //for single tile user origin should only be player
+                        isValidTarget = targets.Contains(target);
+                    }
+                }
+                else if (subaction.TargetingPattern.PatternOrigin == PatternOriginType.FOCUS)
+                {
+                    // focus based is fine from what i see
+                    isValidTarget = targets.Contains(target);
+                }
+
+               
+                if (isValidTarget)
+                {
+                    target.TargetedBy.Add(subaction.GenerateCommand(target, this));
+                }
+            }
         }
 
         private void ClearCommands(ITargetable target)
@@ -404,6 +472,7 @@ namespace SystemMiami.CombatRefactor
             target.TargetedBy.Clear();
         }
     }
+
 
     public class TargetingEventArgs : EventArgs
     {

@@ -15,8 +15,11 @@ MonoBehaviour:
   Icon: {fileID: 0}
   Actions:
   - {fileID: 11400000, guid: fc34f966b5e4ad44db9dc941cfc0e9d1, type: 2}
-  - {fileID: 11400000, guid: a366868f88dc6fc47b7edffe05027fb8, type: 2}
   OverrideController: {fileID: 22100000, guid: e31d81d351c932544a9d436867598fbb, type: 2}
+  MageOverrideController: {fileID: 0}
+  FighterOverrideController: {fileID: 0}
+  TankOverrideController: {fileID: 0}
+  RogueOverrideController: {fileID: 0}
   AbilityType: 1
   ResourceCost: 13
   CooldownTurns: 3
@@ -27,9 +30,10 @@ MonoBehaviour:
     Description: Deal AOE damage and apply Burn (DOT) for 3 turns.
     itemType: 2
     Price: 0
-    MinLevel: 3
-    MaxLevel: 5
+    MinLevel: 5
+    MaxLevel: 15
     rarity: 0
+    <IsStackable>k__BackingField: 0
   classType: 1
   isEnemyAbility: 0
   isGeneralAbility: 0

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using SystemMiami.Enums;
 using SystemMiami.Utilities;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace SystemMiami.CombatSystem
 {
@@ -14,8 +15,14 @@ namespace SystemMiami.CombatSystem
         [Tooltip("Radius of the pattern, in Tiles.")]
         [SerializeField] private int _tileRadius;
 
+        [FormerlySerializedAs("_afftectsCenter")]
         [Tooltip("Whether this pattern should affect the tile at its origin (user or mouse)")]
-        [SerializeField] private bool _afftectsCenter;
+        [SerializeField] private bool _affectsCenter;
+
+        public bool AffectsCenter
+        {
+            get => _affectsCenter;
+        }
 
         [Header("Directions")]
         [SerializeField] private bool _front;
@@ -48,7 +55,7 @@ namespace SystemMiami.CombatSystem
             // For each radial in the radius
             for (int radial = 0; radial < _tileRadius; radial++)
             {
-                if (radial == 0 && _afftectsCenter)
+                if (radial == 0 && _affectsCenter)
                 {
                     Vector2Int checkedPosition;
                     OverlayTile checkedTile;
@@ -80,7 +87,13 @@ namespace SystemMiami.CombatSystem
                     }
                 }
             }
+            string report = "";
+            foreach (OverlayTile tile in foundTiles)
+            {
+                report += $"Found target: {tile.Occupier}\n";
+            }
 
+            Debug.Log(report);
             return new (foundTiles);
         }
 

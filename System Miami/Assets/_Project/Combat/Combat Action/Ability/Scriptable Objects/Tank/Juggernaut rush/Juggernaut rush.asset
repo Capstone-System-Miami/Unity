@@ -15,20 +15,25 @@ MonoBehaviour:
   Icon: {fileID: 0}
   Actions:
   - {fileID: 11400000, guid: 220060d69d8d30a4685e44e1906a8214, type: 2}
-  OverrideController: {fileID: 0}
+  OverrideController: {fileID: 22100000, guid: 04c163e97fbf03b4392ab6cdbc3fcae9, type: 2}
+  MageOverrideController: {fileID: 0}
+  FighterOverrideController: {fileID: 0}
+  TankOverrideController: {fileID: 0}
+  RogueOverrideController: {fileID: 0}
   AbilityType: 0
   ResourceCost: 3
   CooldownTurns: 3
   itemData:
     ID: 1039
-    Icon: {fileID: 0}
+    Icon: {fileID: 21300000, guid: 47ccbf8b44f30aa4a8bcacafd2e550bc, type: 3}
     Name: Juggernaut rush
-    Description: Move forward 3 tiles and push enemies out of the way dealing damage
+    Description: Deal damage to enemies in a cross
     itemType: 1
     Price: 0
     MinLevel: 0
     MaxLevel: 3
     rarity: 0
+    <IsStackable>k__BackingField: 0
   classType: 3
   isEnemyAbility: 0
   isGeneralAbility: 0

@@ -11,6 +11,7 @@ namespace SystemMiami.CombatSystem
     {
         public override TargetSet GetTargets(DirectionContext userDirection)
         {
+            
             List<OverlayTile> foundTiles = new();
 
             DirectionContext patternDirectionInfo = GetPatternDirection(userDirection);
@@ -26,6 +27,13 @@ namespace SystemMiami.CombatSystem
             }
 
             foundTiles.Add(checkedTile);
+            string report = "";
+            foreach (OverlayTile tile in foundTiles)
+            {
+                report += $"Found target: {tile.Occupier}\n";
+            }
+
+            Debug.Log(report);
             return new(foundTiles);
         }
     }
