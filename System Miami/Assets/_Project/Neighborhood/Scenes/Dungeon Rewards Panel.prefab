@@ -1707,6 +1707,7 @@ GameObject:
   - component: {fileID: 4509752939566596714}
   - component: {fileID: 4507090677307890733}
   - component: {fileID: 8579289412280199578}
+  - component: {fileID: 8548341824355249008}
   m_Layer: 5
   m_Name: Exit Button
   m_TagString: Untagged
@@ -1828,9 +1829,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: SystemMiami.PopUpHandler, Assembly-CSharp
-        m_MethodName: ClosePopup
+      - m_Target: {fileID: 8548341824355249008}
+        m_TargetAssemblyTypeName: SystemMiami.ReturnLoadoutItemsToInventory, Assembly-CSharp
+        m_MethodName: Go
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1840,6 +1841,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &8548341824355249008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5110427792202609978}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8710429aed44ce448dd6db2e0c09f79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5521659493106834058
 GameObject:
   m_ObjectHideFlags: 0
@@ -8243,7 +8256,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7823987220773361394, guid: 66955df435475f449b67e80a5593449a, type: 3}
       propertyPath: m_Value
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7913654453353309770, guid: 66955df435475f449b67e80a5593449a, type: 3}
       propertyPath: m_AnchorMax.y
@@ -8275,7 +8288,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7923267801322895273, guid: 66955df435475f449b67e80a5593449a, type: 3}
       propertyPath: m_Value
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7935904818866019090, guid: 66955df435475f449b67e80a5593449a, type: 3}
       propertyPath: m_AnchorMax.y

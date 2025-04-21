@@ -77,6 +77,7 @@ namespace SystemMiami.InventorySystem
         private void OnEnable()
         {
             SceneManager.sceneLoaded += HandleSceneLoaded;
+            
         }
 
         private void OnDisable()
@@ -102,13 +103,13 @@ namespace SystemMiami.InventorySystem
             if (subscribe)
             {
                 subbedToDungeon = true;
-                TurnManager.MGR.DungeonFailed += HandleDungeonComplete;
+                TurnManager.MGR.DungeonCleared += HandleDungeonComplete;
                 TurnManager.MGR.DungeonFailed += HandleDungeonFailed;
             }
             else
             {
                 subbedToDungeon = false;
-                TurnManager.MGR.DungeonFailed -= HandleDungeonComplete;
+                TurnManager.MGR.DungeonCleared -= HandleDungeonComplete;
                 TurnManager.MGR.DungeonFailed -= HandleDungeonFailed;
             }
         }
@@ -123,13 +124,24 @@ namespace SystemMiami.InventorySystem
             {
                 SetTurnManagerSubscription(true);
             }
+            
         }
 
         private void HandleDungeonComplete()
         {
+            ReturnLoadoutItemsToInventory();
             SetTurnManagerSubscription(false);
+        }
 
-            // TODO: Convert quickslot data back to normal inventory.
+        public void ReturnLoadoutItemsToInventory()
+        {
+            foreach (int id in AllQuickslotItems)
+            {
+                AddToInventory(id);
+            }
+            quickslotConsumableIDs.Clear();
+            quickslotMagicalAbilityIDs.Clear();
+            quickslotPhysicalAbilityIDs.Clear();
         }
         private void HandleDungeonFailed()
         {

@@ -33,6 +33,7 @@ namespace SystemMiami.CombatSystem
         [Header("Settings"), Space(10)]
         [SerializeField] private bool _printUItoConsole;
         [SerializeField] private float _movementSpeed;
+        [SerializeField] private KeyCode flowKey;
 
         [Header("Animation")]
         [SerializeField] protected AnimatorOverrideController idleController;
