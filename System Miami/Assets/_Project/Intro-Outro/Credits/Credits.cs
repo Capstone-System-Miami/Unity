@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEditor;
 using UnityEngine.SceneManagement;
 
 namespace SystemMiami
@@ -16,6 +17,7 @@ namespace SystemMiami
         public TextMeshProUGUI nameText;
         public GameObject[] imageGroups;
         public Button continueButton;
+        public float readTime = 2f;
         public float fadeDuration = 1f;
 
         private int currentSlide = 0;
@@ -30,7 +32,12 @@ namespace SystemMiami
             continueButton.onClick.AddListener(AdvanceSlide);
             continueButton.interactable = false;
             StartCoroutine(PlaySlideShow());
-        
+
+
+            for (int i = 0; i < names.Length; i++)
+            {
+                names[i] =  names[i].Replace(", ", "\n");
+            }
         }
 
         IEnumerator PlaySlideShow()
@@ -39,32 +46,16 @@ namespace SystemMiami
             {
                 titleText.text = titles[currentSlide];
                 nameText.text = names[currentSlide];
-                
                 imageGroups[currentSlide].SetActive(true);
-
-
+                yield return new WaitForSeconds(readTime);
                 yield return StartCoroutine(Fade(0f, 1f)); // Start Fade
-
-                waitingForInput = true;
-                continueButton.interactable = true;
-
-                while (waitingForInput)
-                {
-                    yield return null;
-                }
-
-                continueButton.interactable = false;
                 yield return StartCoroutine(Fade(1f, 0f)); // End fade
-
                 imageGroups[currentSlide].SetActive(false);
-
                 currentSlide++;
 
             }
-            
-
              Debug.Log("Credits Finished");
-            SceneManager.LoadScene("Menu Scene"); // Takes you back to Main
+             SceneManager.LoadScene("Menu Scene"); // Takes you back to Main
         }
 
         public void AdvanceSlide()
