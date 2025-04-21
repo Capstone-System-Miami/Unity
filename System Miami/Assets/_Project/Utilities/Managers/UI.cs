@@ -234,22 +234,28 @@ namespace SystemMiami.Management
 
         private void CreatePauseButton(string sceneName)
         {
+            if (pauseButton != null)
+            {
+                Destroy(pauseButton);
+                pauseButton = null;
+            }
 
-                // Create a pause button
-                if (pauseButton == null && dungeonPauseButtonPrefab == null)
-                {
-                    // ERROR
-                }
-                else if (pauseButton == null)
-                {
-                    pauseButton = Instantiate(dungeonPauseButtonPrefab);
-                }
-                else
-                {
-                    // pre existing pause button
-                }
+            GameObject prefab = null;
+            if (sceneName == GAME.MGR.NeighborhoodSceneName)
+            {
+                prefab = neighborhoodPauseButtonPrefab;
+            }
+            else if (sceneName == GAME.MGR.DungeonSceneName)
+            {
+                prefab = dungeonPauseButtonPrefab;
+            }
 
-                pauseButton.transform.SetParent(transform);
+            Assert.IsNotNull(prefab, $"{name} tried to instantiate a null pause button...");
+
+            // Create the button
+            pauseButton = Instantiate(prefab);
+
+            pauseButton.transform.SetParent(transform);
         }
 
         private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -258,14 +264,15 @@ namespace SystemMiami.Management
             {
                 TurnManager.MGR.DungeonFailed += HandleDungeonFailed;
                 TurnManager.MGR.DungeonCleared += HandleDungeonCleared;
-
+            }
 
             if (scene.name == GAME.MGR.NeighborhoodSceneName)
             {
                 OpenCharacterMenu();
                 CloseCharacterMenu();
             }
-            }
+
+            CreatePauseButton(scene.name);
         }
 
         private void HandleGamePaused()
@@ -287,12 +294,7 @@ namespace SystemMiami.Management
 
         private void HandleGameResumed()
         {
-            // Create pause button
-            if (pauseButton == null && dungeonPauseButtonPrefab != null)
-            {
-                pauseButton ??= Instantiate(dungeonPauseButtonPrefab);
-                pauseButton.transform.SetParent(transform);
-            }
+            CreatePauseButton(SceneManager.GetActiveScene().name);
 
             // Destroy pause panel
             if (pausePanel != null)
