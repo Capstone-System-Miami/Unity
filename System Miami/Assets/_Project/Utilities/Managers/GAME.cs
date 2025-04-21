@@ -113,6 +113,8 @@ namespace SystemMiami.Management
         }
 
         // Events
+        public event Action GamePaused;
+        public event Action GameResumed;
         public Action<Combatant> CombatantDying;
         public event Action<Combatant> damageTaken;
 
@@ -154,6 +156,22 @@ namespace SystemMiami.Management
             }
         }
         #endregion // Event Responses
+
+
+        #region Game Control
+        // =====================================================================
+        public void PauseGame()
+        {
+            Time.timeScale = 0;
+            GamePaused?.Invoke();
+        }
+
+        public void ResumeGame()
+        {
+            Time.timeScale = 1;
+            GameResumed?.Invoke();
+        }
+        #endregion // Game Control
 
 
         #region Scene Navigation
@@ -450,6 +468,7 @@ namespace SystemMiami.Management
         // =====================================================================
         private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
         {
+            Time.timeScale = 1;
             if (TurnManager.MGR != null)
             {
                 TurnManager.MGR.DungeonFailed += HandleDungeonFailed;
