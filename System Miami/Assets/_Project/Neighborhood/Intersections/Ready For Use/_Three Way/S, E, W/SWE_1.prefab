@@ -21819,7 +21819,7 @@ TilemapCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -60822,12 +60822,9 @@ MonoBehaviour:
   log:
     showMessages: 1
   _excludedStyles: 0100000000000000
+  dungeonCompleted: 0
   _dungeonData:
-    Prefab: {fileID: 0}
-    Enemies: []
-    ItemRewards: []
-    EXPToGive: 0
-    Credits: 0
+    difficulty: 0
 --- !u!1001 &2742536255653394575
 PrefabInstance:
   m_ObjectHideFlags: 0
