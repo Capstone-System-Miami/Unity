@@ -34,10 +34,14 @@ namespace SystemMiami
         [field: Header("Music")]
         public Music mainMenu;
         public Music settings;
+        public Music intro;
+        public Music tutorial;
         public Music characterSelect;
         public Music neighborhood;
         public Music dungeonLow;
         public Music dungeonHigh;
+        public Music outro;
+        public Music credits;
         [field: SerializeField, ReadOnly] public AudioSource musicSource { get; private set; }
 
         [Space(10)]

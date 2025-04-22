@@ -70,6 +70,7 @@ namespace SystemMiami
                 return false;
             }
 
+            _availableRemaining--;
             prefab = _elementPrefab;
             return true;
         }
