@@ -2,7 +2,10 @@
 
 // Modified to add the EXP + Gold quest reward (Starts on line 37) - Johnny Sosa
 
+using System;
+using SystemMiami.Management;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -18,7 +21,7 @@ namespace SystemMiami
         [SerializeField, ReadOnly] private int level = 0;
         [SerializeField, ReadOnly] private int currentXP = 0;
 
-        [SerializeField] private GameObject levelUpText;
+        [SerializeField] public GameObject levelUpText;
         
         [Header("Debugging")]
         [SerializeField] private bool debugMode = false;
@@ -37,9 +40,31 @@ namespace SystemMiami
         private void Start()
         {
             RecalculateXPtoNextRemaining();
-            if (levelUpText == null)
+           
+        }
+
+        private void OnEnable()
+        {
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+        
+        private void OnDisable()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
+
+        private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
+        {
+            if (arg0.name == GAME.MGR.NeighborhoodSceneName)
             {
-                levelUpText = GameObject.Find("LevelUpNotifText");
+                if (levelUpText == null)
+                {
+                    levelUpText = GameObject.Find("LevelUpNotif");
+                    if (levelUpText != null)
+                    {
+                        levelUpText.SetActive(false);
+                    }
+                }
             }
         }
 
@@ -64,20 +89,22 @@ namespace SystemMiami
 
             if (remainderXP > 0)
             {
-                OnLevelUp();
-                GainXP(remainderXP);
                 if (levelUpText != null && !levelUpText.activeSelf)
                 {
                     levelUpText.SetActive(true);
                 }
+                OnLevelUp();
+                GainXP(remainderXP);
+                
             }
             else if (remainderXP == 0)
             {
-                OnLevelUp();
                 if (levelUpText != null && !levelUpText.activeSelf)
                 {
                     levelUpText.SetActive(true);
                 }
+                OnLevelUp();
+                
             }
         }
 
@@ -122,7 +149,7 @@ namespace SystemMiami
             currentXP = 0;
             RecalculateXPtoNextRemaining();
             Debug.Log($"Leveled up! New level: {level}");
-
+          
             LevelUp?.Invoke(level);
         }
 
