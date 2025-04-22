@@ -155,6 +155,34 @@ namespace SystemMiami
             musicSource.Play();
         }
 
+
+        public float GetMainVolumePercent()
+        {
+            mainMixer.GetFloat("mainVolume", out float currentAtten);
+            float percent = Mathf.Pow(10, (currentAtten / MAX_DB_ATTENUATION));
+            Debug.Log($"AudioManager returning {percent} for mainVolume");
+            return percent;
+        }
+        public float GetMusicVolumePercent()
+        {
+            mainMixer.GetFloat("musicVolume", out float currentAtten);
+            float percent = Mathf.Pow(10, (currentAtten / MAX_DB_ATTENUATION));
+            Debug.Log($"AudioManager returning {percent} for musicVolume");
+            return percent;
+        }
+        public float GetSfxVolumePercent()
+        {
+            mainMixer.GetFloat("sfxVolume", out float currentAtten);
+            float percent = Mathf.Pow(10, (currentAtten / MAX_DB_ATTENUATION));
+            Debug.Log($"AudioManager returning {percent} for sfxVolume");
+            return percent;
+        }
+
+        public void AdjustMainVolume(float percent)
+        {
+            if (mainMixer == null) { Debug.LogError("didn't work"); return; }
+            mainMixer.SetFloat("mainVolume", Mathf.Log10(percent) * MAX_DB_ATTENUATION);
+        }
         public void AdjustMusicVolume(float percent)
         {
             if (mainMixer == null) { Debug.LogError("didn't work"); return; }
@@ -163,21 +191,8 @@ namespace SystemMiami
         public void AdjustSfxVolume(float percent)
         {
             if (mainMixer == null) { Debug.LogError("didn't work"); return; }
-
-            mainMixer.SetFloat("musicVolume", Mathf.Log10(percent) * MAX_DB_ATTENUATION);
+            mainMixer.SetFloat("sfxVolume", Mathf.Log10(percent) * MAX_DB_ATTENUATION);
         }
-
-        public float GetMusicVolumePercent()
-        {
-            mainMixer.GetFloat("musicVolume", out float currentAtten);
-            return (Mathf.Pow(10, currentAtten)) / MAX_DB_ATTENUATION;
-        }
-        public float GetSfxVolumePercent()
-        {
-            mainMixer.GetFloat("sfxVolume", out float currentAtten);
-            return (Mathf.Pow(10, currentAtten)) / MAX_DB_ATTENUATION;
-        }
-
 
         protected virtual void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
         {
