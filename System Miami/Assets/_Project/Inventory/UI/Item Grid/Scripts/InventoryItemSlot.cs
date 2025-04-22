@@ -148,7 +148,7 @@ namespace SystemMiami.ui
             IsEnabled = false;
         }
 
-        public void OnPointerEnter(PointerEventData eventData)
+        public virtual void OnPointerEnter(PointerEventData eventData)
         {
             if (itemData.failbit) { return; }
 
@@ -169,7 +169,7 @@ namespace SystemMiami.ui
             }
         }
 
-        public void OnPointerExit(PointerEventData eventData)
+        public virtual void OnPointerExit(PointerEventData eventData)
         {
             PopUpHandler.MGR?.ClosePopup();
 
@@ -183,7 +183,7 @@ namespace SystemMiami.ui
             spriteBox.SetBackground(toSet);
         }
 
-        public void OnPointerDown(PointerEventData eventData)
+        public virtual void OnPointerDown(PointerEventData eventData)
         {
             clicks++;
             if (clicks == 1) clickTime = Time.time;
@@ -202,7 +202,7 @@ namespace SystemMiami.ui
             }
         }
 
-        public void OnPointerUp(PointerEventData eventData)
+        public virtual void OnPointerUp(PointerEventData eventData)
         {
             if (doubleClick)
             {
