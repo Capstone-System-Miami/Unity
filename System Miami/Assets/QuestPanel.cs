@@ -12,7 +12,11 @@ namespace SystemMiami
         public TMP_Text progressText;
         public TMP_Text xpRewardText;
         public TMP_Text creditRewardText;
-        
+
+        private void Start()
+        {
+            QuestTracker.MGR.questPanel = this;
+        }
 
         public void Initialize(Quest questArg)
         {
