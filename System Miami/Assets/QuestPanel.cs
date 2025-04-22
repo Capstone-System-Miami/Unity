@@ -41,12 +41,6 @@ namespace SystemMiami
             creditRewardText.text = $"Gained {quest.rewardCurrency} Credits!";
         }
 
-        public void Update()
-        {
-            if (quest.questName == "")
-            {
-                this.gameObject.SetActive(false);
-            }
-        }
+    
     }
 }
