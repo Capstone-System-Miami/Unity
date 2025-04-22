@@ -152,7 +152,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &4354561653489288798
 RectTransform:
   m_ObjectHideFlags: 0
@@ -248,6 +248,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81f46c473426072478459b93eeb5f9e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _preserveBetweenScenes: 0
   quest:
     questName: Spider Scaries
     questDescriptionLine: Kill Spiders
@@ -256,8 +257,8 @@ MonoBehaviour:
       m_Bits: 256
     enemiesToGoal: 0
     objectiveGoal: 5
-    rewardEXP: 112
-    rewardCurrency: 72
+    rewardEXP: 50
+    rewardCurrency: 45
     questDialogue:
     - Spiders are creepy
     - I'll make it worth your while if you get rid of some
@@ -466,7 +467,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 112 EXP
+  m_text: 50 EXP
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 303fdf2f21f5eab47949f5c3806da193, type: 2}
   m_sharedMaterial: {fileID: 1836521152029091587, guid: 303fdf2f21f5eab47949f5c3806da193, type: 2}
@@ -600,7 +601,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 72 Credits
+  m_text: 45 Credits
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 303fdf2f21f5eab47949f5c3806da193, type: 2}
   m_sharedMaterial: {fileID: 1836521152029091587, guid: 303fdf2f21f5eab47949f5c3806da193, type: 2}

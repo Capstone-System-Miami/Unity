@@ -37,23 +37,7 @@ MonoBehaviour:
     - _isDefault: 1
       _elementPrefab: {fileID: 5985083666047915755, guid: c228b952585c5bd4ebd232d67bd19af3, type: 3}
       _minCount: 3
-      _maxCount: 10
-    - _isDefault: 0
-      _elementPrefab: {fileID: 5985083666047915755, guid: f52d635873e4e2d4f90a468e161a7d34, type: 3}
-      _minCount: 0
-      _maxCount: 1
-    - _isDefault: 0
-      _elementPrefab: {fileID: 5679960105606152641, guid: ea6a1a0b9017fda40b8e6da4c145a98e, type: 3}
-      _minCount: 0
-      _maxCount: 1
-    - _isDefault: 0
-      _elementPrefab: {fileID: 5985083666047915755, guid: 5b39672ccdd947646a06d564cf3cc222, type: 3}
-      _minCount: 0
-      _maxCount: 1
-    - _isDefault: 0
-      _elementPrefab: {fileID: 5985083666047915755, guid: 36669b685c52cef4ea0721e004888ce8, type: 3}
-      _minCount: 0
-      _maxCount: 1
+      _maxCount: 4
   _rewards:
     _overrideByDifficulty: 1
     _defaultDistributionMethod: 1
@@ -74,13 +58,14 @@ MonoBehaviour:
     _consumableItemDatas: []
     _equipmentItemDatas:
     - ID: 4001
-      Icon: {fileID: 0}
-      Name: 
-      Description: 
-      itemType: 0
+      Icon: {fileID: 21300000, guid: 6822ee3bacd416847be6f7c13ccec328, type: 3}
+      Name: Spider Queen Gem
+      Description: Permanently Increases Speed and Stamina by 5 and 30
+      itemType: 4
       Price: 0
       MinLevel: 0
-      MaxLevel: 0
+      MaxLevel: 30
       rarity: 0
+      <IsStackable>k__BackingField: 0
     log:
       showMessages: 1

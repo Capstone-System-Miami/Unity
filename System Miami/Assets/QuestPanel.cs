@@ -1,3 +1,4 @@
+using System;
 using SystemMiami.Management;
 using TMPro;
 using UnityEngine;
@@ -20,6 +21,7 @@ namespace SystemMiami
             {
                 questNameText.text = quest.questName;
             }
+            this.gameObject.SetActive(true);
             questDescriptionText.text = quest.questDescriptionLine;
             progressText.text = $"Progress: {quest.enemiesToGoal} / {quest.objectiveGoal}";
             xpRewardText.text = $"{quest.rewardEXP} EXP";
@@ -28,6 +30,7 @@ namespace SystemMiami
 
         public void UpdateQuest()
         {
+            this.gameObject.SetActive(true);
             progressText.text = $"Progress: {quest.enemiesToGoal} / {quest.objectiveGoal}";
         }
 
@@ -36,6 +39,14 @@ namespace SystemMiami
             questDescriptionText.text = "Quest Completed!";
             xpRewardText.text = $"Gained {quest.rewardEXP} EXP!";
             creditRewardText.text = $"Gained {quest.rewardCurrency} Credits!";
+        }
+
+        public void Update()
+        {
+            if (quest.questName == "")
+            {
+                this.gameObject.SetActive(false);
+            }
         }
     }
 }
