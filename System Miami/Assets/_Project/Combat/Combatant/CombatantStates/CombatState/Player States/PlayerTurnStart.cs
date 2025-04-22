@@ -14,14 +14,14 @@ namespace SystemMiami.CombatRefactor
             base.OnEnter();
             InputPrompts =
                 $"Turn Start!\n\n" +
-                $"Press Enter to begin.";
+                $"Press {combatant.flowKey} to begin.";
 
             UI.MGR.UpdateInputPrompt(InputPrompts);
         }
 
         protected override bool ProceedRequested()
         {
-            return Input.GetKeyDown(KeyCode.Return);
+            return Input.GetKeyDown(combatant.flowKey);
         }
     }
 }

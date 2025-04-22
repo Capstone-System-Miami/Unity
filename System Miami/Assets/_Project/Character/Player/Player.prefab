@@ -475,7 +475,6 @@ MonoBehaviour:
   _preserveBetweenScenes: 1
   log:
     showMessages: 1
-  showDebug: 0
   sharedComponents:
   - {fileID: 4476760992286927676}
   - {fileID: 3666472161562640362}
@@ -496,6 +495,7 @@ MonoBehaviour:
   - {fileID: 137947715004459473}
   neighborhoodSceneName: NEIGHBORHOOD
   dungeonSceneName: Dungeon
+  inventory: {fileID: 0}
   AnimDriver: {fileID: 0}
 --- !u!114 &2859284793658147475
 MonoBehaviour:
@@ -776,12 +776,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e496e3e20fe77e6439ec6809d0c51888, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  log:
+    showMessages: 0
   detailedFocusHighlight: 0
   _colorTag: {r: 0.6948949, g: 1, b: 0.5896226, a: 1}
   _printUItoConsole: 1
   _movementSpeed: 2
+  flowKey: 9
   idleController: {fileID: 22100000, guid: decd93ce417d8f74fa9d4dc0cfe24f90, type: 2}
   walkingController: {fileID: 22100000, guid: fa6e08b1c92be634090b672d4f4f3230, type: 2}
+  hasResourceEffect: 0
+  _endOfTurnDamage: 0
+  _endOfTurnHeal: 0
+  _endOfTurnStamina: 0
+  _endOfTurnMana: 0
   _inventory: {fileID: 18740023143509276}
   currentStateType: 
   TEST_origin: {x: 0, y: 0}
@@ -812,6 +820,8 @@ MonoBehaviour:
   quickslotConsumableIDs: 
   equippedEquipmentModIDs: 
   credits: 0
+  <subbedToDungeon>k__BackingField: 0
+  TestMode: 0
 --- !u!114 &8518758834218037015
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -828,6 +838,7 @@ MonoBehaviour:
   additionalXPPerLevel: 50
   level: 0
   currentXP: 0
+  levelUpText: {fileID: 0}
   debugMode: 0
   debug_GainExpKey: 0
   debug_amountToGain: 50

@@ -33,7 +33,7 @@ namespace SystemMiami.CombatSystem
         [Header("Settings"), Space(10)]
         [SerializeField] private bool _printUItoConsole;
         [SerializeField] private float _movementSpeed;
-        [SerializeField] private KeyCode flowKey;
+        [SerializeField] public KeyCode flowKey;
 
         [Header("Animation")]
         [SerializeField] protected AnimatorOverrideController idleController;
@@ -509,8 +509,9 @@ namespace SystemMiami.CombatSystem
 
         public void ReceiveDamage(float amount, bool perTurn, int durationTurns)
         {
-            
-                Health.Lose(amount);
+                float dmgRDX = _stats.GetStat(StatType.DMG_RDX);
+                Debug.Log("Damage after rdx: " + (amount  - dmgRDX));
+                Health.Lose(amount - dmgRDX);
                 log.print(
                     $"{gameObject.name} took {amount} damage,\n" +
                     $"its Health is now {Health.Get()}");
