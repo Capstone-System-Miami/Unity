@@ -15,16 +15,25 @@ MonoBehaviour:
   Icon: {fileID: 1560907362, guid: f3c637fbed5451e4c85c7195e80a0954, type: 3}
   Actions:
   - {fileID: 11400000, guid: de15e0781cbd4dd46b06cf02866ae1c3, type: 2}
-  OverrideController: {fileID: 22100000, guid: 6a517d63575cd2f409d46b2014197ec1, type: 2}
+  OverrideController: {fileID: 22100000, guid: 04c163e97fbf03b4392ab6cdbc3fcae9, type: 2}
+  MageOverrideController: {fileID: 0}
+  FighterOverrideController: {fileID: 0}
+  TankOverrideController: {fileID: 0}
+  RogueOverrideController: {fileID: 0}
   AbilityType: 0
   ResourceCost: 5
   CooldownTurns: 2
   itemData:
     ID: 1001
-    Icon: {fileID: 1560907362, guid: f3c637fbed5451e4c85c7195e80a0954, type: 3}
+    Icon: {fileID: -5089149873262349655, guid: b08c18d711b01dd47a6a2a6771fbaf51, type: 3}
     Name: 
     Description: Spin in place, dealing damage to all enemies within a small radius
-    itemType: 2
+    itemType: 1
     Price: 0
-  classType: 1
+    MinLevel: 0
+    MaxLevel: 3
+    rarity: 0
+    <IsStackable>k__BackingField: 0
+  classType: 3
   isEnemyAbility: 0
+  isGeneralAbility: 0

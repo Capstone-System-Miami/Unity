@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using SystemMiami.AbilitySystem;
@@ -9,6 +10,7 @@ using SystemMiami.Utilities;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -55,22 +57,11 @@ namespace SystemMiami
 
         public void Initialize()
         {
-            // Filter database to only include abilities matching the player's class type.
-            Attributes playerAttributes = FindObjectOfType<PlayerManager>().GetComponent<Attributes>();
-            CharacterClassType playerClassType = playerAttributes._characterClass;
-            Scene currentScene = SceneManager.GetActiveScene ();
-            string sceneName = currentScene.name;
-            if (sceneName == "CharacterSelector")
-            {
-                characterSelection = true;
-            }
-            else
-            {
-                characterSelection = false;
-            }
-             //Filter physical abilities if not in character selection screen
+           
             if (!characterSelection)
             {
+                Attributes playerAttributes = PlayerManager.MGR.GetComponent<Attributes>();
+                CharacterClassType playerClassType = playerAttributes._characterClass;
                 physicalAbilityEntries = physicalAbilityEntries
                     .Where(entry => entry.classType == playerClassType || entry.isGeneralAbility).ToList();
                 PhysicalAbilityItemDatas = physicalAbilityEntries.Select(so => so.itemData).ToList();
@@ -80,6 +71,7 @@ namespace SystemMiami
                 magicalAbilityEntries = magicalAbilityEntries
                     .Where(entry => entry.classType == playerClassType || entry.isGeneralAbility).ToList();
               MagicalAbilityItemDatas = magicalAbilityEntries.Select(so => so.itemData).ToList();
+              log.print("Initialized Database with player class: " + playerClassType);
             }
 
             // Convert lists to dictionaries 

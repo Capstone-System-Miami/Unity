@@ -44,8 +44,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0099241410a0b2741ac84b3e5ea80cee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _preserveBetweenScenes: 1
+  _preserveBetweenScenes: 0
+  log:
+    showMessages: 0
   PhysicalAbilityItemDatas:
+  - ID: 1049
+    Icon: {fileID: 21300000, guid: 84cc2121ce773dc4a9f1b46580cde0d6, type: 3}
+    Name: Arrow Split
+    Description: Fire an arrow that splits in 4 diagonal directions
+    itemType: 1
+    Price: 0
+    MinLevel: 5
+    MaxLevel: 8
+    rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 1002
     Icon: {fileID: 21300000, guid: 13243c2e89bbd3049b129ff4334efcb2, type: 3}
     Name: Fire Up
@@ -55,6 +67,7 @@ MonoBehaviour:
     MinLevel: 3
     MaxLevel: 5
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 1006
     Icon: {fileID: 21300000, guid: e2f58794d06dd2746bf200d054a9e4dc, type: 3}
     Name: Flaming Blade
@@ -65,6 +78,7 @@ MonoBehaviour:
     MinLevel: 3
     MaxLevel: 5
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 1021
     Icon: {fileID: 21300000, guid: 24e568b35474c264e9264d0cb3da00a1, type: 3}
     Name: Knockdown Smash
@@ -74,6 +88,7 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 3
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 1022
     Icon: {fileID: 21300000, guid: 947fb7ab9ef70774483633aed0c6c8f6, type: 3}
     Name: Last Stand
@@ -83,6 +98,7 @@ MonoBehaviour:
     MinLevel: 3
     MaxLevel: 5
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 1003
     Icon: {fileID: 21300000, guid: 286eb932114897248b3ee7a9e87dd857, type: 3}
     Name: Merciless Blows
@@ -92,6 +108,7 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 3
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 1023
     Icon: {fileID: 21300000, guid: c0f260ae4ca443244a0e8af450d25854, type: 3}
     Name: Overpower
@@ -101,6 +118,7 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 3
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 1000
     Icon: {fileID: 21300000, guid: f994dfc38ae48f64ea928604caa05189, type: 3}
     Name: Power Strike
@@ -110,6 +128,7 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 3
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 1007
     Icon: {fileID: 21300000, guid: 395b7b34b242d334cbd163896683a736, type: 3}
     Name: Rush Attack
@@ -119,6 +138,7 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 3
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 1024
     Icon: {fileID: 21300000, guid: 9cee837af4aa7c046b961601e55dc5c9, type: 3}
     Name: 'Second Wind '
@@ -128,6 +148,7 @@ MonoBehaviour:
     MinLevel: 2
     MaxLevel: 4
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 1044
     Icon: {fileID: 21300000, guid: 33676012c89f77746900e4935f48a669, type: 3}
     Name: Shield Breaker
@@ -137,6 +158,7 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 3
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 1004
     Icon: {fileID: 21300000, guid: 0fe7452028ddb6b48a54bced86efb56f, type: 3}
     Name: Smash
@@ -146,6 +168,7 @@ MonoBehaviour:
     MinLevel: 3
     MaxLevel: 5
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 1005
     Icon: {fileID: 21300000, guid: bc7e559f696a64a4bb763ffcecfa9d0a, type: 3}
     Name: Strike Through
@@ -155,15 +178,28 @@ MonoBehaviour:
     MinLevel: 2
     MaxLevel: 4
     rarity: 0
+    <IsStackable>k__BackingField: 0
+  - ID: 1048
+    Icon: {fileID: 21300000, guid: 2bf51f0c81ce003499e4d16ab18842a7, type: 3}
+    Name: Surge Attack
+    Description: Ranged attack that deals damage during your turn and again at the
+      start of enemies turn
+    itemType: 1
+    Price: 0
+    MinLevel: 5
+    MaxLevel: 8
+    rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 1025
     Icon: {fileID: 21300000, guid: 324f41c88fff6bc44a491098408b60e2, type: 3}
     Name: 'Wounding Blow '
-    Description: Deal damage and apply bleed to targets for 2 turns
+    Description: Deal damage and apply bleed to targets for 4 turns
     itemType: 1
     Price: 0
     MinLevel: 2
     MaxLevel: 4
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 1045
     Icon: {fileID: 21300000, guid: 2f1bc77efc97d6b48abf1fe558eaa230, type: 3}
     Name: General Shield
@@ -173,6 +209,7 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 0
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 1026
     Icon: {fileID: 21300000, guid: 36127f150f70db44abe87a729423061a, type: 3}
     Name: 'Adrenaline Surge '
@@ -180,8 +217,9 @@ MonoBehaviour:
     itemType: 1
     Price: 0
     MinLevel: 3
-    MaxLevel: 5
+    MaxLevel: 20
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 1019
     Icon: {fileID: 21300000, guid: 079d8e6297a382c439b33970abdaef0e, type: 3}
     Name: Arrow Rain
@@ -189,8 +227,9 @@ MonoBehaviour:
     itemType: 1
     Price: 0
     MinLevel: 2
-    MaxLevel: 4
+    MaxLevel: 20
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 1027
     Icon: {fileID: 21300000, guid: 382c32cf584cd694682a13a893bc9b4b, type: 3}
     Name: Bleeding Dance
@@ -200,6 +239,7 @@ MonoBehaviour:
     MinLevel: 3
     MaxLevel: 5
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 1029
     Icon: {fileID: 21300000, guid: c0f260ae4ca443244a0e8af450d25854, type: 3}
     Name: Disorienting Strike
@@ -210,15 +250,17 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 3
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 1030
     Icon: {fileID: 1874020819344461010, guid: b08c18d711b01dd47a6a2a6771fbaf51, type: 3}
     Name: Evasive maneuver
-    Description: Move 1 tile and gain speed for 2 turns
+    Description: gain speed for 2 turns
     itemType: 1
     Price: 0
     MinLevel: 0
     MaxLevel: 3
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 1031
     Icon: {fileID: 21300000, guid: 7794ab705f2fb8e46b98c36f566be895, type: 3}
     Name: Fan of Blades
@@ -228,6 +270,7 @@ MonoBehaviour:
     MinLevel: 2
     MaxLevel: 4
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 1018
     Icon: {fileID: 21300000, guid: 825eb92b2e0c4a64f8f27b2fd7e1d275, type: 3}
     Name: Knife throw
@@ -237,6 +280,7 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 3
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 1028
     Icon: {fileID: 21300000, guid: 9c5d41edde93b554fa83569ac7608367, type: 3}
     Name: Marked Prey
@@ -246,6 +290,7 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 3
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 1017
     Icon: {fileID: 21300000, guid: ff2d80141664d044c8bf8324bb3a22b8, type: 3}
     Name: Poisoned Blade
@@ -256,6 +301,7 @@ MonoBehaviour:
     MinLevel: 4
     MaxLevel: 5
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 1032
     Icon: {fileID: 21300000, guid: bc7e559f696a64a4bb763ffcecfa9d0a, type: 3}
     Name: Quick Slash
@@ -265,15 +311,7 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 3
     rarity: 0
-  - ID: 1034
-    Icon: {fileID: 21300000, guid: b36e120b6ecdefc4ead8830aa9f3dddf, type: 3}
-    Name: Shadow Step
-    Description: Teleport to a tile behind target and gain speed for 1 turns
-    itemType: 1
-    Price: 0
-    MinLevel: 0
-    MaxLevel: 3
-    rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 1020
     Icon: {fileID: 21300000, guid: 6f246c4d5dcc00243bcf82730e2c9a08, type: 3}
     Name: Vampiric Dagger
@@ -283,6 +321,7 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 3
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 1043
     Icon: {fileID: 21300000, guid: 8091e83f0f4651942bc5627b008703a8, type: 3}
     Name: Anchor slam
@@ -292,6 +331,7 @@ MonoBehaviour:
     MinLevel: 2
     MaxLevel: 4
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 1015
     Icon: {fileID: 21300000, guid: 1a417538a6a19c2409c9e7044b4b5e6e, type: 3}
     Name: Axe Throw
@@ -301,6 +341,7 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 3
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 1035
     Icon: {fileID: 21300000, guid: 1f7dbd9e5a9fcfb4aaeb9b2d5cc3ff84, type: 3}
     Name: Burst of Vitality
@@ -310,6 +351,7 @@ MonoBehaviour:
     MinLevel: 2
     MaxLevel: 4
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 1036
     Icon: {fileID: 21300000, guid: 83b25b6d6a54cb9429200239b7b9f4d1, type: 3}
     Name: Crushing Grasp
@@ -319,6 +361,7 @@ MonoBehaviour:
     MinLevel: 4
     MaxLevel: 5
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 1016
     Icon: {fileID: 21300000, guid: 5f6df661043c3c145b90a320ff866c94, type: 3}
     Name: Defensive Stance
@@ -329,15 +372,17 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 3
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 1037
     Icon: {fileID: 21300000, guid: 6169e8f0f91d66e4cb88e641d0575a39, type: 3}
     Name: 'Earthquake Slam '
-    Description: Deal damage to all enemies within range and push them back
+    Description: 'Deal damage to all enemies within range '
     itemType: 1
     Price: 0
     MinLevel: 2
     MaxLevel: 4
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 1038
     Icon: {fileID: 21300000, guid: b6ad25495d50e4e499d963702f3b5b40, type: 3}
     Name: Iron Wall
@@ -347,15 +392,17 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 3
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 1039
-    Icon: {fileID: 0}
+    Icon: {fileID: 21300000, guid: 47ccbf8b44f30aa4a8bcacafd2e550bc, type: 3}
     Name: Juggernaut rush
-    Description: Move forward 3 tiles and push enemies out of the way dealing damage
+    Description: Deal damage to enemies in a cross
     itemType: 1
     Price: 0
     MinLevel: 0
     MaxLevel: 3
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 1014
     Icon: {fileID: 21300000, guid: 04a8d2aaa90e9b94eb8af76f3e29f6ed, type: 3}
     Name: Rampage
@@ -366,6 +413,7 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 3
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 1040
     Icon: {fileID: 21300000, guid: 80f03ff2000a53e4da57fbea91c49d45, type: 3}
     Name: Self weld
@@ -375,6 +423,7 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 3
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 1041
     Icon: {fileID: 21300000, guid: 4f44a877e7db58843925ad6297492845, type: 3}
     Name: Stoneblood
@@ -384,6 +433,7 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 3
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 1042
     Icon: {fileID: 21300000, guid: 308310d28990b9644b9092bd8672dd5d, type: 3}
     Name: Unbreakable will
@@ -393,15 +443,17 @@ MonoBehaviour:
     MinLevel: 2
     MaxLevel: 4
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 1001
-    Icon: {fileID: 1560907362, guid: f3c637fbed5451e4c85c7195e80a0954, type: 3}
+    Icon: {fileID: -5089149873262349655, guid: b08c18d711b01dd47a6a2a6771fbaf51, type: 3}
     Name: 
     Description: Spin in place, dealing damage to all enemies within a small radius
-    itemType: 2
+    itemType: 1
     Price: 0
     MinLevel: 0
-    MaxLevel: 0
+    MaxLevel: 3
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 1012
     Icon: {fileID: 21300000, guid: e7c202328efa2a4449364129f63a81c5, type: 3}
     Name: Stab
@@ -411,6 +463,7 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 0
     rarity: 0
+    <IsStackable>k__BackingField: 0
   MagicalAbilityItemDatas:
   - ID: 2013
     Icon: {fileID: 21300000, guid: 42beaf279585ee34994d0196076d101b, type: 3}
@@ -421,6 +474,7 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 0
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 2005
     Icon: {fileID: 21300000, guid: b36e120b6ecdefc4ead8830aa9f3dddf, type: 3}
     Name: Arcane Echo
@@ -430,8 +484,9 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 3
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 2009
-    Icon: {fileID: 0}
+    Icon: {fileID: 21300000, guid: 0aa6c2536a63df546818de27573ba3cf, type: 3}
     Name: Astral Explosion
     Description: 'Deal very high AOE damage. Consume all remaining Mana. '
     itemType: 2
@@ -439,6 +494,7 @@ MonoBehaviour:
     MinLevel: 4
     MaxLevel: 5
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 2010
     Icon: {fileID: 21300000, guid: 1ebabc930545f014f949c6b653aa10cc, type: 3}
     Name: 'Chilling Pulse '
@@ -448,16 +504,18 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 3
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 2004
     Icon: {fileID: 21300000, guid: 33676012c89f77746900e4935f48a669, type: 3}
     Name: Exposure
-    Description: "Reduces an enemy\u2019s defence by 5"
+    Description: "Reduces an enemy\u2019s defence by 8 for 1 turn"
     itemType: 2
     Price: 0
     MinLevel: 0
     MaxLevel: 3
     rarity: 0
-  - ID: 1046
+    <IsStackable>k__BackingField: 0
+  - ID: 2014
     Icon: {fileID: 21300000, guid: b543ee3b5a29ea847aa722ed503771b0, type: 3}
     Name: Fire bolt
     Description: Launch a firebolt that deals damage to targets
@@ -466,6 +524,7 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 5
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 2000
     Icon: {fileID: 21300000, guid: 64628b0f68f6dae48ae440ad22b34f27, type: 3}
     Name: Fireball
@@ -476,15 +535,17 @@ MonoBehaviour:
     MinLevel: 2
     MaxLevel: 4
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 2006
     Icon: {fileID: 21300000, guid: e6af8422c90162d428b2f2f6cb4ac914, type: 3}
     Name: Firestorm
     Description: Deal AOE damage and apply Burn (DOT) for 3 turns.
     itemType: 2
     Price: 0
-    MinLevel: 3
-    MaxLevel: 5
+    MinLevel: 5
+    MaxLevel: 15
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 2002
     Icon: {fileID: 3094277118089727538, guid: b08c18d711b01dd47a6a2a6771fbaf51, type: 3}
     Name: Life Drainer
@@ -494,6 +555,7 @@ MonoBehaviour:
     MinLevel: 2
     MaxLevel: 4
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 2008
     Icon: {fileID: 21300000, guid: 7e5d8eb7d12d96943a8a8deb34e07496, type: 3}
     Name: Lightning Chain
@@ -503,6 +565,7 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 3
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 2001
     Icon: {fileID: 21300414, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
     Name: Magic Shield
@@ -513,6 +576,7 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 27
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 2007
     Icon: {fileID: 21300000, guid: 8fcdf9aa89d2f47439d10d9c3a6cd8ff, type: 3}
     Name: Mana burst
@@ -520,8 +584,9 @@ MonoBehaviour:
     itemType: 2
     Price: 0
     MinLevel: 0
-    MaxLevel: 0
+    MaxLevel: 3
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 2011
     Icon: {fileID: 0}
     Name: Mystic Shield
@@ -531,6 +596,7 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 0
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 2003
     Icon: {fileID: 21300000, guid: c860170f35113cf40acad5a10c88b4bc, type: 3}
     Name: Self Heal
@@ -540,25 +606,28 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 3
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 2012
-    Icon: {fileID: 0}
+    Icon: {fileID: 21300000, guid: fa231709fdaf17b499a4663cf3918987, type: 3}
     Name: 'Void Step '
-    Description: Teleport to target location and gain Magical Power for 1 turn.
-    itemType: 1
+    Description: Gain Magical Power for 2 turns and reduce enemy speed to 0.
+    itemType: 2
     Price: 0
-    MinLevel: 0
-    MaxLevel: 0
+    MinLevel: 8
+    MaxLevel: 15
     rarity: 0
+    <IsStackable>k__BackingField: 0
   ConsumableItemDatas:
   - ID: 3001
     Icon: {fileID: 21300000, guid: c39df32eaa071cf42867a6201652fbd8, type: 3}
     Name: Fire Bomb
     Description: Launch a bomb that explodes and harms all enemies in its radius
     itemType: 3
-    Price: 0
-    MinLevel: 10
+    Price: 10
+    MinLevel: 0
     MaxLevel: 0
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 3004
     Icon: {fileID: 1425436850, guid: bf348cbba4063294c8498102360c892d, type: 3}
     Name: Major Healing Potion
@@ -568,8 +637,9 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 30
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 3010
-    Icon: {fileID: 1425436850, guid: bf348cbba4063294c8498102360c892d, type: 3}
+    Icon: {fileID: 21300000, guid: 65e2787dedc68294f916e6eb8f24cd94, type: 3}
     Name: Major Mana Potion
     Description: Restores 20 Mana
     itemType: 3
@@ -577,8 +647,9 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 30
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 3013
-    Icon: {fileID: 1425436850, guid: bf348cbba4063294c8498102360c892d, type: 3}
+    Icon: {fileID: 21300000, guid: c609009f19a05fb449d76f36883af6c6, type: 3}
     Name: Major Regrowth Tonic
     Description: Heal 20 health over time for 3 turns
     itemType: 3
@@ -586,8 +657,9 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 30
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 3005
-    Icon: {fileID: 1425436850, guid: bf348cbba4063294c8498102360c892d, type: 3}
+    Icon: {fileID: 21300000, guid: 2260b15f500eee241b97008de0908667, type: 3}
     Name: Major Stamina Potion
     Description: Restores 20 Stamina
     itemType: 3
@@ -595,62 +667,69 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 30
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 3000
     Icon: {fileID: 840374211, guid: bf348cbba4063294c8498102360c892d, type: 3}
     Name: Minor Healing Potion
-    Description: Heals player for 5 health
+    Description: Heals player for 10 health
     itemType: 2
-    Price: 0
+    Price: 5
     MinLevel: 0
     MaxLevel: 10
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 3009
-    Icon: {fileID: 1425436850, guid: bf348cbba4063294c8498102360c892d, type: 3}
+    Icon: {fileID: 21300000, guid: a65e28a9f2f5f174293b6542720a7ceb, type: 3}
     Name: Minor Mana Potion
-    Description: Restores 5 Mana
+    Description: Restores 10 Mana
     itemType: 3
     Price: 5
     MinLevel: 0
     MaxLevel: 10
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 3011
-    Icon: {fileID: 1425436850, guid: bf348cbba4063294c8498102360c892d, type: 3}
+    Icon: {fileID: 21300000, guid: e649ba524c6c64c449deec37921bc266, type: 3}
     Name: Minor Regrowth Tonic
-    Description: Heal 5 health over time for 3 turns
+    Description: Heal 8 health over time for 3 turns
     itemType: 3
     Price: 10
     MinLevel: 0
     MaxLevel: 30
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 3006
-    Icon: {fileID: 1425436850, guid: bf348cbba4063294c8498102360c892d, type: 3}
+    Icon: {fileID: 21300000, guid: d27646189d03ff34e85dc1f07315a1f8, type: 3}
     Name: Minor Stamina Potion
-    Description: Restores 5 Stamina
+    Description: Restores 8 Stamina
     itemType: 3
     Price: 5
     MinLevel: 0
     MaxLevel: 10
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 3003
     Icon: {fileID: 1477902531, guid: bf348cbba4063294c8498102360c892d, type: 3}
     Name: Moderate Healing Potion
-    Description: Heals player for 10 health
+    Description: Heals player for 15 health
     itemType: 3
     Price: 8
     MinLevel: 1
     MaxLevel: 20
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 3008
-    Icon: {fileID: 1425436850, guid: bf348cbba4063294c8498102360c892d, type: 3}
+    Icon: {fileID: 21300000, guid: 6f6178f97ea00224e9449bd31d773f44, type: 3}
     Name: Moderate Mana Potion
-    Description: Restores 10 Mana
+    Description: Restores 15 Mana
     itemType: 3
     Price: 8
     MinLevel: 0
     MaxLevel: 0
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 3012
-    Icon: {fileID: 1425436850, guid: bf348cbba4063294c8498102360c892d, type: 3}
+    Icon: {fileID: 21300000, guid: 3f86295d2acbb8d46bded4d790fba7de, type: 3}
     Name: Moderate Regrowth Tonic
     Description: Heal 10 health over time for 3 turns
     itemType: 3
@@ -658,15 +737,17 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 30
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 3007
-    Icon: {fileID: 1425436850, guid: bf348cbba4063294c8498102360c892d, type: 3}
+    Icon: {fileID: 21300000, guid: 13d7fef8df5c7674199de22cfe756b50, type: 3}
     Name: Moderate Stamina Potion
-    Description: Restores 10 Stamina
+    Description: Restores 15 Stamina
     itemType: 3
     Price: 8
     MinLevel: 0
     MaxLevel: 0
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 3014
     Icon: {fileID: 21300000, guid: 0274e292b08f7734f8aa19c5b21a6e11, type: 3}
     Name: Stamina Pill
@@ -676,7 +757,18 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 30
     rarity: 0
+    <IsStackable>k__BackingField: 0
   EquipmentModItemDatas:
+  - ID: 4004
+    Icon: {fileID: 21300000, guid: 0274e292b08f7734f8aa19c5b21a6e11, type: 3}
+    Name: Orc Chieftain Gem
+    Description: Permanently Increases Physical Power and Stamina by 15 and 30
+    itemType: 4
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 30
+    rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 4003
     Icon: {fileID: 21300000, guid: a5aad25a271ab424d9845e734849b36b, type: 3}
     Name: Skeleton King Gem
@@ -686,6 +778,7 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 30
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 4002
     Icon: {fileID: 21300000, guid: 596d0b8c53dd967499ffaf972c024825, type: 3}
     Name: Slime Queen Gem
@@ -696,6 +789,7 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 30
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 4001
     Icon: {fileID: 21300000, guid: 6822ee3bacd416847be6f7c13ccec328, type: 3}
     Name: Spider Queen Gem
@@ -705,16 +799,38 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 30
     rarity: 0
-  - ID: 4004
-    Icon: {fileID: 21300000, guid: 0274e292b08f7734f8aa19c5b21a6e11, type: 3}
-    Name: Orc Chieftain Gem
-    Description: Permanently Increases Physical Power and Stamina by 15 and 30
-    itemType: 4
+    <IsStackable>k__BackingField: 0
+  EnemyPhysicalAbilityItemDatas:
+  - ID: 5005
+    Icon: {fileID: 0}
+    Name: Boss_Orc_Attack1
+    Description: 
+    itemType: 1
     Price: 0
     MinLevel: 0
-    MaxLevel: 30
+    MaxLevel: 0
     rarity: 0
-  EnemyPhysicalAbilityItemDatas:
+    <IsStackable>k__BackingField: 0
+  - ID: 5006
+    Icon: {fileID: 0}
+    Name: Boss_Orc_Attack2
+    Description: 
+    itemType: 1
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
+    <IsStackable>k__BackingField: 0
+  - ID: 5007
+    Icon: {fileID: 0}
+    Name: Ghoul Attack
+    Description: 
+    itemType: 1
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 5004
     Icon: {fileID: -839160664, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
     Name: Goblin Attack
@@ -724,6 +840,7 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 0
     rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 5000
     Icon: {fileID: -839160664, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
     Name: Goblin Attack
@@ -733,6 +850,27 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 0
     rarity: 0
+    <IsStackable>k__BackingField: 0
+  - ID: 5010
+    Icon: {fileID: -839160664, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
+    Name: Slime Queen Attack
+    Description: Slime Queen Attack
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
+    <IsStackable>k__BackingField: 0
+  - ID: 5011
+    Icon: {fileID: -839160664, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
+    Name: Slime Queen Attack
+    Description: Slime Queen Attack
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 5001
     Icon: {fileID: 820659288, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
     Name: Goblin Attack
@@ -742,6 +880,17 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 0
     rarity: 0
+    <IsStackable>k__BackingField: 0
+  - ID: 5009
+    Icon: {fileID: -839160664, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
+    Name: Orc Attack
+    Description: Orc Attack
+    itemType: 0
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 5002
     Icon: {fileID: 1549921822, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
     Name: Goblin Attack
@@ -751,6 +900,37 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 0
     rarity: 0
+    <IsStackable>k__BackingField: 0
+  - ID: 5008
+    Icon: {fileID: 0}
+    Name: Skeleton Attack
+    Description: 
+    itemType: 1
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
+    <IsStackable>k__BackingField: 0
+  - ID: 5015
+    Icon: {fileID: 0}
+    Name: Skeleton Boss Attack 1
+    Description: 
+    itemType: 1
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
+    <IsStackable>k__BackingField: 0
+  - ID: 5016
+    Icon: {fileID: 0}
+    Name: Skeleton King Bone Throw
+    Description: 
+    itemType: 1
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
+    <IsStackable>k__BackingField: 0
   - ID: 5003
     Icon: {fileID: -758795546, guid: dda0a1af02d49f04dbf78f7e872f7b6e, type: 3}
     Name: Slime
@@ -760,7 +940,8 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 0
     rarity: 0
-  - ID: 5005
+    <IsStackable>k__BackingField: 0
+  - ID: 5014
     Icon: {fileID: 21300136, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
     Name: Spider Attack
     Description: A swift bite, but enough to inject poisonous venom.
@@ -769,9 +950,41 @@ MonoBehaviour:
     MinLevel: 0
     MaxLevel: 0
     rarity: 0
+    <IsStackable>k__BackingField: 0
+  - ID: 5012
+    Icon: {fileID: 0}
+    Name: SpiderQueenVenomAttack
+    Description: 
+    itemType: 1
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
+    <IsStackable>k__BackingField: 0
+  - ID: 5013
+    Icon: {fileID: 0}
+    Name: SpiderQueenWebAttack
+    Description: 
+    itemType: 1
+    Price: 0
+    MinLevel: 0
+    MaxLevel: 0
+    rarity: 0
+    <IsStackable>k__BackingField: 0
+  - ID: 1034
+    Icon: {fileID: 21300000, guid: b36e120b6ecdefc4ead8830aa9f3dddf, type: 3}
+    Name: Shadow Step
+    Description: Deal damage to group of enemies and gain speed for 1 turns
+    itemType: 1
+    Price: 0
+    MinLevel: 5
+    MaxLevel: 15
+    rarity: 0
+    <IsStackable>k__BackingField: 0
   EnemyMagicalAbilityItemDatas: []
   AllItemDatas: []
   physicalAbilityEntries:
+  - {fileID: 11400000, guid: b16553c71dc84f34c8fd9b2635ec8313, type: 2}
   - {fileID: 11400000, guid: bd1b8105d1967c94b87035ec1f69286e, type: 2}
   - {fileID: 11400000, guid: eaa95cc74f3b9f949a93bf3a7baa65af, type: 2}
   - {fileID: 11400000, guid: a9110b0841da51a45abc6b2ad61f0093, type: 2}
@@ -784,6 +997,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bd0474db28cdd72408a8316dcdf75782, type: 2}
   - {fileID: 11400000, guid: 5f6b00dd99e640049b41e6f61aec1d23, type: 2}
   - {fileID: 11400000, guid: 97272e9041f93b4428fb59ae8a8ad18a, type: 2}
+  - {fileID: 11400000, guid: 587186a63154d6b49b910760f1cfe915, type: 2}
   - {fileID: 11400000, guid: 3ff716c4532017d4fab774359aa7b227, type: 2}
   - {fileID: 11400000, guid: e1b663d113cb074478c558bcef7deff8, type: 2}
   - {fileID: 11400000, guid: 6870156eb2d740c4cbf35e50c28bddd8, type: 2}
@@ -796,7 +1010,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b1d786591ba8dfc439a1d27ae1d76100, type: 2}
   - {fileID: 11400000, guid: acf2988e1de864944af7f4778f72d160, type: 2}
   - {fileID: 11400000, guid: d49a224c8e4615f4187fb826c19c49b1, type: 2}
-  - {fileID: 11400000, guid: db561daaa116eaf458c07cc1a45e9184, type: 2}
   - {fileID: 11400000, guid: 9c10f724e7f6fc14bb91ab9dfdc4192f, type: 2}
   - {fileID: 11400000, guid: 8f3c7d93265400c44b26e61aaaf1db5f, type: 2}
   - {fileID: 11400000, guid: e15880fcb4e966848af9e4e434c12c76, type: 2}
@@ -844,16 +1057,30 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b42f631164b670a46a0deade0207d8cf, type: 2}
   - {fileID: 11400000, guid: b9a40c64b4f8bfc4cb4dde8c87872d47, type: 2}
   enemyPhysicalAbilityEntries:
+  - {fileID: 11400000, guid: 27780664590db6b4a80c2efcc41aaf7a, type: 2}
+  - {fileID: 11400000, guid: 613d68166ff2aa845ab382f6f113862d, type: 2}
+  - {fileID: 11400000, guid: 2d2c20892f9ed084cb0ccd37119311bd, type: 2}
   - {fileID: 11400000, guid: c665fe02e1ebd4a4090e8510287e199b, type: 2}
   - {fileID: 11400000, guid: 0784bd47bf6a041418288067a69788dd, type: 2}
+  - {fileID: 11400000, guid: 75c68153b02b2cd4496ec77a938647cc, type: 2}
+  - {fileID: 11400000, guid: 4170dc35527328a4f9f54ab8d10a1c65, type: 2}
   - {fileID: 11400000, guid: 3c00588e6fc198640adfd59c9d3275cc, type: 2}
+  - {fileID: 11400000, guid: 60be15e24566f38498cb86c9349f50c8, type: 2}
   - {fileID: 11400000, guid: a38d5318836002c44906ddc5808316d0, type: 2}
+  - {fileID: 11400000, guid: 84d964b99439dcf4c91b40d7214c43b3, type: 2}
+  - {fileID: 11400000, guid: db7c57f0787928c479874331047a232a, type: 2}
+  - {fileID: 11400000, guid: 927cb2d0ed005a140850f647a1dfa508, type: 2}
   - {fileID: 11400000, guid: e174f1a19bb73304693b9b27f86b75d4, type: 2}
   - {fileID: 11400000, guid: 9a88aa5433b55c1498d0358ad41507fd, type: 2}
+  - {fileID: 11400000, guid: 2aff59cf1bc467b489c31de39750334b, type: 2}
+  - {fileID: 11400000, guid: f73195ea5aca06f45a5a6d81aaef7f97, type: 2}
+  - {fileID: 11400000, guid: db561daaa116eaf458c07cc1a45e9184, type: 2}
   enemyMagicalAbilityEntries: []
   equipmentModEntries:
+  - {fileID: 11400000, guid: b1d55a7945d94ce409949473ac0adbe6, type: 2}
   - {fileID: 11400000, guid: ca511cdb7acd3a345a15cfa91d4aefa6, type: 2}
   - {fileID: 11400000, guid: 4d19d6df8d622404b9478585a7a82f52, type: 2}
   - {fileID: 11400000, guid: 1594a72378f71174393d12de46f71285, type: 2}
-  - {fileID: 11400000, guid: b1d55a7945d94ce409949473ac0adbe6, type: 2}
   characterSelection: 0
+  currentScene:
+    m_Handle: 0
