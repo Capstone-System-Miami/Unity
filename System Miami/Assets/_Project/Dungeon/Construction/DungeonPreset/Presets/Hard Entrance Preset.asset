@@ -17,16 +17,18 @@ MonoBehaviour:
   _difficulty: 2
   _material: {fileID: 2100000, guid: b673bd577411dc242a027f4797dcd53c, type: 2}
   _doorOffColor: {r: 4.2370944, g: 4.2370944, b: 4.2370944, a: 1}
-  _doorOnColor: {r: 4.533433, g: 0.46412814, b: 0, a: 1}
+  _doorOnColor: {r: 8.47419, g: 0.26620492, b: 0, a: 1}
   _prefabPool:
     _minCount: 1
     _maxCount: 1
     _elements:
     - _isDefault: 1
       _elementPrefab: {fileID: 5478403791188214871, guid: e06f0d678d794ff4aa0827b5bab3bac3, type: 3}
+      _minCount: 0
       _maxCount: 1
     - _isDefault: 0
       _elementPrefab: {fileID: 5478403791188214871, guid: 61dcc914716655d4e8e38edb075c81f5, type: 3}
+      _minCount: 0
       _maxCount: 1
   _enemyPool:
     _minCount: 4
@@ -34,27 +36,35 @@ MonoBehaviour:
     _elements:
     - _isDefault: 0
       _elementPrefab: {fileID: 5985083666047915755, guid: 36669b685c52cef4ea0721e004888ce8, type: 3}
+      _minCount: 0
       _maxCount: 2
     - _isDefault: 1
       _elementPrefab: {fileID: 5985083666047915755, guid: c7ea620002f534d47b93c0d5fe44f53b, type: 3}
+      _minCount: 0
       _maxCount: 3
     - _isDefault: 0
       _elementPrefab: {fileID: 5985083666047915755, guid: 00d3a33d92bcbbc4490762fd6d5fff48, type: 3}
+      _minCount: 0
       _maxCount: 2
     - _isDefault: 0
       _elementPrefab: {fileID: 5679960105606152641, guid: ea6a1a0b9017fda40b8e6da4c145a98e, type: 3}
+      _minCount: 0
       _maxCount: 5
     - _isDefault: 0
       _elementPrefab: {fileID: 5985083666047915755, guid: c228b952585c5bd4ebd232d67bd19af3, type: 3}
+      _minCount: 0
       _maxCount: 5
     - _isDefault: 0
       _elementPrefab: {fileID: 5985083666047915755, guid: 65c6cf36d90cb574893e64dde9de7fbc, type: 3}
+      _minCount: 0
       _maxCount: 2
     - _isDefault: 0
       _elementPrefab: {fileID: 5985083666047915755, guid: 5b39672ccdd947646a06d564cf3cc222, type: 3}
+      _minCount: 0
       _maxCount: 3
     - _isDefault: 0
       _elementPrefab: {fileID: 5985083666047915755, guid: f52d635873e4e2d4f90a468e161a7d34, type: 3}
+      _minCount: 0
       _maxCount: 5
   _rewards:
     _overrideByDifficulty: 1
@@ -82,126 +92,17 @@ MonoBehaviour:
       MinLevel: 0
       MaxLevel: 0
       rarity: 0
-    - ID: 2005
-      Icon: {fileID: 21300000, guid: b36e120b6ecdefc4ead8830aa9f3dddf, type: 3}
-      Name: Arcane Echo
-      Description: Deal AOE damage that repeats next turn at 50% damage.
-      itemType: 2
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 3
-      rarity: 0
-    - ID: 2009
-      Icon: {fileID: 21300000, guid: 0aa6c2536a63df546818de27573ba3cf, type: 3}
-      Name: Astral Explosion
-      Description: 'Deal very high AOE damage. Consume all remaining Mana. '
-      itemType: 2
-      Price: 0
-      MinLevel: 4
-      MaxLevel: 5
-      rarity: 0
-    - ID: 2010
-      Icon: {fileID: 21300000, guid: 1ebabc930545f014f949c6b653aa10cc, type: 3}
-      Name: 'Chilling Pulse '
-      Description: 'Deal AOE damage. Reduce Speed of all enemies hit for 2 turns. '
-      itemType: 2
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 3
-      rarity: 0
-    - ID: 2004
-      Icon: {fileID: 21300000, guid: 33676012c89f77746900e4935f48a669, type: 3}
-      Name: Exposure
-      Description: "Reduces an enemy\u2019s defence by 5"
-      itemType: 2
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 3
-      rarity: 0
-    - ID: 2014
-      Icon: {fileID: 21300000, guid: b543ee3b5a29ea847aa722ed503771b0, type: 3}
-      Name: Fire bolt
-      Description: Launch a firebolt that deals damage to targets
-      itemType: 2
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 5
-      rarity: 0
-    - ID: 2000
-      Icon: {fileID: 21300000, guid: 64628b0f68f6dae48ae440ad22b34f27, type: 3}
-      Name: Fireball
-      Description: Cast a fireball that explodes on impact, dealing high damage to
-        the target and nearby enemies
-      itemType: 2
-      Price: 0
-      MinLevel: 2
-      MaxLevel: 4
-      rarity: 0
-    - ID: 2006
-      Icon: {fileID: 21300000, guid: e6af8422c90162d428b2f2f6cb4ac914, type: 3}
-      Name: Firestorm
-      Description: Deal AOE damage and apply Burn (DOT) for 3 turns.
-      itemType: 2
-      Price: 0
-      MinLevel: 3
-      MaxLevel: 5
-      rarity: 0
-    - ID: 2002
-      Icon: {fileID: 3094277118089727538, guid: b08c18d711b01dd47a6a2a6771fbaf51, type: 3}
-      Name: Life Drainer
-      Description: The player absorbs HP equal to 50% of the damage they deal to
-        enemy
-      itemType: 2
-      Price: 0
-      MinLevel: 2
-      MaxLevel: 4
-      rarity: 0
-    - ID: 2008
-      Icon: {fileID: 21300000, guid: 7e5d8eb7d12d96943a8a8deb34e07496, type: 3}
-      Name: Lightning Chain
-      Description: Deal lightning damage in a line.
-      itemType: 2
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 3
-      rarity: 0
-    - ID: 2001
-      Icon: {fileID: 21300414, guid: 0bbb4973cb6e355408c55e6857cbc224, type: 3}
-      Name: Magic Shield
-      Description: The player summons a magical shield around themselves, absorbing
-        a certain amount of damage for 2 turns
-      itemType: 2
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 27
-      rarity: 0
-    - ID: 2007
-      Icon: {fileID: 21300000, guid: 8fcdf9aa89d2f47439d10d9c3a6cd8ff, type: 3}
-      Name: Mana burst
-      Description: Deal AOE damage and restore an equal amount of Mana.
-      itemType: 2
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 0
-      rarity: 0
-    - ID: 2011
-      Icon: {fileID: 0}
-      Name: Mystic Shield
-      Description: 'Gain Damage Reduction and restore Mana each turn for 3 turns. '
+      <IsStackable>k__BackingField: 0
+    - ID: 1049
+      Icon: {fileID: 21300000, guid: 84cc2121ce773dc4a9f1b46580cde0d6, type: 3}
+      Name: Arrow Split
+      Description: Fire an arrow that splits in 4 diagonal directions
       itemType: 1
       Price: 0
-      MinLevel: 0
-      MaxLevel: 0
+      MinLevel: 5
+      MaxLevel: 8
       rarity: 0
-    - ID: 2003
-      Icon: {fileID: 21300000, guid: c860170f35113cf40acad5a10c88b4bc, type: 3}
-      Name: Self Heal
-      Description: Heals you for a moderate amount of health
-      itemType: 2
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 3
-      rarity: 0
+      <IsStackable>k__BackingField: 0
     - ID: 1002
       Icon: {fileID: 21300000, guid: 13243c2e89bbd3049b129ff4334efcb2, type: 3}
       Name: Fire Up
@@ -211,6 +112,7 @@ MonoBehaviour:
       MinLevel: 3
       MaxLevel: 5
       rarity: 0
+      <IsStackable>k__BackingField: 0
     - ID: 1006
       Icon: {fileID: 21300000, guid: e2f58794d06dd2746bf200d054a9e4dc, type: 3}
       Name: Flaming Blade
@@ -221,6 +123,7 @@ MonoBehaviour:
       MinLevel: 3
       MaxLevel: 5
       rarity: 0
+      <IsStackable>k__BackingField: 0
     - ID: 1021
       Icon: {fileID: 21300000, guid: 24e568b35474c264e9264d0cb3da00a1, type: 3}
       Name: Knockdown Smash
@@ -230,6 +133,7 @@ MonoBehaviour:
       MinLevel: 0
       MaxLevel: 3
       rarity: 0
+      <IsStackable>k__BackingField: 0
     - ID: 1022
       Icon: {fileID: 21300000, guid: 947fb7ab9ef70774483633aed0c6c8f6, type: 3}
       Name: Last Stand
@@ -239,6 +143,7 @@ MonoBehaviour:
       MinLevel: 3
       MaxLevel: 5
       rarity: 0
+      <IsStackable>k__BackingField: 0
     - ID: 1003
       Icon: {fileID: 21300000, guid: 286eb932114897248b3ee7a9e87dd857, type: 3}
       Name: Merciless Blows
@@ -248,6 +153,7 @@ MonoBehaviour:
       MinLevel: 0
       MaxLevel: 3
       rarity: 0
+      <IsStackable>k__BackingField: 0
     - ID: 1023
       Icon: {fileID: 21300000, guid: c0f260ae4ca443244a0e8af450d25854, type: 3}
       Name: Overpower
@@ -257,6 +163,7 @@ MonoBehaviour:
       MinLevel: 0
       MaxLevel: 3
       rarity: 0
+      <IsStackable>k__BackingField: 0
     - ID: 1000
       Icon: {fileID: 21300000, guid: f994dfc38ae48f64ea928604caa05189, type: 3}
       Name: Power Strike
@@ -266,6 +173,7 @@ MonoBehaviour:
       MinLevel: 0
       MaxLevel: 3
       rarity: 0
+      <IsStackable>k__BackingField: 0
     - ID: 1007
       Icon: {fileID: 21300000, guid: 395b7b34b242d334cbd163896683a736, type: 3}
       Name: Rush Attack
@@ -275,6 +183,7 @@ MonoBehaviour:
       MinLevel: 0
       MaxLevel: 3
       rarity: 0
+      <IsStackable>k__BackingField: 0
     - ID: 1024
       Icon: {fileID: 21300000, guid: 9cee837af4aa7c046b961601e55dc5c9, type: 3}
       Name: 'Second Wind '
@@ -284,6 +193,7 @@ MonoBehaviour:
       MinLevel: 2
       MaxLevel: 4
       rarity: 0
+      <IsStackable>k__BackingField: 0
     - ID: 1044
       Icon: {fileID: 21300000, guid: 33676012c89f77746900e4935f48a669, type: 3}
       Name: Shield Breaker
@@ -293,6 +203,7 @@ MonoBehaviour:
       MinLevel: 0
       MaxLevel: 3
       rarity: 0
+      <IsStackable>k__BackingField: 0
     - ID: 1004
       Icon: {fileID: 21300000, guid: 0fe7452028ddb6b48a54bced86efb56f, type: 3}
       Name: Smash
@@ -302,6 +213,7 @@ MonoBehaviour:
       MinLevel: 3
       MaxLevel: 5
       rarity: 0
+      <IsStackable>k__BackingField: 0
     - ID: 1005
       Icon: {fileID: 21300000, guid: bc7e559f696a64a4bb763ffcecfa9d0a, type: 3}
       Name: Strike Through
@@ -311,15 +223,28 @@ MonoBehaviour:
       MinLevel: 2
       MaxLevel: 4
       rarity: 0
+      <IsStackable>k__BackingField: 0
+    - ID: 1048
+      Icon: {fileID: 21300000, guid: 2bf51f0c81ce003499e4d16ab18842a7, type: 3}
+      Name: Surge Attack
+      Description: Ranged attack that deals damage during your turn and again at
+        the start of enemies turn
+      itemType: 1
+      Price: 0
+      MinLevel: 5
+      MaxLevel: 8
+      rarity: 0
+      <IsStackable>k__BackingField: 0
     - ID: 1025
       Icon: {fileID: 21300000, guid: 324f41c88fff6bc44a491098408b60e2, type: 3}
       Name: 'Wounding Blow '
-      Description: Deal damage and apply bleed to targets for 2 turns
+      Description: Deal damage and apply bleed to targets for 4 turns
       itemType: 1
       Price: 0
       MinLevel: 2
       MaxLevel: 4
       rarity: 0
+      <IsStackable>k__BackingField: 0
     - ID: 1045
       Icon: {fileID: 21300000, guid: 2f1bc77efc97d6b48abf1fe558eaa230, type: 3}
       Name: General Shield
@@ -329,227 +254,7 @@ MonoBehaviour:
       MinLevel: 0
       MaxLevel: 0
       rarity: 0
-    - ID: 1026
-      Icon: {fileID: 21300000, guid: 36127f150f70db44abe87a729423061a, type: 3}
-      Name: 'Adrenaline Surge '
-      Description: Restore Stamina and gain Speed for 2 turns.
-      itemType: 1
-      Price: 0
-      MinLevel: 3
-      MaxLevel: 5
-      rarity: 0
-    - ID: 1019
-      Icon: {fileID: 21300000, guid: 079d8e6297a382c439b33970abdaef0e, type: 3}
-      Name: Arrow Rain
-      Description: Launch a volley of arrows dealing AOE damage to 5 tiles
-      itemType: 1
-      Price: 0
-      MinLevel: 2
-      MaxLevel: 4
-      rarity: 0
-    - ID: 1027
-      Icon: {fileID: 21300000, guid: 382c32cf584cd694682a13a893bc9b4b, type: 3}
-      Name: Bleeding Dance
-      Description: Deal AOE damage and apply Bleed to all targets
-      itemType: 1
-      Price: 0
-      MinLevel: 3
-      MaxLevel: 5
-      rarity: 0
-    - ID: 1029
-      Icon: {fileID: 21300000, guid: c0f260ae4ca443244a0e8af450d25854, type: 3}
-      Name: Disorienting Strike
-      Description: Deal damage and reduce target's physical and magical power for
-        2 turns
-      itemType: 1
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 3
-      rarity: 0
-    - ID: 1030
-      Icon: {fileID: 1874020819344461010, guid: b08c18d711b01dd47a6a2a6771fbaf51, type: 3}
-      Name: Evasive maneuver
-      Description: gain speed for 2 turns
-      itemType: 1
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 3
-      rarity: 0
-    - ID: 1031
-      Icon: {fileID: 21300000, guid: 7794ab705f2fb8e46b98c36f566be895, type: 3}
-      Name: Fan of Blades
-      Description: Deal cone AOE damage, applying bleed for 2 turns
-      itemType: 1
-      Price: 0
-      MinLevel: 2
-      MaxLevel: 4
-      rarity: 0
-    - ID: 1018
-      Icon: {fileID: 21300000, guid: 825eb92b2e0c4a64f8f27b2fd7e1d275, type: 3}
-      Name: Knife throw
-      Description: Throws a knife at an enemy within a short range, dealing light
-        damage
-      itemType: 1
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 3
-      rarity: 0
-    - ID: 1028
-      Icon: {fileID: 21300000, guid: 9c5d41edde93b554fa83569ac7608367, type: 3}
-      Name: Marked Prey
-      Description: 'Target takes bonus damage  for 3 turns. '
-      itemType: 1
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 3
-      rarity: 0
-    - ID: 1017
-      Icon: {fileID: 21300000, guid: ff2d80141664d044c8bf8324bb3a22b8, type: 3}
-      Name: Poisoned Blade
-      Description: Coat your weapon with poison dealing damage over time and lowering
-        the targets max health
-      itemType: 1
-      Price: 0
-      MinLevel: 4
-      MaxLevel: 5
-      rarity: 0
-    - ID: 1032
-      Icon: {fileID: 21300000, guid: bc7e559f696a64a4bb763ffcecfa9d0a, type: 3}
-      Name: Quick Slash
-      Description: damage slash that deals damage to enemies
-      itemType: 1
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 3
-      rarity: 0
-    - ID: 1020
-      Icon: {fileID: 21300000, guid: 6f246c4d5dcc00243bcf82730e2c9a08, type: 3}
-      Name: Vampiric Dagger
-      Description: Deal damage to an enemy and drain their health for yourself
-      itemType: 1
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 3
-      rarity: 0
-    - ID: 1043
-      Icon: {fileID: 21300000, guid: 8091e83f0f4651942bc5627b008703a8, type: 3}
-      Name: Anchor slam
-      Description: Deal damage and stun target for 2 turns
-      itemType: 1
-      Price: 0
-      MinLevel: 2
-      MaxLevel: 4
-      rarity: 0
-    - ID: 1015
-      Icon: {fileID: 21300000, guid: 1a417538a6a19c2409c9e7044b4b5e6e, type: 3}
-      Name: Axe Throw
-      Description: 'Throws the shield at medium range towards the enemy '
-      itemType: 1
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 3
-      rarity: 0
-    - ID: 1035
-      Icon: {fileID: 21300000, guid: 1f7dbd9e5a9fcfb4aaeb9b2d5cc3ff84, type: 3}
-      Name: Burst of Vitality
-      Description: Exchange a large amount of stamina for health
-      itemType: 1
-      Price: 0
-      MinLevel: 2
-      MaxLevel: 4
-      rarity: 0
-    - ID: 1036
-      Icon: {fileID: 21300000, guid: 83b25b6d6a54cb9429200239b7b9f4d1, type: 3}
-      Name: Crushing Grasp
-      Description: Deal damage and apply immobilize and bleed for 2 turns
-      itemType: 1
-      Price: 0
-      MinLevel: 4
-      MaxLevel: 5
-      rarity: 0
-    - ID: 1016
-      Icon: {fileID: 21300000, guid: 5f6df661043c3c145b90a320ff866c94, type: 3}
-      Name: Defensive Stance
-      Description: The player adopts a defensive stance, reducing incoming damage
-        by 5 for 2 turns
-      itemType: 1
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 3
-      rarity: 0
-    - ID: 1037
-      Icon: {fileID: 21300000, guid: 6169e8f0f91d66e4cb88e641d0575a39, type: 3}
-      Name: 'Earthquake Slam '
-      Description: Deal damage to all enemies within range and push them back
-      itemType: 1
-      Price: 0
-      MinLevel: 2
-      MaxLevel: 4
-      rarity: 0
-    - ID: 1038
-      Icon: {fileID: 21300000, guid: b6ad25495d50e4e499d963702f3b5b40, type: 3}
-      Name: Iron Wall
-      Description: Gain high damage reduction for 2 turns
-      itemType: 1
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 3
-      rarity: 0
-    - ID: 1039
-      Icon: {fileID: 0}
-      Name: Juggernaut rush
-      Description: Move forward 3 tiles and push enemies out of the way dealing damage
-      itemType: 1
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 3
-      rarity: 0
-    - ID: 1014
-      Icon: {fileID: 21300000, guid: 04a8d2aaa90e9b94eb8af76f3e29f6ed, type: 3}
-      Name: Rampage
-      Description: Deals moderate damage to an enemy and enemies nearby have their
-        HP dropped
-      itemType: 1
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 3
-      rarity: 0
-    - ID: 1040
-      Icon: {fileID: 21300000, guid: 80f03ff2000a53e4da57fbea91c49d45, type: 3}
-      Name: Self weld
-      Description: Heal over time but reduce Speed and damage for the duration
-      itemType: 1
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 3
-      rarity: 0
-    - ID: 1041
-      Icon: {fileID: 21300000, guid: 4f44a877e7db58843925ad6297492845, type: 3}
-      Name: Stoneblood
-      Description: Heal over time and gain damage reduction for 3 turns
-      itemType: 1
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 3
-      rarity: 0
-    - ID: 1042
-      Icon: {fileID: 21300000, guid: 308310d28990b9644b9092bd8672dd5d, type: 3}
-      Name: Unbreakable will
-      Description: 'Gain Health and stamina for 3 turns '
-      itemType: 1
-      Price: 0
-      MinLevel: 2
-      MaxLevel: 4
-      rarity: 0
-    - ID: 1001
-      Icon: {fileID: 1560907362, guid: f3c637fbed5451e4c85c7195e80a0954, type: 3}
-      Name: 
-      Description: Spin in place, dealing damage to all enemies within a small radius
-      itemType: 2
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 0
-      rarity: 0
+      <IsStackable>k__BackingField: 0
     - ID: 1012
       Icon: {fileID: 21300000, guid: e7c202328efa2a4449364129f63a81c5, type: 3}
       Name: Stab
@@ -559,6 +264,7 @@ MonoBehaviour:
       MinLevel: 0
       MaxLevel: 0
       rarity: 0
+      <IsStackable>k__BackingField: 0
     _consumableItemDatas:
     - ID: 3001
       Icon: {fileID: 21300000, guid: c39df32eaa071cf42867a6201652fbd8, type: 3}
@@ -569,6 +275,7 @@ MonoBehaviour:
       MinLevel: 0
       MaxLevel: 0
       rarity: 0
+      <IsStackable>k__BackingField: 0
     - ID: 3004
       Icon: {fileID: 1425436850, guid: bf348cbba4063294c8498102360c892d, type: 3}
       Name: Major Healing Potion
@@ -578,8 +285,9 @@ MonoBehaviour:
       MinLevel: 0
       MaxLevel: 30
       rarity: 0
+      <IsStackable>k__BackingField: 0
     - ID: 3010
-      Icon: {fileID: 1425436850, guid: bf348cbba4063294c8498102360c892d, type: 3}
+      Icon: {fileID: 21300000, guid: 65e2787dedc68294f916e6eb8f24cd94, type: 3}
       Name: Major Mana Potion
       Description: Restores 20 Mana
       itemType: 3
@@ -587,8 +295,9 @@ MonoBehaviour:
       MinLevel: 0
       MaxLevel: 30
       rarity: 0
+      <IsStackable>k__BackingField: 0
     - ID: 3013
-      Icon: {fileID: 1425436850, guid: bf348cbba4063294c8498102360c892d, type: 3}
+      Icon: {fileID: 21300000, guid: c609009f19a05fb449d76f36883af6c6, type: 3}
       Name: Major Regrowth Tonic
       Description: Heal 20 health over time for 3 turns
       itemType: 3
@@ -596,8 +305,9 @@ MonoBehaviour:
       MinLevel: 0
       MaxLevel: 30
       rarity: 0
+      <IsStackable>k__BackingField: 0
     - ID: 3005
-      Icon: {fileID: 1425436850, guid: bf348cbba4063294c8498102360c892d, type: 3}
+      Icon: {fileID: 21300000, guid: 2260b15f500eee241b97008de0908667, type: 3}
       Name: Major Stamina Potion
       Description: Restores 20 Stamina
       itemType: 3
@@ -605,62 +315,69 @@ MonoBehaviour:
       MinLevel: 0
       MaxLevel: 30
       rarity: 0
+      <IsStackable>k__BackingField: 0
     - ID: 3000
       Icon: {fileID: 840374211, guid: bf348cbba4063294c8498102360c892d, type: 3}
       Name: Minor Healing Potion
-      Description: Heals player for 5 health
+      Description: Heals player for 10 health
       itemType: 2
       Price: 5
       MinLevel: 0
       MaxLevel: 10
       rarity: 0
+      <IsStackable>k__BackingField: 0
     - ID: 3009
       Icon: {fileID: 21300000, guid: a65e28a9f2f5f174293b6542720a7ceb, type: 3}
       Name: Minor Mana Potion
-      Description: Restores 5 Mana
+      Description: Restores 10 Mana
       itemType: 3
       Price: 5
       MinLevel: 0
       MaxLevel: 10
       rarity: 0
+      <IsStackable>k__BackingField: 0
     - ID: 3011
-      Icon: {fileID: 1425436850, guid: bf348cbba4063294c8498102360c892d, type: 3}
+      Icon: {fileID: 21300000, guid: e649ba524c6c64c449deec37921bc266, type: 3}
       Name: Minor Regrowth Tonic
-      Description: Heal 5 health over time for 3 turns
+      Description: Heal 8 health over time for 3 turns
       itemType: 3
       Price: 10
       MinLevel: 0
       MaxLevel: 30
       rarity: 0
+      <IsStackable>k__BackingField: 0
     - ID: 3006
       Icon: {fileID: 21300000, guid: d27646189d03ff34e85dc1f07315a1f8, type: 3}
       Name: Minor Stamina Potion
-      Description: Restores 5 Stamina
+      Description: Restores 8 Stamina
       itemType: 3
       Price: 5
       MinLevel: 0
       MaxLevel: 10
       rarity: 0
+      <IsStackable>k__BackingField: 0
     - ID: 3003
       Icon: {fileID: 1477902531, guid: bf348cbba4063294c8498102360c892d, type: 3}
       Name: Moderate Healing Potion
-      Description: Heals player for 10 health
+      Description: Heals player for 15 health
       itemType: 3
       Price: 8
       MinLevel: 1
       MaxLevel: 20
       rarity: 0
+      <IsStackable>k__BackingField: 0
     - ID: 3008
-      Icon: {fileID: 1425436850, guid: bf348cbba4063294c8498102360c892d, type: 3}
+      Icon: {fileID: 21300000, guid: 6f6178f97ea00224e9449bd31d773f44, type: 3}
       Name: Moderate Mana Potion
-      Description: Restores 10 Mana
+      Description: Restores 15 Mana
       itemType: 3
       Price: 8
       MinLevel: 0
       MaxLevel: 0
       rarity: 0
+      <IsStackable>k__BackingField: 0
     - ID: 3012
-      Icon: {fileID: 1425436850, guid: bf348cbba4063294c8498102360c892d, type: 3}
+      Icon: {fileID: 21300000, guid: 3f86295d2acbb8d46bded4d790fba7de, type: 3}
       Name: Moderate Regrowth Tonic
       Description: Heal 10 health over time for 3 turns
       itemType: 3
@@ -668,15 +385,17 @@ MonoBehaviour:
       MinLevel: 0
       MaxLevel: 30
       rarity: 0
+      <IsStackable>k__BackingField: 0
     - ID: 3007
-      Icon: {fileID: 1425436850, guid: bf348cbba4063294c8498102360c892d, type: 3}
+      Icon: {fileID: 21300000, guid: 13d7fef8df5c7674199de22cfe756b50, type: 3}
       Name: Moderate Stamina Potion
-      Description: Restores 10 Stamina
+      Description: Restores 15 Stamina
       itemType: 3
       Price: 8
       MinLevel: 0
       MaxLevel: 0
       rarity: 0
+      <IsStackable>k__BackingField: 0
     - ID: 3014
       Icon: {fileID: 21300000, guid: 0274e292b08f7734f8aa19c5b21a6e11, type: 3}
       Name: Stamina Pill
@@ -686,7 +405,18 @@ MonoBehaviour:
       MinLevel: 0
       MaxLevel: 30
       rarity: 0
+      <IsStackable>k__BackingField: 0
     _equipmentItemDatas:
+    - ID: 4004
+      Icon: {fileID: 21300000, guid: 0274e292b08f7734f8aa19c5b21a6e11, type: 3}
+      Name: Orc Chieftain Gem
+      Description: Permanently Increases Physical Power and Stamina by 15 and 30
+      itemType: 4
+      Price: 0
+      MinLevel: 0
+      MaxLevel: 30
+      rarity: 0
+      <IsStackable>k__BackingField: 0
     - ID: 4003
       Icon: {fileID: 21300000, guid: a5aad25a271ab424d9845e734849b36b, type: 3}
       Name: Skeleton King Gem
@@ -696,6 +426,7 @@ MonoBehaviour:
       MinLevel: 0
       MaxLevel: 30
       rarity: 0
+      <IsStackable>k__BackingField: 0
     - ID: 4002
       Icon: {fileID: 21300000, guid: 596d0b8c53dd967499ffaf972c024825, type: 3}
       Name: Slime Queen Gem
@@ -706,6 +437,7 @@ MonoBehaviour:
       MinLevel: 0
       MaxLevel: 30
       rarity: 0
+      <IsStackable>k__BackingField: 0
     - ID: 4001
       Icon: {fileID: 21300000, guid: 6822ee3bacd416847be6f7c13ccec328, type: 3}
       Name: Spider Queen Gem
@@ -715,14 +447,6 @@ MonoBehaviour:
       MinLevel: 0
       MaxLevel: 30
       rarity: 0
-    - ID: 4004
-      Icon: {fileID: 21300000, guid: 0274e292b08f7734f8aa19c5b21a6e11, type: 3}
-      Name: Orc Chieftain Gem
-      Description: Permanently Increases Physical Power and Stamina by 15 and 30
-      itemType: 4
-      Price: 0
-      MinLevel: 0
-      MaxLevel: 30
-      rarity: 0
+      <IsStackable>k__BackingField: 0
     log:
       showMessages: 0

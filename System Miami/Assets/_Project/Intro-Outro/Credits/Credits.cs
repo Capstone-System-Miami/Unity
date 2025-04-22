@@ -11,7 +11,7 @@ namespace SystemMiami
     public class Credits : MonoBehaviour
     {
         public string[] titles;
-        public string[] names;
+        public CustomString[] names;
         public CanvasGroup canvasGroup;
         public TextMeshProUGUI titleText;
         public TextMeshProUGUI nameText;
@@ -34,10 +34,10 @@ namespace SystemMiami
             StartCoroutine(PlaySlideShow());
 
 
-            for (int i = 0; i < names.Length; i++)
-            {
-                names[i] =  names[i].Replace(", ", "\n");
-            }
+            // for (int i = 0; i < names.Length; i++)
+            // {
+            //     names[i] =  names[i].Replace(", ", "\n");
+            // }
         }
 
         IEnumerator PlaySlideShow()
@@ -45,7 +45,7 @@ namespace SystemMiami
             while (currentSlide < titles.Length && currentSlide < names.Length)
             {
                 titleText.text = titles[currentSlide];
-                nameText.text = names[currentSlide];
+                nameText.text = names[currentSlide].text;
                 imageGroups[currentSlide].SetActive(true);
                 yield return new WaitForSeconds(readTime);
                 yield return StartCoroutine(Fade(0f, 1f)); // Start Fade
@@ -79,4 +79,10 @@ namespace SystemMiami
         }
 
     }
+}
+
+[System.Serializable]
+public class CustomString
+{
+    [SerializeField,TextArea] public string text;
 }

@@ -37,6 +37,10 @@ namespace SystemMiami
         private void Start()
         {
             RecalculateXPtoNextRemaining();
+            if (levelUpText == null)
+            {
+                levelUpText = GameObject.Find("LevelUpNotifText");
+            }
         }
 
         private void Update()

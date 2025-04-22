@@ -33,6 +33,7 @@ namespace SystemMiami.ui
         private List<string> messages = new();
 
         private int messageIndex = 0;
+        public int MessageIndex => messageIndex;
         private string currentMessage;
 
         [field: SerializeField, ReadOnly]
@@ -42,13 +43,15 @@ namespace SystemMiami.ui
         public bool BeenToLast { get; private set; } = false;
 
         private bool AtFirstIndex => messageIndex == 0;
-        private bool AtLastIndex => messageIndex == messages?.Count - 1;
+        public bool AtLastIndex => messageIndex == messages?.Count - 1;
         private bool IndexIsGreater => messageIndex >= messages.Count;
         private bool IndexIsLess => messageIndex < 0;
 
         private bool ShowPrevButton => IsRunning && (wrapStart || !AtFirstIndex);
         private bool ShowNextButton => IsRunning && (wrapEnd || !AtLastIndex);
         private bool ShowCloseButton => IsRunning && (allowCloseEarly || BeenToLast);
+        
+        public RectTransform rt => GetComponent<RectTransform>();
 
 
         public void Start()
@@ -96,6 +99,11 @@ namespace SystemMiami.ui
         public void OpenWindow()
         {
             OpenWindow(wrapStart, wrapEnd, allowCloseEarly, header, messages.ToArray());
+        }
+
+        public void OpenWindow(DialogueEventArgs eventArgs)
+        {
+            OpenWindow(eventArgs.wrapStart, eventArgs.wrapEnd, eventArgs.allowCloseEarly, eventArgs.header, eventArgs.messages.ToArray());
         }
 
         public void OpenWindow(
