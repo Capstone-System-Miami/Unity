@@ -65,6 +65,7 @@ namespace SystemMiami
         public event Action DungeonFailed;
         public Action<Phase> NewTurnPhase;
 
+
         #region Unity Methods
         //===============================
         private void OnEnable()
@@ -122,9 +123,9 @@ namespace SystemMiami
         //===============================
         #endregion // ^Unity Methods^
 
+
         #region Turn Management
         //===============================
-
         /// <summary>
         /// Coroutine for handling enemy turns.
         /// Each enemy takes their movement and action phases in sequence.
@@ -184,7 +185,6 @@ namespace SystemMiami
                 }
             }
         }
-
         //===============================
         #endregion // ^Turn Management^
 
@@ -257,7 +257,12 @@ namespace SystemMiami
 
             Debug.Log($"Spawning {enemyCombatant}");
         }
+        //===============================
+        #endregion // ^Spawning^
 
+
+        #region Event Raisers
+        // =====================================================================
         public void OnCombatStart()
         {
             IsGameOver = false;
@@ -282,7 +287,6 @@ namespace SystemMiami
         protected void OnDungeonCleared()
         {
             IsGameOver = true;
-            // combatants.Where(c => c != null && c is not PlayerCombatant).ToList().ForEach(c => c.gameObject.SetActive(false));
             DungeonCleared?.Invoke();
         }
 
@@ -292,7 +296,6 @@ namespace SystemMiami
             combatants.Where(c => c != null && c is not PlayerCombatant).ToList().ForEach(c => c.gameObject.SetActive(false));
             DungeonFailed?.Invoke();
         }
-        //===============================
-        #endregion // ^Spawning^
+        #endregion // Event Raisers
     }
 }

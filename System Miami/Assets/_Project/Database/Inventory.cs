@@ -77,7 +77,6 @@ namespace SystemMiami.InventorySystem
         private void OnEnable()
         {
             SceneManager.sceneLoaded += HandleSceneLoaded;
-            
         }
 
         private void OnDisable()
@@ -103,13 +102,13 @@ namespace SystemMiami.InventorySystem
             if (subscribe)
             {
                 subbedToDungeon = true;
-                TurnManager.MGR.DungeonCleared += HandleDungeonComplete;
+                TurnManager.MGR.DungeonCleared += HandleDungeonCleared;
                 TurnManager.MGR.DungeonFailed += HandleDungeonFailed;
             }
             else
             {
                 subbedToDungeon = false;
-                TurnManager.MGR.DungeonCleared -= HandleDungeonComplete;
+                TurnManager.MGR.DungeonCleared -= HandleDungeonCleared;
                 TurnManager.MGR.DungeonFailed -= HandleDungeonFailed;
             }
         }
@@ -120,14 +119,17 @@ namespace SystemMiami.InventorySystem
         // ====================================================================
         private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            if (scene.name == GAME.MGR.DungeonSceneName && !subbedToDungeon)
+            if (scene.name == GAME.MGR.NeighborhoodSceneName)
+            {
+                ReturnLoadoutItemsToInventory();
+            }
+            else if (scene.name == GAME.MGR.DungeonSceneName && !subbedToDungeon)
             {
                 SetTurnManagerSubscription(true);
             }
-            
         }
 
-        private void HandleDungeonComplete()
+        private void HandleDungeonCleared()
         {
             ReturnLoadoutItemsToInventory();
             SetTurnManagerSubscription(false);
@@ -143,11 +145,10 @@ namespace SystemMiami.InventorySystem
             quickslotMagicalAbilityIDs.Clear();
             quickslotPhysicalAbilityIDs.Clear();
         }
+
         private void HandleDungeonFailed()
         {
             SetTurnManagerSubscription(false);
-
-            // TODO: Convert quickslot data back to normal inventory.
         }
         #endregion // Event Responses ===========================================
 
