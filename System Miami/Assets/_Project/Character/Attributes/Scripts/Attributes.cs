@@ -122,11 +122,13 @@ namespace SystemMiami
         public void EnterUpgradeMode()
         {
             _upgradeMode = true;
+            PlayerManager.MGR?.GetComponent<PlayerLevel>().levelUpText?.SetActive(false);
         }
 
         public void LeaveUpgradeMode()
         {
             _upgradeMode = false;
+            PlayerManager.MGR?.GetComponent<PlayerLevel>().levelUpText?.SetActive(false);
             ResetUpgrades();
         }
 

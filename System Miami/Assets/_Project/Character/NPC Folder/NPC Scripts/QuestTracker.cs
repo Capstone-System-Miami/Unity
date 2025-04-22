@@ -13,7 +13,7 @@ namespace SystemMiami
         public Quest activeQuest;
         [SerializeField] private PlayerLevel playerLevel;
         [SerializeField] private Inventory playerInventory;
-        [SerializeField] private QuestPanel questPanel;
+        [SerializeField] public QuestPanel questPanel;
         
         public void AcceptQuest(Quest quest)
         {
