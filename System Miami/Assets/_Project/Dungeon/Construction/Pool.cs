@@ -36,13 +36,17 @@ namespace SystemMiami
 
             result = getRequired();
 
-            int countRemaining = _maxCount - result.Count;
-            if (countRemaining < 0 || countRemaining > _maxCount)
+            int availableCountRemaining = Mathf.Clamp((_maxCount - result.Count), 0, _maxCount);
+
+            // if result is greater than min, this will be neg
+            int requiredCountRemaining = Mathf.Clamp((_minCount - result.Count), 0, _minCount);
+
+            if (availableCountRemaining == 0)
             {
                 return result;
             }
 
-            int randomCountRemaining = Random.Range(_minCount, countRemaining + 1);
+            int randomCountRemaining = Random.Range(requiredCountRemaining, availableCountRemaining);
 
             result.AddRange(getListOfSize(randomCountRemaining));
             return result;
@@ -89,6 +93,7 @@ namespace SystemMiami
             if (_defaultPrefab != null)
             {
                 defaultPrefab = _defaultPrefab;
+
                 return true;
             }
 
