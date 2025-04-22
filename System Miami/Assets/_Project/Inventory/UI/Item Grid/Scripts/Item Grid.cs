@@ -122,9 +122,9 @@ namespace SystemMiami.ui
             for (int i = 0; i < minCount; i++)
             {
                 Assert.IsNotNull(Slots);
-                Assert.IsTrue(Slots.Count >= i);
+                Assert.IsTrue(Slots.Count > i);
                 Assert.IsNotNull(ids);
-                Assert.IsTrue(ids.Count >= i);
+                Assert.IsTrue(ids.Count > i);
 
                 // log.print($"Filling slot {i} with {ids[i]}");
                 if (!Slots[i].TryFill(ids[i]))

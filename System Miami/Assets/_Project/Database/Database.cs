@@ -248,6 +248,11 @@ namespace SystemMiami
             return modSo;
         }
 
+        public StatSet GetEquipmentModStats(int modID)
+        {
+            return new StatSet(GetEquipmentMod(modID).StatBonus);
+        }
+
         /// <summary>
         /// Gets the itemData type of that ID(for sorting purposes)
         /// </summary>

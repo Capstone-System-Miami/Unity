@@ -156,8 +156,11 @@ namespace SystemMiami
         /// <summary>
         /// Adds an equipment mod's stats by ID, separate from status effects.
         /// </summary>
-        public void EquipMod(int modID, StatSet modStats)
+        public void EquipMod(int modID)
         {
+            // Convert the ScriptableObject's bonuses into a runtime StatSet
+            StatSet modStats = Database.MGR.GetEquipmentModStats(modID);
+
             if (_equipmentMods.ContainsKey(modID))
             {
                 Debug.LogWarning($"{name} already has equipment mod {modID}!");
