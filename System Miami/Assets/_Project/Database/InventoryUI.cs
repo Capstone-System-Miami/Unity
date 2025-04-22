@@ -41,7 +41,6 @@ namespace SystemMiami.InventorySystem
 
         private void OnEnable()
         {
-           
             if (!PlayerManager.MGR.TryGetComponent(out playerInventory))
             {
                 string[] error = new string[]
@@ -55,7 +54,8 @@ namespace SystemMiami.InventorySystem
                     $"OnInventoryChanged.");
                 return;
             }
-            RefreshUI();
+
+
             // TODO: Should this be reversed? I was sort of assuming the
             // inventory menu would be a place where the UI affects the
             // players inventory, and is safe from needing to update.
