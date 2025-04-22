@@ -170,6 +170,7 @@ namespace SystemMiami.InventorySystem
 
                 case ItemType.EquipmentMod:
                     equipmentModIDs.Add(ID);
+                    EquipMod(ID);
                     break;
 
                 default:
@@ -302,6 +303,21 @@ namespace SystemMiami.InventorySystem
             AddToInventory(startingGeneralShieldID);
             AddToInventory(startingHealPotionID);
             AddToInventory(startingResourcePotionID);
+        }
+
+
+        /// <summary>
+        /// Removes an equipped mod by ID
+        /// </summary>
+        public void UnequipMod(int modID)
+        {
+            PlayerManager.MGR.GetComponent<Stats>().UnequipMod(modID);
+        }
+
+        public void EquipMod(int modId)
+        {
+            PlayerManager.MGR.GetComponent<Stats>().EquipMod(modId);
+            MoveToQuickslot(modId);
         }
 
         // Gain Credits from quests and other sources

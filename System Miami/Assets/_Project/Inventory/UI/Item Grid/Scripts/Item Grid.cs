@@ -122,6 +122,7 @@ namespace SystemMiami.ui
             for (int i = 0; i < minCount; i++)
             {
                 Assert.IsNotNull(Slots);
+                Assert.IsTrue(Slots.Count > i);
                 Assert.IsNotNull(ids);
                 Assert.IsTrue(ids.Count > i);
 

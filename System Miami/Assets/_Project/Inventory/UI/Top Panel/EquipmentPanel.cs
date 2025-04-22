@@ -8,22 +8,27 @@ namespace SystemMiami.ui
 {
     public class EquipmentPanel : CharacterMenuSubPanel
     {
+        [SerializeField] SelectableSprite skeletonLabelBKG;
         [SerializeField] SelectableTMP skeletonLabel;
         [SerializeField] int skeletonItemId;
         [SerializeField] InventoryItemSlot skeletonSlot;
 
+        [SerializeField] SelectableSprite slimeLabelBKG;
         [SerializeField] SelectableTMP slimeLabel;
         [SerializeField] int slimeItemId;
         [SerializeField] InventoryItemSlot slimeSlot;
 
+        [SerializeField] SelectableSprite orcLabelBKG;
         [SerializeField] SelectableTMP orcLabel;
         [SerializeField] int orcItemId;
         [SerializeField] InventoryItemSlot orcSlot;
 
+        [SerializeField] SelectableSprite spiderLabelBKG;
         [SerializeField] SelectableTMP spiderLabel;
         [SerializeField] int spiderItemId;
         [SerializeField] InventoryItemSlot spiderSlot;
 
+        private Dictionary<InventoryItemSlot, SelectableSprite> bkgAtSlots = new();
         private Dictionary<InventoryItemSlot, SelectableTMP> textAtSlots = new();
         private Dictionary<InventoryItemSlot, int> idsAtSlots = new();
         // private List<InventoryItemSlot> emptySlots =>
@@ -31,6 +36,13 @@ namespace SystemMiami.ui
 
         private void OnEnable()
         {
+            bkgAtSlots = new()
+            {
+                { skeletonSlot, skeletonLabelBKG },
+                { slimeSlot, slimeLabelBKG },
+                { orcSlot, orcLabelBKG },
+                { spiderSlot, spiderLabelBKG },
+            };
             textAtSlots = new()
             {
                 { skeletonSlot, skeletonLabel },
@@ -70,6 +82,7 @@ namespace SystemMiami.ui
                     }
                     else
                     {
+                        bkgAtSlots[slot].Select();
                         textAtSlots[slot].Select();
                     }
                 }
