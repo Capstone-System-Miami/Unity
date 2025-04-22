@@ -2,6 +2,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using SystemMiami.Management;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -60,7 +61,7 @@ namespace SystemMiami
 
             }
 
-            SceneManager.LoadScene("Menu Scene"); // Takes you back to Main
+            GAME.MGR.GoToTutorial();
             Debug.Log("SlideShow Finished");
         }
 

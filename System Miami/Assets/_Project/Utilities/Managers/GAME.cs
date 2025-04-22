@@ -63,6 +63,7 @@ namespace SystemMiami.Management
         [SerializeField] string mainMenuSceneName;
         [SerializeField] string settingsSceneName;
         [SerializeField] string introSceneName;
+        [SerializeField] string tutorialSceneName;
         [SerializeField] string characterSelectSceneName;
         [SerializeField] string neighborhoodSceneName;
         [SerializeField] string dungeonSceneName;
@@ -77,6 +78,10 @@ namespace SystemMiami.Management
         }
         public string IntroSceneName {
             get { return introSceneName; }
+        }
+        
+        public string TutorialSceneName {
+            get { return tutorialSceneName; }
         }
         public string CharacterSelectSceneName {
             get { return characterSelectSceneName; }
@@ -189,6 +194,11 @@ namespace SystemMiami.Management
         public void GoToIntro()
         {
             SceneManager.LoadScene(IntroSceneName);
+        }
+        
+        public void GoToTutorial()
+        {
+            SceneManager.LoadScene(TutorialSceneName);
         }
 
         public void GoToCharacterSelect()
