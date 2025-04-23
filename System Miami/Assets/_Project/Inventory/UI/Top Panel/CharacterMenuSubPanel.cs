@@ -7,6 +7,10 @@ namespace SystemMiami.ui
 {
     public class CharacterMenuSubPanel : MonoBehaviour, ISingleSelectable
     {
+        [Header("Player Info")]
+        [SerializeField] private Image characterImage;
+        [SerializeField, ReadOnly] Sprite characterSprite;
+
         private Image background;
 
         int ISingleSelectable.SelectionIndex { get; set; }
@@ -30,6 +34,11 @@ namespace SystemMiami.ui
         public virtual void Select()
         {
             IsSelected = true;
+            if (characterImage != null)
+            {
+                characterSprite = PlayerManager.MGR?.PlayerSprite;
+                characterImage.sprite = characterSprite;
+            }
         }
 
         public virtual void Deselect()

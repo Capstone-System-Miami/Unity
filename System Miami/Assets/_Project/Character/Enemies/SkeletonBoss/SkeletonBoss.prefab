@@ -122,9 +122,10 @@ GameObject:
   - component: {fileID: -7163708798834749806}
   - component: {fileID: -4757405529046438839}
   - component: {fileID: 6430554345259942087}
+  - component: {fileID: 212607644978762889}
   m_Layer: 13
   m_Name: SkeletonBoss
-  m_TagString: Goblin
+  m_TagString: Boss
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -336,6 +337,7 @@ MonoBehaviour:
   _colorTag: {r: 1, g: 0.28759372, b: 0.25943398, a: 1}
   _printUItoConsole: 1
   _movementSpeed: 2
+  flowKey: 0
   idleController: {fileID: 22100000, guid: a9fea33cbd6c633499205a2683ef4b32, type: 2}
   walkingController: {fileID: 22100000, guid: 6d68f9da4074ed04db18c27cc44c52b6, type: 2}
   hasResourceEffect: 0
@@ -441,6 +443,20 @@ MonoBehaviour:
     m_NumColorKeys: 3
     m_NumAlphaKeys: 2
   fill: {fileID: 2691417255355059732}
+--- !u!114 &212607644978762889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5985083666047915755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 068a918acc271324b857b5cd9d389208, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <bossName>k__BackingField: The Skeleton King
+  <powerName>k__BackingField: Mysticism
 --- !u!1 &6862992159796389256
 GameObject:
   m_ObjectHideFlags: 0

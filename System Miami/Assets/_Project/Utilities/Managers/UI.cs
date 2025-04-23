@@ -35,11 +35,11 @@ namespace SystemMiami.Management
         [SerializeField] private CombatActionBar consumablesBar;
 
         [Header("Combat")]
-        [SerializeField] private GameObject lossPanelPrefab;
-        [SerializeField] private GameObject winPanelPrefab;
-        [SerializeField] private GameObject winBossPanelPrefab;
-        [SerializeField] private GameObject rollCreditsPanelPrefab;
-        [SerializeField, ReadOnly] private GameObject combatOverPanel;
+        [SerializeField] private EndCombatWindow lossPanelPrefab;
+        [SerializeField] private EndCombatWindow winPanelPrefab;
+        [SerializeField] private EndCombatWindow winBossPanelPrefab;
+        [SerializeField] private EndCombatWindow rollCreditsPanelPrefab;
+        [SerializeField, ReadOnly] private EndCombatWindow combatOverPanel;
 
 
         public event Action CharacterMenuOpened;
@@ -323,14 +323,17 @@ namespace SystemMiami.Management
             if (GAME.MGR.AllBossesDefeated)
             {
                 combatOverPanel = Instantiate(rollCreditsPanelPrefab);
+                combatOverPanel.Init(null);
             }
             else if (GAME.MGR.BossRecentlyDefeated)
             {
                 combatOverPanel = Instantiate(winBossPanelPrefab);
+                combatOverPanel.Init(GAME.MGR.RecentlyDefeatedBoss);
             }
             else
             {
                 combatOverPanel = Instantiate(winPanelPrefab);
+                combatOverPanel.Init(null);
             }
 
             combatOverPanel.transform.SetParent(transform);
@@ -344,6 +347,7 @@ namespace SystemMiami.Management
             TurnManager.MGR.DungeonCleared -= HandleDungeonCleared;
 
             combatOverPanel = Instantiate(lossPanelPrefab);
+            combatOverPanel.Init(null);
         }
     }
 }

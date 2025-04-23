@@ -325,9 +325,10 @@ GameObject:
   - component: {fileID: -7163708798834749806}
   - component: {fileID: -4757405529046438839}
   - component: {fileID: 1585470229873009833}
+  - component: {fileID: -7025280881447039435}
   m_Layer: 7
   m_Name: BossOrc
-  m_TagString: Goblin
+  m_TagString: Boss
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -539,6 +540,7 @@ MonoBehaviour:
   _colorTag: {r: 1, g: 0.28759372, b: 0.25943398, a: 1}
   _printUItoConsole: 1
   _movementSpeed: 2
+  flowKey: 0
   idleController: {fileID: 22100000, guid: 52614b335e5b6f840a582d744e303797, type: 2}
   walkingController: {fileID: 22100000, guid: 4a094c075857b254f97813ba9993354d, type: 2}
   hasResourceEffect: 0
@@ -644,3 +646,17 @@ MonoBehaviour:
     m_NumColorKeys: 3
     m_NumAlphaKeys: 2
   fill: {fileID: 2400357103048454633}
+--- !u!114 &-7025280881447039435
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5985083666047915755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 068a918acc271324b857b5cd9d389208, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <bossName>k__BackingField: The Orc Chieftain
+  <powerName>k__BackingField: Might

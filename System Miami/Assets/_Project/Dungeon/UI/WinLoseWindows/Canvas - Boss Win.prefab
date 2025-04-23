@@ -1004,6 +1004,7 @@ GameObject:
   - component: {fileID: 3330014639936420108}
   - component: {fileID: 5726563361027138189}
   - component: {fileID: 6904976252163207038}
+  - component: {fileID: 8122187270716631628}
   m_Layer: 5
   m_Name: Canvas - Boss Win
   m_TagString: Untagged
@@ -1101,6 +1102,24 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &8122187270716631628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4783360393765713647}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee0222ee4eb0a564488efbb29514ca96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  charImage: {fileID: 4227535237612593289}
+  charSprite: {fileID: 0}
+  bossToken: <>
+  bossPowerToken: '[]'
+  replacements: []
+  allTexts: []
 --- !u!1 &4793363526863239873
 GameObject:
   m_ObjectHideFlags: 0
@@ -1193,8 +1212,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 72
-  m_fontSizeBase: 72
+  m_fontSize: 64
+  m_fontSizeBase: 64
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2063,10 +2082,13 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Now that you''ve slain <>,
 
-    it''s time to move along to the next Neighborhood.
+    and gained the power of [],
 
-    Let''s
-    see how long you can keep this up...'
+    it''s
+    time to move along to the next Neighborhood.
+
+    Let''s see how long you can
+    keep this up...'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 303fdf2f21f5eab47949f5c3806da193, type: 2}
   m_sharedMaterial: {fileID: 1836521152029091587, guid: 303fdf2f21f5eab47949f5c3806da193, type: 2}
@@ -2093,8 +2115,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 72
-  m_fontSizeBase: 72
+  m_fontSize: 64
+  m_fontSizeBase: 64
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

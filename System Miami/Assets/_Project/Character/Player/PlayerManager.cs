@@ -26,7 +26,7 @@ namespace SystemMiami
         [Header("Component Groups")]
         [Tooltip("Components active in all modes")]
         [SerializeField] private List<Component> sharedComponents = new(); // Always enabled
-
+ 
         [Tooltip("Components active in neighborhood mode")]
         [SerializeField] private List<Component> neighborhoodComponents = new();
         [SerializeField] private GameObject playerCamera;
@@ -38,6 +38,17 @@ namespace SystemMiami
         [Header("Scene Names")]
         [SerializeField] private string neighborhoodSceneName = "Neighborhood"; // Name of the neighborhood scene
         [SerializeField] private string dungeonSceneName = "Dungeon"; // Name of the Dungeon scene
+
+        [Header("Other")]
+        [SerializeField] private PlayerSprites playerSprites;
+        public Sprite PlayerSprite
+        {
+            get
+            {
+                CharacterClassType charClass = GetComponent<Attributes>()._characterClass;
+                return playerSprites.GetClassPFP(charClass);
+            }
+        }
 
         // ======================================
         #endregion // SERIALIZED

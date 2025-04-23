@@ -16,5 +16,16 @@ namespace SystemMiami
         public Sprite mageSprite;
         public Sprite rogueSprite;
         public Sprite fighterSprite;
+
+        public Sprite GetClassPFP(CharacterClassType charClass)
+        {
+            return charClass switch {
+                CharacterClassType.TANK     => tankSprite,
+                CharacterClassType.MAGE     => mageSprite,
+                CharacterClassType.ROGUE    => rogueSprite,
+                CharacterClassType.FIGHTER  => fighterSprite,
+                _                           => tankSprite,
+            };
+        }
     }
 }

@@ -79,7 +79,6 @@ namespace SystemMiami.Management
         public string IntroSceneName {
             get { return introSceneName; }
         }
-        
         public string TutorialSceneName {
             get { return tutorialSceneName; }
         }
@@ -111,6 +110,8 @@ namespace SystemMiami.Management
         [field: SerializeField, ReadOnly]
         public DungeonData CurrentDungeonData { get; private set; }
         [field: SerializeField] public bool BossRecentlyDefeated { get; private set; }
+        [field: SerializeField] public BossTag RecentlyDefeatedBoss { get; private set; }
+
 
         private Queue<DungeonPreset> bossDungeonQueue = new();
         public bool AllBossesDefeated {
@@ -452,18 +453,13 @@ namespace SystemMiami.Management
 
         #region Event Raisers
         // =====================================================================
-        public void NotifyBossSpawned()
-        {
-            BossRecentlyDefeated = false;
-        }
-
-        public void NotifyBossDefeated()
-        {
-            BossRecentlyDefeated = true;
-        }
-
         public void NotifyCombatantDying(Combatant combatant)
         {
+            if (combatant.TryGetComponent(out BossTag boss))
+            {
+                BossRecentlyDefeated = true;
+                RecentlyDefeatedBoss = boss;
+            }
             CombatantDying.Invoke(combatant);
         }
 
