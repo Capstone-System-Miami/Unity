@@ -64,10 +64,14 @@ namespace SystemMiami
             allMusic = new Music[] {
                 mainMenu,
                 settings,
+                intro,
+                tutorial,
                 characterSelect,
                 neighborhood,
                 dungeonLow,
-                dungeonHigh
+                dungeonHigh,
+                outro,
+                credits,
             };
         }
 
