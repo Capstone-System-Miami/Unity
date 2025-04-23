@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58d728392c04c9a48a8a419a8ac94f33, type: 3}
+  m_Name: Surge Attack
+  m_EditorClassIdentifier: 
+  Icon: {fileID: 21300000, guid: 2bf51f0c81ce003499e4d16ab18842a7, type: 3}
+  Actions:
+  - {fileID: 11400000, guid: 9ffa9f3bf3f42074e98068b579845515, type: 2}
+  - {fileID: 11400000, guid: 5bca3704436724646a7edfaf1018fc16, type: 2}
+  OverrideController: {fileID: 22100000, guid: e7ddbb9330541ea418e500d2fd87135d, type: 2}
+  MageOverrideController: {fileID: 0}
+  FighterOverrideController: {fileID: 0}
+  TankOverrideController: {fileID: 0}
+  RogueOverrideController: {fileID: 0}
+  AbilityType: 0
+  ResourceCost: 15
+  CooldownTurns: 2
+  itemData:
+    ID: 1048
+    Icon: {fileID: 21300000, guid: 2bf51f0c81ce003499e4d16ab18842a7, type: 3}
+    Name: Surge Attack
+    Description: Ranged attack that deals damage during your turn and again at the
+      start of enemies turn
+    itemType: 1
+    Price: 0
+    MinLevel: 5
+    MaxLevel: 8
+    rarity: 0
+    <IsStackable>k__BackingField: 0
+  classType: 0
+  isEnemyAbility: 0
+  isGeneralAbility: 0

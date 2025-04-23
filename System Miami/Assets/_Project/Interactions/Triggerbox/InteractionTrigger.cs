@@ -9,31 +9,34 @@ namespace SystemMiami
     [RequireComponent(typeof(Collider2D))]
     public class InteractionTrigger : MonoBehaviour, IInteractable
     {
+        [SerializeField] public bool IsInteractionEnabled
+        {
+            get { return this.enabled; }
+            set { this.enabled = value; }
+        }
+
         [SerializeField] private UnityEvent OnEnter;
         [SerializeField] public UnityEvent OnInteract;
         [SerializeField] private UnityEvent OnExit;
         [SerializeField] private string _promptAction;
 
-        // private NPCQuestGiver npc; // Reference to NPC script
+        private bool isInteractionEnabled = true;
 
-        private void Start()
+        private void OnDisable()
         {
-           // npc = GetComponent<NPCQuestGiver>(); // Check if NPC script is attached
+            PlayerExit();
         }
 
         public virtual void PlayerEnter()
         {
+            if (!IsInteractionEnabled) { return; }
             OnEnter?.Invoke();
         }
 
         public virtual void Interact()
         {
+            if (!IsInteractionEnabled) { return; }
             OnInteract?.Invoke();
-
-            // if (npc != null)
-            //{
-                // npc.StartDialogue(); // Trigger NPC dialogue
-           // }
         }
 
         public virtual void PlayerExit()

@@ -15,13 +15,17 @@ MonoBehaviour:
   Icon: {fileID: 0}
   Actions:
   - {fileID: 11400000, guid: b905a3a990ce2134c962941e28ccba5e, type: 2}
-  OverrideController: {fileID: 0}
+  OverrideController: {fileID: 22100000, guid: e3bd9958f1fa886428560e9b610c8a1f, type: 2}
+  MageOverrideController: {fileID: 0}
+  FighterOverrideController: {fileID: 0}
+  TankOverrideController: {fileID: 0}
+  RogueOverrideController: {fileID: 0}
   AbilityType: 1
   ResourceCost: 50
   CooldownTurns: 8
   itemData:
     ID: 2009
-    Icon: {fileID: 0}
+    Icon: {fileID: 21300000, guid: 0aa6c2536a63df546818de27573ba3cf, type: 3}
     Name: Astral Explosion
     Description: 'Deal very high AOE damage. Consume all remaining Mana. '
     itemType: 2
@@ -29,6 +33,7 @@ MonoBehaviour:
     MinLevel: 4
     MaxLevel: 5
     rarity: 0
+    <IsStackable>k__BackingField: 0
   classType: 1
   isEnemyAbility: 0
   isGeneralAbility: 0

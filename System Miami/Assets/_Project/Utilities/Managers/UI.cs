@@ -3,9 +3,9 @@ using System;
 using System.Linq;
 using SystemMiami.CombatRefactor;
 using SystemMiami.CombatSystem;
-using System.Collections.Generic;
 using SystemMiami.ui;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Assertions;
 
 namespace SystemMiami.Management
@@ -16,11 +16,34 @@ namespace SystemMiami.Management
         [SerializeField] private bool inputPromptsOn = true;
         [SerializeField] private TextBox inputPromptPanel;
 
+        [Header("GameControl")]
+        [SerializeField] private GameObject neighborhoodPauseButtonPrefab;
+        [SerializeField] private GameObject dungeonPauseButtonPrefab;
+        [SerializeField] private GameObject pausePanelPrefab;
+        [SerializeField, ReadOnly] private GameObject pauseButton;
+        [SerializeField, ReadOnly] private GameObject pausePanel;
+
+        [Header("CharacterMenu")]
+        [SerializeField] private GameObject characterMenuPrefab;
+        [SerializeField] private GameObject characterMenuButtonPrefab;
+        [SerializeField, ReadOnly] private GameObject characterMenu;
+        [SerializeField, ReadOnly] private GameObject characterMenuButton;
 
         [Header("Loadout UI")]
         [SerializeField] private CombatActionBar physicalAbilitiesBar;
         [SerializeField] private CombatActionBar magicalAbilitiesBar;
         [SerializeField] private CombatActionBar consumablesBar;
+
+        [Header("Combat")]
+        [SerializeField] private EndCombatWindow lossPanelPrefab;
+        [SerializeField] private EndCombatWindow winPanelPrefab;
+        [SerializeField] private EndCombatWindow winBossPanelPrefab;
+        [SerializeField] private EndCombatWindow rollCreditsPanelPrefab;
+        [SerializeField, ReadOnly] private EndCombatWindow combatOverPanel;
+
+
+        public event Action CharacterMenuOpened;
+        public event Action CharacterMenuClosed;
 
         public Action<ActionQuickslot> SlotClicked;
         public Action<Loadout, Combatant> CombatantLoadoutCreated;
@@ -30,8 +53,25 @@ namespace SystemMiami.Management
 
         [field: SerializeField, ReadOnly] public GameObject CurrentClient { get; private set; }
 
+        private void OnEnable()
+        {
+            SceneManager.sceneLoaded += HandleSceneLoaded;
+
+            GAME.MGR.GamePaused += HandleGamePaused;
+            GAME.MGR.GameResumed += HandleGameResumed;
+        }
+
+        private void OnDisable()
+        {
+            SceneManager.sceneLoaded -= HandleSceneLoaded;
+
+            GAME.MGR.GamePaused -= HandleGamePaused;
+            GAME.MGR.GameResumed -= HandleGameResumed;
+        }
+
         public void CreatePlayerLoadout(Combatant combatant)
         {
+            Assert.IsNotNull(combatant, $"{combatant.name}'s was null");
             OnCreatePlayerLoadout(combatant);
         }
 
@@ -57,6 +97,9 @@ namespace SystemMiami.Management
 
         public void ClickSlot(ActionQuickslot slot)
         {
+            if (TurnManager.MGR == null) { return; }
+            if (!TurnManager.MGR.IsPlayerTurn) { return; }
+            if (TurnManager.MGR.playerCharacter.CurrentPhase != Phase.Action) { return; }
             physicalAbilitiesBar.DisableAllExcept(slot);
             magicalAbilitiesBar.DisableAllExcept(slot);
             consumablesBar.DisableAllExcept(slot);
@@ -95,13 +138,56 @@ namespace SystemMiami.Management
             OnDialogueFinished();
         }
 
+        public void OpenCharacterMenu()
+        {
+            // Create the character menu
+            if (characterMenu == null && characterMenuPrefab != null)
+            {
+                characterMenu = Instantiate(characterMenuPrefab);
+            }
+
+            characterMenu.transform.SetParent(transform);
+
+            // Destroy the character menu button
+            if (characterMenuButton != null)
+            {
+                Destroy(characterMenuButton);
+                characterMenuButton = null;
+            }
+
+            OnCharacterMenuOpened();
+        }
+
+        public void CloseCharacterMenu()
+        {
+            // Create the character menu button
+            if (characterMenuButton == null && characterMenuButtonPrefab != null)
+            {
+                characterMenuButton = Instantiate(characterMenuButtonPrefab);
+            }
+
+            characterMenuButton.transform.SetParent(transform);
+
+            // Destroy the character menu
+            if (characterMenu != null)
+            {
+                Destroy(characterMenu);
+                characterMenu = null;
+            }
+
+            OnCharacterMenuClosed();
+        }
+
         protected virtual void OnCreatePlayerLoadout(Combatant combatant)
         {
+            Assert.IsNotNull(combatant, $"{combatant.name} was null");
+            Assert.IsNotNull(combatant._inventory, $"{combatant.name}'s Inventory was null");
+
             Loadout combatantLoadout = new(
                 combatant._inventory,
                 combatant);
 
-            Assert.IsNotNull(combatantLoadout);
+            Assert.IsNotNull(combatantLoadout, $"{combatant.name}'s Loadout was null");
 
             if (combatant is PlayerCombatant)
             {
@@ -119,13 +205,24 @@ namespace SystemMiami.Management
         protected virtual void OnDialogueStarted(DialogueEventArgs args)
         {
             CurrentClient = (args.client as MonoBehaviour)?.gameObject;
-
             DialogueStarted?.Invoke(this, args);
         }
 
         protected virtual void OnDialogueFinished()
         {
+            CurrentClient = null;
             DialogueFinished?.Invoke(this, EventArgs.Empty);
+        }
+
+
+        protected virtual void OnCharacterMenuOpened()
+        {
+            CharacterMenuOpened?.Invoke();
+        }
+
+        protected virtual void OnCharacterMenuClosed()
+        {
+            CharacterMenuClosed?.Invoke();
         }
 
         private void FillLoadoutBars(Loadout loadout)
@@ -133,6 +230,124 @@ namespace SystemMiami.Management
             physicalAbilitiesBar.FillWith(loadout.PhysicalAbilities.Cast<CombatAction>().ToList());
             magicalAbilitiesBar.FillWith(loadout.MagicalAbilities.Cast<CombatAction>().ToList());
             consumablesBar.FillWith(loadout.Consumables.Cast<CombatAction>().ToList());
+        }
+
+        private void CreatePauseButton(string sceneName)
+        {
+            if (pauseButton != null)
+            {
+                Destroy(pauseButton);
+                pauseButton = null;
+            }
+
+            GameObject prefab = null;
+            if (sceneName == GAME.MGR.NeighborhoodSceneName)
+            {
+                prefab = neighborhoodPauseButtonPrefab;
+            }
+            else if (sceneName == GAME.MGR.DungeonSceneName)
+            {
+                prefab = dungeonPauseButtonPrefab;
+            }
+            else
+            {
+                return;
+            }
+
+            Assert.IsNotNull(prefab, $"{name} tried to instantiate a null pause button...");
+
+            // Create the button
+            pauseButton = Instantiate(prefab);
+
+            pauseButton.transform.SetParent(transform);
+        }
+
+        private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            if (scene.name == GAME.MGR.DungeonSceneName)
+            {
+                TurnManager.MGR.DungeonFailed += HandleDungeonFailed;
+                TurnManager.MGR.DungeonCleared += HandleDungeonCleared;
+            }
+
+            if (scene.name == GAME.MGR.NeighborhoodSceneName)
+            {
+                OpenCharacterMenu();
+                CloseCharacterMenu();
+            }
+
+            CreatePauseButton(scene.name);
+        }
+
+        private void HandleGamePaused()
+        {
+            // Create Pause panel
+            if (pausePanel == null && pausePanelPrefab != null)
+            {
+                pausePanel = Instantiate(pausePanelPrefab);
+                pausePanel.transform.SetParent(transform);
+            }
+
+            // Destroy pause button
+            if (pauseButton != null)
+            {
+                Destroy(pauseButton);
+                pauseButton = null;
+            }
+        }
+
+        private void HandleGameResumed()
+        {
+            CreatePauseButton(SceneManager.GetActiveScene().name);
+
+            // Destroy pause panel
+            if (pausePanel != null)
+            {
+                Destroy(pausePanel);
+                pausePanel = null;
+            }
+        }
+
+        // TODO: Attach Win/Lose panel script on all the combatOverPanel
+        // prefabs. They should take certain information in an Init()
+        // and display different things (or connect to different actions)
+        // based on the given info.
+        //
+        private void HandleDungeonCleared()
+        {
+            Debug.Log($"{name} handling dun clr");
+
+            TurnManager.MGR.DungeonFailed -= HandleDungeonFailed;
+            TurnManager.MGR.DungeonCleared -= HandleDungeonCleared;
+
+            if (GAME.MGR.AllBossesDefeated)
+            {
+                combatOverPanel = Instantiate(rollCreditsPanelPrefab);
+                combatOverPanel.Init(null);
+            }
+            else if (GAME.MGR.BossRecentlyDefeated)
+            {
+                combatOverPanel = Instantiate(winBossPanelPrefab);
+                combatOverPanel.Init(GAME.MGR.RecentlyDefeatedBoss);
+            }
+            else
+            {
+                combatOverPanel = Instantiate(winPanelPrefab);
+                combatOverPanel.Init(null);
+            }
+
+            combatOverPanel.transform.SetParent(transform);
+        }
+
+        private void HandleDungeonFailed()
+        {
+            Debug.Log($"{name} handling dun fail");
+
+            TurnManager.MGR.DungeonFailed -= HandleDungeonFailed;
+            TurnManager.MGR.DungeonCleared -= HandleDungeonCleared;
+
+            combatOverPanel = Instantiate(lossPanelPrefab);
+            combatOverPanel.Init(null);
         }
     }
 }

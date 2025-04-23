@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using SystemMiami.Utilities;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -74,6 +75,19 @@ namespace SystemMiami.ui
             }
         }
 
+        /// NOTE: This is a subscription to <see cref="Inventory.InventoryChanged">,
+        /// which doesn't do anything right now.
+        ///
+        // private void OnEnable()
+        // {
+        //     PlayerManager.MGR.inventory.InventoryChanged += HandleInventoryChanged;
+        // }
+        //
+        // private void OnDisable()
+        // {
+        //     PlayerManager.MGR.inventory.InventoryChanged -= HandleInventoryChanged;
+        // }
+
         private void Start()
         {
         }
@@ -107,12 +121,12 @@ namespace SystemMiami.ui
 
             for (int i = 0; i < minCount; i++)
             {
-                Assert.IsTrue(Slots != null);
+                Assert.IsNotNull(Slots);
                 Assert.IsTrue(Slots.Count > i);
-                Assert.IsTrue(ids != null);
+                Assert.IsNotNull(ids);
                 Assert.IsTrue(ids.Count > i);
-                // ItemData itemData = Database.Instance.GetData(id);
-                Debug.Log($"Filling slot {i} with {ids[i]}");
+
+                // log.print($"Filling slot {i} with {ids[i]}");
                 if (!Slots[i].TryFill(ids[i]))
                 {
                     log.error(
@@ -128,6 +142,28 @@ namespace SystemMiami.ui
             for (int i = 0; i < Slots.Count; i++)
             {
                 Slots[i].ClearSlot();
+            }
+        }
+
+
+        public void AddNew(List<int> toAdd)
+        {
+            for (int i = 0; i < Slots.Count; i++)
+            {
+                if (!Slots[i].TryFill(toAdd[i]))
+                {
+                    Debug.Log($"Couldn't Add {Database.MGR.GetDataWithJustID(toAdd[i])}");
+                }
+            }
+        }
+
+        public void RemoveExisting(List<int> toRemove)
+        {
+            for (int i = 0; i < Slots.Count; i++)
+            {
+                Slots[i].ClearSlot();
+
+                // Would anything else need to happen in here?
             }
         }
 
@@ -210,6 +246,14 @@ namespace SystemMiami.ui
 
                 _ => Vector2.zero
             };
+        }
+
+        private void HandleInventoryChanged(object sender, InventoryChangedEventArgs args)
+        {
+            if (args.itemType != this.ItemType) { return; }
+
+            RemoveExisting(args.itemsRemoved);
+            AddNew(args.itemsAdded);
         }
 
         private class DimensionInfo

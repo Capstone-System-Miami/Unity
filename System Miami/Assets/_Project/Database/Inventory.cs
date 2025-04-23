@@ -1,10 +1,10 @@
-using System.Collections;
+using SystemMiami.Management;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.Serialization;
-using SystemMiami.CombatSystem;
-using SystemMiami.Outdated;
 using UnityEngine.Assertions;
+using UnityEngine.SceneManagement;
 
 namespace SystemMiami.InventorySystem
 {
@@ -21,6 +21,8 @@ namespace SystemMiami.InventorySystem
 
         [SerializeField] private int credits;
 
+        [field: SerializeField, ReadOnly] public bool subbedToDungeon { get; private set; }
+
         public List<int> PhysicalAbilityIDs { get => physicalAbilityIDs; private set => physicalAbilityIDs = value; }
         public List<int> MagicalAbilityIDs { get => magicalAbilityIDs; private set => magicalAbilityIDs = value; }
         public List<int> ConsumableIDs { get => consumableIDs; private set => consumableIDs = value; }
@@ -31,7 +33,8 @@ namespace SystemMiami.InventorySystem
         public List<int> QuickslotConsumableIDs { get => quickslotConsumableIDs; private set => quickslotConsumableIDs = value; }
         public List<int> EquippedEquipmentModIDs { get => equippedEquipmentModIDs; private set => equippedEquipmentModIDs = value; }
 
-        public List<int> AllValidInventoryItems
+        public bool TestMode;
+        public List<int> AllInventoryItems
         {
             get
             {
@@ -39,8 +42,20 @@ namespace SystemMiami.InventorySystem
                 allIDs.AddRange(PhysicalAbilityIDs);
                 allIDs.AddRange(MagicalAbilityIDs);
                 allIDs.AddRange(ConsumableIDs);
+                return allIDs;
+            }
+        }
 
-                return allIDs ?? new();
+        public List<int> AllQuickslotItems
+        {
+            get
+            {
+                List<int> allQuickslotIDs = new();
+                allQuickslotIDs.AddRange(quickslotPhysicalAbilityIDs);
+                allQuickslotIDs.AddRange(quickslotMagicalAbilityIDs);
+                allQuickslotIDs.AddRange(quickslotConsumableIDs);
+                allQuickslotIDs.AddRange(equippedEquipmentModIDs);
+                return allQuickslotIDs;
             }
         }
 
@@ -48,11 +63,95 @@ namespace SystemMiami.InventorySystem
 
         public event System.Action OnInventoryChanged;
 
+        /// <summary>
+        /// NOTE: This doesn't really mean anything right now.
+        /// If you want, feel free to check out <see cref="InventoryChangedEventArgs">
+        /// and figure out how to integrate it. There's something there, but I can't
+        /// get it rn.
+        ///
+        public event EventHandler<InventoryChangedEventArgs> InventoryChanged;
+
+
+        #region Unity Methods
+        // ====================================================================
+        private void OnEnable()
+        {
+            SceneManager.sceneLoaded += HandleSceneLoaded;
+        }
+
+        private void OnDisable()
+        {
+            SceneManager.sceneLoaded += HandleSceneLoaded;
+        }
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.G)) { AddCredits(100); } //  Test adding credits
+            //  Test adding credits
+            if (Debug.isDebugBuild && Input.GetKeyDown(KeyCode.G))
+            {
+                AddCredits(100);
+            }
         }
+        #endregion // Unity Methods ===========================================
+
+
+        #region Event Subscriptions
+        // ====================================================================
+        private void SetTurnManagerSubscription(bool subscribe)
+        {
+            if (subscribe)
+            {
+                subbedToDungeon = true;
+                TurnManager.MGR.DungeonCleared += HandleDungeonCleared;
+                TurnManager.MGR.DungeonFailed += HandleDungeonFailed;
+            }
+            else
+            {
+                subbedToDungeon = false;
+                TurnManager.MGR.DungeonCleared -= HandleDungeonCleared;
+                TurnManager.MGR.DungeonFailed -= HandleDungeonFailed;
+            }
+        }
+        #endregion // Event Subscriptions =====================================
+
+
+        #region Event Responses
+        // ====================================================================
+        private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            if (scene.name == GAME.MGR.NeighborhoodSceneName)
+            {
+                ReturnLoadoutItemsToInventory();
+            }
+            else if (scene.name == GAME.MGR.DungeonSceneName && !subbedToDungeon)
+            {
+                SetTurnManagerSubscription(true);
+            }
+        }
+
+        private void HandleDungeonCleared()
+        {
+            ReturnLoadoutItemsToInventory();
+            SetTurnManagerSubscription(false);
+        }
+
+        public void ReturnLoadoutItemsToInventory()
+        {
+            foreach (int id in AllQuickslotItems)
+            {
+                AddToInventory(id);
+            }
+            quickslotConsumableIDs.Clear();
+            quickslotMagicalAbilityIDs.Clear();
+            quickslotPhysicalAbilityIDs.Clear();
+        }
+
+        private void HandleDungeonFailed()
+        {
+            SetTurnManagerSubscription(false);
+        }
+        #endregion // Event Responses ===========================================
+
 
         public void AddToInventory(int ID)
         {
@@ -72,6 +171,7 @@ namespace SystemMiami.InventorySystem
 
                 case ItemType.EquipmentMod:
                     equipmentModIDs.Add(ID);
+                    EquipMod(ID);
                     break;
 
                 default:
@@ -149,17 +249,46 @@ namespace SystemMiami.InventorySystem
             magicalAbilityIDs.Clear();
             physicalAbilityIDs.Clear();
             consumableIDs.Clear();
-            equipmentModIDs.Clear();
+            //equipmentModIDs.Clear();
             quickslotMagicalAbilityIDs.Clear();
             quickslotPhysicalAbilityIDs.Clear();
             quickslotConsumableIDs.Clear();
+
+            if (TestMode)
+            { 
+               List<int> tempMagIDList = Database.MGR.GetAllItemsOfPlayerClass(ItemType.MagicalAbility).Select(x => x.ID).ToList();
+               List<int> tempPhysIDList = Database.MGR.GetAllItemsOfPlayerClass(ItemType.PhysicalAbility).Select(x => x.ID).ToList();
+
+               foreach (int id in tempMagIDList)
+               {
+                   AddToInventory(id);
+               }
+               foreach (int id in tempPhysIDList)
+               {
+                   AddToInventory(id);
+               }
+
+               return;
+            }
+
             int startingAbilityID = characterClass switch
             {
-                CharacterClassType.MAGE => 2000,
-                CharacterClassType.TANK => 1015,
-                CharacterClassType.ROGUE => 1019,
-                CharacterClassType.FIGHTER => 1012,
+                CharacterClassType.MAGE     => 2014,
+                CharacterClassType.TANK     => 1015,
+                CharacterClassType.ROGUE    => 1032,
+                CharacterClassType.FIGHTER  => 1000,
+                _                           => 1000,
             };
+
+            int startingResourcePotionID = characterClass switch
+            {
+                CharacterClassType.MAGE => 3009,
+                _                       => 3006
+            };
+
+            int startingGeneralHealID = 2013;
+            int startingGeneralShieldID = 1045;
+            int startingHealPotionID = 3000;
 
             Debug.Log(
                 $"Init starting ability called on {gameObject} with args {characterClass}." +
@@ -171,6 +300,25 @@ namespace SystemMiami.InventorySystem
                 $"Data Corrupted. Database returned a starting ItemData with a 'true' failbit.");
 
             AddToInventory(startingAbilityID);
+            AddToInventory(startingGeneralHealID);
+            AddToInventory(startingGeneralShieldID);
+            AddToInventory(startingHealPotionID);
+            AddToInventory(startingResourcePotionID);
+        }
+
+
+        /// <summary>
+        /// Removes an equipped mod by ID
+        /// </summary>
+        public void UnequipMod(int modID)
+        {
+            PlayerManager.MGR.GetComponent<Stats>().UnequipMod(modID);
+        }
+
+        public void EquipMod(int modId)
+        {
+            PlayerManager.MGR.GetComponent<Stats>().EquipMod(modId);
+            MoveToQuickslot(modId);
         }
 
         // Gain Credits from quests and other sources

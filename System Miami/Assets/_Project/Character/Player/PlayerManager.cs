@@ -4,14 +4,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using SystemMiami.Management;
 using SystemMiami.CombatSystem;
-using System.Runtime.CompilerServices;
 using SystemMiami.InventorySystem;
 using SystemMiami.Utilities;
-using SystemMiami.Animation;
 using SystemMiami.Drivers;
-
-
-
+using SystemMiami.Dungeons;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -25,13 +21,12 @@ namespace SystemMiami
         #region SERIALIZED
         // ======================================
         [Header("Debug")]
-        [SerializeField] private dbug log;
-        [SerializeField] bool showDebug;
+        [SerializeField] private dbug log = new();
 
         [Header("Component Groups")]
         [Tooltip("Components active in all modes")]
         [SerializeField] private List<Component> sharedComponents = new(); // Always enabled
-
+ 
         [Tooltip("Components active in neighborhood mode")]
         [SerializeField] private List<Component> neighborhoodComponents = new();
         [SerializeField] private GameObject playerCamera;
@@ -43,6 +38,17 @@ namespace SystemMiami
         [Header("Scene Names")]
         [SerializeField] private string neighborhoodSceneName = "Neighborhood"; // Name of the neighborhood scene
         [SerializeField] private string dungeonSceneName = "Dungeon"; // Name of the Dungeon scene
+
+        [Header("Other")]
+        [SerializeField] private PlayerSprites playerSprites;
+        public Sprite PlayerSprite
+        {
+            get
+            {
+                CharacterClassType charClass = GetComponent<Attributes>()._characterClass;
+                return playerSprites.GetClassPFP(charClass);
+            }
+        }
 
         // ======================================
         #endregion // SERIALIZED
@@ -86,6 +92,8 @@ namespace SystemMiami
 
         protected override void Awake()
         {
+            // WARN: Not sure what this is, but I'm too scared to change it now
+            // Just want to flag this as a potential source of bugs
             if (MGR != null && TurnManager.MGR != null)
             {
                 MGR.transform.position = transform.position;
@@ -131,6 +139,10 @@ namespace SystemMiami
             {
                 DisableComponents(neighborhoodComponents);
                 DisableComponents(dungeonComponents);
+
+                // NOTE: 04.16 added this
+                //
+                EnableComponents(sharedComponents);
             }
         }
 
@@ -182,8 +194,6 @@ namespace SystemMiami
         // ======================================
         #endregion
 
-      
-        
 
         #region PUBLIC METHODS
         // ======================================
@@ -197,7 +207,7 @@ namespace SystemMiami
             playerCamera.SetActive(true);
             interactionUI.SetActive(true);
             interactionUI.GetComponentInChildren<PromptBox>().Clear();
-            
+
             DisableComponents(dungeonComponents);
             EnableComponents(neighborhoodComponents);
 

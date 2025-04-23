@@ -19,8 +19,8 @@ namespace SystemMiami.CombatRefactor
 
             /// Update prompts
             InputPrompts =
-                "Select an action from your Loadout Menu.\n\n" +
-                "Or press Tab to skip Actions and end your turn.";
+                $"Select an action from your Loadout Menu.\n\n" +
+                $"Or press {combatant.flowKey} to skip Actions and end your turn.";
 
             UI.MGR.UpdateInputPrompt(InputPrompts);
 
@@ -62,7 +62,7 @@ namespace SystemMiami.CombatRefactor
 
         protected override bool SkipPhaseRequested()
         {
-            return Input.GetKeyDown(KeyCode.Tab);
+            return Input.GetKeyDown(combatant.flowKey);
         }
     }
 }

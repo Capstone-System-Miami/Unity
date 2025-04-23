@@ -21,8 +21,8 @@ namespace SystemMiami.CombatRefactor
             base.OnEnter();
 
             InputPrompts =
-                "Press Enter to Move,\n\n" +
-                "Or Right Click to select a different path.";
+                $"Press {combatant.flowKey} to Move,\n\n" +
+                $"Or Right Click to select a different path.";
 
             UI.MGR.UpdateInputPrompt(InputPrompts);
         }
@@ -34,7 +34,7 @@ namespace SystemMiami.CombatRefactor
 
         protected override bool ConfirmSelection()
         {
-            return Input.GetKeyDown(KeyCode.Return);
+            return Input.GetKeyDown(combatant.flowKey);
         }
     }
 }

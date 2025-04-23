@@ -19,18 +19,18 @@ namespace SystemMiami
         public bool questCompleted;
 
         
-        public Quest()
+        public Quest(bool empty)
         {
-            questName = "Quest Name";
-            questDescriptionLine = "Quest Description";
+            questName = "";
+            questDescriptionLine = "";
             targetEnemyLayer = 4;
             objectiveGoal = 1000;
             rewardEXP = 0;
             rewardCurrency = 0;
             questDialogue = new string[]
             {
-                "Quest Initiation Dialogue 1",
-                "Quest Initiation Dialogue 2",
+                "",
+                "",
             };
             
         }

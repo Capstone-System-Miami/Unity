@@ -15,22 +15,38 @@ namespace SystemMiami
             "this box on remaining elements.")]
         [SerializeField] private bool _isDefault;
         [SerializeField] private T _elementPrefab;
+        [SerializeField] private int _minCount;
         [SerializeField] private int _maxCount;
 
-        private int _count;
+        private int _availableRemaining;
+        private int _requiredRemaining;
         private bool _initialized = false;
 
         /// <summary>
         /// Takes everything from the incoming arg except
-        /// the _count, which is reset to max during construction.
+        /// the _availableRemaining, which is reset to max during construction.
         /// </summary>
         public PoolElement(PoolElement<T> toCopy)
         {
             _isDefault = toCopy._isDefault;
             _elementPrefab = toCopy._elementPrefab;
+            _minCount = toCopy._minCount;
             _maxCount = toCopy._maxCount;
 
             initialize();
+        }
+
+        public bool TryGetRequired(out T[] prefabs)
+        {
+            prefabs = new T[_requiredRemaining];
+
+            for (int i = 0; i < prefabs.Length; i++)
+            {
+                prefabs[i] = _elementPrefab;
+                _requiredRemaining--;
+                _availableRemaining--;
+            }
+            return prefabs.Length > 0;
         }
 
         public bool TryGet(out T prefab)
@@ -41,7 +57,7 @@ namespace SystemMiami
                 return false;
             }
 
-            _count--;
+            _availableRemaining--;
             prefab = _elementPrefab;
             return true;
         }
@@ -54,6 +70,7 @@ namespace SystemMiami
                 return false;
             }
 
+            _availableRemaining--;
             prefab = _elementPrefab;
             return true;
         }
@@ -65,12 +82,13 @@ namespace SystemMiami
                 initialize();
             }
 
-            return _count > 0;
+            return _availableRemaining > 0;
         }
 
         private void initialize()
         {
-            _count = _maxCount;
+            _availableRemaining = _maxCount;
+            _requiredRemaining = _minCount;
             _initialized = true;
         }
     }

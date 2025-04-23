@@ -126,12 +126,12 @@ namespace SystemMiami
         
         private void OnEnable()
         {
-            GAME.MGR.CombatantDeath += HandleCombatantDeath;
+            GAME.MGR.CombatantDying += HandleCombatantDying;
         }
 
         private void OnDisable()
         {
-            GAME.MGR.CombatantDeath -= HandleCombatantDeath;
+            GAME.MGR.CombatantDying -= HandleCombatantDying;
         }
 
         private void Start()
@@ -250,7 +250,7 @@ namespace SystemMiami
             occupant = null;
         }
         
-        private void HandleCombatantDeath(Combatant deadCombatant)
+        private void HandleCombatantDying(Combatant deadCombatant)
         {
             if (deadCombatant == occupant as Combatant)
             {
@@ -327,10 +327,10 @@ namespace SystemMiami
         /// </summary>
         public void PreviewOn()
         {
-            Debug.Log(
+            /*Debug.Log(
                 $"{gameObject.name} wants to START" +
                 $"displaying a preivew. This has not yet been" +
-                $"implemented on OverlayTile", this);
+                $"implemented on OverlayTile", this);*/
         }
 
         /// <summary>
@@ -338,18 +338,18 @@ namespace SystemMiami
         /// </summary>
         public void PreviewOff()
         {
-            Debug.Log(
+          /*  Debug.Log(
                 $"{gameObject.name} wants to START" +
                 $"displaying a preivew. This has not yet been" +
-                $"implemented on OverlayTile", this);
+                $"implemented on OverlayTile", this);*/
         }
 
         public void ApplyCombatAction()
         {
-            Debug.Log(
+           /* Debug.Log(
                 $"{gameObject.name} wants to get some" +
                 $"subactions done to itself. This has not" +
-                $"yet been implemented on OverlayTile", this);
+                $"yet been implemented on OverlayTile", this);*/
         }
 
         public virtual IDamageReceiver GetDamageInterface()

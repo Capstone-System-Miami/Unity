@@ -19,12 +19,12 @@ namespace SystemMiami
 
         private void OnEnable()
         {
-            GAME.MGR.CombatantDeath += onCombatantDeath;
+            GAME.MGR.CombatantDying += onCombatantDying;
         }
 
         private void OnDisable()
         {
-            GAME.MGR.CombatantDeath -= onCombatantDeath;
+            GAME.MGR.CombatantDying -= onCombatantDying;
         }
 
         private void Start()
@@ -45,7 +45,7 @@ namespace SystemMiami
             _health.Value.SetForeground(result);
         }
 
-        private void onCombatantDeath(Combatant deadCombatant)
+        private void onCombatantDying(Combatant deadCombatant)
         {
             if (_combatant == deadCombatant)
             {

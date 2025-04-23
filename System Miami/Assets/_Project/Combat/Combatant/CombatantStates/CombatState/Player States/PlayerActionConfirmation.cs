@@ -19,9 +19,9 @@ namespace SystemMiami.CombatRefactor
             string actionName = Database.MGR.GetDataWithJustID(combatAction.ID).Name;
 
             InputPrompts =
-                $"(NOT IMPLEMENTED) Hover over a target to " +
-                $"preview {actionName}'s effects.\n\n" +
-                $"Press Enter to confirm your targets\n" +
+                // $"(NOT IMPLEMENTED) Hover over a target to " +
+                // $"preview {actionName}'s effects.\n\n" +
+                $"Press {combatant.flowKey} to confirm your targets\n" +
                 $"and use {actionName}\n\n" +
                 $"Or Right Click to select new targets.";
 
@@ -37,7 +37,7 @@ namespace SystemMiami.CombatRefactor
         protected override bool ConfirmSelection()
         {
             // Player presses enter
-            return Input.GetKeyDown(KeyCode.Return);
+            return Input.GetKeyDown(combatant.flowKey);
         }
     }
 }

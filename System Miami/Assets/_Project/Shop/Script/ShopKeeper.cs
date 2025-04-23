@@ -33,6 +33,7 @@ namespace SystemMiami.Shop
             shop = npcInfo.GetShop();
             this.myName = myName;
             this.shopPanel = Instantiate(shopPanel);
+            this.shopPanel.transform.SetParent(transform);
             this.shopPanel.SetActive(false);
             slots.AddRange(this.shopPanel.GetComponentsInChildren<ShopItemSlot>());
             shopImage = shopPanel.GetComponent<ShopImage>();
@@ -53,6 +54,7 @@ namespace SystemMiami.Shop
         {
        
             UI.MGR.StartDialogue(this,true,true,false,myName,shop.shopDialogue);
+            UI.MGR.DialogueFinished -= HandleDialogueFinished;
             UI.MGR.DialogueFinished += HandleDialogueFinished;
 
         }

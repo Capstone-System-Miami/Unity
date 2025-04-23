@@ -2,12 +2,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using SystemMiami.CombatSystem;
 using SystemMiami.CombatRefactor;
 using SystemMiami.Management;
 using SystemMiami.Utilities;
 using UnityEngine;
 using SystemMiami.ui;
+using UnityEngine.Assertions;
+
 namespace SystemMiami
 {
     /// <summary>
@@ -38,11 +41,8 @@ namespace SystemMiami
 
         [Header("Testing")]
         public GameObject enemyPrefab;
-        public GameObject bossPrefab; // TODO: Assign boss prefab
         public List<GameObject> enemyPrefabs = new();
         public int numberOfEnemies = 3;
-
-        [SerializeField] private GoToNeighborhood goToNeighborhood;
 
         [SerializeField, ReadOnly] private int enemiesRemaining;
 
@@ -58,26 +58,26 @@ namespace SystemMiami
 
         public Combatant CurrentTurnOwner { get; private set; }
 
-        public bool IsGameOver
-        {
-            get
-            {
-                if (playerCharacter == null) { return true; }
-                if (enemyCharacters.Count == 0) { return true; }
+        public bool IsGameOver { get; private set; }
 
-                return false;
-            }
-        }
-
-        private Dictionary<object, Action> dungeonClearedActions = new();
+        public event Action CombatStarted;
+        public event Action DungeonCleared;
+        public event Action DungeonFailed;
         public Action<Phase> NewTurnPhase;
+
 
         #region Unity Methods
         //===============================
         private void OnEnable()
         {
-            GAME.MGR.CombatantDeath += OnCombatantDeath;
+            GAME.MGR.CombatantDying += OnCombatantDying;
         }
+
+        private void OnDisable()
+        {
+            GAME.MGR.CombatantDying -= OnCombatantDying;
+        }
+
         private void Start()
         {
             if (playerCharacter != null)
@@ -120,26 +120,12 @@ namespace SystemMiami
 
             StartCoroutine(TurnSequence());
         }
-
-        private void Update()
-        {
-            if (CurrentTurnOwner == null)
-            { return; }
-
-
-            //Debug.Log($"Current Turn Owner: {CurrentTurnOwner.name}");
-        }
-
-        private void OnDisable()
-        {
-            GAME.MGR.CombatantDeath -= OnCombatantDeath;
-        }
         //===============================
         #endregion // ^Unity Methods^
 
+
         #region Turn Management
         //===============================
-
         /// <summary>
         /// Coroutine for handling enemy turns.
         /// Each enemy takes their movement and action phases in sequence.
@@ -153,18 +139,20 @@ namespace SystemMiami
                 combatantsReady = true;
                 foreach (Combatant combatant in combatants)
                 {
-                    if (!combatant.ReadyToStart)
+                    if (!combatant.Initialized)
                     {
+                        combatant.InitAll();
                         combatantsReady = false;
-                        break;
                     }
                 }
-                Debug.Log("IN");
+                Debug.Log("Combatants Preparing...");
                 yield return null;
             } while (!combatantsReady);
 
-            Debug.Log("OUT");
+            Debug.Log("Combatants Ready. Begin Combat");
+            OnCombatStart();
             enemiesRemaining = enemyCharacters.Count;
+            IsGameOver = false;
             while (!IsGameOver)
             {
                 // Remove null items.
@@ -172,10 +160,10 @@ namespace SystemMiami
                 // combatants die.
                 combatants.RemoveAll(combatant => combatant == null);
 
+                // vv During player turn vv
                 foreach (Combatant combatant in combatants)
                 {
                     if (combatant == null) { continue; }
-
                     // TODO this is a werid way of
                     // 'forcing' a state switch, as
                     // states should control their own
@@ -184,14 +172,19 @@ namespace SystemMiami
                     combatant.CurrentState.SwitchState(combatant.Factory.TurnStart());
 
                     CurrentTurnOwner = combatant;
-                    yield return new WaitForEndOfFrame();
-                    yield return new WaitUntil(() => !combatant.IsMyTurn);
-                }
 
-                yield return null;
+                    do
+                    {
+                        if (IsGameOver) { yield break; }
+                        if (combatant == null) { break; }
+
+                        yield return null;
+                    } while (combatant.IsMyTurn);
+
+                    yield return null;
+                }
             }
         }
-
         //===============================
         #endregion // ^Turn Management^
 
@@ -264,55 +257,45 @@ namespace SystemMiami
 
             Debug.Log($"Spawning {enemyCombatant}");
         }
+        //===============================
+        #endregion // ^Spawning^
 
-        public void OnCombatantDeath(Combatant combatant)
+
+        #region Event Raisers
+        // =====================================================================
+        public void OnCombatStart()
         {
-            Debug.Log("Combatant Death called" + combatant.name + " has died");
+            IsGameOver = false;
+            CombatStarted?.Invoke();
+        }
+
+        public void OnCombatantDying(Combatant combatant)
+        {
+            Debug.Log($"{name} responding to CombatantDying({combatant.name}).");
 
             if (combatant is EnemyCombatant && --enemiesRemaining == 0)
             {
                 OnDungeonCleared();
             }
-            else if (combatant is PlayerCombatant)
+            else if (combatant is PlayerCombatant p)
             {
-                GAME.MGR.GoToCharacterSelect();
+                OnDungeonFailed();
             }
-        }
 
-        public void AddDungeonClearedAction(object client, Action action)
-        {
-            dungeonClearedActions[client] = action;
         }
 
         protected void OnDungeonCleared()
         {
-            List<object> nulls = new();
-
-            foreach (object client in dungeonClearedActions.Keys)
-            {
-                if (client == null
-                    || (client is GameObject go && !go.activeSelf)
-                    || (client is MonoBehaviour mono && !mono.enabled))
-                {
-                    Debug.LogError($"{name} adding a null to null list");
-                    continue;
-                }
-
-            }
-            foreach (object client in nulls)
-            {
-                Debug.LogError($"{name} removing a null from dict");
-                dungeonClearedActions.Remove(client);
-            }
-
-            foreach (object client in dungeonClearedActions.Keys)
-            {
-                dungeonClearedActions[client].Invoke();
-            }
-
-            goToNeighborhood.Go(false);
+            IsGameOver = true;
+            DungeonCleared?.Invoke();
         }
-        //===============================
-        #endregion // ^Spawning^
+
+        protected void OnDungeonFailed()
+        {
+            IsGameOver = true;
+            combatants.Where(c => c != null && c is not PlayerCombatant).ToList().ForEach(c => c.gameObject.SetActive(false));
+            DungeonFailed?.Invoke();
+        }
+        #endregion // Event Raisers
     }
 }

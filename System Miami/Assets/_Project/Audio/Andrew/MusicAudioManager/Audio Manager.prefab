@@ -1,0 +1,477 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1688179684245833404
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3944789654016000848}
+  - component: {fileID: 4766871419057806930}
+  m_Layer: 0
+  m_Name: Audio Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3944789654016000848
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1688179684245833404}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4766871419057806930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1688179684245833404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d315b1147188e594182c141c2c2e02d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _preserveBetweenScenes: 1
+  log:
+    showMessages: 1
+  <mainMixer>k__BackingField: {fileID: 24100000, guid: f479d9c990caf4f43baeae6082d92296, type: 2}
+  sounds:
+  - name: OverWorld
+    clip: {fileID: 8300000, guid: 9c00c36f9d87a36418c8119263d909a2, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 1
+  - name: Title
+    clip: {fileID: 8300000, guid: 0d1d1e0032d4d3d40bfcf54d72832f67, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 1
+  - name: BattleMusicLowINT
+    clip: {fileID: 8300000, guid: f2efd0de7f71f1e409ceb6044a2a5377, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 1
+  - name: BattleMusic
+    clip: {fileID: 8300000, guid: ce14bf3071e8fde4f91c82ac745ca612, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 1
+  - name: GLISSEMENT
+    clip: {fileID: 8300000, guid: 6f131bc2864752b45bda191abb43179c, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: RACIER
+    clip: {fileID: 8300000, guid: aee6c7592ebd59f4b9e2361f9fae4108, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: SWISH
+    clip: {fileID: 8300000, guid: 294b7f9b5bdbce7439e71385826f0f8a, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: COUPS
+    clip: {fileID: 8300000, guid: 4f0d58d2949fecd4bb24cacdf8c3daf4, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: VENT_D
+    clip: {fileID: 8300000, guid: 2e3cdbedf387e844cb9c243e9d489297, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: VENT_F
+    clip: {fileID: 8300000, guid: 87ac8e58286cbd44d93198f5d0f9d5dc, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: BABY_BATS_COMMUNICAT
+    clip: {fileID: 8300000, guid: 8cce36ccfacca884088308f09d8aecb9, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: BATS_FLAPPING
+    clip: {fileID: 8300000, guid: b97146deb9ea1324da1717441a9c6d78, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: BATS_HANGING
+    clip: {fileID: 8300000, guid: deafe7ea950d89440883ab1fde972080, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: BATTLE_MEDIEVAL
+    clip: {fileID: 8300000, guid: 63a21565d2893854983ac2c3631ef1aa, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: CITY_NIGHT_1
+    clip: {fileID: 8300000, guid: 6b63b4c85aa35114baf9f6d35928737b, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: CITY_NIGHT_2
+    clip: {fileID: 8300000, guid: a28ee21f55f404d4caf7d6640ef1fc14, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: CITY_NIGHT_3
+    clip: {fileID: 8300000, guid: 92707b7c08f3f6741baf9fb7a557b5e8, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: CITY_NIGHT_4
+    clip: {fileID: 8300000, guid: d8f3186f720bcc04e89a89fb4984d86c, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: CITY_STREET_1
+    clip: {fileID: 8300000, guid: 948146cd81d2c8944a78f5e2f7534274, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: CITY_LIGHT_1
+    clip: {fileID: 8300000, guid: ab40b46350141174487bdb7e0920ef2b, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: DOOR_LOCK
+    clip: {fileID: 8300000, guid: e2135cd1396af38498fd1b19cc0d70ee, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: DOOR_METAL
+    clip: {fileID: 8300000, guid: b1d9dbea2d0e14f458ef7d3dca21b41d, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: FIRE_CAN_SPRAY
+    clip: {fileID: 8300000, guid: 674e813810d660641a9f36a4657329bc, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: FIRE_FLAME_POOF_1
+    clip: {fileID: 8300000, guid: 542c21a5f893f804c861358cf39c4450, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: FIRE_FLAME_POOF_2
+    clip: {fileID: 8300000, guid: 8c1d4693f57963243879c2f8f27b5e7b, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: FIRE_FLAME_POOF_3
+    clip: {fileID: 8300000, guid: babf34c05471e764d9abfd0da3e56d9c, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: FIRE_FLAME_POOF_4
+    clip: {fileID: 8300000, guid: 4697a094f7f311146af45934bdbe0bd6, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: HORROR
+    clip: {fileID: 8300000, guid: 56f592bbf4d3c3f4fbfac0a93b453afb, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: HUMAN_GRUNT_1
+    clip: {fileID: 8300000, guid: 5d91be3e8031c8045a89908a1e8b8c12, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: HUMAN_GRUNT_2
+    clip: {fileID: 8300000, guid: b58afbf7fb45d15499a4a3d3ad41de64, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: HUMAN_GRUNT_3
+    clip: {fileID: 8300000, guid: 4efd45e31d316114b98d03972be2a543, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: HUMAN_GRUNT_4
+    clip: {fileID: 8300000, guid: b7c68980c4e6b6748b525db1c69ce804, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: HUMAN_YELL_1
+    clip: {fileID: 8300000, guid: 819e84c33aa6a794baaa5be8213f49ee, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: HUMAN_YELL_2
+    clip: {fileID: 8300000, guid: 594fb77f08a8a1948b541f4987afff6c, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: HUMAN_YELL_3
+    clip: {fileID: 8300000, guid: f796e5db61c0be24ba72a54f6e428d7d, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: HUMAN_YELL_4
+    clip: {fileID: 8300000, guid: 83865a37945f7a64cb28dc1249dee5b2, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: HUMAN_YELL_5
+    clip: {fileID: 8300000, guid: be73c1c03bc61b145b9361799b66c20d, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: HUMAN_YELL_6
+    clip: {fileID: 8300000, guid: 450d6fef49838824596fdd0de89f4a00, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: MLDS_MARKET_PLACE_MEDIUM
+    clip: {fileID: 8300000, guid: 7f03a75d0784da54c8370b2afe04b49e, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: MUI_CONFIRM_SMALL_MAGIC_WAND
+    clip: {fileID: 8300000, guid: a89f2beeab193fe4c9381625bfec1ec7, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: RAGING_GOBLIN_ATTACK
+    clip: {fileID: 8300000, guid: bd57350641063c940a043e8d847796d9, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: RAGING_GOBLIN_CALM
+    clip: {fileID: 8300000, guid: 4633935a111e4154cbe9f67fd5c99482, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: RAGING_GOBLIN_DIE
+    clip: {fileID: 8300000, guid: 65c1d9f48b80ae149a6decda93c5ad65, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: RAGING_GOBLIN_HURT
+    clip: {fileID: 8300000, guid: 217155bf7d2a8fe46a59691eb9bc8e47, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: RAGING_GOBLIN_TENSE
+    clip: {fileID: 8300000, guid: de336636bafab2247ae938dacd8e0b53, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: SCIFI
+    clip: {fileID: 8300000, guid: 1bb68a1505db7c54aaacf6e15c215f46, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: SHIELD_METAL_SMALL_HIT
+    clip: {fileID: 8300000, guid: ac367b2d995811a448b62fb3ed0f6754, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: SQUISH_SLIME
+    clip: {fileID: 8300000, guid: 88bb7eb229350454fa7e6f58c9099336, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: SUIT_OF_ARMOUR
+    clip: {fileID: 8300000, guid: 24cff383280e5c44b982256fef0825b8, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: SWORD_1
+    clip: {fileID: 8300000, guid: d45ee06eb9d671e4a9bf80c5de54dcf6, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: SWORD_2
+    clip: {fileID: 8300000, guid: c817b9889e65420498f3ad4cc7d4871f, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: SWORD_3
+    clip: {fileID: 8300000, guid: a276452d8a483994188b1dc1952c4340, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: SWORD_4
+    clip: {fileID: 8300000, guid: acf7a4dc62881b34e82d0fc26afcbf7e, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: VFAFS_BOOTS_CONCRETE
+    clip: {fileID: 8300000, guid: 250513765dcb3a34f8bb962f0baacac5, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: WHOOSH_1
+    clip: {fileID: 8300000, guid: b05aa47b70a1d3e41bf813accdce87c9, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  - name: WHOOSH_2
+    clip: {fileID: 8300000, guid: 8d47c28109df1074d9ace12841f7405b, type: 3}
+    type: 0
+    group: {fileID: 0}
+    pitch: 1
+    loop: 0
+  mainMenu:
+    name: Main Menu
+    clip: {fileID: 8300000, guid: 0d1d1e0032d4d3d40bfcf54d72832f67, type: 3}
+    type: 0
+    group: {fileID: -2727739882906410996, guid: f479d9c990caf4f43baeae6082d92296, type: 2}
+    pitch: 1
+    loop: 1
+    <BuildIndex>k__BackingField: 0
+  settings:
+    name: Settings
+    clip: {fileID: 8300000, guid: 0d1d1e0032d4d3d40bfcf54d72832f67, type: 3}
+    type: 0
+    group: {fileID: -2727739882906410996, guid: f479d9c990caf4f43baeae6082d92296, type: 2}
+    pitch: 1
+    loop: 1
+    <BuildIndex>k__BackingField: 2
+  intro:
+    name: Intro
+    clip: {fileID: 8300000, guid: 0d1d1e0032d4d3d40bfcf54d72832f67, type: 3}
+    type: 0
+    group: {fileID: -2727739882906410996, guid: f479d9c990caf4f43baeae6082d92296, type: 2}
+    pitch: 1
+    loop: 1
+    <BuildIndex>k__BackingField: 7
+  tutorial:
+    name: Tutorial
+    clip: {fileID: 8300000, guid: 0d1d1e0032d4d3d40bfcf54d72832f67, type: 3}
+    type: 0
+    group: {fileID: -2727739882906410996, guid: f479d9c990caf4f43baeae6082d92296, type: 2}
+    pitch: 1
+    loop: 1
+    <BuildIndex>k__BackingField: 8
+  characterSelect:
+    name: CharacterSelect
+    clip: {fileID: 8300000, guid: 0d1d1e0032d4d3d40bfcf54d72832f67, type: 3}
+    type: 0
+    group: {fileID: -2727739882906410996, guid: f479d9c990caf4f43baeae6082d92296, type: 2}
+    pitch: 1
+    loop: 1
+    <BuildIndex>k__BackingField: 3
+  neighborhood:
+    name: Overworld
+    clip: {fileID: 8300000, guid: 9c00c36f9d87a36418c8119263d909a2, type: 3}
+    type: 0
+    group: {fileID: -9168700067057402706, guid: f479d9c990caf4f43baeae6082d92296, type: 2}
+    pitch: 1
+    loop: 1
+    <BuildIndex>k__BackingField: 4
+  dungeonLow:
+    name: Dungeon Low
+    clip: {fileID: 8300000, guid: f2efd0de7f71f1e409ceb6044a2a5377, type: 3}
+    type: 0
+    group: {fileID: -2344130200468946052, guid: f479d9c990caf4f43baeae6082d92296, type: 2}
+    pitch: 1
+    loop: 1
+    <BuildIndex>k__BackingField: 1
+  dungeonHigh:
+    name: Dungeon High
+    clip: {fileID: 8300000, guid: ebb7eba99ab409e40bfdebc03232b948, type: 3}
+    type: 0
+    group: {fileID: 2038925452069851034, guid: f479d9c990caf4f43baeae6082d92296, type: 2}
+    pitch: 1
+    loop: 1
+    <BuildIndex>k__BackingField: 1
+  outro:
+    name: Outro
+    clip: {fileID: 8300000, guid: 0d1d1e0032d4d3d40bfcf54d72832f67, type: 3}
+    type: 0
+    group: {fileID: -2727739882906410996, guid: f479d9c990caf4f43baeae6082d92296, type: 2}
+    pitch: 1
+    loop: 1
+    <BuildIndex>k__BackingField: 6
+  credits:
+    name: Credits
+    clip: {fileID: 8300000, guid: ebb7eba99ab409e40bfdebc03232b948, type: 3}
+    type: 0
+    group: {fileID: 2038925452069851034, guid: f479d9c990caf4f43baeae6082d92296, type: 2}
+    pitch: 1
+    loop: 1
+    <BuildIndex>k__BackingField: 5
+  <musicSource>k__BackingField: {fileID: 0}
+  overrideBuildIndex: 0
+  overrideWith:
+    name: Overworld
+    clip: {fileID: 8300000, guid: 23c7e4b0a55c6cf4a9fcf9be3407d3dc, type: 3}
+    type: 0
+    group: {fileID: -9168700067057402706, guid: f479d9c990caf4f43baeae6082d92296, type: 2}
+    pitch: 1
+    loop: 1
+    <BuildIndex>k__BackingField: 0

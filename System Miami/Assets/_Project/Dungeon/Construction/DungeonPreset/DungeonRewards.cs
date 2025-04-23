@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using SystemMiami.Utilities;
 using UnityEngine;
 using System.Linq;
-using UnityEngine.Serialization;
 
 
 namespace SystemMiami.Dungeons
@@ -55,29 +54,39 @@ namespace SystemMiami.Dungeons
         private int hardMinCredit = 14;
         private int hardMaxCredit = 20;
 
-        
-        [Header("Available IDs (pulled from Database)")]
+        [Header("Available IDs")]
+        [SerializeField] private bool pullFromDatabase = true;
         [SerializeField] public List<ItemData> _abilityItemDatas = new();         // e.g. Physical or Magical
         [SerializeField] public List<ItemData> _consumableItemDatas = new();
         [SerializeField] public List<ItemData> _equipmentItemDatas = new();
 
-        private List<ItemData> rewards;
+        private List<ItemData> rewards = new();
 
         public dbug log;
 
         public void Initialize()
         {
-            _abilityItemDatas.Clear();
-            _consumableItemDatas.Clear();
-            _equipmentItemDatas.Clear();
             rewards = new List<ItemData>();
-            
-            _abilityItemDatas = Database.MGR.GetAllItemsOfPlayerClass(ItemType.MagicalAbility);
-            _abilityItemDatas.AddRange(Database.MGR.GetAllItemsOfPlayerClass(ItemType.PhysicalAbility));
-            _consumableItemDatas = Database.MGR.GetAllItemsOfPlayerClass(ItemType.Consumable);
-            _equipmentItemDatas = Database.MGR.GetAllItemsOfPlayerClass(ItemType.EquipmentMod);
+
+            if (pullFromDatabase)
+            {
+                _abilityItemDatas.Clear();
+                _consumableItemDatas.Clear();
+                _equipmentItemDatas.Clear();
+
+                _abilityItemDatas = Database.MGR.GetAllItemsOfPlayerClass(ItemType.MagicalAbility);
+                _abilityItemDatas.AddRange(Database.MGR.GetAllItemsOfPlayerClass(ItemType.PhysicalAbility));
+                _consumableItemDatas = Database.MGR.GetAllItemsOfPlayerClass(ItemType.Consumable);
+                _equipmentItemDatas = Database.MGR.GetAllItemsOfPlayerClass(ItemType.EquipmentMod);
+            }
+            else
+            {
+                _abilityItemDatas = _abilityItemDatas.Select(data => Database.MGR.GetDataWithJustID(data.ID)).ToList();
+                _consumableItemDatas = _consumableItemDatas.Select(data => Database.MGR.GetDataWithJustID(data.ID)).ToList();
+                _equipmentItemDatas = _equipmentItemDatas.Select(data => Database.MGR.GetDataWithJustID(data.ID)).ToList();
+            }
         }
-        
+
         /// <summary>
         /// Generates a list of ItemData rewards based on:
         /// - The dungeon difficulty
@@ -86,7 +95,21 @@ namespace SystemMiami.Dungeons
         /// </summary>
         public List<ItemData> GenerateItemRewards(DifficultyLevel dungeonDifficulty)
         {
-           Debug.Log("Generate Rewards");
+            // Generate items using finalMethod + difficulty-based filters
+            List<ItemData> result = new();
+
+            if (!pullFromDatabase)
+            {
+                if (_includeAbilities && _abilityItemDatas != null)
+                    result.AddRange(_abilityItemDatas);
+                if (_includeConsumables && _consumableItemDatas != null)
+                    result.AddRange(_consumableItemDatas);
+                if (_includeEquipmentMods && _equipmentItemDatas != null)
+                    result.AddRange(_equipmentItemDatas);
+                return result;
+            }
+
+            // Debug.Log("Generate Rewards");
             int playerLevel = PlayerManager.MGR.CurrentLevel;
 
             //  Determine the final distribution method
@@ -104,83 +127,83 @@ namespace SystemMiami.Dungeons
                     case DifficultyLevel.HARD:
                         finalMethod = _hardMethod;
                         break;
-                     
+                    default:
+                        break;
                 }
             }
 
-            // Generate items using finalMethod + difficulty-based filters
-             List<ItemData> result = new List<ItemData>();
-
             switch (finalMethod)
             {
-                   
                 case RewardDistributionMethod.OneOfEach:
-                 
                     if (_includeAbilities)
-                        TryAddRandomItem( _abilityItemDatas, playerLevel, dungeonDifficulty);
+                        TryAddRandomItem(_abilityItemDatas, playerLevel, dungeonDifficulty);
                     if (_includeConsumables)
-                        TryAddRandomItem( _consumableItemDatas, playerLevel, dungeonDifficulty);
+                        TryAddRandomItem(_consumableItemDatas, playerLevel, dungeonDifficulty);
                     if (_includeEquipmentMods)
-                        TryAddRandomItem( _equipmentItemDatas, playerLevel, dungeonDifficulty);
+                        TryAddRandomItem(_equipmentItemDatas, playerLevel, dungeonDifficulty);
                     break;
 
                 case RewardDistributionMethod.OneOfOneType:
                 {
                     // Collect which lists are enabled
-                    
+
                     List<List<ItemData>> candidateLists = CollectEnabledIDLists();
-                   Debug.Log($"Candidate Count {candidateLists.Count} {candidateLists[0].Count} {candidateLists[1].Count} {candidateLists[2].Count}");
+                    // Debug.Log($"Candidate Count {candidateLists.Count} {candidateLists[0].Count} {candidateLists[1].Count} {candidateLists[2].Count}");
                     if (candidateLists.Count > 0)
                     {
                         // Pick 1 random category from the enabled ones
                         int randomTypeIndex = Random.Range(0, candidateLists.Count);
-                        TryAddRandomItem( candidateLists[randomTypeIndex], playerLevel, dungeonDifficulty);
+                        TryAddRandomItem(candidateLists[randomTypeIndex], playerLevel, dungeonDifficulty);
                     }
                     break;
                 }
                 case RewardDistributionMethod.TwoTypes:
                 {
                     List<List<ItemData>> candidateLists = CollectEnabledIDLists();
-                  
+
                     if (candidateLists.Count > 1)
                     {
                         // Shuffle to pick 2 random distinct types
                         Shuffle(candidateLists);
                         // TryAddRandomItem from the first 2
-                        TryAddRandomItem( candidateLists[0], playerLevel, dungeonDifficulty);
+                        TryAddRandomItem(candidateLists[0], playerLevel, dungeonDifficulty);
                         TryAddRandomItem(candidateLists[1], playerLevel, dungeonDifficulty);
                     }
                     break;
                 }
             }
-
+            List<int> rewardItemIDs = rewards.Select(r => r.ID).ToList();
             for (int i = 0; i < rewards.Count; i++)
             {
-                List<int> playerItemIDs = PlayerManager.MGR.inventory.AllValidInventoryItems;
-                
-                return rewards.Where(reward => !playerItemIDs.Contains(reward.ID)).ToList();
+                List<int> playerItemIDs = PlayerManager.MGR.inventory.AllInventoryItems;
+                rewards = rewards.Where(reward => !playerItemIDs.Contains(reward.ID)).ToList();
+                rewardItemIDs = rewardItemIDs.Distinct().ToList();
+            }
+            rewards.Clear();
+            foreach (int ID in rewardItemIDs)
+            {
+                rewards.Add(Database.MGR.GetDataWithJustID(ID));
             }
             return rewards;
         }
 
-
-       
         public int GenerateExpReward(DifficultyLevel dungeonDifficulty)
         {
             int expReward = 0;
             switch (dungeonDifficulty)
             {
                 case DifficultyLevel.EASY:
-                    expReward = IntersectionManager.MGR.easyDungeonReward[Random.Range(0, IntersectionManager.MGR.easyDungeonReward.Count -1)];
+                    expReward = IntersectionManager.MGR.easyDungeonReward[Random.Range(0, IntersectionManager.MGR.easyDungeonReward.Count)];
                     break;
                 case DifficultyLevel.MEDIUM:
-                    expReward = IntersectionManager.MGR.mediumDungeonReward[Random.Range(0, IntersectionManager.MGR.mediumDungeonReward.Count -1)];
+                    expReward = IntersectionManager.MGR.mediumDungeonReward[Random.Range(0, IntersectionManager.MGR.mediumDungeonReward.Count)];
                     break;
                 case DifficultyLevel.HARD:
-                    expReward = IntersectionManager.MGR.hardDungeonReward[Random.Range(0, IntersectionManager.MGR.hardDungeonReward.Count -1)];
+                    expReward = IntersectionManager.MGR.hardDungeonReward[Random.Range(0, IntersectionManager.MGR.hardDungeonReward.Count)];
+                    break;
+                default:
                     break;
             }
-            
             return expReward;
         }
 
@@ -191,7 +214,6 @@ namespace SystemMiami.Dungeons
             switch (dungeonDifficulty)
             {
                 case DifficultyLevel.EASY:
-                    
                     creditReward = playerLevel > 0 ?  playerLevel * Random.Range(easyMinCredit, easyMaxCredit) : Random.Range(easyMinCredit, easyMaxCredit) ;
                     break;
                 case DifficultyLevel.MEDIUM:
@@ -199,6 +221,8 @@ namespace SystemMiami.Dungeons
                     break;
                 case DifficultyLevel.HARD:
                     creditReward = playerLevel > 0 ?  playerLevel * Random.Range(hardMinCredit, hardMaxCredit) : Random.Range(hardMinCredit, hardMaxCredit) ;
+                    break;
+                default:
                     break;
             }
             
@@ -213,8 +237,7 @@ namespace SystemMiami.Dungeons
         private void TryAddRandomItem(
             List<ItemData> candidateData,
             int playerLevel,
-            DifficultyLevel difficulty
-        )
+            DifficultyLevel difficulty)
         {
             List<ItemData> validItems = FilterByDifficultyAndLevel(candidateData, playerLevel, difficulty);
             if (validItems.Count == 0)
@@ -247,6 +270,7 @@ namespace SystemMiami.Dungeons
                     minOffset = _mediumMinLevelOffset;
                     maxOffset = _mediumMaxLevelOffset;
                     break;
+                default:
                 case DifficultyLevel.HARD:
                     minOffset = _hardMinLevelOffset;
                     maxOffset = _hardMaxLevelOffset;
@@ -268,14 +292,12 @@ namespace SystemMiami.Dungeons
                 // Ensure we don’t clamp below 1 or do something unintended
                 if (adjustedMin < 0) adjustedMin = 0;
                 
-               log.warn($"Before {filtered.Count} {data.ID}");
+               // log.warn($"Before {filtered.Count} {data.ID}");
                filtered.Add(data);
-               log.warn($"After {filtered.Count} {data.ID}");
+               // log.warn($"After {filtered.Count} {data.ID}");
             }
             return Database.MGR.FilterByLevel(filtered);
         }
-
-        
 
         /// <summary>
         /// Collects whichever ID lists are enabled (Abilities, Consumables, EquipmentMods).
@@ -300,8 +322,5 @@ namespace SystemMiami.Dungeons
                 (list[i], list[rand]) = (list[rand], list[i]);
             }
         }
-
-        
-        
     }
 }

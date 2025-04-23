@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.Design;
-using SystemMiami.Animation;
-using SystemMiami.CombatRefactor;
-using SystemMiami.Dungeons;
+﻿using SystemMiami.Dungeons;
 using UnityEngine;
 
 // Authors: Layla Hoey, Lee St Louis
@@ -10,15 +6,10 @@ namespace SystemMiami.CombatSystem
 {
     public class EnemyCombatant : Combatant
     {
+        [field: SerializeField] public bool IsBoss { get; private set; } = false;
         [SerializeField] private int detectionRadius = 3;
 
         [HideInInspector] public bool PlayerInRange;
-
-        [Header("CombatAction Presets")]
-        [SerializeField] private List<NewAbilitySO> physicalSOs;
-        [SerializeField] private List<NewAbilitySO> magicalSOs;
-        [SerializeField] private List<ConsumableSO> consumableSOs;
-
 
         protected override void Start()
         {
@@ -27,6 +18,7 @@ namespace SystemMiami.CombatSystem
             DifficultyLevel difficultyLevel = MapManager.MGR.Dungeon.DifficultyLevel;
             GetComponent<EnemiesLevel>().Initialize(difficultyLevel, playerLevel);
         }
+
         public override OverlayTile GetNewFocus()
         {
             Combatant targetPlayer = TurnManager.MGR.playerCharacter;
@@ -49,7 +41,7 @@ namespace SystemMiami.CombatSystem
         {
             MovementPath pathToPlayerData = new(
                 PositionTile,
-                target.PositionTile,
+                target?.PositionTile,
                 false
             );
 

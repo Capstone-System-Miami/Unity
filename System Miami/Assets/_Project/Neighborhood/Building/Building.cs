@@ -7,6 +7,8 @@ namespace SystemMiami
 {
     /// <summary>
     /// TODO: write a Building sub tilemap class or smth
+    /// Also, try the colliders again but adding them to a composite
+    /// and marking it as [whatever the opposite of the Edge setting is]
     /// </summary>
     public class Building : MonoBehaviour, ITransparency
     {
@@ -27,11 +29,15 @@ namespace SystemMiami
 
         private void Awake()
         {
-            foreach (Tilemap map in allTilemaps)
-            {
-                TilemapCollider2D mapCollider = map.gameObject.AddComponent<TilemapCollider2D>();
-                mapCollider.isTrigger = true;
-            }
+            // TODO:
+            // WARNING: Using these TilemapCollider2Ds is game-breakingly, PC-ruiningly slow.
+            //
+            // Using these TilemapCollider2Ds is game-breakingly, PC-ruiningly slow.
+            // foreach (Tilemap map in allTilemaps)
+            // {
+            //     TilemapCollider2D mapCollider = map.gameObject.AddComponent<TilemapCollider2D>();
+            //     mapCollider.isTrigger = true;
+            // }
         }
 
         private void Update()

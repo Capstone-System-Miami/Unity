@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using SystemMiami.CombatSystem;
 using SystemMiami.Utilities;
@@ -24,6 +25,19 @@ namespace SystemMiami.CombatRefactor
 
             /// Add equip conditions
             canEquip.Add(() => selectedCombatAction != null);
+            /*canEquip.Add(() =>
+             {
+                 if (selectedCombatAction is NewAbility ability)
+                 {
+                     return ability.IsOnCooldown == false;
+                 }
+                 else if(selectedCombatAction is Consumable consumable)
+                 {
+                     return consumable.UsesRemaining > 0;
+                 }
+                 return false;
+                
+             });*/
 
             /// Subscribe to FocusTile events.
             combatant.FocusTileChanged += HandleFocusTileChanged;           

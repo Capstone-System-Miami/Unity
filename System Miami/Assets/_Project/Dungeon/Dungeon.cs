@@ -44,7 +44,6 @@ namespace SystemMiami.Dungeons
         {
             overlayTileContainer = Instantiate(new GameObject(), transform);
             overlayTileContainer.name = "Overlay Tile Container";
-            
         }
 
         /// <summary>

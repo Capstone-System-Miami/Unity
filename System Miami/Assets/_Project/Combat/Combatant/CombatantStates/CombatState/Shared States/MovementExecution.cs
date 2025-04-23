@@ -15,13 +15,8 @@ namespace SystemMiami.CombatRefactor
         protected MovementPath path;
         protected List<OverlayTile> pathToConsume = new();
 
-        public MovementExecution(
-            Combatant combatant,
-            MovementPath movementPath)
-                : base(
-                    combatant,
-                    Phase.Movement
-                )
+        public MovementExecution(Combatant combatant, MovementPath movementPath)
+                : base( combatant, Phase.Movement )
         {
             this.path = movementPath;
         }
@@ -54,6 +49,8 @@ namespace SystemMiami.CombatRefactor
                 "Executing Movement.\n";
 
             UI.MGR.ClearInputPrompt();
+
+            Vector2 newVec = new Vector2(0f, 0f);
         }
 
         public override void Update()

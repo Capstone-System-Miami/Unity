@@ -15,7 +15,7 @@ namespace SystemMiami.CombatRefactor
 
             InputPrompts = 
                 $"Turn Over.\n\n" +
-                $"Press Enter to proceed.";
+                $"Press {combatant.flowKey} to proceed.";
 
             UI.MGR.UpdateInputPrompt(InputPrompts);
         }
@@ -23,7 +23,7 @@ namespace SystemMiami.CombatRefactor
         protected override bool Proceed()
         {
             // Wait for input
-            return Input.GetKeyDown(KeyCode.Return);
+            return Input.GetKeyDown(combatant.flowKey);
         }
     }
 }

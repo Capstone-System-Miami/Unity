@@ -13,7 +13,8 @@ namespace SystemMiami
         public Quest activeQuest;
         [SerializeField] private PlayerLevel playerLevel;
         [SerializeField] private Inventory playerInventory;
-        [SerializeField] private QuestPanel questPanel;
+        [SerializeField] public QuestPanel questPanel;
+        
         public void AcceptQuest(Quest quest)
         {
             if (activeQuest != null)
@@ -22,10 +23,11 @@ namespace SystemMiami
             }
             activeQuest = quest;
             questPanel.Initialize(activeQuest);
-            GAME.MGR.CombatantDeath += HandleCombatantDeath;
+            GAME.MGR.CombatantDying -= HandleCombatantDying;
+            GAME.MGR.CombatantDying += HandleCombatantDying;
         }
 
-        private void HandleCombatantDeath(Combatant obj)
+        private void HandleCombatantDying(Combatant obj)
         {
             Debug.Log($"Combatant died. Object layer: {obj.gameObject.layer}");
             Debug.Log($"Target enemy layer: {activeQuest.targetEnemyLayer.value}");
@@ -57,13 +59,14 @@ namespace SystemMiami
             activeQuest.Reset();
             GiveQuestRewards();
             Debug.Log($"Congratulations! You completed {activeQuest.questName}. Reward: {activeQuest.rewardEXP} EXP, {activeQuest.rewardCurrency} Currency.");
-            GAME.MGR.CombatantDeath -= HandleCombatantDeath;
+            GAME.MGR.CombatantDying -= HandleCombatantDying;
         }
 
         public void GiveQuestRewards()
         {
             playerLevel.GainXP(activeQuest.rewardEXP);
             playerInventory.AddCredits(activeQuest.rewardCurrency);
+            activeQuest = new Quest(true);
         }
 
         // Helper method to update all UI elements at once
@@ -72,13 +75,7 @@ namespace SystemMiami
            questPanel.UpdateQuest();
         }
 
-        // Helper method to update progress UI
-        private void UpdateProgressUI()
-        {
-            //change actual quest prgress text
-            // if (progressText != null)
-            //     progressText.text = $"Defeat {objectiveCount}/{selectedQuest.objectiveGoal} {selectedQuest.targetEnemyTag}s";
-        }
+        
 
     }
 }

@@ -7,6 +7,9 @@ namespace SystemMiami.CombatRefactor
 {
     public class EnemyMovementTileSelection : MovementTileSelection
     {
+        private const float selectionTimeout = 5f;
+        private CountdownTimer aiTimeout;
+
         public EnemyMovementTileSelection(EnemyCombatant combatant)
             : base(combatant) { }
 
@@ -16,6 +19,20 @@ namespace SystemMiami.CombatRefactor
 
             InputPrompts = 
                 $"{combatant.gameObject.name} is selecting a tile...";
+
+            aiTimeout = new(combatant, selectionTimeout);
+
+            aiTimeout.Start();
+        }
+
+        public override void MakeDecision()
+        {
+            base.MakeDecision();
+
+            if (aiTimeout.IsFinished)
+            {
+                SwitchState(factory.ActionSelection());
+            }
         }
 
         // Decision

@@ -1,8 +1,9 @@
 using System.Collections.Generic;
-using SystemMiami.AbilitySystem;
+using System.Linq;
 using SystemMiami.CombatSystem;
 using SystemMiami.Utilities;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace SystemMiami.CombatRefactor
 {
@@ -50,58 +51,26 @@ namespace SystemMiami.CombatRefactor
 
         public void ResetTurn()
         {
+            Debug.Log($"{combatant.name}: ResetTurn called.");
+           // Assert.IsNotNull(combatant.Loadout, $"{combatant.name}'s Loadout was null");
             combatant.Loadout.ReduceCooldowns();
-            GainResource();
             combatant.Stats.DecrementStatusEffectDurations();
-            DecrementRestoreResourceDurations();
+            ApplyResourceEffects();
             combatant.Speed = new Resource(combatant.Stats.GetStat(StatType.SPEED));
         }
-        private void GainResource()
-        {
-            if(combatant.hasResourceEffect)
-            {
-                if (combatant.restoreResourceEffects.ContainsKey(ResourceType.Health))
-                {
-                    combatant.GainResource(ResourceType.Health,combatant._endOfTurnHeal);
-                    combatant.GainResource(ResourceType.Health,combatant._endOfTurnDamage);
-                }
-                else if(combatant.restoreResourceEffects.ContainsKey(ResourceType.Mana))
-                {
-                    combatant.GainResource(ResourceType.Mana, combatant._endOfTurnMana);
-                }
-                else if (combatant.restoreResourceEffects.ContainsKey(ResourceType.Stamina))
-                {
-                    combatant.GainResource(ResourceType.Stamina, combatant._endOfTurnStamina);
-                }
-                
-            }
-        }
-        public void DecrementRestoreResourceDurations()
-        {
-            if (combatant.restoreResourceEffects.Count > 0 && combatant != null)
-            {
-                List<ResourceType> keysToRemove = new List<ResourceType>();
 
-                // First pass: decide which keys need changing / removing
-                foreach (var kvp in combatant.restoreResourceEffects)
-                {
-                    if (kvp.Value > 0)
-                    {
-                        combatant.restoreResourceEffects[kvp.Key] = kvp.Value - 1;
-                    }
-                    if (kvp.Value <= 0)
-                    {
-                        keysToRemove.Add(kvp.Key);
-                    }
-                }
-
-                // Second pass: remove them outside the iteration
-                foreach (var key in keysToRemove)
-                {
-                    combatant.restoreResourceEffects.Remove(key);
-                }
+        public void ApplyResourceEffects()
+        {
+            if(combatant.resourceEffects == null || combatant.resourceEffects.Count == 0)
+            {
+                return;
             }
-           
+            combatant.resourceEffects = combatant.resourceEffects.Where(effect => effect.RemainingTurns > 0).ToList();
+            combatant.resourceEffects.ForEach(effect =>
+            {
+                effect.Execute();
+            });
         }
+
     }
 }

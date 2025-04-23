@@ -1,8 +1,11 @@
-using UnityEngine;
 using SystemMiami.CombatSystem;
 
 namespace SystemMiami.CombatRefactor
 {
+    // TODO:
+    // LOOK HERE THE NEXT TIME WE HIT A WEIRD THING WHERE
+    // COMBATANT SEEMS LIKE IT THINKS THAT SELF IS NULL
+
     #nullable enable
     public class CombatantStateFactory
     {

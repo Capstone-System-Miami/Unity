@@ -18,7 +18,11 @@ namespace SystemMiami.CombatRefactor
         public Loadout(Inventory inventory, Combatant user)
         {
             this.user = user;
-
+            if (inventory == null)
+            {
+                Debug.LogError($"Loadout: Inventory is null. Returning empty loadout.");
+                return;
+            }
             PhysicalAbilities = ConvertPhysical(inventory.QuickslotPhysicalAbilityIDs);
             MagicalAbilities  = ConvertMagical(inventory.QuickslotMagicalAbilityIDs);
             Consumables       = ConvertConsumable(inventory.QuickslotConsumableIDs);

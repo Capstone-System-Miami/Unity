@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using SystemMiami.Management;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -18,6 +19,11 @@ namespace SystemMiami
             {
                 Debug.LogWarning("Scene name is empty or null! Please provide a valid scene name.");
             }
+        }
+        
+        public void goTONeighborhood()
+        {
+            GAME.MGR.GoToNeighborhood(true);
         }
 
         // Function to quit the game

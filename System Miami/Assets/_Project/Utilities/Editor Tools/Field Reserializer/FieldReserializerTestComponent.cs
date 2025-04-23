@@ -4,9 +4,17 @@ using UnityEngine;
 
 namespace SystemMiami.Utilities
 {
+    /// NOTE:
+    /// For testing the FieldReserializer editor tool.
+    /// To use, uncomment the code below. Fill in values in the inspector, and save.
+    /// Then, open the tool, find a prefab that uses this class,
+    /// and apply the tool. The old values will be replaced with the new ones.
+    /// This way, you can rename or reset fields without losing references on prefabs.
+    /// Then you can delete all of the old fields and the dictionary, and remove
+    /// the IFieldReserializerInterface.
     public class FieldReserializerTestComponent : MonoBehaviour, IFieldReserializer
     {
-        static Dictionary<string, string> oldFieldName_newFieldName = new()
+        Dictionary<string, string> oldFieldName_newFieldName = new()
         {
             {"_testRenameEditor" , "newGuy7000_hellYeah"},
             {"_testInt" , "testInt"},

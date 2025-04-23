@@ -1,11 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
+using SystemMiami.Management;
 using TMPro;
 using UnityEngine;
-
 namespace SystemMiami
 {
-    public class QuestPanel : MonoBehaviour
+    public class QuestPanel : Singleton<QuestPanel>
     {
         public Quest quest;
         public TMP_Text questNameText;
@@ -14,9 +13,9 @@ namespace SystemMiami
         public TMP_Text xpRewardText;
         public TMP_Text creditRewardText;
 
-        public void GiveQuestToPlayer()
+        private void Start()
         {
-            Debug.Log("Quest given to player");
+            QuestTracker.MGR.questPanel = this;
         }
 
         public void Initialize(Quest questArg)
@@ -26,6 +25,7 @@ namespace SystemMiami
             {
                 questNameText.text = quest.questName;
             }
+            this.gameObject.SetActive(true);
             questDescriptionText.text = quest.questDescriptionLine;
             progressText.text = $"Progress: {quest.enemiesToGoal} / {quest.objectiveGoal}";
             xpRewardText.text = $"{quest.rewardEXP} EXP";
@@ -34,6 +34,7 @@ namespace SystemMiami
 
         public void UpdateQuest()
         {
+            this.gameObject.SetActive(true);
             progressText.text = $"Progress: {quest.enemiesToGoal} / {quest.objectiveGoal}";
         }
 
@@ -43,5 +44,15 @@ namespace SystemMiami
             xpRewardText.text = $"Gained {quest.rewardEXP} EXP!";
             creditRewardText.text = $"Gained {quest.rewardCurrency} Credits!";
         }
+        
+        public void Update()
+        {
+            if (quest.questName == "")
+            {
+                this.gameObject.SetActive(false);
+            }
+        }
+
+    
     }
 }

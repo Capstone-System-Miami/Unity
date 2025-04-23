@@ -25,16 +25,31 @@ namespace SystemMiami
         /// </summary>
         public List<T> GetNewList()
         {
+            List<T> result = new();
+
             resetElementCounts();
 
             if (!tryGetDefault(out _defaultPrefab))
             {
-                Debug.LogWarning($"No Default Element Fount in pool ( {this} )");
+                Debug.LogWarning($"No Default Element Found in pool ( {this} )");
             }
-            
-            int count = Random.Range(_minCount, _maxCount + 1);
 
-            return getListOfSize(count);
+            result = getRequired();
+
+            int availableCountRemaining = Mathf.Clamp((_maxCount - result.Count), 0, _maxCount);
+
+            // if result is greater than min, this will be neg
+            int requiredCountRemaining = Mathf.Clamp((_minCount - result.Count), 0, _minCount);
+
+            if (availableCountRemaining == 0)
+            {
+                return result;
+            }
+
+            int randomCountRemaining = Random.Range(requiredCountRemaining, availableCountRemaining);
+
+            result.AddRange(getListOfSize(randomCountRemaining));
+            return result;
         }
 
         private void resetElementCounts()
@@ -44,6 +59,27 @@ namespace SystemMiami
             {
                 _elements[i] = new PoolElement<T>(_elements[i]);
             }
+        }
+
+        /// <summary>
+        /// Gets, concats, & returns the required number of elements
+        /// from each <see cref="PoolElement{T}">.
+        /// </summary>
+        private List<T> getRequired()
+        {
+            List<T> result = new();
+
+            for (int i = 0; i < _elements.Count; i++)
+            {
+                if (!_elements[i].TryGetRequired(out T[] req))
+                {
+                    continue;
+                }
+
+                result.AddRange(req);
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -57,6 +93,7 @@ namespace SystemMiami
             if (_defaultPrefab != null)
             {
                 defaultPrefab = _defaultPrefab;
+
                 return true;
             }
 
@@ -135,10 +172,10 @@ namespace SystemMiami
                     result.Add(_defaultPrefab);
 
                     Debug.Log(
-                        $"{this} Added a default prefab ({_defaultPrefab.name})\n" +
-                        getLoopInfo(validElementsMinIndex, validElementsMaxIndex, randomIndex, i) +
-                        $"Updated Elements:\n" +
-                        string.Join( "\n", validElements.Select( e => DebugHelpers.GetInfo(e, BindingFlags.NonPublic | BindingFlags.Instance) ) )
+                        $"A Pool<{_defaultPrefab.GetType()}> Added a default prefab ({_defaultPrefab.name})\n"
+                        // + getLoopInfo(validElementsMinIndex, validElementsMaxIndex, randomIndex, i) +
+                        // $"Updated Elements:\n" +
+                        // string.Join("\n", validElements.Select(e => DebugHelpers.GetInfo(e, BindingFlags.NonPublic | BindingFlags.Instance)))
                         );
 
                     continue;
@@ -156,8 +193,7 @@ namespace SystemMiami
 
             //Debug.Log(
             //    $"End of {this}'s getListOfSize() func\n" +
-            //    getPoolInfo(validElements)
-            //    );
+            //    getPoolInfo(validElements));
 
             return result;
         }

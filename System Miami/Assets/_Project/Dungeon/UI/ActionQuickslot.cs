@@ -1,7 +1,6 @@
+using SystemMiami.CombatSystem;
 using SystemMiami.CombatRefactor;
 using SystemMiami.Management;
-using SystemMiami.Outdated;
-using TMPro;
 using UnityEngine;
 
 namespace SystemMiami.ui
@@ -12,13 +11,14 @@ namespace SystemMiami.ui
         [SerializeField] private SelectableSprite _icon;
 
         private RectTransform rt;
-        private CombatAction _combatAction;
-        private SelectionState _selectionState = SelectionState.UNSELECTED;
+        private CombatAction combatAction;
+        private PlayerCombatant user;
+        private SelectionState selectionState = SelectionState.UNSELECTED;
 
         /// <summary>
         /// The real combat object (AbilityPhysical, AbilityMagical, or Consumable).
         /// </summary>
-        public CombatAction CombatAction => _combatAction;
+        public CombatAction CombatAction => combatAction;
 
         public RectTransform RT => rt;
 
@@ -29,7 +29,14 @@ namespace SystemMiami.ui
 
         private void Update()
         {
-            if (_combatAction is NewAbility ability)
+            if (selectionState == SelectionState.SELECTED
+                && user?.CurrentState is not ActionEquipped
+                && user?.CurrentState is not ActionConfirmation
+                && user?.CurrentState is not ActionExecution)
+            {
+                Deselect();
+            }
+            if (combatAction is NewAbility ability)
             {
                 UpdateCooldowns(ability);
             }
@@ -40,8 +47,8 @@ namespace SystemMiami.ui
         /// </summary>
         public void Fill(CombatAction action)
         {
-            _combatAction = action;
-            if (_combatAction == null)
+            combatAction = action;
+            if (combatAction == null)
             {
                 Clear();
                 return;
@@ -53,6 +60,8 @@ namespace SystemMiami.ui
             {
                 _icon.SetAllSprites(iconSprite);
             }
+
+            user = combatAction.User as PlayerCombatant;
         }
 
         /// <summary>
@@ -60,9 +69,8 @@ namespace SystemMiami.ui
         /// </summary>
         public void Clear()
         {
-            _combatAction = null;
+            combatAction = null;
             _icon.SetAllSprites(null);
-            
         }
 
         /// <summary>
@@ -73,7 +81,7 @@ namespace SystemMiami.ui
             /// TODO: Need a way more elegant solution than this.
             /// There should be some indication that the slot was clicked
             /// but can't be equipped because of cooldown.
-            if (_selectionState == SelectionState.DISABLED) return;
+            if (selectionState == SelectionState.DISABLED) return;
 
             // Notify the UI Manager
             UI.MGR.ClickSlot(this);
@@ -81,27 +89,27 @@ namespace SystemMiami.ui
 
         public void Select()
         {
-            if (_selectionState == SelectionState.DISABLED) return;
-            _selectionState = SelectionState.SELECTED;
+            if (selectionState == SelectionState.DISABLED) return;
+            selectionState = SelectionState.SELECTED;
             UpdateVisualState(SelectionState.SELECTED);
         }
 
         public void Deselect()
         {
-            if (_selectionState == SelectionState.DISABLED) return;
-            _selectionState = SelectionState.UNSELECTED;
+            if (selectionState == SelectionState.DISABLED) return;
+            selectionState = SelectionState.UNSELECTED;
             UpdateVisualState(SelectionState.UNSELECTED);
         }
 
         public void EnableSelection()
         {
-            _selectionState = SelectionState.UNSELECTED;
+            selectionState = SelectionState.UNSELECTED;
             UpdateVisualState(SelectionState.UNSELECTED);
         }
 
         public void DisableSelection()
         {
-            _selectionState = SelectionState.DISABLED;
+            selectionState = SelectionState.DISABLED;
             UpdateVisualState(SelectionState.DISABLED);
         }
 
@@ -113,12 +121,12 @@ namespace SystemMiami.ui
         private void UpdateCooldowns(NewAbility ability)
         {
             if (ability.CooldownRemaining > 0
-                && _selectionState != SelectionState.DISABLED)
+                && selectionState != SelectionState.DISABLED)
             {
                 DisableSelection();
             }
             else if (ability.CooldownRemaining == 0
-                && _selectionState == SelectionState.DISABLED)
+                && selectionState == SelectionState.DISABLED)
             {
                 EnableSelection();
             }
@@ -126,9 +134,9 @@ namespace SystemMiami.ui
 
         public void SetPopupOnEnter()
         {
-            if (_combatAction == null) { return; }
+            if (combatAction == null) { return; }
 
-            PopUpHandler.MGR?.OpenPopup(_combatAction, this);
+            PopUpHandler.MGR?.OpenPopup(combatAction, this);
         }
 
         public void SetPopupOnExit()

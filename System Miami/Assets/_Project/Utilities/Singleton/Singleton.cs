@@ -2,7 +2,11 @@ using UnityEngine;
 
 namespace SystemMiami.Management
 {
-    public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
+    public abstract class Singleton : MonoBehaviour {
+        public abstract GameObject GetMe();
+    }
+
+    public abstract class Singleton<T> : Singleton where T : MonoBehaviour
     {
         [SerializeField] private static T _mgr;
 
@@ -25,6 +29,11 @@ namespace SystemMiami.Management
                     DontDestroyOnLoad(gameObject);
                 }
             }
+        }
+
+        public override GameObject GetMe()
+        {
+            return MGR.gameObject;
         }
     }
 }
