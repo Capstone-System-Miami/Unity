@@ -2,15 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Serialization;
 using TMPro;
-using UnityEditor;
 using UnityEngine.SceneManagement;
 
 namespace SystemMiami
 {
     public class Credits : MonoBehaviour
     {
-        public string[] titles;
+        public CustomString[] titles;
         public CustomString[] names;
         public CanvasGroup canvasGroup;
         public TextMeshProUGUI titleText;
@@ -37,7 +37,7 @@ namespace SystemMiami
             while (currentSlide < titles.Length && currentSlide < names.Length)
             {
                 titleText.text = titles[currentSlide];
-                nameText.text = names[currentSlide].text;
+                nameText.text = names[currentSlide];
                 yield return StartCoroutine(Fade(0f, 1f)); // Start Fade
                 yield return new WaitForSeconds(readTime);
                 yield return StartCoroutine(Fade(1f, 0f)); // End fade
@@ -69,4 +69,17 @@ namespace SystemMiami
 public class CustomString
 {
     [SerializeField,TextArea] public string text;
+
+    // NOTE: hey hey woah look at this, this is cool this is good stuff
+    //  -with deepest regards and love,
+    //  layla
+    public static implicit operator string(CustomString cs) => cs.text;
+    //
+    //  p.s. it sounds like im being sarcastic but im not,
+    //  i was like "oh dang you can just do this?  this is cool this is good stuff"
+    //  and then i typed this.
+    //
+    //
+    //
+    // p.p.s. ... hi.
 }
