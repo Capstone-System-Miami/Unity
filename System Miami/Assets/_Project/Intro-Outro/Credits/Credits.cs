@@ -17,6 +17,7 @@ namespace SystemMiami
         public TextMeshProUGUI nameText;
         public Button continueButton;
         public float startDelay = 3f;
+        public float endDelay = 3f;
         public float readTime = 2f;
         public float fadeDuration = 1f;
 
@@ -42,8 +43,11 @@ namespace SystemMiami
                 yield return StartCoroutine(Fade(1f, 0f)); // End fade
                 currentSlide++;
             }
-             Debug.Log("Credits Finished");
-             SceneManager.LoadScene("Menu Scene"); // Takes you back to Main
+
+            yield return new WaitForSeconds(endDelay);
+
+            Debug.Log("Credits Finished");
+            SceneManager.LoadScene("Menu Scene"); // Takes you back to Main
         }
 
         IEnumerator Fade(float from, float to)
