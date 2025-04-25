@@ -144,6 +144,9 @@ namespace SystemMiami
             if (dungeon.DynamicDamageable != null)
             {
                 this.staticUndamageable = dungeon.StaticUndamageable;
+                this.staticDamageable = dungeon.StaticDamageable;
+                this.dynamicUndamageable = dungeon.DynamicUndamageable;
+                this.dynamicDamageable = dungeon.DynamicDamageable;
             }
             else
             {
