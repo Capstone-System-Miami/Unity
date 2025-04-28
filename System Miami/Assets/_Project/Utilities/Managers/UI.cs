@@ -291,7 +291,6 @@ namespace SystemMiami.Management
 
             if (scene.name == GAME.MGR.NeighborhoodSceneName)
             {
-                OpenLoadScreen();
                 IntersectionManager.MGR.GenerationComplete += HandleGenerationComplete;
 
                 OpenCharacterMenu();
