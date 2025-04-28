@@ -223,6 +223,8 @@ namespace SystemMiami.Management
 
         public void GoToNeighborhood(bool regenerate)
         {
+            PlayerManager.MGR.GetComponent<TopDownMovement>().DisableMovement();
+
             string debugGotoNeighborhood =
                     $"Going to {NeighborhoodSceneName}.\n" +
                     $"Regenerating?  {regenerate}";
@@ -270,6 +272,8 @@ namespace SystemMiami.Management
         /// </summary>
         public void GoToDungeon()
         {
+            PlayerManager.MGR.GetComponent<TopDownMovement>().DisableMovement();
+
             // If we're in a Neighborhood and are entering combat,
             // we should turn off the IntersectionManager,
             // since it will be preserved between scenes. 

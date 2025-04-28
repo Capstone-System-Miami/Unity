@@ -3,7 +3,9 @@ using SystemMiami.Animation;
 using SystemMiami.Enums;
 using SystemMiami.Utilities;
 using UnityEngine;
-using SystemMiami.Drivers;
+using UnityEngine.SceneManagement;
+using SystemMiami.Management;
+using System;
 
 namespace SystemMiami
 {
@@ -12,19 +14,24 @@ namespace SystemMiami
         [Header("Debug")]
         [SerializeField] private dbug log;
 
-        public Rigidbody2D body;
-        public SpriteRenderer spriteRenderer;
+        [Header("Settings")]
         public float walkSpeed;
         public float frameRate;
 
-        [SerializeField] private Animator animator;
-
+        [Header("Inspect")]
         /// <summary>
         /// Must be assigned at runtime by <see cref="CharClassAnimationDriver"/>
         /// </summary>
         [SerializeField, ReadOnly] private StandardAnimSet animSet;
+        [field: SerializeField, ReadOnly] public bool CanMove { get; private set; } = false;
 
 
+        // Components
+        private Rigidbody2D body;
+        private SpriteRenderer spriteRenderer;
+        private Animator animator;
+
+        // Input
         private Vector2 rawInput;
         private Vector2Int input;
         private Vector2 moveDirection;
@@ -45,6 +52,27 @@ namespace SystemMiami
             {
                 log.error($"{name}'s {this} couldnt find an animator");
             }
+
+            DisableMovement();
+        }
+
+        private void OnEnable()
+        {
+            DisableMovement();
+            SceneManager.sceneLoaded += HandleSceneLoaded;
+            GAME.MGR.GamePaused += HandleGamePause;
+            GAME.MGR.GameResumed += HandleGameResume;
+            UI.MGR.CharacterMenuOpened += HandleCharacterMenuOpened;
+            UI.MGR.CharacterMenuClosed += HandleCharacterMenuClosed;
+        }
+
+        private void OnDisable()
+        {
+            GAME.MGR.GamePaused -= HandleGamePause;
+            GAME.MGR.GameResumed -= HandleGameResume;
+            UI.MGR.CharacterMenuOpened -= HandleCharacterMenuOpened;
+            UI.MGR.CharacterMenuClosed -= HandleCharacterMenuClosed;
+            animator.runtimeAnimatorController = animSet.idle;
         }
 
         private void Update()
@@ -59,16 +87,22 @@ namespace SystemMiami
             }
 
             UpdateDirections();
-            MovePlayer();
+            SetAnim();
 
-            if (input == Vector2.zero)
+            if (!CanMove) { return; }
+            MovePlayer();
+        }
+
+        public void EnableMovement()
+        {
+            CanMove = true;
+        }
+        public void DisableMovement()
+        {
+            CanMove = false;
+            if (body != null)
             {
-                animator.runtimeAnimatorController = animSet.idle;
-            }
-            else
-            {
-                animator.runtimeAnimatorController = animSet.walking;
-                SetAnim();
+                body.velocity = Vector2.zero;
             }
         }
 
@@ -82,15 +116,17 @@ namespace SystemMiami
         {
             rawInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
+            // For animation
             int inputX = rawInput.x == 0f
-            ? 0
-            : rawInput.x < 0 ? -1 : 1;
+                ? 0
+                : rawInput.x < 0 ? -1 : 1;
             int inputY = rawInput.y == 0f
-            ? 0
-            : rawInput.y < 0 ? -1 : 1;
+                ? 0
+                : rawInput.y < 0 ? -1 : 1;
             input = new Vector2Int(inputX, inputY);
 
-            moveDirection = new Vector2(rawInput.x, rawInput.y * .5f).normalized; // Handles input
+            // For rigidbody
+            moveDirection = new Vector2(rawInput.x, rawInput.y * .5f).normalized;
         }
 
         private void MovePlayer()
@@ -100,13 +136,52 @@ namespace SystemMiami
 
         private void SetAnim()
         {
-            TileDir dir = DirectionHelper.GetTileDir(input);
-            animator.SetInteger("TileDir", (int)dir);
+            if (input == Vector2.zero)
+            {
+                animator.runtimeAnimatorController = animSet.idle;
+            }
+            else
+            {
+                TileDir dir = DirectionHelper.GetTileDir(input);
+                animator.SetInteger("TileDir", (int)dir);
+                animator.runtimeAnimatorController = animSet.walking;
+            }
         }
 
-        private void OnDisable()
+        #region Event Responses
+        // =====================================================================
+        private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            animator.runtimeAnimatorController = animSet.idle;
+            if (scene.name == GAME.MGR.NeighborhoodSceneName)
+            {
+                DisableMovement();
+                IntersectionManager.MGR.GenerationComplete += HandleGenerationComplete;
+            }
         }
+
+        private void HandleGenerationComplete()
+        {
+            EnableMovement();
+            IntersectionManager.MGR.GenerationComplete -= HandleGenerationComplete;
+        }
+
+        private void HandleGamePause()
+        {
+            DisableMovement();
+        }
+        private void HandleGameResume()
+        {
+            EnableMovement();
+        }
+
+        private void HandleCharacterMenuOpened()
+        {
+            DisableMovement();
+        }
+        private void HandleCharacterMenuClosed()
+        {
+            EnableMovement();
+        }
+        #endregion // Event Responses
     }
 }
