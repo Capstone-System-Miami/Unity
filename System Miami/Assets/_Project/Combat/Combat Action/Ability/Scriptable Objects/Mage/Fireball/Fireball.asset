@@ -16,6 +16,10 @@ MonoBehaviour:
   Actions:
   - {fileID: 11400000, guid: a44a95abef297144a9d13e6631bad263, type: 2}
   OverrideController: {fileID: 22100000, guid: 983c4ac37ede5db49952b8430abec95a, type: 2}
+  MageOverrideController: {fileID: 0}
+  FighterOverrideController: {fileID: 0}
+  TankOverrideController: {fileID: 0}
+  RogueOverrideController: {fileID: 0}
   AbilityType: 1
   ResourceCost: 5
   CooldownTurns: 3
@@ -28,8 +32,9 @@ MonoBehaviour:
     itemType: 2
     Price: 0
     MinLevel: 2
-    MaxLevel: 4
+    MaxLevel: 80
     rarity: 0
+    <IsStackable>k__BackingField: 0
   classType: 1
   isEnemyAbility: 0
   isGeneralAbility: 0

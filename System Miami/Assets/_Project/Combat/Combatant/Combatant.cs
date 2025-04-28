@@ -509,13 +509,16 @@ namespace SystemMiami.CombatSystem
 
         public void ReceiveDamage(float amount, bool perTurn, int durationTurns)
         {
-                float dmgRDX = _stats.GetStat(StatType.DMG_RDX);
-                Debug.Log("Damage after rdx: " + (amount  - dmgRDX));
-                Health.Lose(amount - dmgRDX);
-                log.print(
-                    $"{gameObject.name} took {amount} damage,\n" +
-                    $"its Health is now {Health.Get()}");
-                GAME.MGR.NotifyDamageTaken(this);
+            float dmgRDX = _stats.GetStat(StatType.DMG_RDX);
+            float healthToLose = Mathf.Max( amount - dmgRDX,0);
+           
+            Debug.Log("Damage after rdx: " + (healthToLose) + " dmgRDX is " + dmgRDX);
+                
+            Health.Lose(healthToLose);
+            log.print(
+              $"{gameObject.name} took {amount} damage,\n" +
+              $"its Health is now {Health.Get()}");
+              GAME.MGR.NotifyDamageTaken(this);
             
         }
         #endregion IDamageReciever
@@ -726,13 +729,14 @@ namespace SystemMiami.CombatSystem
 
             me.TargetedBy.ForEach(subaction =>
             {
-                subaction.Execute();
-                if (subaction is IPerTurn effect)
+                if (subaction is IPerTurn effect && effect.perTurn)
                 {
                     resourceEffects.Add(effect);
-                    log.print("Added a resource effect to " +
-                        $"{gameObject.name} with {subaction.GetType()}");
+                    log.print($"Added a resource effect to {gameObject.name} with {subaction.GetType()}");
+                    return;
                 }
+                subaction.Execute();
+
             });
         }
 

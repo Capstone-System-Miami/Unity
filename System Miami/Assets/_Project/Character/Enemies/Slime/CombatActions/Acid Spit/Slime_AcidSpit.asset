@@ -16,6 +16,10 @@ MonoBehaviour:
   Actions:
   - {fileID: 11400000, guid: 845590f5e6fcb0a4eb8dd823d1b760e5, type: 2}
   OverrideController: {fileID: 22100000, guid: 908272a7752269240ba8b731a749b801, type: 2}
+  MageOverrideController: {fileID: 0}
+  FighterOverrideController: {fileID: 0}
+  TankOverrideController: {fileID: 0}
+  RogueOverrideController: {fileID: 0}
   AbilityType: 0
   ResourceCost: 0
   CooldownTurns: 0
@@ -26,5 +30,10 @@ MonoBehaviour:
     Description: Slime
     itemType: 0
     Price: 0
+    MinLevel: 0
+    MaxLevel: 80
+    rarity: 0
+    <IsStackable>k__BackingField: 0
   classType: 0
   isEnemyAbility: 1
+  isGeneralAbility: 0

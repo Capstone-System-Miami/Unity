@@ -141,22 +141,46 @@ namespace SystemMiami
 
         public void DecrementStatusEffectDurations()
         {
-            List<StatSet> toRemove = new();
+            // If there are no effects, just return
+            if (_statusEffects.Count == 0)
+            {
+                Debug.Log($"{name}: No status effects to decrement.");
+                return;
+            }
 
-            List<StatSet> keys = new(_statusEffects.Keys);
+            Debug.Log($"{name}: Starting with {_statusEffects.Count} status effects.");
+
+            // Create a temporary list of the keys to avoid modifying during enumeration
+            List<StatSet> keys = new List<StatSet>(_statusEffects.Keys);
+            List<StatSet> toRemove = new List<StatSet>();
 
             foreach (StatSet entry in keys)
             {
-                if (--_statusEffects[entry] <= 0)
+                int currentDuration = _statusEffects[entry];
+                int newDuration = currentDuration - 1;
+                _statusEffects[entry] = newDuration;
+
+                Debug.Log($"{name}: Effect {entry} duration decreased from {currentDuration} to {newDuration}");
+
+                if (newDuration <= 0)
                 {
-                    toRemove.Add(entry); 
+                    Debug.Log($"{name}: Marking effect {entry} for removal (duration = {newDuration})");
+                    toRemove.Add(entry);
                 }
-                Debug.Log(entry.ToString() + ("duration is now " + _statusEffects[entry]));
             }
 
-            toRemove.ForEach(statSet => _statusEffects.Remove(statSet));
+            Debug.Log($"{name}: Found {toRemove.Count} effects to remove");
+
+            // Remove expired effects
+            foreach (StatSet statSet in toRemove)
+            {
+                bool removed = _statusEffects.Remove(statSet);
+                Debug.Log($"{name}: Attempt to remove {statSet} effect: {(removed ? "Successful" : "FAILED")}");
+            }
+
+            Debug.Log($"{name}: After removal, {_statusEffects.Count} status effects remain.");
         }
-        
+
         /// <summary>
         /// Adds an equipment mod's stats by ID, separate from status effects.
         /// </summary>

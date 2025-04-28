@@ -93,7 +93,7 @@ namespace SystemMiami.CombatSystem
                 report += $"Found target: {tile.Occupier}\n";
             }
 
-            Debug.Log(report);
+            //Debug.Log(report);
             return new (foundTiles);
         }
 
