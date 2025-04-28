@@ -7,7 +7,7 @@ namespace SystemMiami.CombatRefactor
 {
     public class EnemyMovementTileSelection : MovementTileSelection
     {
-        private const float selectionTimeout = 5f;
+        private const float selectionTimeout = 2f;
         private CountdownTimer aiTimeout;
 
         public EnemyMovementTileSelection(EnemyCombatant combatant)
@@ -46,8 +46,8 @@ namespace SystemMiami.CombatRefactor
             // Are the coordinates of what the enemy is focusing
             // on the same as the coordinates right in front of them
             return (
-                combatant.CurrentDirectionContext.TilePositionB
-                == combatant.CurrentDirectionContext.ForwardA
+                combatant.CurrentDirectionContext.ForwardA
+                == combatant.FocusTile.BoardPos
                 );
         }
 
