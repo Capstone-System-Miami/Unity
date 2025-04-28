@@ -293,6 +293,7 @@ public class IntersectionManager : Singleton<IntersectionManager>
     // Begin the street generation process starting from the specified grid index.
     private void StartStreetGenerationFromStreet(Vector2Int streetIndex)
     {
+        UI.MGR.OpenLoadScreen();
         // Add the starting street index to the queue for processing.
         streetQueue.Enqueue(streetIndex);
         // Mark the street as enqueued to prevent it from being enqueued again.

@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using SystemMiami.Management;
 using SystemMiami.Utilities;
@@ -64,10 +65,14 @@ namespace SystemMiami
             allMusic = new Music[] {
                 mainMenu,
                 settings,
+                intro,
+                tutorial,
                 characterSelect,
                 neighborhood,
                 dungeonLow,
-                dungeonHigh
+                dungeonHigh,
+                outro,
+                credits,
             };
         }
 
@@ -155,6 +160,11 @@ namespace SystemMiami
             musicSource.Play();
         }
 
+        public void PlayBossMusic()
+        {
+            PlayMusic(dungeonHigh);
+        }
+
 
         public float GetMainVolumePercent()
         {
@@ -197,6 +207,16 @@ namespace SystemMiami
         protected virtual void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             if (overrideBuildIndex) { return; }
+
+            // Play boss music if necessary
+            if (scene.name == GAME.MGR.DungeonSceneName
+                && GAME.MGR.TryGetEnemies(out List<GameObject> combs)
+                && combs.Where(enemy => enemy.TryGetComponent(out BossTag boss))
+                    .ToList().Count > 0)
+            {
+                AudioManager.MGR.PlayBossMusic();
+                return;
+            }
 
             sceneMusic = allMusic.Where(music => music.BuildIndex == scene.buildIndex).ToArray();
 

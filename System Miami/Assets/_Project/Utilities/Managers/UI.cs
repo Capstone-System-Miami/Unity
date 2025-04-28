@@ -23,6 +23,10 @@ namespace SystemMiami.Management
         [SerializeField, ReadOnly] private GameObject pauseButton;
         [SerializeField, ReadOnly] private GameObject pausePanel;
 
+        [Header("Loading Screen")]
+        [SerializeField] private GameObject loadingScreenPrefab;
+        [SerializeField, ReadOnly] private GameObject loadingScreen;
+
         [Header("CharacterMenu")]
         [SerializeField] private GameObject characterMenuPrefab;
         [SerializeField] private GameObject characterMenuButtonPrefab;
@@ -67,6 +71,21 @@ namespace SystemMiami.Management
 
             GAME.MGR.GamePaused -= HandleGamePaused;
             GAME.MGR.GameResumed -= HandleGameResumed;
+        }
+
+        public void OpenLoadScreen()
+        {
+            CloseLoadScreen();
+            loadingScreen = Instantiate(loadingScreenPrefab);
+            loadingScreen.transform.SetParent(transform);
+        }
+
+        public void CloseLoadScreen()
+        {
+            if (loadingScreen != null)
+            {
+                Destroy(loadingScreen);
+            }
         }
 
         public void CreatePlayerLoadout(Combatant combatant)
@@ -272,6 +291,8 @@ namespace SystemMiami.Management
 
             if (scene.name == GAME.MGR.NeighborhoodSceneName)
             {
+                IntersectionManager.MGR.GenerationComplete += HandleGenerationComplete;
+
                 OpenCharacterMenu();
                 CloseCharacterMenu();
             }
@@ -306,6 +327,12 @@ namespace SystemMiami.Management
                 Destroy(pausePanel);
                 pausePanel = null;
             }
+        }
+
+        private void HandleGenerationComplete()
+        {
+            CloseLoadScreen();
+            IntersectionManager.MGR.GenerationComplete -= HandleGenerationComplete;
         }
 
         // TODO: Attach Win/Lose panel script on all the combatOverPanel

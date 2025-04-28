@@ -131,10 +131,7 @@ namespace SystemMiami.Management
         {
             base.Awake();
 
-            for (int i = 0; i < bosses?.Length; i++)
-            {
-                bossDungeonQueue.Enqueue(bosses[i]);
-            }
+            ResetBossQueue();
         }
 
         private void OnEnable()
@@ -204,6 +201,8 @@ namespace SystemMiami.Management
 
         public void GoToCharacterSelect()
         {
+            ResetBossQueue();
+
             log.print($"Going to {CharacterSelectSceneName}");
 
             Singleton[] managers = FindObjectsOfType<Singleton>(true);
@@ -223,6 +222,8 @@ namespace SystemMiami.Management
 
         public void GoToNeighborhood(bool regenerate)
         {
+            PlayerManager.MGR.GetComponent<TopDownMovement>().DisableMovement();
+
             string debugGotoNeighborhood =
                     $"Going to {NeighborhoodSceneName}.\n" +
                     $"Regenerating?  {regenerate}";
@@ -270,6 +271,8 @@ namespace SystemMiami.Management
         /// </summary>
         public void GoToDungeon()
         {
+            PlayerManager.MGR.GetComponent<TopDownMovement>().DisableMovement();
+
             // If we're in a Neighborhood and are entering combat,
             // we should turn off the IntersectionManager,
             // since it will be preserved between scenes. 
@@ -381,6 +384,15 @@ namespace SystemMiami.Management
 
             credit = CurrentDungeonData.Credits;
             return true;
+        }
+
+        private void ResetBossQueue()
+        {
+            bossDungeonQueue.Clear();
+            for (int i = 0; i < bosses?.Length; i++)
+            {
+                bossDungeonQueue.Enqueue(bosses[i]);
+            }
         }
         #endregion // Global Data
 

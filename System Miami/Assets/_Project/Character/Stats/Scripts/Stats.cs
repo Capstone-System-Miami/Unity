@@ -28,6 +28,7 @@ namespace SystemMiami
 
         // Time-limited status effects: (StatSet, duration)
         private Dictionary<StatSet, int> _statusEffects = new();
+       
 
         // Permanent equipment mods: (modID, StatSet)
         private Dictionary<int, StatSet> _equipmentMods = new();
@@ -140,19 +141,46 @@ namespace SystemMiami
 
         public void DecrementStatusEffectDurations()
         {
-            List<StatSet> toRemove = new();
-
-            foreach (KeyValuePair<StatSet, int> entry in _statusEffects)
+            // If there are no effects, just return
+            if (_statusEffects.Count == 0)
             {
-                if (entry.Value <= 0)
+                Debug.Log($"{name}: No status effects to decrement.");
+                return;
+            }
+
+            Debug.Log($"{name}: Starting with {_statusEffects.Count} status effects.");
+
+            // Create a temporary list of the keys to avoid modifying during enumeration
+            List<StatSet> keys = new List<StatSet>(_statusEffects.Keys);
+            List<StatSet> toRemove = new List<StatSet>();
+
+            foreach (StatSet entry in keys)
+            {
+                int currentDuration = _statusEffects[entry];
+                int newDuration = currentDuration - 1;
+                _statusEffects[entry] = newDuration;
+
+                Debug.Log($"{name}: Effect {entry} duration decreased from {currentDuration} to {newDuration}");
+
+                if (newDuration <= 0)
                 {
-                    toRemove.Add(entry.Key);
+                    Debug.Log($"{name}: Marking effect {entry} for removal (duration = {newDuration})");
+                    toRemove.Add(entry);
                 }
             }
 
-            toRemove.ForEach(statSet => _statusEffects.Remove(statSet));
+            Debug.Log($"{name}: Found {toRemove.Count} effects to remove");
+
+            // Remove expired effects
+            foreach (StatSet statSet in toRemove)
+            {
+                bool removed = _statusEffects.Remove(statSet);
+                Debug.Log($"{name}: Attempt to remove {statSet} effect: {(removed ? "Successful" : "FAILED")}");
+            }
+
+            Debug.Log($"{name}: After removal, {_statusEffects.Count} status effects remain.");
         }
-        
+
         /// <summary>
         /// Adds an equipment mod's stats by ID, separate from status effects.
         /// </summary>
