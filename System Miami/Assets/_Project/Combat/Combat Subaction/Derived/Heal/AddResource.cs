@@ -25,7 +25,7 @@ namespace SystemMiami.CombatSystem
         public readonly ITargetable reciever;
         public readonly float amount;
         public readonly ResourceType type;
-        public readonly bool perTurn;
+        public bool perTurn { get; }
         public readonly int durationTurns;
         public int RemainingTurns { get; private set; }
 

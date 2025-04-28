@@ -48,7 +48,7 @@ namespace SystemMiami.CombatSystem
     {
         public readonly ITargetable target;
         public readonly float amount;
-        public readonly bool perTurn;
+        public bool perTurn { get; }
         public readonly int durationTurns;
         public int RemainingTurns { get; private set; }
         public DamageCommand(ITargetable target, float amount, bool perTurn,int durationTurns)
