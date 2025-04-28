@@ -28,6 +28,7 @@ namespace SystemMiami
 
         // Time-limited status effects: (StatSet, duration)
         private Dictionary<StatSet, int> _statusEffects = new();
+       
 
         // Permanent equipment mods: (modID, StatSet)
         private Dictionary<int, StatSet> _equipmentMods = new();
@@ -142,12 +143,15 @@ namespace SystemMiami
         {
             List<StatSet> toRemove = new();
 
-            foreach (KeyValuePair<StatSet, int> entry in _statusEffects)
+            List<StatSet> keys = new(_statusEffects.Keys);
+
+            foreach (StatSet entry in keys)
             {
-                if (entry.Value <= 0)
+                if (--_statusEffects[entry] <= 0)
                 {
-                    toRemove.Add(entry.Key);
+                    toRemove.Add(entry); 
                 }
+                Debug.Log(entry.ToString() + ("duration is now " + _statusEffects[entry]));
             }
 
             toRemove.ForEach(statSet => _statusEffects.Remove(statSet));
