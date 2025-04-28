@@ -17,6 +17,8 @@ namespace SystemMiami.CombatSystem
             int playerLevel = PlayerManager.MGR.CurrentLevel;
             DifficultyLevel difficultyLevel = MapManager.MGR.Dungeon.DifficultyLevel;
             GetComponent<EnemiesLevel>().Initialize(difficultyLevel, playerLevel);
+
+            FocusTile = MapManager.MGR.GetRandomValidTile();
         }
 
         public override OverlayTile GetNewFocus()
